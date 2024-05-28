@@ -1,0 +1,14 @@
+{
+  "extends": "@session/typescript-config/react-library.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "paths": {
+      "@/componets/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/icons/*": ["./icons/*"]
+    }
+  },
+  "include": ["./**/*.ts", "./**/*.tsx", "tailwind.config.js", "postcss.config.js"],
+  "exclude": ["node_modules", "turbo", "dist"]
+}
