@@ -1,0 +1,37 @@
+{
+  "name": "@session/wallet",
+  "version": "1.0.0",
+  "exports": {
+    "./components/*": "./components/*.tsx",
+    "./lib/*": "./lib/*.ts",
+    "./providers/*": "./providers/*.tsx"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@session/eslint-config": "workspace:*",
+    "@session/typescript-config": "workspace:*",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "react": "^18.2.0"
+  },
+  "dependencies": {
+    "@session/contracts": "workspace:*",
+    "@session/util": "workspace:*",
+    "@session/ui": "workspace:*",
+    "@tanstack/react-query": "^5.32.1",
+    "@web3modal/wagmi": "^4.1.11",
+    "viem": "^2.9.31",
+    "wagmi": "^2.8.0"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9",
+    "yarn": "use pnpm",
+    "npm": "use pnpm"
+  }
+}
