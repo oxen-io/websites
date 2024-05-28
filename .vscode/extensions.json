@@ -1,0 +1,12 @@
+{
+  // Changes to the extensions here must be replicated in the .websites-monorepo.json file
+  "recommendations": [
+    "syler.sass-indented",
+    "bradlc.vscode-tailwindcss",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "usernamehw.errorlens",
+    "vivaxy.vscode-conventional-commits"
+  ],
+  "unwantedRecommendations": []
+}

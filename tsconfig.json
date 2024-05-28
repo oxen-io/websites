@@ -1,0 +1,3 @@
+{
+  "extends": "@session/typescript-config/base.json"
+}

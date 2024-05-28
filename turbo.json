@@ -1,0 +1,29 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "globalDotEnv": [".env"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "dotEnv": [".env.production.local", ".env.local", ".env.production", ".env"],
+      "env": [
+        "NEXT_PUBLIC_SITE_ENV",
+        "NEXT_PUBLIC_SENT_STAKING_API_URL",
+        "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID"
+      ],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "dev": {
+      "dotEnv": [".env.development.local", ".env.local", ".env.development", ".env"],
+
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dotEnv": [".env.test.local", ".env.test", ".env"]
+    }
+  }
+}

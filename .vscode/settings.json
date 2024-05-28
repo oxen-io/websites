@@ -1,0 +1,11 @@
+{
+  // The settings.json file contains a subset of the settings as the .websites-monorepo.workspace file to ensure important settings are applied to all workspaces.
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always"
+  },
+  "editor.formatOnSave": true,
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  "spellright.language": ["en-US-10-1."],
+  "spellright.documentTypes": ["markdown", "latex", "plaintext"]
+}
