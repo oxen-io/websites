@@ -59,11 +59,9 @@
     "files.associations": {
       "*.css": "tailwindcss",
     },
-    "files.exclude": {
-      "ts/**/*.js": true,
-    },
+    "files.exclude": {},
     "files.watcherExclude": {
-      "ts/**/*.js": true,
+      "node_modules": true,
     },
     "tailwindCSS.experimental.classRegex": [
       ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
