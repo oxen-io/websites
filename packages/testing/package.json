@@ -1,0 +1,21 @@
+{
+  "name": "@session/testing",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./*": "./*.ts"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@session/typescript-config": "workspace:*",
+    "@session/eslint-config": "workspace:*"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9",
+    "yarn": "use pnpm",
+    "npm": "use pnpm"
+  }
+}
