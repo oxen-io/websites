@@ -1,0 +1,16 @@
+{
+  "extends": "@session/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist"
+  },
+  "include": [
+    "./index.ts",
+    "./chains.ts",
+    "./constants.ts",
+    "./abis/*",
+    "./hooks/*.tsx",
+    "./scripts/*.ts"
+  ],
+  "exclude": ["node_modules", "turbo", "dist", ".cache"]
+}
