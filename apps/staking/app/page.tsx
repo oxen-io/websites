@@ -3,7 +3,6 @@ import { Button } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Time } from './Time';
 
 export default function LandingPage() {
   const dictionary = useTranslations('home');
@@ -16,7 +15,6 @@ export default function LandingPage() {
             bold: (chunks) => <b>{chunks}</b>,
           })}
         </h1>
-        <Time />
         <div className="hidden lg:flex gap-4 lg:flex-row lg:justify-start">
           <Link href="/stake-now" prefetch>
             <Button size="lg" data-testid={ButtonDataTestId.Home_Run_Node}>
