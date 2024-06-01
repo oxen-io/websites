@@ -1,5 +1,5 @@
 import { ButtonDataTestId } from '@/testing/data-test-ids';
-import HomeIcon from '@session/ui/icons/Home';
+import { HomeIcon } from '@session/ui/icons/HomeIcon';
 import { Button } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
