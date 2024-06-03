@@ -1,10 +1,5 @@
 'use client';
-import {
-  GenericSessionNode,
-  SessionNode,
-  StakeCard,
-  StakeCardContent,
-} from '@/components/SessionNodeCard';
+import { GenericStakedNode, StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
 import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { ServiceNode } from '@session/sent-staking-js';
@@ -13,41 +8,40 @@ import { Loading } from '@session/ui/components/loading';
 import { Button } from '@session/ui/ui/button';
 import { useAccount } from 'wagmi';
 
-export default function SessionNodes() {
+export default function StakedNodes() {
   const { address } = useAccount();
-  return address ? <SessionNodesWithAddress address={address} /> : <Loading />;
+  return address ? <StakedNodesWithAddress address={address} /> : <Loading />;
 }
 
+// TODO - replace these with real values
 const currentBlockHeight = 1000;
-const blocksPerMilisecond = 0.00001;
+const blocksPerMs = 0.00001;
 
-const milisecondsToBlockHeight = (height: number) => {
-  return Math.floor((currentBlockHeight + height) / blocksPerMilisecond);
+const msToBlockHeight = (height: number) => {
+  return Math.floor((currentBlockHeight + height) / blocksPerMs);
 };
 
-const parseSessionNodeData = (node: ServiceNode): GenericSessionNode => {
+const parseSessionNodeData = (node: ServiceNode): GenericStakedNode => {
   return {
     state: node.state,
     contributors: node.contributors,
     lastRewardHeight: 0,
-    lastUptime: new Date(Date.now() - milisecondsToBlockHeight(node.last_uptime_proof)),
+    lastUptime: new Date(Date.now() - msToBlockHeight(node.last_uptime_proof)),
     pubKey: node.service_node_pubkey,
     balance: node.total_contributed,
     operatorFee: node.portions_for_operator,
     operator_address: node.operator_address,
     requiresLiquidation: node.awaiting_liquidation,
-    // canRestake: node.can_restake, FRONT END WORK THIS OUT
+    // canRestake: node.can_restake, FRONT END WORK CAN THIS OUT
     ...(node.requested_unlock_height
       ? {
-          deregistrationDate: new Date(
-            Date.now() + milisecondsToBlockHeight(node.requested_unlock_height)
-          ),
+          deregistrationDate: new Date(Date.now() + msToBlockHeight(node.requested_unlock_height)),
         }
       : {}),
   };
 };
 
-function SessionNodesWithAddress({ address }: { address: string }) {
+function StakedNodesWithAddress({ address }: { address: string }) {
   const { data } = useSessionStakingQuery({
     query: 'getNodesForEthWallet',
     args: { address },
@@ -56,9 +50,7 @@ function SessionNodesWithAddress({ address }: { address: string }) {
     <ModuleGridContent>
       {data
         ? data?.nodes.map((node) => (
-            <StakeCard key={node.service_node_pubkey}>
-              <StakeCardContent node={parseSessionNodeData(node) as SessionNode} />
-            </StakeCard>
+            <StakedNodeCard node={parseSessionNodeData(node) as StakedNode} />
           ))
         : null}
       <div className="w-52 self-center">

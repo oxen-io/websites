@@ -8,7 +8,7 @@ import {
 } from '@session/ui/components/Module';
 import { ModuleGrid, ModuleGridHeader, ModuleGridTitle } from '@session/ui/components/ModuleGrid';
 import { Button } from '@session/ui/components/ui/button';
-import SessionNodes from './SessionNodes';
+import StakedNodes from './StakedNodes';
 import BalanceModule from './modules/BalanceModule';
 import ClaimTokensModule from './modules/ClaimTokensModule';
 import DailyNodeReward from './modules/DailyNodeReward';
@@ -37,7 +37,7 @@ export default function Page() {
           <ModuleGridTitle>My Stakes</ModuleGridTitle>
           <Button title="NEW STAKE" data-testid={ButtonDataTestId.New_Stake} />
         </ModuleGridHeader>
-        <SessionNodes />
+        <StakedNodes />
       </ModuleGrid>
     </ModuleGrid>
   );
