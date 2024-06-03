@@ -1,1 +1,1 @@
-{ "*": "eslint" }
+{ "*.js|*.jsx|*.ts|*.tsx": "eslint" }
