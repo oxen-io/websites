@@ -5,8 +5,8 @@ export const Loading = ({ global, absolute }: { global?: boolean; absolute?: boo
   return (
     <div
       className={cn(
-        'flex align-center justify-center items-center',
-        global && 'w-screen h-screen',
+        'align-center flex items-center justify-center',
+        global && 'h-screen w-screen',
         absolute && 'absolute'
       )}
     >

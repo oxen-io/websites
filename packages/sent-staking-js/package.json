@@ -5,6 +5,7 @@
   "exports": "./client.ts",
   "scripts": {
     "lint": "eslint .",
+    "lint-staged": "lint-staged",
     "format": "prettier --write ."
   },
   "devDependencies": {

@@ -10,7 +10,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint-staged": "lint-staged"
   },
   "devDependencies": {
     "@session/eslint-config": "workspace:*",

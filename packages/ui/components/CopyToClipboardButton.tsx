@@ -10,6 +10,7 @@ export interface CopyToClipboardButtonProps
     TestingProps<BaseDataTestId.Button> {
   textToCopy: string;
   copyToClipboardToastMessage: string;
+  onCopyComplete?: () => void;
 }
 
 /**
@@ -18,18 +19,25 @@ export interface CopyToClipboardButtonProps
  * @param textToCopy The text to be copied to the clipboard.
  * @param copyToClipboardToastMessage The message to be displayed in the success toast.
  */
-function copyToClipboard(textToCopy: string, copyToClipboardToastMessage: string) {
+function copyToClipboard(
+  textToCopy: string,
+  copyToClipboardToastMessage: string,
+  onCopyComplete?: () => void
+) {
   navigator.clipboard.writeText(textToCopy);
   toast.success(copyToClipboardToastMessage);
+  if (onCopyComplete) {
+    onCopyComplete();
+  }
 }
 
 const CopyToClipboardButton = forwardRef<HTMLButtonElement, CopyToClipboardButtonProps>(
-  ({ textToCopy, copyToClipboardToastMessage, className, ...props }, ref) => {
+  ({ textToCopy, copyToClipboardToastMessage, onCopyComplete, className, ...props }, ref) => {
     return (
       <Button
-        onClick={() => copyToClipboard(textToCopy, copyToClipboardToastMessage)}
+        onClick={() => copyToClipboard(textToCopy, copyToClipboardToastMessage, onCopyComplete)}
         variant="ghost"
-        className={cn(className, 'p-0 select-all')}
+        className={cn(className, 'select-all p-0')}
         ref={ref}
         {...props}
         data-testid={props['data-testid']}

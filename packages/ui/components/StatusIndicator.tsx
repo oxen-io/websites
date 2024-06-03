@@ -1,6 +1,6 @@
-import { cn } from '../lib/utils';
 import { VariantProps, cva } from 'class-variance-authority';
 import { HTMLAttributes } from 'react';
+import { cn } from '../lib/utils';
 
 export const statusVariants = cva('w-[18px] h-[18px] rounded-full filter drop-shadow-lg', {
   variants: {

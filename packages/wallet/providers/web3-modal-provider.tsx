@@ -8,6 +8,7 @@ import { WagmiMetadata, createWagmiConfig } from '../lib/wagmi';
 
 import { addresses } from '@session/contracts';
 import { mainnet, testnet } from '@session/contracts/chains';
+import { isProduction } from '@session/util/env';
 import { createWeb3Modal } from '@web3modal/wagmi/react';
 
 enum Wallet {
@@ -49,7 +50,7 @@ export const initWeb3Modal = ({
       [testnet.id]: '/images/arbitrum.svg',
     },
     projectId,
-    enableAnalytics: true,
+    enableAnalytics: !isProduction(),
     enableOnramp: true,
     featuredWalletIds: [
       Wallet.MetaMask,
