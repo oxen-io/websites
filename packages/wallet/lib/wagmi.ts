@@ -1,13 +1,11 @@
-import { testnet } from '@session/contracts';
-import { isProduction } from '@session/util/env';
+import { ethereum, mainnet, testnet } from '@session/contracts';
 import { defaultWagmiConfig } from '@web3modal/wagmi';
-import { mainnet } from 'viem/chains';
 import { cookieStorage, createStorage } from 'wagmi';
 
 export type WagmiMetadata = Parameters<typeof defaultWagmiConfig>[0]['metadata'];
 export type WagmiConfig = ReturnType<typeof defaultWagmiConfig>;
 
-const chains = [isProduction() ? mainnet : testnet] as const;
+const chains = [mainnet, testnet, ethereum] as const;
 
 /**
  * Creates a Wagmi configuration object.
