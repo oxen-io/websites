@@ -11,6 +11,8 @@
     "generate": "tsx ./scripts/generate-abis.ts",
     "generate:debug": "tsx ./scripts/generate-abis.ts --debug",
     "format": "prettier --write .",
+    "lint": "eslint .",
+    "lint-staged": "lint-staged",
     "tsc": "pnpm generate",
     "postinstall": "pnpm generate"
   },

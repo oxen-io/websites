@@ -1,9 +1,5 @@
 {
   "extends": "@session/typescript-config/nextjs.json",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "outDir": "dist"
-  },
   "include": [
     "./index.ts",
     "./chains.ts",

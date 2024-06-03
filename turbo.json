@@ -16,6 +16,10 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
+    "lint-staged": {
+      "dependsOn": ["^lint-staged"],
+      "cache": false
+    },
     "dev": {
       "dotEnv": [".env.development.local", ".env.local", ".env.development", ".env"],
 

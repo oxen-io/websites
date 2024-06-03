@@ -1,5 +1,5 @@
 import { defineChain } from 'viem';
-import { arbitrum, arbitrumSepolia } from 'viem/chains';
+import { arbitrum, arbitrumSepolia, mainnet as ethereum } from 'viem/chains';
 
 export const mainnet = defineChain({
   ...arbitrum,
@@ -24,3 +24,5 @@ export const chains = {
 } as const;
 
 export type ChainData = keyof typeof chains;
+
+export { ethereum };
