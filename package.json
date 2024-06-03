@@ -2,13 +2,12 @@
   "name": "websites",
   "private": true,
   "scripts": {
-    "@ui": "cd ./packages/ui &&",
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "engines": "./scripts/engines.sh",
     "clean:nm": "./scripts/clean-node-modules.sh",
+    "lintstaged-rules": "./scripts/lintstaged-rules.sh",
     "prepare": "husky"
   },
   "devDependencies": {
