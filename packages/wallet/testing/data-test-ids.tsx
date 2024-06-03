@@ -1,3 +1,3 @@
 export enum ButtonDataTestId {
-  Connect_Wallet = 'button:connect-wallet',
+  Wallet_Modal = 'button:wallet-modal',
 }
