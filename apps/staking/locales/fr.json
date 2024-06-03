@@ -8,9 +8,11 @@
   },
   "wallet": {
     "connect": "Connect Wallet",
+    "connected": "Open Wallet",
     "connecting": "Connecting Wallet...",
     "reconnecting": "Reconnecting Wallet...",
-    "disconnect": "Disconnect Wallet",
+    "ariaConnected": "Open wallet account modal",
+    "ariaDisconnected": "Open connect wallet modal",
     "balance": "Balance",
     "address": "Address"
   },
@@ -68,6 +70,12 @@
     "price": {
       "title": "Price:",
       "description": "Current price of $SENT."
+    }
+  },
+  "nodeCard": {
+    "pubKey": {
+      "copyPubkeyToClipboard": "Copy to Clipboard",
+      "copyPubkeyToClipboardSuccessToast": "Copied Session Node Pubkey to clipboard!"
     }
   }
 }

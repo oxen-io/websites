@@ -6,7 +6,7 @@ import {
   CONTRACT_READ_STATUS,
   mergeContractReadStatuses,
 } from '@session/contracts/hooks/contract-hooks';
-import { getUnixTimestamp } from '@session/util/date';
+import { getUnixTimestampNowSeconds } from '@session/util/date';
 import { useMemo } from 'react';
 
 function calculateDailyNodeReward(totalNodes: bigint, rewardRate: bigint) {
@@ -27,7 +27,7 @@ export default function useDailyNodeReward() {
     status: rewardRateStatus,
     error: errorRewardRateQuery,
     refetch: refetchRewardRate,
-  } = useRewardRateQuery({ startEnabled: true, args: [BigInt(getUnixTimestamp())] });
+  } = useRewardRateQuery({ startEnabled: true, args: [BigInt(getUnixTimestampNowSeconds())] });
 
   const dailyNodeReward = useMemo(() => {
     if (
