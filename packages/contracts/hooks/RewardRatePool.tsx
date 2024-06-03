@@ -1,9 +1,9 @@
 'use client';
+import { getUnixTimestampNowSeconds } from '@session/util/date';
 import { ContractFunctionArgs } from 'viem';
+import type { ReadContractData } from 'wagmi/query';
 import type { RewardRatePoolAbi } from '../abis';
 import { ReadContractQuery, useContractReadQuery } from './contract-hooks';
-import type { ReadContractData } from 'wagmi/query';
-import { getUnixTimestamp } from '@session/util/date';
 
 export type RewardRateQuery = ReadContractQuery & {
   /** Get the reward rate */
@@ -35,7 +35,7 @@ export function useRewardRateQuery(
   });
 
   const getRewardRate = () => {
-    readContract({ args: [BigInt(getUnixTimestamp())] });
+    readContract({ args: [BigInt(getUnixTimestampNowSeconds())] });
   };
 
   return {
