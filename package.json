@@ -2,13 +2,12 @@
   "name": "websites",
   "private": true,
   "scripts": {
-    "@ui": "cd ./packages/ui &&",
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "engines": "./scripts/engines.sh",
     "clean:nm": "./scripts/clean-node-modules.sh",
+    "lintstaged-rules": "./scripts/lintstaged-rules.sh",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -22,6 +21,7 @@
     "eslint": "8.57.0",
     "husky": "^9.0.11",
     "prettier": "3.2.5",
+    "prettier-plugin-tailwindcss": "^0.6.1",
     "turbo": "1.13.3",
     "typescript": "5.4.5"
   },

@@ -6,7 +6,8 @@
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "usernamehw.errorlens",
-    "vivaxy.vscode-conventional-commits"
+    "vivaxy.vscode-conventional-commits",
+    "pflannery.vscode-versionlens"
   ],
   "unwantedRecommendations": []
 }
