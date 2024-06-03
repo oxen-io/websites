@@ -37,7 +37,7 @@ const CopyToClipboardButton = forwardRef<HTMLButtonElement, CopyToClipboardButto
       <Button
         onClick={() => copyToClipboard(textToCopy, copyToClipboardToastMessage, onCopyComplete)}
         variant="ghost"
-        className={cn(className, 'p-0 select-all')}
+        className={cn(className, 'select-all p-0')}
         ref={ref}
         {...props}
         data-testid={props['data-testid']}

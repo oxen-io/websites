@@ -1,7 +1,7 @@
-import { Loading } from './loading';
-import { cn } from '../lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { forwardRef, type HTMLAttributes } from 'react';
+import { cn } from '../lib/utils';
+import { Loading } from './loading';
 
 const moduleGridVariants = cva('module-grid h-max', {
   variants: {
@@ -60,7 +60,7 @@ const ModuleGridHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElemen
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('p-8 pb-0 justify-between flex flex-row w-full items-center', className)}
+      className={cn('flex w-full flex-row items-center justify-between p-8 pb-0', className)}
       {...props}
     />
   )
@@ -71,7 +71,7 @@ const ModuleGridContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('p-6 pt-0 align-middle gap-2 flex flex-col', className)}
+      className={cn('flex flex-col gap-2 p-6 pt-0 align-middle', className)}
       {...props}
     />
   )

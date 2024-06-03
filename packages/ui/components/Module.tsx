@@ -1,7 +1,7 @@
-import { Loading } from './loading';
-import { cn } from '../lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { forwardRef, type HTMLAttributes } from 'react';
+import { cn } from '../lib/utils';
+import { Loading } from './loading';
 
 export const outerModuleVariants = cva(
   'rounded-[40px] transition-all ease-in-out bg-gradient-to-br from-[#7FB1AE] to-[#2A4337] bg-blend-lighten shadow-md p-px',
@@ -59,7 +59,7 @@ const Module = forwardRef<HTMLDivElement, ModuleProps>(
           className={cn(
             innerModuleVariants({ size, variant, className }),
             noPadding && 'p-0',
-            props.onClick && 'hover:cursor-pointer hover:bg-session-green hover:text-session-black'
+            props.onClick && 'hover:bg-session-green hover:text-session-black hover:cursor-pointer'
           )}
           ref={ref}
           {...props}
@@ -116,7 +116,7 @@ const ModuleTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingEle
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn('leading-none tracking-tight font-atyp-display text-text-gradient', className)}
+      className={cn('font-atyp-display text-text-gradient leading-none tracking-tight', className)}
       {...props}
     />
   )
