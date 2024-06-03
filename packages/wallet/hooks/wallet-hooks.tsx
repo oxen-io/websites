@@ -2,6 +2,7 @@ import { useEns } from '@session/contracts/hooks/ens';
 import { useMemo } from 'react';
 import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
+import { useArbName } from './arb';
 
 /**
  * The status of a wallet.
@@ -47,6 +48,8 @@ type UseWalletType = {
   ensName?: string | null;
   /** The ENS avatar of the wallet. */
   ensAvatar?: string | null;
+  /** The arb name of the wallet. */
+  arbName?: string | null;
   /** The status of the wallet. */
   status: WALLET_STATUS;
   /** Whether the wallet is connected. */
@@ -60,10 +63,12 @@ export function useWallet(): UseWalletType {
     enabled: isConnected,
   });
 
+  const { arbName } = useArbName({ address });
+
   const status = useMemo(
     () => parseWalletStatus({ isConnected, isConnecting, isDisconnected, isReconnecting }),
     [isConnected, isConnecting, isDisconnected, isReconnecting]
   );
 
-  return { address, ensName, ensAvatar, status, isConnected };
+  return { address, ensName, ensAvatar, arbName, status, isConnected };
 }
