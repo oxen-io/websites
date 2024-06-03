@@ -16,7 +16,7 @@ done
 for package in ./packages/*; do
   if [[ -d "$package" ]]; then
     lintstagedrc_path="$package/.lintstagedrc.json"
-    # Copy the content of the root .lintstagedrc.json file to the package's .lintstagedrc.json file
+    # Copy the content of the root .lintstagedrc.json file to the package's .lintstagedrc.json file, overriding the original data
     echo "$lintstagedrc" >"$lintstagedrc_path"
   fi
 done

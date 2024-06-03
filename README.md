@@ -42,6 +42,7 @@ pnpm build
 
 - [Node.js](https://nodejs.org/en/) (v22 or higher)
 - [pnpm](https://pnpm.io/) (v9 or higher)
+- [jq](https://jqlang.github.io/jq/) (see [jq for mac](https://formulae.brew.sh/formula/jq))
 
 We recommend using a node version manager like [asdf](https://asdf-vm.com/) to manage your node versions. The `.tool-versions` file in the root of the project specifies the node version to use. We also have an `.nvmrc` file that specifies the same node version to use. You can enable support for [Using Existing Tool Version Files](https://asdf-vm.com/guide/getting-started.html#using-existing-tool-version-files) in asdf to use these files.
 
