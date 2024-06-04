@@ -6,7 +6,8 @@
     "./*": "./*.ts"
   },
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint-staged": "lint-staged"
   },
   "devDependencies": {
     "@session/typescript-config": "workspace:*",

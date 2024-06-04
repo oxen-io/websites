@@ -1,0 +1,39 @@
+{
+  "name": "@session/contracts",
+  "version": "0.0.0",
+  "exports": {
+    ".": "./index.ts",
+    "./abis": "./abis/index.ts",
+    "./chains": "./chains.ts",
+    "./hooks/*": "./hooks/*.tsx"
+  },
+  "scripts": {
+    "generate": "tsx ./scripts/generate-abis.ts",
+    "generate:debug": "tsx ./scripts/generate-abis.ts --debug",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "lint-staged": "lint-staged",
+    "tsc": "pnpm generate",
+    "postinstall": "pnpm generate"
+  },
+  "dependencies": {
+    "@session/util": "workspace:*",
+    "@tanstack/react-query": "^5.32.1",
+    "viem": "^2.9.31",
+    "wagmi": "2.8.0"
+  },
+  "devDependencies": {
+    "@session/eslint-config": "workspace:*",
+    "@session/typescript-config": "workspace:*",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "react": "^18.2.0",
+    "tsx": "^4.10.5"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9",
+    "yarn": "use pnpm",
+    "npm": "use pnpm"
+  }
+}

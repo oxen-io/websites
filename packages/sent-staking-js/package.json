@@ -1,13 +1,12 @@
 {
-  "name": "@session/util",
+  "name": "@session/sent-staking-js",
   "version": "0.0.0",
   "private": true,
-  "exports": {
-    "./*": "./*.ts"
-  },
+  "exports": "./client.ts",
   "scripts": {
     "lint": "eslint .",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "@session/typescript-config": "workspace:*",

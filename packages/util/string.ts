@@ -1,11 +1,12 @@
 /**
- * Collapses a string by replacing characters between a specified length with an ellipsis.
- * The final length of the string will be the {sideLength} * 2 + 3.
+ * Collapses a string by replacing characters between the leading and trailing characters with 3 ellipsis.
+ * The final length of the string will be the sum of the leading and trailing characters plus 3.
  * @param str - The input string to collapse.
- * @param sideLength - The number of characters to keep on either side of the string. Default is 4.
+ * @param leadingChars - The number of characters to keep at the beginning of the string.
+ * @param trailingChars - The number of characters to keep at the end of the string.
  * @returns The collapsed string.
  */
-export const collapseString = (str: string, sideLength = 4): string => {
-  if (str.length <= sideLength * 2 + 3) return str;
-  return `${str.slice(0, sideLength)}...${str.slice(-sideLength)}`;
+export const collapseString = (str: string, leadingChars = 6, trailingChars = 4): string => {
+  if (str.length <= leadingChars + trailingChars + 3) return str;
+  return `${str.slice(0, leadingChars)}...${str.slice(-trailingChars)}`;
 };
