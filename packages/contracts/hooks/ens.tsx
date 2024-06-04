@@ -39,7 +39,5 @@ export function useEns({ address, enabled }: { address?: Address; enabled: boole
     ...ensConfig,
   });
 
-  console.log('ensAvatar:', ensAvatar);
-
   return { ensName, ensAvatar };
 }
