@@ -1,0 +1,83 @@
+{
+  "folders": [
+    {
+      "name": "🌳 root",
+      "path": ".",
+    },
+    {
+      "name": "🍂 staking",
+      "path": "apps/staking",
+    },
+    {
+      "name": "📦 ui",
+      "path": "packages/ui",
+    },
+    {
+      "name": "📦 sent-staking-js",
+      "path": "packages/sent-staking-js",
+    },
+    {
+      "name": "📦 wallet",
+      "path": "packages/wallet",
+    },
+    {
+      "name": "📦 contracts",
+      "path": "packages/contracts",
+    },
+    {
+      "name": "📦 testing",
+      "path": "packages/testing",
+    },
+    {
+      "name": "📦 util",
+      "path": "packages/util",
+    },
+  ],
+  // Changes to the extensions here must be replicated in the .vscode/extensions.json file
+  "extensions": {
+    "recommendations": [
+      "folke.vscode-monorepo-workspace",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "lokalise.i18n-ally",
+      "syler.sass-indented",
+      "bradlc.vscode-tailwindcss",
+      "usernamehw.errorlens",
+      "vivaxy.vscode-conventional-commits",
+      "pflannery.vscode-versionlens",
+    ],
+    "unwantedRecommendations": [],
+  },
+  "settings": {
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always",
+    },
+    "editor.formatOnSave": true,
+    "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "files.associations": {
+      "*.css": "tailwindcss",
+    },
+    "files.exclude": {},
+    "files.watcherExclude": {
+      "node_modules": true,
+    },
+    "tailwindCSS.experimental.classRegex": [
+      ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+      ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+      ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ],
+    "eslint.alwaysShowStatus": true,
+    "eslint.run": "onSave",
+    // https://github.com/Microsoft/vscode-eslint#mono-repository-setup
+    "eslint.workingDirectories": ["./apps", "./packages"],
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+  },
+}
