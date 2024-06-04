@@ -48,7 +48,7 @@ type UseWalletType = {
   ensName?: string | null;
   /** The ENS avatar of the wallet. */
   ensAvatar?: string | null;
-  /** The arb name of the wallet. */
+  /** The .arb name of the wallet. */
   arbName?: string | null;
   /** The status of the wallet. */
   status: WALLET_STATUS;
