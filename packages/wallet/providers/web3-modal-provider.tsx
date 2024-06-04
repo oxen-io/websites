@@ -11,6 +11,10 @@ import { mainnet, testnet } from '@session/contracts/chains';
 import { isProduction } from '@session/util/env';
 import { createWeb3Modal } from '@web3modal/wagmi/react';
 
+/**
+ * The wallet connect wallet address IDs.
+ * @see https://explorer.walletconnect.com/
+ */
 enum Wallet {
   MetaMask = 'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
   Ledger = '19177a98252e07ddfc9af2083ba8e07ef627cb6103467ffebb3f8f4205fd7927',
