@@ -3,6 +3,7 @@
   "include": [
     "./index.ts",
     "./chains.ts",
+    "./util.ts",
     "./constants.ts",
     "./abis/*",
     "./hooks/*.tsx",
