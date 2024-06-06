@@ -33,3 +33,19 @@ export const formatTimeDistanceToNowClient = (
     ...options,
   });
 };
+
+type LocalizedNumberOptions = Parameters<typeof Intl.NumberFormat>[1];
+
+export const formatNumber = (num: number, options: LocalizedNumberOptions) => {
+  const locale = useLocale();
+  return new Intl.NumberFormat(locale, options).format(num);
+};
+
+export const formatPercentage = (num: number, options?: LocalizedNumberOptions) => {
+  return formatNumber(num, {
+    style: 'percent',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    ...options,
+  });
+};
