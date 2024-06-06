@@ -19,6 +19,7 @@ module.exports = {
     fontFamily: {
       'atyp-display': ['var(--font-atyp-display)'],
       'atyp-text': ['var(--font-atyp-text)'],
+      'monument-extended': ['var(--font-monument-extended)'],
     },
     extend: {
       margin: {
@@ -34,6 +35,7 @@ module.exports = {
           white: 'var(--session-white)',
           text: 'var(--session-text)',
         },
+        destructive: '#FF4D4D',
         text: {
           primary: 'var(--session-text)',
           gradient: 'session-text-gradient',
