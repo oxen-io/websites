@@ -1,4 +1,5 @@
 import { ButtonDataTestId } from '@/testing/data-test-ids';
+import { SENT_SYMBOL } from '@session/contracts';
 import { Button } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -7,15 +8,15 @@ import Link from 'next/link';
 export default function LandingPage() {
   const dictionary = useTranslations('home');
   return (
-    <div className="flex flex-col-reverse justify-around lg:grid lg:grid-cols-2 w-screen lg:h-screen align-middle items-center lg:p-32 lg:-mt-header-displacement w-max-[1920px]">
-      <div className="align-middle flex flex-col gap-10">
-        <h1 className="text-5xl lg:text-8xl max-w-[700px] text-center lg:text-left lg:px-0 px-10">
+    <div className="lg:-mt-header-displacement w-max-[1920px] flex w-screen flex-col-reverse items-center justify-around align-middle lg:grid lg:h-screen lg:grid-cols-2 lg:p-32">
+      <div className="flex flex-col gap-10 align-middle">
+        <h1 className="max-w-[700px] px-10 text-center text-5xl lg:px-0 lg:text-left lg:text-8xl">
           {dictionary.rich('title', {
-            token: '$SENT',
+            tokenSymbol: SENT_SYMBOL,
             bold: (chunks) => <b>{chunks}</b>,
           })}
         </h1>
-        <div className="hidden lg:flex gap-4 lg:flex-row lg:justify-start">
+        <div className="hidden gap-4 lg:flex lg:flex-row lg:justify-start">
           <Link href="/stake-now" prefetch>
             <Button size="lg" data-testid={ButtonDataTestId.Home_Run_Node}>
               {dictionary('buttons.primary')}
@@ -27,7 +28,7 @@ export default function LandingPage() {
             </Button>
           </Link>
         </div>
-        <div className="flex lg:hidden gap-4 flex-col-reverse justify-center items-center">
+        <div className="flex flex-col-reverse items-center justify-center gap-4 lg:hidden">
           <Link href="/stake-now" prefetch>
             <Button size="sm" data-testid={ButtonDataTestId.Home_Run_Node}>
               {dictionary('buttons.primary')}
@@ -40,13 +41,8 @@ export default function LandingPage() {
           </Link>
         </div>
       </div>
-      <div className="flex items-center align-middle justify-center">
-        <Image
-          src="/images/cube.png"
-          alt="Glass cube with green highlights"
-          height={1024}
-          width={1024}
-        />
+      <div className="flex items-center justify-center align-middle">
+        <Image src="/images/cube.png" alt={dictionary('heroImageAlt')} height={1024} width={1024} />
       </div>
     </div>
   );
