@@ -125,7 +125,11 @@ ModuleTitle.displayName = 'ModuleTitle';
 
 const ModuleText = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
   ({ className, ...props }, ref) => (
-    <span ref={ref} className={cn('font-atyp-display text-text-gradient', className)} {...props} />
+    <span
+      ref={ref}
+      className={cn('font-atyp-display text-text-gradient overflow-x-hidden', className)}
+      {...props}
+    />
   )
 );
 ModuleText.displayName = 'ModuleText';
