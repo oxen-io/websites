@@ -21,7 +21,7 @@ export const outerNodeCardVariants = cva(
 );
 
 const innerNodeCardVariants = cva(
-  'rounded-[20px] w-full h-full flex align-middle flex-col p-8 from-[#090F0D] to-[#081310] bg-gradient-to-br',
+  'rounded-[20px] w-full h-full flex align-middle flex-col py-8 px-9 from-[#090F0D] to-[#081310] bg-gradient-to-br',
   {
     variants: {
       variant: {
