@@ -1,11 +1,11 @@
 'use client';
 import type { LocaleKey } from '@/lib/locale-util';
 import { cn } from '@session/ui/lib/utils';
-import WalletModalButton from '@session/wallet/components/WalletModalButton';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { WalletModalButtonWithLocales } from './WalletModalButtonWithLocales';
 
 type LinkItem = {
   href: string;
@@ -36,7 +36,6 @@ function NavLink({ href, label, pathname }: NavLinkProps) {
 
 export default function Header() {
   const dictionary = useTranslations('navigation');
-  const walletDictionary = useTranslations('wallet');
   const pathname = usePathname();
   return (
     <nav className="flex flex-wrap items-center justify-between p-6">
@@ -50,18 +49,7 @@ export default function Header() {
           ))}
         </div>
       </div>
-      <WalletModalButton
-        labels={{
-          disconnected: walletDictionary('connect'),
-          connected: walletDictionary('connected'),
-          connecting: walletDictionary('connecting'),
-          reconnecting: walletDictionary('reconnecting'),
-        }}
-        ariaLabels={{
-          connected: walletDictionary('ariaConnected'),
-          disconnected: walletDictionary('ariaDisconnected'),
-        }}
-      />
+      <WalletModalButtonWithLocales />
     </nav>
   );
 }
