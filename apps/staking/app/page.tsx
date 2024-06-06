@@ -17,7 +17,7 @@ export default function LandingPage() {
           })}
         </h1>
         <div className="hidden gap-4 lg:flex lg:flex-row lg:justify-start">
-          <Link href="/stake-now" prefetch>
+          <Link href="/stake" prefetch>
             <Button size="lg" data-testid={ButtonDataTestId.Home_Run_Node}>
               {dictionary('buttons.primary')}
             </Button>
@@ -29,7 +29,7 @@ export default function LandingPage() {
           </Link>
         </div>
         <div className="flex flex-col-reverse items-center justify-center gap-4 lg:hidden">
-          <Link href="/stake-now" prefetch>
+          <Link href="/stake" prefetch>
             <Button size="sm" data-testid={ButtonDataTestId.Home_Run_Node}>
               {dictionary('buttons.primary')}
             </Button>
