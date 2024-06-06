@@ -3,14 +3,29 @@ import { GenericStakedNode, StakedNode, StakedNodeCard } from '@/components/Stak
 import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { ServiceNode } from '@session/sent-staking-js';
-import { ModuleGridContent } from '@session/ui/components/ModuleGrid';
+import {
+  ModuleGridContent,
+  ModuleGridHeader,
+  ModuleGridTitle,
+} from '@session/ui/components/ModuleGrid';
 import { Loading } from '@session/ui/components/loading';
 import { Button } from '@session/ui/ui/button';
+import { Switch } from '@session/ui/ui/switch';
+import { useTranslations } from 'next-intl';
 import { useAccount } from 'wagmi';
 
-export default function StakedNodes() {
+export default function StakedNodesModule() {
+  const dictionary = useTranslations('modules.stakedNodes');
   const { address } = useAccount();
-  return address ? <StakedNodesWithAddress address={address} /> : <Loading />;
+  return (
+    <>
+      <ModuleGridHeader>
+        <ModuleGridTitle>{dictionary('title')}</ModuleGridTitle>
+        Show Hidden <Switch />
+      </ModuleGridHeader>
+      {address ? <StakedNodesWithAddress address={address} /> : <Loading />}
+    </>
+  );
 }
 
 // TODO - replace these with real values

@@ -1,17 +1,9 @@
-import { ButtonDataTestId } from '@/testing/data-test-ids';
-import {
-  Module,
-  ModuleContent,
-  ModuleHeader,
-  ModuleText,
-  ModuleTitle,
-} from '@session/ui/components/Module';
-import { ModuleGrid, ModuleGridHeader, ModuleGridTitle } from '@session/ui/components/ModuleGrid';
-import { Button } from '@session/ui/components/ui/button';
-import StakedNodes from './StakedNodes';
+import { ModuleGrid } from '@session/ui/components/ModuleGrid';
 import BalanceModule from './modules/BalanceModule';
 import ClaimTokensModule from './modules/ClaimTokensModule';
 import DailyNodeReward from './modules/DailyNodeReward';
+import PriceModule from './modules/PriceModule';
+import StakedNodesModule from './modules/StakedNodesModule';
 import TotalRewardsModule from './modules/TotalRewardsModule';
 import UnclaimedTokensModule from './modules/UnclaimedTokensModule';
 
@@ -24,20 +16,10 @@ export default function Page() {
         <TotalRewardsModule />
         <UnclaimedTokensModule />
         <ClaimTokensModule />
-        <Module size="lg" className="hidden lg:flex">
-          <ModuleHeader variant="overlay">
-            <ModuleTitle>Price</ModuleTitle>
-            <ModuleText>$XX.XX USD</ModuleText>
-          </ModuleHeader>
-          <ModuleContent className="h-[300px]"></ModuleContent>
-        </Module>
+        <PriceModule />
       </ModuleGrid>
       <ModuleGrid variant="section" colSpan={2}>
-        <ModuleGridHeader>
-          <ModuleGridTitle>My Stakes</ModuleGridTitle>
-          <Button title="NEW STAKE" data-testid={ButtonDataTestId.New_Stake} />
-        </ModuleGridHeader>
-        <StakedNodes />
+        <StakedNodesModule />
       </ModuleGrid>
     </ModuleGrid>
   );
