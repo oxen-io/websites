@@ -1,10 +1,15 @@
 {
+  "general": {
+    "comingSoon": "Coming Soon",
+    "loading": "Loading..."
+  },
   "navigation": {
     "home": "Home",
     "stake": "Stake Now",
     "myStakes": "My Stakes",
     "docs": "Docs",
-    "support": "Support"
+    "support": "Support",
+    "faucet": "Faucet"
   },
   "wallet": {
     "connect": "Connect Wallet",
@@ -14,29 +19,58 @@
     "ariaConnected": "Open wallet account modal",
     "ariaDisconnected": "Open connect wallet modal",
     "balance": "Balance",
-    "address": "Address"
+    "address": "Address",
+    "fallbackName": "No name"
   },
   "notFound": {
     "description": "Sorry! We couldn't find the page you were looking for.",
     "homeButton": "Return Home"
   },
   "home": {
-    "title": "Stake <bold>{token}</bold> Earn Rewards",
+    "title": "Stake <bold>{tokenSymbol}</bold> Earn Rewards",
     "buttons": {
       "primary": "STAKE NOW",
       "secondary": "HOW TO RUN A SESSION NODE"
-    }
+    },
+    "heroImageAlt": "Glass cube with green highlights"
   },
-  "myStakes": {
-    "title": "My Stakes"
+  "stakeNow": {
+    "title": "Open Session Nodes"
+  },
+  "faucet": {
+    "title": "Faucet",
+    "connectedWalletInfo": "Your wallet's account {address} is connected and is being used to fill out this form. We will not ask you to make any transactions.",
+    "or": "or",
+    "form": {
+      "disconnectWallet": "Disconnect Wallet",
+      "label": "Enter your wallet address",
+      "placeholder": "Wallet address",
+      "description": "Enter your wallet address to receive test {tokenSymbol} from the faucet.",
+      "button": "Get test {tokenSymbol}",
+      "testnet": "Swap to Arbitrum Sepolia testnet",
+      "lowEthBalance": "It looks like you dont have enough test eth on Arbitrum Sepolia, go to {link} to get some. You have {ethAmount} ETH",
+      "transactionHash": "Transaction Hash: {hash}",
+      "transactionHashDescription": "Transaction hash of the faucet transaction.",
+      "copyTransactionHash": "Copy Transaction Hash",
+      "copyTransactionHashSuccessToast": "Copied Transaction Hash to clipboard!",
+      "error": "Failed to get test {tokenSymbol}.",
+      "errorInvalidAddress": "Wallet address is not valid. It must be a valid address: {example}",
+      "success": "Successfully received test {tokenSymbol}.",
+      "loading": "Getting test {tokenSymbol}..."
+    },
+    "disconnectWallet": "Disconnect Wallet",
+    "description": "This wallet will"
   },
   "modules": {
+    "stakedNodes": {
+      "title": "My Stakes"
+    },
     "buttons": {
       "refetch": "Refetch"
     },
     "balance": {
-      "title": "Total $SENT:",
-      "description": "Total $SENT in your wallet.",
+      "title": "Total Staked {tokenSymbol}:",
+      "description": "Total {tokenSymbol} in your wallet.",
       "error": "Failed to fetch balance.",
       "refetching": "Refetching balance...",
       "refetchSuccess": "Successfully refetched balance"
@@ -69,13 +103,27 @@
     },
     "price": {
       "title": "Price:",
-      "description": "Current price of $SENT."
+      "description": "Current price of {tokenSymbol}."
     }
   },
   "nodeCard": {
     "pubKey": {
+      "sessionNodePubkey": "Session Node Pubkey",
       "copyPubkeyToClipboard": "Copy to Clipboard",
       "copyPubkeyToClipboardSuccessToast": "Copied Session Node Pubkey to clipboard!"
+    },
+    "open": {
+      "title": "SN Pubkey:",
+      "minContribution": "Min Contribution:",
+      "minContributionDescription": "Minimum amount of {tokenSymbol} required to stake.",
+      "maxContribution": "Max Contribution:",
+      "maxContributionDescription": "Maximum amount of {tokenSymbol} that can be staked.",
+      "fee": "Fee:",
+      "feeDescription": "The node operator fee.",
+      "stakeButton": {
+        "stake": "STAKE",
+        "ariaLabel": "Open the stake to a node form"
+      }
     }
   }
 }
