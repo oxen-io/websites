@@ -1,6 +1,7 @@
 'use client';
 
-import { formatSENT, useSENTBalanceQuery } from '@session/contracts/hooks/SENT';
+import { formatSENT } from '@session/contracts';
+import { useSENTBalanceQuery } from '@session/contracts/hooks/SENT';
 import { useMemo } from 'react';
 import { useAccount } from 'wagmi';
 
