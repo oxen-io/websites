@@ -1,6 +1,6 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CHAIN, SENT_SYMBOL } from '@session/contracts';
+import { CHAIN, SENT_SYMBOL, chains } from '@session/contracts';
 import { Module, ModuleContent } from '@session/ui/components/Module';
 import { Button } from '@session/ui/ui/button';
 import { Input } from '@session/ui/ui/input';
@@ -26,13 +26,19 @@ import {
   FormMessage,
   FormSubmitButton,
 } from '@session/ui/ui/form';
+import { useWalletChain } from '@session/wallet/hooks/wallet-hooks';
 
 export default function FaucetModule() {
   const dictionary = useTranslations('faucet');
   const [transactionHash, setTransactionHash] = useState<Address | null>(null);
   const { address, status } = useAccount();
   const { disconnect } = useDisconnect();
-  const { data: ethBalance } = useBalance({ address, query: { enabled: !!address } });
+  const { chain, switchChain } = useWalletChain();
+  const { data: ethBalance } = useBalance({
+    address,
+    chainId: chains[CHAIN.TESTNET].id,
+    query: { enabled: !!address },
+  });
 
   const FormSchema = z.object({
     walletAddress: z.string().refine((value) => isAddress(value), {
@@ -103,6 +109,9 @@ export default function FaucetModule() {
         shouldDirty: true,
       });
       setTransactionHash(null);
+      if (chain !== CHAIN.TESTNET) {
+        switchChain(CHAIN.TESTNET);
+      }
     } else if (status === 'disconnected') {
       form.reset({ walletAddress: '' });
       form.clearErrors();
