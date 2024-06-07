@@ -38,14 +38,12 @@ export default function WalletAddTokenButton(props: WalletAddTokenButtonProps) {
   }
 
   return (
-    <>
-      <AddTokenButton
-        {...props}
-        handleClick={handleClick}
-        onCorrectChain={onCorrectChain}
-        isPending={isPending}
-      />
-    </>
+    <AddTokenButton
+      {...props}
+      handleClick={handleClick}
+      onCorrectChain={onCorrectChain}
+      isPending={isPending}
+    />
   );
 }
 
