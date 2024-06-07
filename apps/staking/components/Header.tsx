@@ -15,6 +15,7 @@ type LinkItem = {
 const links: LinkItem[] = [
   { dictionaryKey: 'stake', href: '/stake' },
   { dictionaryKey: 'myStakes', href: '/mystakes' },
+  { dictionaryKey: 'faucet', href: '/faucet' },
 ] as const;
 
 type NavLinkProps = {

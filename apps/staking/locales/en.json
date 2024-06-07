@@ -12,15 +12,25 @@
     "faucet": "Faucet"
   },
   "wallet": {
-    "connect": "Connect Wallet",
-    "connected": "Open Wallet",
-    "connecting": "Connecting Wallet...",
-    "reconnecting": "Reconnecting Wallet...",
-    "ariaConnected": "Open wallet account modal",
-    "ariaDisconnected": "Open connect wallet modal",
-    "balance": "Balance",
-    "address": "Address",
-    "fallbackName": "No name"
+    "modalButton": {
+      "connect": "Connect Wallet",
+      "connected": "Open Wallet",
+      "connecting": "Connecting Wallet...",
+      "reconnecting": "Reconnecting Wallet...",
+      "ariaConnected": "Open wallet account modal",
+      "ariaDisconnected": "Open connect wallet modal",
+      "balance": "Balance",
+      "address": "Address",
+      "fallbackName": "No name"
+    },
+    "addTokenButton": {
+      "addToken": "Add {tokenSymbol} to Wallet",
+      "ariaAddToken": "Add {tokenSymbol} to Wallet",
+      "changeNetwork": "Change Network",
+      "ariaChangeNetwork": "Change Network",
+      "pending": "Pending",
+      "ariaPending": "Pending"
+    }
   },
   "notFound": {
     "description": "Sorry! We couldn't find the page you were looking for.",
@@ -41,6 +51,7 @@
     "title": "Faucet",
     "connectedWalletInfo": "Your wallet's account {address} is connected and is being used to fill out this form. We will not ask you to make any transactions.",
     "or": "or",
+    "addTokenInfo": "You may need to add {tokenSymbol} to your wallet to make it show up, click the button below to add it.",
     "form": {
       "disconnectWallet": "Disconnect Wallet",
       "label": "Enter your wallet address",

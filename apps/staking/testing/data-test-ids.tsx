@@ -5,6 +5,8 @@ export enum ButtonDataTestId {
   Not_Found_Return_Home = 'button:not-found-return-home',
   Copy_Node_Id_To_Clipboard = 'button:copy-node-id-to-clipboard',
   Node_Card_Stake = 'button:node-card-stake',
+  Faucet_Submit = 'button:faucet-submit',
+  Faucet_Disconnect = 'button:faucet-disconnect',
 }
 
 export enum ModuleDataTestId {
