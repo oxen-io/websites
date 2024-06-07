@@ -1,11 +1,13 @@
 'use client';
 import type { LocaleKey } from '@/lib/locale-util';
 import { cn } from '@session/ui/lib/utils';
+import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { WalletModalButtonWithLocales } from './WalletModalButtonWithLocales';
+import { WalletNetworkDropdownWithLocales } from './WalletNetworkDropdownWithLocales';
 
 type LinkItem = {
   href: string;
@@ -36,6 +38,7 @@ function NavLink({ href, label, pathname }: NavLinkProps) {
 }
 
 export default function Header() {
+  const { isConnected } = useWallet();
   const dictionary = useTranslations('navigation');
   const pathname = usePathname();
   return (
@@ -50,7 +53,10 @@ export default function Header() {
           ))}
         </div>
       </div>
-      <WalletModalButtonWithLocales />
+      <div className="flex flex-row gap-2">
+        {isConnected ? <WalletNetworkDropdownWithLocales /> : null}
+        <WalletModalButtonWithLocales />
+      </div>
     </nav>
   );
 }

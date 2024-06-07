@@ -9,6 +9,10 @@ export enum ButtonDataTestId {
   Faucet_Disconnect = 'button:faucet-disconnect',
 }
 
+export enum SpecialDataTestId {
+  Unsupported_Chain_Link = 'special:unsupported-chain-link',
+}
+
 export enum ModuleDataTestId {
   Balance = 'module:balance',
   Claim_Tokens = 'module:claim-tokens',

@@ -30,6 +30,14 @@
       "ariaChangeNetwork": "Change Network",
       "pending": "Pending",
       "ariaPending": "Pending"
+    },
+    "networkDropdown": {
+      "mainnet": "MAINNET",
+      "testnet": "TESTNET",
+      "invalid": "INVALID NETWORK",
+      "ariaMainnet": "Switch to Mainnet",
+      "ariaTestnet": "Switch to Testnet",
+      "ariaDropdown": "Open network dropdown"
     }
   },
   "notFound": {

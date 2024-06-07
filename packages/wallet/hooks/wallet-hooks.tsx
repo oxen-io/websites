@@ -3,7 +3,8 @@ import { CHAIN, ChainId, chainIdMap, chains } from '@session/contracts/chains';
 import { useEns } from '@session/contracts/hooks/ens';
 import { useMemo, useState } from 'react';
 import { createWalletClient, custom, type Address } from 'viem';
-import { useAccount } from 'wagmi';
+import { useAccount, useConfig } from 'wagmi';
+import { switchChain as switchChainWagmi } from 'wagmi/actions';
 import { useArbName } from './arb';
 
 /**
@@ -77,6 +78,7 @@ export function useWallet(): UseWalletType {
 
 export function useWalletChain() {
   const { chainId } = useAccount();
+  const config = useConfig();
 
   const chain = useMemo(() => {
     if (!chainId) return null;
@@ -87,7 +89,12 @@ export function useWalletChain() {
     return validChain;
   }, [chainId]);
 
-  return { chain };
+  const switchChain = async (chain: CHAIN) =>
+    switchChainWagmi(config, {
+      chainId: chains[chain].id,
+    });
+
+  return { chain, switchChain };
 }
 
 export function useAddToken() {
@@ -104,9 +111,14 @@ export function useAddToken() {
         throw new Error('Invalid chain');
       }
 
+      if (!('ethereum' in window) || !window.ethereum) {
+        throw new Error('No ethereum provider');
+      }
+
       const walletClient = createWalletClient({
         chain: chains[chain],
-        transport: custom(window.ethereum!),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- eth provider is not typed
+        transport: custom(window.ethereum as any),
       });
 
       const wasAdded = await walletClient.watchAsset({
@@ -139,4 +151,39 @@ export function useAddToken() {
     }
   };
   return { addToken, error, isPending, isSuccess };
+}
+
+export function useAddChain() {
+  const [isPending, setIsPending] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const addChain = async (chain: CHAIN) => {
+    setIsPending(true);
+    setIsSuccess(false);
+    try {
+      if (!('ethereum' in window) || !window.ethereum) {
+        throw new Error('No ethereum provider');
+      }
+
+      const walletClient = createWalletClient({
+        chain: chains[chain],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- eth provider is not typed
+        transport: custom(window.ethereum as any),
+      });
+
+      await walletClient.addChain({ chain: chains[chain] });
+
+      setIsSuccess(true);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Failed to add chain');
+      }
+    } finally {
+      setIsPending(false);
+    }
+  };
+  return { addChain, error, isPending, isSuccess };
 }
