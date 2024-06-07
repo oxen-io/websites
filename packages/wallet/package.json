@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "exports": {
     "./components/*": "./components/*.tsx",
+    "./hooks/*": "./hooks/*.tsx",
     "./lib/*": "./lib/*.ts",
     "./providers/*": "./providers/*.tsx"
   },

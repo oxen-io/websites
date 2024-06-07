@@ -1,6 +1,8 @@
+import { SENT_DECIMALS, SENT_SYMBOL, addresses } from '@session/contracts';
+import { CHAIN, ChainId, chainIdMap, chains } from '@session/contracts/chains';
 import { useEns } from '@session/contracts/hooks/ens';
-import { useMemo } from 'react';
-import type { Address } from 'viem';
+import { useMemo, useState } from 'react';
+import { createWalletClient, custom, type Address } from 'viem';
 import { useAccount } from 'wagmi';
 import { useArbName } from './arb';
 
@@ -71,4 +73,70 @@ export function useWallet(): UseWalletType {
   );
 
   return { address, ensName, ensAvatar, arbName, status, isConnected };
+}
+
+export function useWalletChain() {
+  const { chainId } = useAccount();
+
+  const chain = useMemo(() => {
+    if (!chainId) return null;
+
+    const validChain = chainIdMap[chainId as ChainId];
+    if (!validChain) return null;
+
+    return validChain;
+  }, [chainId]);
+
+  return { chain };
+}
+
+export function useAddToken() {
+  const [isPending, setIsPending] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const { chain } = useWalletChain();
+
+  const addToken = async () => {
+    setIsPending(true);
+    setIsSuccess(false);
+    try {
+      if (!chain || (chain !== CHAIN.MAINNET && chain !== CHAIN.TESTNET)) {
+        throw new Error('Invalid chain');
+      }
+
+      const walletClient = createWalletClient({
+        chain: chains[chain],
+        transport: custom(window.ethereum!),
+      });
+
+      const wasAdded = await walletClient.watchAsset({
+        type: 'ERC20',
+        options: {
+          // The address of the token.
+          address: addresses.SENT[chain],
+          // A ticker symbol or shorthand, up to 5 characters.
+          symbol: SENT_SYMBOL.replaceAll('$', ''),
+          // The number of decimals in the token.
+          decimals: SENT_DECIMALS,
+          // A string URL of the token logo.
+          image: '/images/icon.png',
+        },
+      });
+
+      if (!wasAdded) {
+        throw new Error('Failed to add token');
+      }
+
+      setIsSuccess(true);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Failed to add token');
+      }
+    } finally {
+      setIsPending(false);
+    }
+  };
+  return { addToken, error, isPending, isSuccess };
 }
