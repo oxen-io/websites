@@ -72,6 +72,10 @@
     "disconnectWallet": "Disconnect Wallet",
     "description": "This wallet will"
   },
+  "chainBanner": {
+    "unsupportedChain": "You are currently on an unsupported chain. <change>Click here to switch chain</change>",
+    "ariaUnsupportedChain": "Click here to switch chain"
+  },
   "modules": {
     "stakedNodes": {
       "title": "My Stakes"

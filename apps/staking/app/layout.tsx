@@ -10,6 +10,7 @@ import { Web3ModalProvider } from '@session/wallet/providers/web3-modal-provider
 import { NextIntlClientProvider } from 'next-intl';
 import { headers } from 'next/headers';
 import { cookieToInitialState } from 'wagmi';
+import ChainBanner from '../components/ChainBanner';
 import Header from '../components/Header';
 import SentStakingClientProvider from '../providers/sent-staking-provider';
 
@@ -36,6 +37,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         >
           <SentStakingClientProvider>
             <body className="bg-session-black text-session-text font-atyp-text overflow-x-hidden">
+              <ChainBanner />
               <Header />
               <main>{children}</main>
               <Toaster />
