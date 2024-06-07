@@ -118,7 +118,7 @@ export default function FaucetModule() {
             {dictionary.rich('form.lowEthBalance', {
               link: (chunks) => (
                 <a
-                  href="https://www.alchemy.com/faucets/arbitrum-sepolia"
+                  href="https://faucet.quicknode.com/arbitrum/sepolia"
                   target="_blank"
                   rel="noreferrer"
                   className="text-blue-400 underline"

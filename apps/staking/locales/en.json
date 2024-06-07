@@ -59,7 +59,7 @@
       "description": "Enter your wallet address to receive test {tokenSymbol} from the faucet.",
       "button": "Get test {tokenSymbol}",
       "testnet": "Swap to Arbitrum Sepolia testnet",
-      "lowEthBalance": "It looks like you dont have enough test eth on Arbitrum Sepolia, go to <link>Arbitrum Sepolia Faucet</link> to get some. You have {ethAmount} ETH",
+      "lowEthBalance": "It looks like you dont have enough test eth on Arbitrum Sepolia, go to <link>QuickNode Arbitrum Sepolia Faucet</link> to get some. You have {ethAmount} ETH",
       "transactionHash": "Transaction Hash: {hash}",
       "transactionHashDescription": "Transaction hash of the faucet transaction.",
       "copyTransactionHash": "Copy Transaction Hash",
