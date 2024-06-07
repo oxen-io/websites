@@ -32,7 +32,7 @@ export default function FaucetModule() {
   const [transactionHash, setTransactionHash] = useState<Address | null>(null);
   const { address, status } = useAccount();
   const { disconnect } = useDisconnect();
-  const { data: ethBalance } = useBalance({ address });
+  const { data: ethBalance } = useBalance({ address, query: { enabled: !!address } });
 
   const FormSchema = z.object({
     walletAddress: z.string().refine((value) => isAddress(value), {
@@ -88,11 +88,11 @@ export default function FaucetModule() {
   };
 
   const ethAmount = useMemo(() => {
-    if (!ethBalance) {
+    if (!address || ethBalance === undefined) {
       return null;
     }
     return parseFloat(formatEther(ethBalance.value));
-  }, [ethBalance]);
+  }, [ethBalance, address]);
 
   useEffect(() => {
     if (status === 'connected') {
@@ -113,21 +113,22 @@ export default function FaucetModule() {
   return (
     <Module className="max-w-xl items-center">
       <ModuleContent className="flex h-full flex-col items-center gap-2 align-middle font-bold">
-        {ethAmount && ethAmount <= 0.001 ? (
-          <span className="text-destructive text-sm">
+        {address && ethAmount !== null && ethAmount <= 0.001 ? (
+          <p className="text-destructive text-lg">
             {dictionary.rich('form.lowEthBalance', {
               link: (chunks) => (
                 <a
                   href="https://www.alchemy.com/faucets/arbitrum-sepolia"
                   target="_blank"
                   rel="noreferrer"
+                  className="text-blue-400 underline"
                 >
                   {chunks}
                 </a>
               ),
               ethAmount,
             })}
-          </span>
+          </p>
         ) : null}
         {address ? (
           <p className="text-md font-normal">
