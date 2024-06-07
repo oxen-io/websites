@@ -7,7 +7,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@session/ui/ui/dropdown-menu';
 import { useMemo } from 'react';
@@ -82,7 +81,6 @@ export function NetworkDropdown({
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Choose a Network</DropdownMenuLabel>
-        <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={chain ?? undefined} onValueChange={handleValueChange}>
           <DropdownMenuRadioItem value={CHAIN.MAINNET} aria-label={ariaLabels.mainnet}>
             {labels.mainnet}
