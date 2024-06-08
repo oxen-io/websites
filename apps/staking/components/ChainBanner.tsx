@@ -13,7 +13,7 @@ export default function ChainBanner() {
     switchChain(preferredChain);
   };
 
-  const invalidChain = chain !== CHAIN.MAINNET && chain !== CHAIN.TESTNET;
+  const invalidChain = chain && chain !== CHAIN.MAINNET && chain !== CHAIN.TESTNET;
 
   return invalidChain ? (
     <div className="bg-session-green text-session-black flex flex-wrap items-center justify-around p-2 text-sm">
