@@ -54,67 +54,75 @@ export async function getSENTBalance({ address, chain }: { address?: Address; ch
 }
 
 export async function sentTestSent({ address, chain }: { address?: Address; chain: CHAIN }) {
-  const privateKey = process.env.FAUCET_WALLET_PRIVATE_KEY;
-  if (!privateKey) {
-    throw new Error('Faucet wallet private key is required');
+  try {
+    const privateKey = process.env.FAUCET_WALLET_PRIVATE_KEY;
+    if (!privateKey) {
+      throw new Error('Faucet wallet private key is required');
+    }
+
+    if (!isPrivateKey(privateKey)) {
+      throw new Error('Invalid faucet wallet private key');
+    }
+
+    if (!isAddress(address)) {
+      throw new Error('Address is required');
+    }
+
+    if (chain !== CHAIN.TESTNET) {
+      throw new Error('Faucet only works on testnet');
+    }
+
+    const serverWallet = createServerWallet(privateKey, chain);
+
+    const walletAddress = (await serverWallet.getAddresses())[0];
+
+    const targetEthBalancePromise = getEthBalance({ address, chain });
+    const faucetEthBalancePromise = getEthBalance({ address: walletAddress, chain });
+    const faucetSENTBalancePromise = getSENTBalance({ address: walletAddress, chain });
+
+    const [targetEthBalance, faucetEthBalance, faucetSENTBalance] = await Promise.all([
+      targetEthBalancePromise,
+      faucetEthBalancePromise,
+      faucetSENTBalancePromise,
+    ]);
+
+    if (parseFloat(targetEthBalance) < minEthBalance) {
+      throw new Error(
+        `Insufficient ETH balance (${targetEthBalance} ETH): faucet requires at least ${minEthBalance} ETH`
+      );
+    }
+
+    if (parseFloat(faucetSENTBalance) < faucetDrip) {
+      throw new Error(
+        `Insufficient SENT balance: faucet requires at least ${faucetDrip}. Please contact support`
+      );
+    }
+
+    if (parseFloat(faucetEthBalance) < faucetGasWarning) {
+      console.warn(
+        `Faucet wallet ETH balance (${faucetEthBalance} ETH) if below the warning threshold (${faucetGasWarning})`
+      );
+    }
+
+    if (parseFloat(faucetSENTBalance) < faucetSENTWarning) {
+      console.warn(
+        `Faucet wallet SENT balance (${faucetSENTBalance} $SENT) if below the warning threshold (${faucetSENTWarning})`
+      );
+    }
+
+    const hash = await serverWallet.writeContract({
+      address: addresses.SENT[chain],
+      abi: SENTAbi,
+      functionName: 'transfer',
+      args: [address, parseSENT(faucetDrip.toString())],
+    });
+
+    return { hash };
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message };
+    } else {
+      return { error: 'An unknown error occurred' };
+    }
   }
-
-  if (!isPrivateKey(privateKey)) {
-    throw new Error('Invalid faucet wallet private key');
-  }
-
-  if (!isAddress(address)) {
-    throw new Error('Address is required');
-  }
-
-  if (chain !== CHAIN.TESTNET) {
-    throw new Error('Faucet only works on testnet');
-  }
-
-  const serverWallet = createServerWallet(privateKey, chain);
-
-  const walletAddress = (await serverWallet.getAddresses())[0];
-
-  const targetEthBalancePromise = getEthBalance({ address, chain });
-  const faucetEthBalancePromise = getEthBalance({ address: walletAddress, chain });
-  const faucetSENTBalancePromise = getSENTBalance({ address: walletAddress, chain });
-
-  const [targetEthBalance, faucetEthBalance, faucetSENTBalance] = await Promise.all([
-    targetEthBalancePromise,
-    faucetEthBalancePromise,
-    faucetSENTBalancePromise,
-  ]);
-
-  if (parseFloat(targetEthBalance) < minEthBalance) {
-    throw new Error(
-      `Insufficient ETH balance (${targetEthBalance} ETH): faucet requires at least ${minEthBalance} ETH`
-    );
-  }
-
-  if (parseFloat(faucetSENTBalance) < faucetDrip) {
-    throw new Error(
-      `Insufficient SENT balance: faucet requires at least ${faucetDrip}. Please contact support`
-    );
-  }
-
-  if (parseFloat(faucetEthBalance) < faucetGasWarning) {
-    console.warn(
-      `Faucet wallet ETH balance (${faucetEthBalance} ETH) if below the warning threshold (${faucetGasWarning})`
-    );
-  }
-
-  if (parseFloat(faucetSENTBalance) < faucetSENTWarning) {
-    console.warn(
-      `Faucet wallet SENT balance (${faucetSENTBalance} $SENT) if below the warning threshold (${faucetSENTWarning})`
-    );
-  }
-
-  const hash = await serverWallet.writeContract({
-    address: addresses.SENT[chain],
-    abi: SENTAbi,
-    functionName: 'transfer',
-    args: [address, parseSENT(faucetDrip.toString())],
-  });
-
-  return hash;
 }

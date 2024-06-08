@@ -65,28 +65,33 @@ export default function FaucetModule() {
     if (!walletAddress || !isAddress(walletAddress)) {
       return;
     }
-    const promise = sentTestSent({ address: walletAddress, chain: CHAIN.TESTNET });
+
+    const promise: Promise<Address> = new Promise((resolve, reject) =>
+      sentTestSent({ address: walletAddress, chain: CHAIN.TESTNET }).then(({ hash, error }) => {
+        if (hash) {
+          setTransactionHash(hash);
+          return resolve(hash);
+        }
+
+        if (error) {
+          form.setError('root', { message: error });
+          return reject(error);
+        }
+      })
+    );
+
     toast.promise(promise, {
       loading: dictionary('form.loading', { tokenSymbol: SENT_SYMBOL }),
       success: successMessage,
-      error: (error: Error) => (
+      error: (error: string) => (
         <div className="flex flex-col">
           <span>{dictionary('form.error', { tokenSymbol: SENT_SYMBOL })}</span>
-          <span>{error?.message}</span>
+          <span>{error}</span>
         </div>
       ),
     });
 
-    try {
-      const hash = await promise;
-      setTransactionHash(hash);
-    } catch (error) {
-      if (error instanceof Error) {
-        form.setError('root', { message: error.message });
-      } else {
-        form.setError('root', { message: dictionary('form.error', { tokenSymbol: SENT_SYMBOL }) });
-      }
-    }
+    await promise;
   }
 
   const disconnectWallet = () => {
