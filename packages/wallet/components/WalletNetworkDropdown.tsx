@@ -79,7 +79,7 @@ export function NetworkDropdown({
           {label}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="w-max">
         <DropdownMenuLabel>Choose a Network</DropdownMenuLabel>
         <DropdownMenuRadioGroup value={chain ?? undefined} onValueChange={handleValueChange}>
           <DropdownMenuRadioItem value={CHAIN.MAINNET} aria-label={ariaLabels.mainnet}>
