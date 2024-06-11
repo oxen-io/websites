@@ -8,8 +8,8 @@
     "./components/*": "./components/*.tsx",
     "./lib/*": "./lib/*.ts",
     "./icons/*": "./icons/*.tsx",
-    "./taiwind.config.js": "./tailwind.config.js",
-    "./postcss.config.js": "./postcss.config.js"
+    "./taiwind": "./tailwind.config.ts",
+    "./postcss": "./postcss.config.js"
   },
   "scripts": {
     "lint": "eslint .",

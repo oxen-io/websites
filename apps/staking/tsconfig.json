@@ -15,7 +15,7 @@
     "global.d.ts",
     "next-env.d.ts",
     "next.config.mjs",
-    "tailwind.config.js",
+    "tailwind.config.ts",
     "postcss.config.js",
     "**/*.ts",
     "**/*.tsx",

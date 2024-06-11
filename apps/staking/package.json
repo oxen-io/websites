@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "NEXT_PUBLIC_ENV_FLAG=prd && next build",
+    "start": "NEXT_PUBLIC_ENV_FLAG=prd && next start",
     "lint": "eslint ."
   },
   "dependencies": {
