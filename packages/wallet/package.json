@@ -15,7 +15,6 @@
     "lint-staged": "lint-staged"
   },
   "devDependencies": {
-    "@session/storybook": "workspace:*",
     "@session/eslint-config": "workspace:*",
     "@session/typescript-config": "workspace:*",
     "@types/react": "^18.3.1",
