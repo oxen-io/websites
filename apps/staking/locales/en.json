@@ -9,7 +9,16 @@
     "myStakes": "My Stakes",
     "docs": "Docs",
     "support": "Support",
-    "faucet": "Faucet"
+    "faucet": "Faucet",
+    "hamburgerDropdown": {
+      "ariaLabel": "Open navigation menu",
+      "language": "Change language",
+      "ariaLanguage": "Open language selection",
+      "support": "Support",
+      "ariaSupport": "Go to support page",
+      "faucet": "Faucet",
+      "ariaFaucet": "Go to faucet page"
+    }
   },
   "wallet": {
     "modalButton": {
@@ -83,6 +92,10 @@
   "chainBanner": {
     "unsupportedChain": "You are currently on an unsupported chain. <change>Click here to switch chain</change>",
     "ariaUnsupportedChain": "Click here to switch chain"
+  },
+  "chainBannerMainnetNotLive": {
+    "mainnetNotLive": "Mainnet is not live yet. <change>Click here to switch to Testnet</change>",
+    "ariaMainnetNotLive": "Click here to switch chain"
   },
   "modules": {
     "stakedNodes": {

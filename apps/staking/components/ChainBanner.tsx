@@ -2,10 +2,13 @@
 import { preferredChain } from '@/lib/constants';
 import { SpecialDataTestId } from '@/testing/data-test-ids';
 import { CHAIN } from '@session/contracts/chains';
-import { useWalletChain } from '@session/wallet/hooks/wallet-hooks';
+import { Banner } from '@session/ui/components/Banner';
+import { useWallet, useWalletChain } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
+import { useMemo } from 'react';
 
 export default function ChainBanner() {
+  const { isConnected } = useWallet();
   const { chain, switchChain } = useWalletChain();
   const dictionary = useTranslations('chainBanner');
 
@@ -13,10 +16,13 @@ export default function ChainBanner() {
     switchChain(preferredChain);
   };
 
-  const invalidChain = chain && chain !== CHAIN.MAINNET && chain !== CHAIN.TESTNET;
+  const isUnsupportedChain = useMemo(
+    () => isConnected && chain !== CHAIN.MAINNET && chain !== CHAIN.TESTNET,
+    [chain, isConnected]
+  );
 
-  return invalidChain ? (
-    <div className="bg-session-green text-session-black flex flex-wrap items-center justify-around p-2 text-sm">
+  return isUnsupportedChain ? (
+    <Banner>
       <span>
         {dictionary.rich('unsupportedChain', {
           change: (chunks) => (
@@ -32,6 +38,40 @@ export default function ChainBanner() {
           ),
         })}
       </span>
-    </div>
+    </Banner>
+  ) : (
+    <MainnetNotLiveBanner />
+  );
+}
+
+function MainnetNotLiveBanner() {
+  const { isConnected } = useWallet();
+  const { chain, switchChain } = useWalletChain();
+  const dictionary = useTranslations('chainBannerMainnetNotLive');
+
+  const handleClick = () => {
+    switchChain(CHAIN.TESTNET);
+  };
+
+  const isMainnet = useMemo(() => isConnected && chain === CHAIN.MAINNET, [chain, isConnected]);
+
+  return isMainnet ? (
+    <Banner>
+      <span>
+        {dictionary.rich('mainnetNotLive', {
+          change: (chunks) => (
+            <a
+              role="button"
+              aria-label={dictionary('ariaMainnetNotLive')}
+              data-testid={SpecialDataTestId.Mainnet_Not_Live_Link}
+              onClick={handleClick}
+              className="underline"
+            >
+              {chunks}
+            </a>
+          ),
+        })}
+      </span>
+    </Banner>
   ) : null;
 }

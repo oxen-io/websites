@@ -7,10 +7,12 @@ export enum ButtonDataTestId {
   Node_Card_Stake = 'button:node-card-stake',
   Faucet_Submit = 'button:faucet-submit',
   Faucet_Disconnect = 'button:faucet-disconnect',
+  Dropdown_Hamburger_Menu = 'button:dropdown-hamburger-menu',
 }
 
 export enum SpecialDataTestId {
   Unsupported_Chain_Link = 'special:unsupported-chain-link',
+  Mainnet_Not_Live_Link = 'special:mainnet-not-online-live',
 }
 
 export enum ModuleDataTestId {
