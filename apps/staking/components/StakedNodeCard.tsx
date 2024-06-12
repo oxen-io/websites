@@ -1,11 +1,14 @@
 'use client';
 import { formatTimeDistanceToNowClient } from '@/lib/locale-client';
+import { NodeCardDataTestId, StakedNodeDataTestId } from '@/testing/data-test-ids';
+import { SENT_SYMBOL } from '@session/contracts';
 import { NODE_STATE } from '@session/sent-staking-js';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import { ArrowDownIcon } from '@session/ui/icons/ArrowDownIcon';
 import { HumanIcon } from '@session/ui/icons/HumanIcon';
 import { cn } from '@session/ui/lib/utils';
 import { type VariantProps } from 'class-variance-authority';
+import { useTranslations } from 'next-intl';
 import { forwardRef, useId, useMemo, type HTMLAttributes } from 'react';
 import { NodeCard, NodeCardText, NodeCardTitle, NodePubKey } from './NodeCard';
 
@@ -29,7 +32,7 @@ export interface GenericStakedNode {
 
 type RunningStakedNode = GenericStakedNode & {
   state: NODE_STATE.RUNNING;
-  deregistrationDate?: Date;
+  unlockDate?: Date;
 };
 
 type AwaitingContributorsStakedNode = GenericStakedNode & {
@@ -41,6 +44,7 @@ type CancelledStakedNode = GenericStakedNode & { state: NODE_STATE.CANCELLED };
 type DecommissionedStakedNode = GenericStakedNode & {
   state: NODE_STATE.DECOMMISSIONED;
   deregistrationDate: Date;
+  unlockDate?: Date;
 };
 
 type DeregisteredStakedNode = GenericStakedNode & {
@@ -48,8 +52,8 @@ type DeregisteredStakedNode = GenericStakedNode & {
   requiresLiquidation?: boolean;
 };
 
-type VoluntaryDeregistrationStakedNode = GenericStakedNode & {
-  state: NODE_STATE.VOLUNTARY_DEREGISTRATION;
+type UnlockedStakedNode = GenericStakedNode & {
+  state: NODE_STATE.UNLOCKED;
 };
 
 export type StakedNode =
@@ -58,7 +62,7 @@ export type StakedNode =
   | CancelledStakedNode
   | DecommissionedStakedNode
   | DeregisteredStakedNode
-  | VoluntaryDeregistrationStakedNode;
+  | UnlockedStakedNode;
 
 /** Type assertions */
 const isRunning = (node: StakedNode): node is RunningStakedNode =>
@@ -76,8 +80,8 @@ const isDecommissioned = (node: StakedNode): node is DecommissionedStakedNode =>
 const isDeregistered = (node: StakedNode): node is DeregisteredStakedNode =>
   node.state === NODE_STATE.DEREGISTERED;
 
-const isVoluntaryDeregistration = (node: StakedNode): node is VoluntaryDeregistrationStakedNode =>
-  node.state === NODE_STATE.VOLUNTARY_DEREGISTRATION;
+const isUnlocking = (node: StakedNode): node is UnlockedStakedNode =>
+  node.state === NODE_STATE.UNLOCKED;
 
 /** State assertions */
 
@@ -88,8 +92,13 @@ const isVoluntaryDeregistration = (node: StakedNode): node is VoluntaryDeregistr
  */
 const isBeingDeregistered = (
   node: StakedNode
-): node is (RunningStakedNode | DecommissionedStakedNode) & { deregistrationDate: Date } =>
+): node is DecommissionedStakedNode & { deregistrationDate: Date } =>
   'deregistrationDate' in node && node.deregistrationDate !== undefined;
+
+const isBeingUnlocked = (
+  node: StakedNode
+): node is (RunningStakedNode | DecommissionedStakedNode) & { unlockDate: Date } =>
+  'unlockDate' in node && node.unlockDate !== undefined;
 
 /**
  * Checks if a given node is awaiting liquidation.
@@ -129,125 +138,167 @@ function getNodeStatus(state: NODE_STATE): VariantProps<typeof statusVariants>['
     case NODE_STATE.CANCELLED:
     case NODE_STATE.DEREGISTERED:
       return 'red';
-    case NODE_STATE.VOLUNTARY_DEREGISTRATION:
+    case NODE_STATE.UNLOCKED:
     default:
       return 'grey';
   }
 }
 
-const StakedNodeContributorList = forwardRef<
-  HTMLDivElement,
-  HTMLAttributes<HTMLDivElement> & { node: Pick<StakedNode, 'contributors' | 'state'> }
->(({ className, node: { contributors, state }, ...props }, ref) => {
-  return (
-    <div
-      className={cn('-mb-0.5 flex flex-row gap-1 self-baseline align-baseline', className)}
-      ref={ref}
-      {...props}
-    >
-      {Array.from({
-        length: state === NODE_STATE.AWAITING_CONTRIBUTORS ? 10 : contributors.length,
-      }).map((_, i) => (
+const NodeLiquidationNotification = () => (
+  <span className="text-destructive">• Awaiting liquidation</span>
+);
+
+const NodeDeregistrationNotification = ({ deregistrationDate }: { deregistrationDate: Date }) => (
+  <span className="text-destructive">
+    • {'Deregistration'} {formatTimeDistanceToNowClient(deregistrationDate, { addSuffix: true })}
+  </span>
+);
+
+const NodeUnlockNotification = ({ unlockDate }: { unlockDate: Date }) => (
+  <span className="text-orange-500">
+    • Unlocking {formatTimeDistanceToNowClient(unlockDate, { addSuffix: true })}
+  </span>
+);
+
+type StakedNodeContributorListProps = HTMLAttributes<HTMLDivElement> & {
+  node: Pick<StakedNode, 'contributors' | 'state'>;
+  expanded?: boolean;
+};
+
+const StakedNodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorListProps>(
+  ({ className, node: { contributors, state }, expanded, ...props }, ref) => {
+    const id = useId();
+    return (
+      <div
+        className={cn('mb-0.5 flex flex-row items-center gap-1 align-middle', className)}
+        ref={ref}
+        {...props}
+        id={id}
+        key={id}
+      >
         <HumanIcon
-          key={i}
-          full={i < contributors.length}
-          className={cn(i === 0 ? 'block' : 'hidden xl:block')}
+          id={id + 'first'}
+          key={id + 'first'}
+          className="h-4 w-4"
+          full={contributors.length > 0}
         />
-      ))}
-      <span className={'block text-xl xl:hidden'}>
-        {contributors.length}
-        {state === NODE_STATE.AWAITING_CONTRIBUTORS ? '/10' : null}
-      </span>
-    </div>
-  );
-});
+        {Array.from({
+          length: state === NODE_STATE.AWAITING_CONTRIBUTORS ? 9 : contributors.length - 1,
+        }).map((_, i) => (
+          <HumanIcon
+            id={id + i}
+            key={id + i}
+            full={i + 1 < contributors.length}
+            className={cn('h-4 w-4', expanded ? 'block' : 'hidden')}
+          />
+        ))}
+        <span className={cn('block text-lg', expanded && 'hidden')}>
+          {contributors.length}
+          {state === NODE_STATE.AWAITING_CONTRIBUTORS ? '/10' : null}
+        </span>
+      </div>
+    );
+  }
+);
 
 const StakedNodeCard = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement> & { node: StakedNode }
 >(({ className, node, ...props }, ref) => {
+  const dictionary = useTranslations('nodeCard.staked');
   const id = useId();
   const { state, pubKey, balance, operatorFee, lastRewardHeight, lastUptime } = node;
 
   const nodeNotification = useMemo(() => {
-    if (isBeingDeregistered(node)) {
-      return (
-        <span className={cn(state === NODE_STATE.RUNNING ? 'text-destructive' : 'text-orange-500')}>
-          • {state === NODE_STATE.RUNNING ? 'Unlocking' : ' Deregistration'}{' '}
-          {formatTimeDistanceToNowClient(node.deregistrationDate, { addSuffix: true })}
-        </span>
-      );
+    if (isAwaitingLiquidation(node)) {
+      return <NodeLiquidationNotification />;
     }
 
-    if (isAwaitingLiquidation(node)) {
-      return <span className="text-red-500">• Awaiting liquidation</span>;
+    if (isBeingDeregistered(node)) {
+      return <NodeDeregistrationNotification deregistrationDate={node.deregistrationDate} />;
+    }
+
+    if (isBeingUnlocked(node)) {
+      return <NodeUnlockNotification unlockDate={node.unlockDate} />;
     }
 
     return null;
   }, [node]);
 
   return (
-    <NodeCard ref={ref} {...props}>
-      <div className={cn('grid grid-cols-10', className)}>
-        <label
-          className="col-span-8 flex w-full cursor-pointer items-baseline gap-4 align-middle"
-          htmlFor={id}
-          aria-label="Toggle details expansion"
-          title="Toggle details expansion"
-        >
-          <div className="p-0.5">
-            <StatusIndicator status={getNodeStatus(state)} />
-          </div>
-          <NodeCardTitle>{state}</NodeCardTitle>
-          {nodeNotification ?? (
-            <StakedNodeContributorList
-              node={node}
-              className={cn(
-                state !== NODE_STATE.AWAITING_CONTRIBUTORS &&
-                  state !== NODE_STATE.RUNNING &&
-                  'hidden'
-              )}
-            />
-          )}
-        </label>
-        <input type="checkbox" className="peer hidden appearance-none" id={id} />
-        <label
-          className="col-span-2 flex w-full cursor-pointer items-center justify-end align-middle peer-checked:hidden"
-          htmlFor={id}
-          aria-label="Expand"
-          title="Expand"
-        >
-          <span className="hidden xl:block">Expand</span>
-          <ArrowDownIcon className="ml-1 h-5 w-5" />
-        </label>
-        <label
-          className="col-span-2 hidden w-full cursor-pointer items-center justify-end align-middle peer-checked:flex"
-          htmlFor={id}
-          aria-label="Collapse"
-          title="Collapse"
-        >
-          <span className="hidden xl:block">Collapse</span>
-          <ArrowDownIcon className="ml-1 h-5 w-5 rotate-180 transform" />
-        </label>
-        <div className="col-span-10 mt-3 hidden max-h-0 flex-col align-middle peer-checked:flex peer-checked:max-h-max">
-          <div className="mb-2 flex flex-col text-xs opacity-40">
-            <span className="font-bold">Last Reward Height: {lastRewardHeight}</span>
-            <span className="font-bold">
-              Last Uptime: {formatTimeDistanceToNowClient(lastUptime)}
-            </span>
-          </div>
+    <NodeCard
+      ref={ref}
+      {...props}
+      className={cn('flex flex-row flex-wrap items-center gap-3 align-middle', className)}
+      data-testid={NodeCardDataTestId.Staked_Node}
+    >
+      <input type="checkbox" className="peer hidden appearance-none" id={id} key={id} />
+      <StatusIndicator
+        status={getNodeStatus(state)}
+        className="mb-1"
+        data-testid={StakedNodeDataTestId.Indicator}
+      />
+      <NodeCardTitle data-testid={StakedNodeDataTestId.Title}>{state}</NodeCardTitle>
+      {nodeNotification ? (
+        <span data-testid={StakedNodeDataTestId.Notification}>{nodeNotification}</span>
+      ) : state == NODE_STATE.AWAITING_CONTRIBUTORS || state == NODE_STATE.RUNNING ? (
+        <>
+          <StakedNodeContributorList
+            node={node}
+            data-testid={StakedNodeDataTestId.Contributor_List}
+            className="peer-checked:hidden"
+          />
+          <StakedNodeContributorList
+            node={node}
+            data-testid={StakedNodeDataTestId.Contributor_List}
+            expanded
+            className="hidden peer-checked:flex"
+          />
+        </>
+      ) : null}
+      <label
+        className="flex flex-grow cursor-pointer items-center justify-end align-middle peer-checked:hidden"
+        htmlFor={id}
+        aria-label={dictionary('ariaExpand')}
+        role="button"
+        data-testid={StakedNodeDataTestId.Expand_Button}
+      >
+        <span className="hidden xl:block">{dictionary('expand')}</span>
+        <ArrowDownIcon className="ml-1 h-4 w-4" />
+      </label>
+      <label
+        className="hidden flex-grow cursor-pointer items-center justify-end align-middle peer-checked:flex"
+        htmlFor={id}
+        aria-label={dictionary('ariaCollapse')}
+        role="button"
+        data-testid={StakedNodeDataTestId.Collapse_Button}
+      >
+        <span className="hidden xl:block">{dictionary('collapse')}</span>
+        <ArrowDownIcon className="ml-1 h-4 w-4 rotate-180 transform" />
+      </label>
+      <div className="mt-3 hidden max-h-0 w-full flex-col align-middle peer-checked:flex peer-checked:max-h-max">
+        <div className="mb-2 flex flex-col text-xs opacity-60">
+          {isBeingDeregistered(node) && isBeingUnlocked(node) ? (
+            <NodeUnlockNotification unlockDate={node.unlockDate} />
+          ) : null}
+          <span className="font-medium">Last Reward Height: {lastRewardHeight}</span>
+          <span className="font-medium">
+            {dictionary('lastUptime')} {formatTimeDistanceToNowClient(lastUptime)}
+          </span>
         </div>
-        <NodeCardText className="col-span-10 flex flex-row gap-1 peer-checked:[&>div>button]:block peer-checked:[&>div>div]:block peer-checked:[&>div>span]:hidden">
-          <span className="font-bold">Public Key:</span> <NodePubKey pubKey={pubKey} />
+      </div>
+      <NodeCardText className="flex w-full flex-row gap-1 peer-checked:[&>div>button]:block peer-checked:[&>div>div]:block peer-checked:[&>div>span]:hidden">
+        <span className="font-semibold">{dictionary('pubKey')}</span> <NodePubKey pubKey={pubKey} />
+      </NodeCardText>
+      <div className="hidden max-h-0 w-full flex-col align-middle peer-checked:flex peer-checked:max-h-max">
+        <NodeCardText>
+          <span className="font-semibold">{dictionary('balance')}</span> {balance.toFixed(2)}{' '}
+          {SENT_SYMBOL}
         </NodeCardText>
-        <div className="col-span-10 hidden max-h-0 flex-col align-middle peer-checked:flex peer-checked:max-h-max">
-          <NodeCardText>
-            <span className="font-bold">Balance:</span> {balance.toFixed(2)}
-          </NodeCardText>
-          <NodeCardText>
-            <span className="font-bold">Operator Fee:</span> {(operatorFee * 100).toFixed(2)}%
-          </NodeCardText>
-        </div>
+        <NodeCardText>
+          <span className="font-semibold">{dictionary('operatorFee')}</span>{' '}
+          {(operatorFee * 100).toFixed(2)}%
+        </NodeCardText>
       </div>
     </NodeCard>
   );

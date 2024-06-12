@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import { forwardRef, useEffect, useMemo, useState, type HTMLAttributes } from 'react';
 
 export const outerNodeCardVariants = cva(
-  'rounded-[20px] hover:cursor-pointer transition-all ease-in-out bg-gradient-to-br from-[#7FB1AE] to-[#2A4337] bg-blend-lighten shadow-md p-px',
+  'rounded-xl hover:cursor-pointer transition-all ease-in-out bg-gradient-to-br from-[#7FB1AE] to-[#2A4337] bg-blend-lighten shadow-md p-px',
   {
     variants: {
       variant: {
@@ -21,7 +21,7 @@ export const outerNodeCardVariants = cva(
 );
 
 const innerNodeCardVariants = cva(
-  'rounded-[20px] w-full h-full flex align-middle flex-col py-8 px-9 from-[#090F0D] to-[#081310] bg-gradient-to-br',
+  'rounded-xl w-full h-full flex align-middle flex-col py-5 px-6 from-[#090F0D] to-[#081310] bg-gradient-to-br',
   {
     variants: {
       variant: {
@@ -87,7 +87,7 @@ const NodeCardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingE
     <h4
       ref={ref}
       className={cn(
-        'font-atyp-display bg-gradient-to-br from-[#FFFFFF] to-[#B3CBC5] bg-clip-text text-xl font-normal leading-none text-transparent md:text-3xl',
+        'bg-gradient-to-br from-[#FFFFFF] to-[#B3CBC5] bg-clip-text text-lg font-medium leading-none text-transparent md:text-2xl',
         className
       )}
       {...props}
@@ -101,7 +101,7 @@ const NodeCardText = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>
     <span
       ref={ref}
       className={cn(
-        'font-atyp-display bg-gradient-to-br from-[#FFFFFF] to-[#79A499] bg-clip-text text-base font-extralight text-transparent md:text-lg',
+        'bg-gradient-to-br from-[#FFFFFF] to-[#79A499] bg-clip-text text-sm font-light text-transparent md:text-base',
         className
       )}
       {...props}

@@ -248,7 +248,7 @@ const generateVoluntaryDeregistrationNode = ({
 }): ServiceNode => {
   return {
     ...generateBasicNodeData({ operatorAddress }),
-    state: NODE_STATE.VOLUNTARY_DEREGISTRATION,
+    state: NODE_STATE.UNLOCKED,
     active: false,
     funded: false,
     can_restake: canRestake,

@@ -31,7 +31,7 @@ const OpenNodeCard = forwardRef<
       className="flex flex-row items-center justify-between gap-10 align-middle"
     >
       <div className={className}>
-        <div className="flex w-full cursor-pointer items-baseline gap-4 align-middle">
+        <div className="flex w-full cursor-pointer items-baseline gap-3 align-middle">
           <div className="p-0.5">
             <StatusIndicator status="green" />
           </div>
@@ -62,7 +62,7 @@ const OpenNodeCard = forwardRef<
       </div>
       <div>
         <Button variant="outline" size="lg" data-testid={ButtonDataTestId.Node_Card_Stake}>
-          {dictionary('stakeButton.stake')}
+          {dictionary('button.text')}
         </Button>
       </div>
     </NodeCard>

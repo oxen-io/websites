@@ -4,7 +4,7 @@ import { cn } from '../lib/utils';
 import { Loading } from './loading';
 
 export const outerModuleVariants = cva(
-  'rounded-[40px] transition-all ease-in-out bg-gradient-to-br from-[#7FB1AE] to-[#2A4337] bg-blend-lighten shadow-md p-px',
+  'rounded-3xl transition-all ease-in-out bg-gradient-to-br from-[#7FB1AE] to-[#2A4337] bg-blend-lighten shadow-md p-px',
   {
     variants: {
       variant: {
@@ -24,17 +24,17 @@ export const outerModuleVariants = cva(
 );
 
 const innerModuleVariants = cva(
-  'rounded-[40px] w-full h-full flex align-middle flex-col [&>span]:font-normal [&>*>span]:font-normal from-[#0a0a0a] to-[#081B14] bg-gradient-to-br',
+  'rounded-3xl w-full h-full flex align-middle flex-col  from-[#0a0a0a] to-[#081B14] bg-gradient-to-br [&>span]:font-medium [&>*>span]:font-medium',
   {
     variants: {
       variant: {
         default:
-          '[&>h3]:text-lg [&>*>h3]:text-lg [&>span]:text-3xl [&>*>span]:text-3xl [&>h3]:font-light [&>*>h3]:font-light bg-blend-lighten shadow-md gap-1',
-        hero: '[&>h3]:text-3xl [&>h3]:font-regular [&>span]:text-8xl [&>*>h3]:text-2xl [&>*>h3]:font-regular [&>*>span]:text-7xl gap-4 hover:brightness-125',
+          '[&>h3]:text-lg [&>*>h3]:text-lg [&>span]:text-3xl [&>*>span]:text-3xl [&>h3]:font-light [&>*>h3]:font-light bg-blend-lighten shadow-md gap-1 ',
+        hero: '[&>h3]:text-3xl [&>h3]:font-regular [&>span]:text-8xl [&>*>h3]:text-2xl [&>*>h3]:font-regular [&>*>span]:text-8xl gap-4 hover:brightness-125',
       },
       size: {
-        default: 'p-8',
-        lg: 'p-12',
+        default: 'p-6',
+        lg: 'p-10',
       },
     },
     defaultVariants: {
@@ -116,7 +116,7 @@ const ModuleTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingEle
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn('font-atyp-display text-text-gradient leading-none tracking-tight', className)}
+      className={cn('text-text-gradient leading-none tracking-tight', className)}
       {...props}
     />
   )
@@ -125,11 +125,7 @@ ModuleTitle.displayName = 'ModuleTitle';
 
 const ModuleText = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
   ({ className, ...props }, ref) => (
-    <span
-      ref={ref}
-      className={cn('font-atyp-display text-text-gradient overflow-x-hidden', className)}
-      {...props}
-    />
+    <span ref={ref} className={cn('text-text-gradient overflow-hidden', className)} {...props} />
   )
 );
 ModuleText.displayName = 'ModuleText';

@@ -5,14 +5,14 @@ import { PresentIcon } from '@session/ui/icons/PresentIcon';
 export default function ClaimTokensModule() {
   return (
     <Module
-      className="items-center"
+      className="group items-center"
       onClick={() => {
         console.log('clicked claim');
       }}
     >
-      <ModuleText className="text-3xl font-bold inline-flex gap-2 align-middle items-center h-full">
-        <PresentIcon className="w-6 h-6 fill-session-text hover:fill-session-black" />
-        Claim
+      <ModuleText className="inline-flex h-full items-center gap-2 align-middle text-3xl font-bold">
+        <PresentIcon className="fill-session-text group-hover:fill-session-black h-6 w-6" />
+        <span className="h-8">Claim</span>
       </ModuleText>
     </Module>
   );

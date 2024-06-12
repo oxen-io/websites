@@ -3,12 +3,12 @@ import { forwardRef, type HTMLAttributes } from 'react';
 import { cn } from '../lib/utils';
 import { Loading } from './loading';
 
-const moduleGridVariants = cva('module-grid h-max', {
+const moduleGridVariants = cva('module-grid min-h-0', {
   variants: {
     variant: {
       grid: 'grid',
       section:
-        'from-[#0A0C0C] to-[#081512] bg-gradient-to-b bg-blend-lighten shadow-md border-[2px] rounded-[40px] border-[#54797241] flex flex-col',
+        'from-[#0A0C0C] to-[#081512] bg-gradient-to-b bg-blend-lighten shadow-md border-[2px] rounded-[30px] border-[#54797241] flex flex-col',
     },
     size: {
       md: 'gap-4 grid-cols-1 sm:grid-cols-2',
@@ -54,7 +54,7 @@ const ModuleGridTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadin
   ({ className, ...props }, ref) => (
     <h2
       ref={ref}
-      className={cn('my-2 text-5xl font-normal leading-none tracking-tight', className)}
+      className={cn('my-2 text-3xl font-medium leading-none tracking-tight', className)}
       {...props}
     />
   )
@@ -65,7 +65,7 @@ const ModuleGridHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElemen
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex w-full flex-row items-center justify-between p-8 pb-0', className)}
+      className={cn('flex w-full flex-row items-center justify-between px-8 pt-6', className)}
       {...props}
     />
   )
@@ -76,7 +76,7 @@ const ModuleGridContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex flex-col gap-2 p-6 pt-0 align-middle', className)}
+      className={cn('flex flex-col gap-2 p-8 pt-0 align-middle', className)}
       {...props}
     />
   )

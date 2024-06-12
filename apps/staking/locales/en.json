@@ -156,10 +156,24 @@
       "maxContributionDescription": "Maximum amount of {tokenSymbol} that can be staked.",
       "fee": "Fee:",
       "feeDescription": "The node operator fee.",
-      "stakeButton": {
-        "stake": "STAKE",
-        "ariaLabel": "Open the stake to a node form"
+      "button": {
+        "text": "View",
+        "ariaLabel": "View the node details in the side pannel"
       }
+    },
+    "staked": {
+      "expand": "Expand",
+      "ariaExpand": "Expand node details",
+      "collapse": "Collapse",
+      "ariaCollapse": "Collapse node details",
+      "lastUptime": "Last Uptime:",
+      "lastUptimeDescription": "Last time the node was online.",
+      "pubKey": "Public Key:",
+      "pubKeyDescription": "Public key of the node.",
+      "balance": "Balance:",
+      "balanceDescription": "Total {tokenSymbol} staked in the node.",
+      "operatorFee": "Operator Fee:",
+      "operatorFeeDescription": "The node operator fee."
     }
   }
 }

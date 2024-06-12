@@ -22,7 +22,7 @@ export enum NODE_STATE {
   CANCELLED = 'Cancelled',
   DECOMMISSIONED = 'Decommissioned',
   DEREGISTERED = 'Deregistered',
-  VOLUNTARY_DEREGISTRATION = 'Voluntary Deregistration',
+  UNLOCKED = 'Unlocked',
 }
 
 export interface LockedContribution {
