@@ -1,5 +1,5 @@
 'use server';
-import { CHAIN, addresses, formatSENT, parseSENT } from '@session/contracts';
+import { CHAIN, addresses, formatSENT } from '@session/contracts';
 import { SENTAbi } from '@session/contracts/abis';
 import { createPublicWalletClient, createServerWallet } from '@session/wallet/lib/server-wallet';
 import { formatEther, isAddress as isAddressViem, type Address } from 'viem';
@@ -75,7 +75,6 @@ export async function sentTestSent({ address, chain }: { address?: Address; chai
     const serverWallet = createServerWallet(privateKey, chain);
 
     const walletAddress = (await serverWallet.getAddresses())[0];
-
     const targetEthBalancePromise = getEthBalance({ address, chain });
     const faucetEthBalancePromise = getEthBalance({ address: walletAddress, chain });
     const faucetSENTBalancePromise = getSENTBalance({ address: walletAddress, chain });
