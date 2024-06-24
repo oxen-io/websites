@@ -50,6 +50,8 @@
       rgba(174, 208, 216, 0.8) 98.84%
     );
 
+    --session-module-outline-gradient: linear-gradient(135deg, #7FB1AE 0%, #2A4337 100%);
+
     --session-module-gradient: linear-gradient(135deg, #0a0a0a 0%, #081b14 100%);
 
     --card: 240 10% 3.9%;
@@ -79,22 +81,21 @@
 }
 
 /* Text Gradients */
-.session-text-gradient {
-  background-image: var(--session-gradient-gray);
+.text-gradient-white {
+  background-image: var(--session-gradient-white);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  display: inline-block; /* Ensures the gradient is only as wide as the text */
 }
 
 /* Text Selection */
 ::-moz-selection {
   /* Code for Firefox */
-/*   @apply bg-session-green text-session-black; */
+  @apply bg-session-green text-session-black;
 }
 
 ::selection {
- /*  @apply bg-session-green text-session-black; */
+  @apply bg-session-green text-session-black;
 }
 
 /* Glow Effect */
