@@ -9,18 +9,22 @@ import UnclaimedTokensModule from './modules/UnclaimedTokensModule';
 
 export default function Page() {
   return (
-    <ModuleGrid size="lg" className="w-screen px-10 py-6">
-      <ModuleGrid>
-        <BalanceModule />
-        <DailyNodeReward />
-        <TotalRewardsModule />
-        <UnclaimedTokensModule />
-        <ClaimTokensModule />
+    <ModuleGrid size="lg" className="h-full px-4 md:auto-rows-auto md:px-10">
+      <div className="md:max-h-screen-minus-header col-span-1 flex h-full min-h-max flex-col gap-4 py-6 md:overflow-y-auto md:overflow-x-hidden">
+        <ModuleGrid>
+          <BalanceModule />
+          <DailyNodeReward />
+          <TotalRewardsModule />
+          <UnclaimedTokensModule />
+          <ClaimTokensModule />
+        </ModuleGrid>
         <PriceModule />
-      </ModuleGrid>
-      <ModuleGrid variant="section" colSpan={2}>
-        <StakedNodesModule />
-      </ModuleGrid>
+      </div>
+      <div className="md:max-h-screen-minus-header col-span-2 h-full py-6">
+        <ModuleGrid variant="section" colSpan={2} className="h-full">
+          <StakedNodesModule />
+        </ModuleGrid>
+      </div>
     </ModuleGrid>
   );
 }
