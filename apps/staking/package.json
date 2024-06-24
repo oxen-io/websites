@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NEXT_PUBLIC_ENV_FLAG=dev next dev",
     "build": "NEXT_PUBLIC_ENV_FLAG=prd && next build",
     "start": "NEXT_PUBLIC_ENV_FLAG=prd && next start",
     "lint": "eslint ."
