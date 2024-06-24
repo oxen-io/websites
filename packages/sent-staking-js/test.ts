@@ -42,17 +42,17 @@ const generateContributor = (): Contributor => {
  * Generates an array of contributors.
  *
  * @param maxN The maximum number of contributors to generate.
- * @param operatorAddress The address of the operator.
+ * @param userAddress The address of the user.
  * @returns An array of contributors.
  */
-const generateContributors = (maxN = 10, operatorAddress?: string): Contributor[] => {
+const generateContributors = (maxN = 10, userAddress?: string): Contributor[] => {
   const contributors = Array.from(
-    { length: Math.ceil(Math.random() * (operatorAddress ? maxN - 1 : maxN)) },
+    { length: Math.ceil(Math.random() * (userAddress ? maxN - 1 : maxN)) },
     () => generateContributor()
   );
-  if (operatorAddress) {
+  if (userAddress) {
     contributors.unshift({
-      address: operatorAddress,
+      address: userAddress,
       amount: Math.random() * 1000,
       reserved: Math.random() * 1000,
       locked_contributions: [],
@@ -82,18 +82,25 @@ const generateFutureBlockHeight = (maxDistance = 100): number => {
   return currentBlockHeight + Math.floor(Math.random() * maxDistance);
 };
 
+type GenerateBasicNodeDataProps = {
+  userAddress: string;
+  operatorAddress?: string;
+  minContributors?: number;
+};
+
 /**
  * Generates basic node data for a service node.
  * @param options The options for generating the node data.
+ * @param options.userAddress - The user address for the node.
  * @param options.operatorAddress - The operator address for the node.
  * @returns The generated node data.
  */
 function generateBasicNodeData({
+  userAddress,
   operatorAddress,
-}: {
-  operatorAddress?: string;
-}): Omit<ServiceNode, 'state'> {
-  const num_contributions = Math.floor(Math.random() * 10);
+  minContributors,
+}: GenerateBasicNodeDataProps): Omit<ServiceNode, 'state'> {
+  const num_contributions = Math.max(minContributors ?? 0, Math.ceil(Math.random() * 10));
   return {
     service_node_pubkey: generateNodePubKey(),
     requested_unlock_height: 0,
@@ -101,12 +108,12 @@ function generateBasicNodeData({
     funded: true,
     earned_downtime_blocks: 0,
     service_node_version: [1, 1, 1],
-    contributors: generateContributors(num_contributions, operatorAddress),
+    contributors: generateContributors(num_contributions, userAddress),
     total_contributed: 0,
     total_reserved: 0,
     staking_requirement: 0,
     portions_for_operator: 0,
-    operator_address: generateWalletAddress(),
+    operator_address: operatorAddress ?? generateWalletAddress(),
     pubkey_ed25519: '...',
     last_uptime_proof: generatePastBlockHeight(),
     state_height: 0,
@@ -120,16 +127,15 @@ function generateBasicNodeData({
 /**
  * Generates a service node object in the "AWAITING_CONTRIBUTORS" state.
  * @param options The options for generating the service node.
- * @param options.operatorAddress The operator address for the service node.
+ * @param options.userAddress The user address for the service node.
  * @returns The generated service node object.
  */
 const generateAwaitingContributorsNode = ({
+  userAddress,
   operatorAddress,
-}: {
-  operatorAddress?: string;
-}): ServiceNode => {
+}: GenerateBasicNodeDataProps): ServiceNode => {
   return {
-    ...generateBasicNodeData({ operatorAddress }),
+    ...generateBasicNodeData({ userAddress, operatorAddress }),
     state: NODE_STATE.AWAITING_CONTRIBUTORS,
     active: false,
     funded: false,
@@ -140,19 +146,19 @@ const generateAwaitingContributorsNode = ({
  * Generates a running service node.
  *
  * @param options The options for generating the running node.
- * @param options.operatorAddress The operator address of the node.
+ * @param options.userAddress The user address of the node.
  * @param options.beingDeregistered Indicates if the node is being deregistered.
  * @returns The generated running service node.
  */
 const generateRunningNode = ({
+  userAddress,
   operatorAddress,
   beingDeregistered,
-}: {
-  operatorAddress?: string;
+}: GenerateBasicNodeDataProps & {
   beingDeregistered?: boolean;
 }): ServiceNode => {
   return {
-    ...generateBasicNodeData({ operatorAddress }),
+    ...generateBasicNodeData({ userAddress, operatorAddress }),
     state: NODE_STATE.RUNNING,
     active: true,
     ...(beingDeregistered ? { requested_unlock_height: generateFutureBlockHeight() } : {}),
@@ -163,19 +169,19 @@ const generateRunningNode = ({
  * Generates a cancelled service node object.
  *
  * @param options The options for generating the cancelled node.
- * @param options.operatorAddress The operator address of the node.
+ * @param options.userAddress The user address of the node.
  * @param options.canRestake Indicates if the node can restake.
  * @returns The generated cancelled service node.
  */
 const generateCancelledNode = ({
+  userAddress,
   operatorAddress,
   canRestake,
-}: {
-  operatorAddress?: string;
+}: GenerateBasicNodeDataProps & {
   canRestake?: boolean;
 }): ServiceNode => {
   return {
-    ...generateBasicNodeData({ operatorAddress }),
+    ...generateBasicNodeData({ userAddress, operatorAddress }),
     state: NODE_STATE.CANCELLED,
     active: false,
     funded: false,
@@ -187,22 +193,22 @@ const generateCancelledNode = ({
  * Generates a deregistered service node object.
  *
  * @param options The options for generating the deregistered node.
- * @param options.operatorAddress The operator address of the node.
+ * @param options.userAddress The user address of the node.
  * @param options.awaitingLiquidation Indicates if the node is awaiting liquidation.
  * @param options.canRestake Indicates if the node can be restaked.
  * @returns The generated deregistered service node object.
  */
-const generateDeregistedNode = ({
+const generateDeregisteredNode = ({
+  userAddress,
   operatorAddress,
   awaitingLiquidation,
   canRestake,
-}: {
-  operatorAddress?: string;
+}: GenerateBasicNodeDataProps & {
   awaitingLiquidation?: boolean;
   canRestake?: boolean;
 }): ServiceNode => {
   return {
-    ...generateBasicNodeData({ operatorAddress }),
+    ...generateBasicNodeData({ userAddress, operatorAddress }),
     state: NODE_STATE.DEREGISTERED,
     active: false,
     funded: false,
@@ -214,16 +220,15 @@ const generateDeregistedNode = ({
 /**
  * Generates a decommissioned service node.
  * @param options The options for generating the decommissioned node.
- * @param options.operatorAddress The operator address of the node.
+ * @param options.userAddress The user address of the node.
  * @returns The decommissioned service node.
  */
 const generateDecommissionedNode = ({
+  userAddress,
   operatorAddress,
-}: {
-  operatorAddress?: string;
-}): ServiceNode => {
+}: GenerateBasicNodeDataProps): ServiceNode => {
   return {
-    ...generateBasicNodeData({ operatorAddress }),
+    ...generateBasicNodeData({ userAddress, operatorAddress }),
     state: NODE_STATE.DECOMMISSIONED,
     active: false,
     funded: false,
@@ -232,23 +237,23 @@ const generateDecommissionedNode = ({
 };
 
 /**
- * Generates a voluntary deregistration node.
+ * Generates an unlocked node.
  *
  * @param options The options for generating the node.
- * @param options.operatorAddress The operator address.
+ * @param options.userAddress The user address.
  * @param options.canRestake Indicates if the node can restake.
- * @returns The generated voluntary deregistration node.
+ * @returns The generated unlocked node.
  */
-const generateVoluntaryDeregistrationNode = ({
+const generateUnlockedNode = ({
+  userAddress,
   operatorAddress,
   canRestake,
-}: {
-  operatorAddress?: string;
+}: GenerateBasicNodeDataProps & {
   canRestake?: boolean;
 }): ServiceNode => {
   return {
-    ...generateBasicNodeData({ operatorAddress }),
-    state: NODE_STATE.VOLUNTARY_DEREGISTRATION,
+    ...generateBasicNodeData({ userAddress, operatorAddress }),
+    state: NODE_STATE.UNLOCKED,
     active: false,
     funded: false,
     can_restake: canRestake,
@@ -258,37 +263,45 @@ const generateVoluntaryDeregistrationNode = ({
 /**
  * Generates mock node data for testing purposes.
  * @param params The parameters for generating mock node data.
- * @param params.operatorAddress The operator address for the mock node data.
+ * @param params.userAddress The user address for the mock node data.
  * @returns The generated mock node data.
  */
 export const generateMockNodeData = ({
-  operatorAddress,
+  userAddress,
 }: {
-  operatorAddress: string;
+  userAddress: string;
 }): GetNodesForWalletResponse => {
   const mockNodeData: GetNodesForWalletResponse = {
     nodes: [],
   };
 
-  mockNodeData.nodes.push(generateRunningNode({ operatorAddress }));
-  mockNodeData.nodes.push(generateRunningNode({}));
-  mockNodeData.nodes.push(generateRunningNode({ operatorAddress, beingDeregistered: true }));
-  mockNodeData.nodes.push(generateAwaitingContributorsNode({ operatorAddress }));
-  mockNodeData.nodes.push(generateAwaitingContributorsNode({}));
-  mockNodeData.nodes.push(generateCancelledNode({ operatorAddress, canRestake: true }));
-  mockNodeData.nodes.push(generateCancelledNode({}));
-  mockNodeData.nodes.push(generateCancelledNode({ operatorAddress }));
-  mockNodeData.nodes.push(generateDecommissionedNode({}));
-  mockNodeData.nodes.push(generateDecommissionedNode({ operatorAddress }));
-  mockNodeData.nodes.push(generateDeregistedNode({}));
-  mockNodeData.nodes.push(generateDeregistedNode({ awaitingLiquidation: true }));
-  mockNodeData.nodes.push(generateDeregistedNode({ operatorAddress }));
-  mockNodeData.nodes.push(generateDeregistedNode({ operatorAddress, canRestake: true }));
-  mockNodeData.nodes.push(generateVoluntaryDeregistrationNode({ operatorAddress }));
-  mockNodeData.nodes.push(generateVoluntaryDeregistrationNode({}));
+  const operatorAddress = userAddress;
+
+  mockNodeData.nodes.push(generateRunningNode({ userAddress }));
+  mockNodeData.nodes.push(generateRunningNode({ userAddress, operatorAddress }));
+  mockNodeData.nodes.push(generateRunningNode({ userAddress, beingDeregistered: true }));
   mockNodeData.nodes.push(
-    generateVoluntaryDeregistrationNode({ operatorAddress, canRestake: true })
+    generateRunningNode({ userAddress, beingDeregistered: true, operatorAddress })
   );
+  mockNodeData.nodes.push(generateAwaitingContributorsNode({ userAddress, minContributors: 1 }));
+  mockNodeData.nodes.push(generateAwaitingContributorsNode({ userAddress, minContributors: 10 }));
+  mockNodeData.nodes.push(
+    generateAwaitingContributorsNode({ userAddress, minContributors: 1, operatorAddress })
+  );
+  mockNodeData.nodes.push(generateCancelledNode({ userAddress, canRestake: true }));
+  mockNodeData.nodes.push(generateCancelledNode({ userAddress }));
+  mockNodeData.nodes.push(generateCancelledNode({ userAddress, operatorAddress }));
+  mockNodeData.nodes.push(generateDecommissionedNode({ userAddress }));
+  mockNodeData.nodes.push(generateDecommissionedNode({ userAddress, operatorAddress }));
+  mockNodeData.nodes.push(generateDeregisteredNode({ userAddress }));
+  mockNodeData.nodes.push(generateDeregisteredNode({ userAddress, awaitingLiquidation: true }));
+  mockNodeData.nodes.push(generateDeregisteredNode({ userAddress, operatorAddress }));
+  mockNodeData.nodes.push(
+    generateDeregisteredNode({ userAddress, operatorAddress, canRestake: true })
+  );
+  mockNodeData.nodes.push(generateUnlockedNode({ userAddress }));
+  mockNodeData.nodes.push(generateUnlockedNode({ userAddress, operatorAddress }));
+  mockNodeData.nodes.push(generateUnlockedNode({ userAddress, operatorAddress, canRestake: true }));
 
   return mockNodeData;
 };
