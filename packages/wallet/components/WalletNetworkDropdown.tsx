@@ -14,6 +14,7 @@ import { useWalletChain } from '../hooks/wallet-hooks';
 import { ButtonDataTestId } from '../testing/data-test-ids';
 
 export type WalletNetworkButtonProps = ButtonVariantProps & {
+  className?: string;
   labels: {
     mainnet: string;
     testnet: string;

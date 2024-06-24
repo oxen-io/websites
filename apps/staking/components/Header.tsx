@@ -66,7 +66,7 @@ export default function Header() {
         </div>
       </div>
       <div className="flex flex-row gap-2">
-        {isConnected ? <WalletNetworkDropdownWithLocales /> : null}
+        {isConnected ? <WalletNetworkDropdownWithLocales className="hidden md:flex" /> : null}
         <WalletModalButtonWithLocales />
         <DropdownHamburgerMenu />
       </div>

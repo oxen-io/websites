@@ -1,5 +1,5 @@
 'use server';
-import { CHAIN, addresses, formatSENT } from '@session/contracts';
+import { CHAIN, addresses, formatSENT, parseSENT } from '@session/contracts';
 import { SENTAbi } from '@session/contracts/abis';
 import { createPublicWalletClient, createServerWallet } from '@session/wallet/lib/server-wallet';
 import { formatEther, isAddress as isAddressViem, type Address } from 'viem';
