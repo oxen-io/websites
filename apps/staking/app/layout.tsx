@@ -4,10 +4,11 @@ import { siteMetadata as metadata, wagmiMetadata } from '@/lib/metadata';
 import { Toaster } from '@session/ui/components/ui/sonner';
 import { AtypDisplay, AtypText, MonumentExtended } from '@session/ui/fonts';
 
+import LocalizationProvider from '@/providers/localization-provider';
 import '@session/ui/styles';
+import { TooltipProvider } from '@session/ui/ui/tooltip';
 import { createWagmiConfig } from '@session/wallet/lib/wagmi';
 import { Web3ModalProvider } from '@session/wallet/providers/web3-modal-provider';
-import { NextIntlClientProvider } from 'next-intl';
 import { headers } from 'next/headers';
 import { cookieToInitialState } from 'wagmi';
 import ChainBanner from '../components/ChainBanner';
@@ -29,22 +30,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       dir={direction}
       className={`${AtypDisplay.variable} ${AtypText.variable} ${MonumentExtended.variable}`}
     >
-      <NextIntlClientProvider messages={messages} locale={locale}>
+      <LocalizationProvider messages={messages} locale={locale}>
         <Web3ModalProvider
           initialState={initialWagmiState}
           wagmiMetadata={wagmiMetadata}
           projectId={NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID}
         >
           <SentStakingClientProvider>
-            <body className="bg-session-black text-session-text font-atyp-text overflow-x-hidden">
-              <ChainBanner />
-              <Header />
-              <main>{children}</main>
-              <Toaster />
-            </body>
+            <TooltipProvider delayDuration={300}>
+              <body className="bg-session-black text-session-text font-atyp-text overflow-x-hidden">
+                <ChainBanner />
+                <Header />
+                <main>{children}</main>
+                <Toaster />
+              </body>
+            </TooltipProvider>
           </SentStakingClientProvider>
         </Web3ModalProvider>
-      </NextIntlClientProvider>
+      </LocalizationProvider>
     </html>
   );
 }
