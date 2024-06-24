@@ -1,10 +1,12 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { forwardRef, type HTMLAttributes } from 'react';
+import { QuestionIcon } from '../icons/QuestionIcon';
 import { cn } from '../lib/utils';
 import { Loading } from './loading';
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 export const outerModuleVariants = cva(
-  'rounded-[40px] transition-all ease-in-out bg-gradient-to-br from-[#7FB1AE] to-[#2A4337] bg-blend-lighten shadow-md p-px',
+  'rounded-3xl transition-all ease-in-out bg-module-outline bg-blend-lighten shadow-md p-px',
   {
     variants: {
       variant: {
@@ -24,17 +26,27 @@ export const outerModuleVariants = cva(
 );
 
 const innerModuleVariants = cva(
-  'rounded-[40px] w-full h-full flex align-middle flex-col [&>span]:font-normal [&>*>span]:font-normal from-[#0a0a0a] to-[#081B14] bg-gradient-to-br',
+  cn(
+    'rounded-3xl w-full h-full flex align-middle flex-col bg-module',
+    '[&>span]:font-medium [&>*>span]:font-medium'
+  ),
   {
     variants: {
       variant: {
-        default:
-          '[&>h3]:text-lg [&>*>h3]:text-lg [&>span]:text-3xl [&>*>span]:text-3xl [&>h3]:font-light [&>*>h3]:font-light bg-blend-lighten shadow-md gap-1',
-        hero: '[&>h3]:text-3xl [&>h3]:font-regular [&>span]:text-8xl [&>*>h3]:text-2xl [&>*>h3]:font-regular [&>*>span]:text-7xl gap-4 hover:brightness-125',
+        default: cn(
+          'bg-blend-lighten shadow-md gap-1',
+          '[&>h3]:text-lg [&>*>h3]:text-lg',
+          '[&>span]:text-3xl [&>*>span]:text-3xl [&>h3]:font-normal [&>*>h3]:font-normal'
+        ),
+        hero: cn(
+          'gap-5 hover:brightness-125',
+          '[&>h3]:text-3xl [&>h3]:font-normal [&>*>h3]:text-2xl [&>*>h3]:font-normal [&>h3]:text-session-white',
+          '[&>span]:text-8xl [&>*>span]:text-8xl [&>span]:text-session-white [&>*>span]:text-session-white'
+        ),
       },
       size: {
-        default: 'p-8',
-        lg: 'p-12',
+        default: 'p-6',
+        lg: 'p-10 py-12',
       },
     },
     defaultVariants: {
@@ -57,6 +69,7 @@ const Module = forwardRef<HTMLDivElement, ModuleProps>(
       <div className={cn(outerModuleVariants({ size, variant, className }))}>
         <div
           className={cn(
+            'relative',
             innerModuleVariants({ size, variant, className }),
             noPadding && 'p-0',
             props.onClick && 'hover:bg-session-green hover:text-session-black hover:cursor-pointer'
@@ -116,7 +129,7 @@ const ModuleTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingEle
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn('font-atyp-display text-text-gradient leading-none tracking-tight', className)}
+      className={cn('text-gradient-white leading-none tracking-tight', className)}
       {...props}
     />
   )
@@ -125,11 +138,7 @@ ModuleTitle.displayName = 'ModuleTitle';
 
 const ModuleText = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
   ({ className, ...props }, ref) => (
-    <span
-      ref={ref}
-      className={cn('font-atyp-display text-text-gradient overflow-x-hidden', className)}
-      {...props}
-    />
+    <span ref={ref} className={cn('text-gradient-white overflow-hidden', className)} {...props} />
   )
 );
 ModuleText.displayName = 'ModuleText';
@@ -170,6 +179,24 @@ const ModuleContent = forwardRef<HTMLDivElement, ModuleContentProps>(
   }
 );
 
+const ModuleTooltip = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, children, ...props }, ref) => (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div
+          ref={ref}
+          className={cn('absolute right-5 top-4 cursor-pointer', className)}
+          {...props}
+        >
+          <QuestionIcon className="fill-session-text h-4 w-4" />
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>{children}</TooltipContent>
+    </Tooltip>
+  )
+);
+ModuleTooltip.displayName = 'ModuleTooltip';
+
 ModuleContent.displayName = 'ModuleContent';
 
 export {
@@ -179,5 +206,6 @@ export {
   ModuleHeader,
   ModuleText,
   ModuleTitle,
+  ModuleTooltip,
   innerModuleVariants as moduleVariants,
 };

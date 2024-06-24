@@ -2,7 +2,7 @@ import { VariantProps, cva } from 'class-variance-authority';
 import { HTMLAttributes } from 'react';
 import { cn } from '../lib/utils';
 
-export const statusVariants = cva('w-[18px] h-[18px] rounded-full filter drop-shadow-lg', {
+export const statusVariants = cva('w-3 h-3 rounded-full filter drop-shadow-lg', {
   variants: {
     status: {
       green: 'bg-[#00F782] drop-shadow-[0_0_8px_#00F782] glow',
