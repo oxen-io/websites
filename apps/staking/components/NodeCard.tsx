@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import { forwardRef, useEffect, useMemo, useState, type HTMLAttributes } from 'react';
 
 export const outerNodeCardVariants = cva(
-  'rounded-[20px] hover:cursor-pointer transition-all ease-in-out bg-gradient-to-br from-[#7FB1AE] to-[#2A4337] bg-blend-lighten shadow-md p-px',
+  'rounded-xl transition-all ease-in-out bg-module-outline bg-blend-lighten shadow-md p-px',
   {
     variants: {
       variant: {
@@ -21,7 +21,7 @@ export const outerNodeCardVariants = cva(
 );
 
 const innerNodeCardVariants = cva(
-  'rounded-[20px] w-full h-full flex align-middle flex-col py-8 px-9 from-[#090F0D] to-[#081310] bg-gradient-to-br',
+  'rounded-xl w-full h-full flex align-middle flex-col py-5 px-6 bg-module',
   {
     variants: {
       variant: {
@@ -43,7 +43,7 @@ export interface StakeCardProps
 const NodeCard = forwardRef<HTMLDivElement, StakeCardProps>(
   ({ className, variant, loading, children, ...props }, ref) => {
     return (
-      <div className={cn(outerNodeCardVariants({ variant, className }))}>
+      <div className={cn(outerNodeCardVariants({ variant }))}>
         <div className={cn(innerNodeCardVariants({ variant, className }))} ref={ref} {...props}>
           {loading ? <Loading /> : children}
         </div>
@@ -86,10 +86,7 @@ const NodeCardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingE
   ({ className, ...props }, ref) => (
     <h4
       ref={ref}
-      className={cn(
-        'font-atyp-display bg-gradient-to-br from-[#FFFFFF] to-[#B3CBC5] bg-clip-text text-xl font-normal leading-none text-transparent md:text-3xl',
-        className
-      )}
+      className={cn('text-gradient-white text-lg font-medium leading-none md:text-xl', className)}
       {...props}
     />
   )
@@ -100,10 +97,7 @@ const NodeCardText = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>
   ({ className, ...props }, ref) => (
     <span
       ref={ref}
-      className={cn(
-        'font-atyp-display bg-gradient-to-br from-[#FFFFFF] to-[#79A499] bg-clip-text text-base font-extralight text-transparent md:text-lg',
-        className
-      )}
+      className={cn('text-gradient-white text-sm font-light md:text-base', className)}
       {...props}
     />
   )
@@ -141,7 +135,7 @@ const NodePubKey = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & {
     }, [pubKey]);
 
     return (
-      <div ref={ref} className={cn('group flex select-all', className)} {...props}>
+      <span ref={ref} className={cn('group flex select-all', className)} {...props}>
         <span
           className={cn('select-all break-all group-hover:hidden', isSelected ? 'hidden' : 'block')}
         >
@@ -153,7 +147,7 @@ const NodePubKey = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & {
             isSelected ? 'block' : 'hidden'
           )}
         >
-          <span>{pubKey}</span>
+          {pubKey}
         </div>
         <CopyToClipboardButton
           className={cn('hidden group-hover:block', isSelected ? 'block' : 'hidden')}
@@ -162,7 +156,7 @@ const NodePubKey = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & {
           aria-label={dictionary('copyPubkeyToClipboard')}
           copyToClipboardToastMessage={dictionary('copyPubkeyToClipboardSuccessToast')}
         />
-      </div>
+      </span>
     );
   }
 );
