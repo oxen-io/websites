@@ -1,7 +1,6 @@
 'use client';
 import { GenericStakedNode, StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
 import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
-import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { ServiceNode } from '@session/sent-staking-js';
 import {
   ModuleGridContent,
@@ -9,7 +8,6 @@ import {
   ModuleGridTitle,
 } from '@session/ui/components/ModuleGrid';
 import { Loading } from '@session/ui/components/loading';
-import { Button } from '@session/ui/ui/button';
 import { Switch } from '@session/ui/ui/switch';
 import { useTranslations } from 'next-intl';
 import { useAccount } from 'wagmi';
@@ -21,7 +19,9 @@ export default function StakedNodesModule() {
     <>
       <ModuleGridHeader>
         <ModuleGridTitle>{dictionary('title')}</ModuleGridTitle>
-        Show Hidden <Switch />
+        <div className="flex flex-row gap-2 align-middle">
+          Show Hidden <Switch />
+        </div>
       </ModuleGridHeader>
       {address ? <StakedNodesWithAddress address={address} /> : <Loading />}
     </>
@@ -62,15 +62,15 @@ function StakedNodesWithAddress({ address }: { address: string }) {
     args: { address },
   });
   return (
-    <ModuleGridContent>
+    <ModuleGridContent className="h-full md:overflow-y-auto">
       {data
-        ? data?.nodes.map((node) => (
-            <StakedNodeCard node={parseSessionNodeData(node) as StakedNode} />
+        ? data.nodes.map((node) => (
+            <StakedNodeCard
+              key={node.service_node_pubkey}
+              node={parseSessionNodeData(node) as StakedNode}
+            />
           ))
         : null}
-      <div className="w-52 self-center">
-        <Button data-testid={ButtonDataTestId.New_Stake}></Button>
-      </div>
     </ModuleGridContent>
   );
 }
