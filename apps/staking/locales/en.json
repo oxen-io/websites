@@ -101,6 +101,9 @@
     "stakedNodes": {
       "title": "My Stakes"
     },
+    "openNodes": {
+      "title": "Open Session Nodes"
+    },
     "buttons": {
       "refetch": "Refetch"
     },
