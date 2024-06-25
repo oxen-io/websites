@@ -417,7 +417,7 @@ const StakedNodeCard = forwardRef<
         <span className="flex flex-row gap-1">
           {address && isNodeOperator(node, address) ? <NodeOperatorIndicator /> : null}
           {dictionary.rich('pubKey', { pubKey: '' })}
-          <NodePubKey pubKey={pubKey} />
+          <NodePubKey pubKey={pubKey} expandOnHover />
         </span>
       </NodeCardText>
       <CollapsableContent>

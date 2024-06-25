@@ -2,6 +2,7 @@ import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { CopyToClipboardButton } from '@session/ui/components/CopyToClipboardButton';
 import { Loading } from '@session/ui/components/loading';
 import { cn } from '@session/ui/lib/utils';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { useTranslations } from 'next-intl';
 import { forwardRef, useEffect, useMemo, useState, type HTMLAttributes } from 'react';
@@ -110,18 +111,24 @@ function getPublicKeyEnds(pubKey: string): [string, string] {
   return [start, end];
 }
 
-const NodePubKey = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & { pubKey: string }>(
-  ({ className, pubKey, ...props }, ref) => {
+type NodePubKeyType = HTMLAttributes<HTMLDivElement> & {
+  pubKey: string;
+  expandOnHover?: boolean;
+};
+
+const NodePubKey = forwardRef<HTMLDivElement, NodePubKeyType>(
+  ({ className, pubKey, expandOnHover, ...props }, ref) => {
     const dictionary = useTranslations('nodeCard.pubKey');
     const [isSelected, setIsSelected] = useState(false);
     const [pubKeyStart, pubKeyEnd] = useMemo(() => getPublicKeyEnds(pubKey), [pubKey]);
+
     useEffect(() => {
       /**
        * Keeps the full pubkey visible when selected.
        */
       const handleSelectionChange = () => {
         const selection = window.getSelection();
-        if (selection?.toString().includes(pubKey)) {
+        if (selection?.toString().includes(pubKey) || selection?.toString().includes(pubKeyStart)) {
           setIsSelected(true);
         } else {
           setIsSelected(false);
@@ -136,15 +143,27 @@ const NodePubKey = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & {
 
     return (
       <span ref={ref} className={cn('group flex select-all', className)} {...props}>
-        <span
-          className={cn('select-all break-all group-hover:hidden', isSelected ? 'hidden' : 'block')}
-        >
-          {pubKeyStart}...{pubKeyEnd}
-        </span>
+        <Tooltip>
+          <TooltipTrigger asChild disabled={expandOnHover}>
+            <span
+              className={cn(
+                'select-all break-all',
+                expandOnHover && 'group-hover:hidden',
+                expandOnHover && isSelected ? 'hidden' : 'block'
+              )}
+            >
+              {pubKeyStart}...{pubKeyEnd}
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{pubKey}</p>
+          </TooltipContent>
+        </Tooltip>
         <div
           className={cn(
-            'hidden select-all break-all group-hover:block',
-            isSelected ? 'block' : 'hidden'
+            'select-all break-all',
+            expandOnHover && 'group-hover:block',
+            expandOnHover && isSelected ? 'block' : 'hidden'
           )}
         >
           {pubKey}
