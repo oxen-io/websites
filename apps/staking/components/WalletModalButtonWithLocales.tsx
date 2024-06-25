@@ -2,7 +2,7 @@ import WalletModalButton from '@session/wallet/components/WalletModalButton';
 import { useTranslations } from 'next-intl';
 
 export function WalletModalButtonWithLocales() {
-  const dictionary = useTranslations('wallet');
+  const dictionary = useTranslations('wallet.modalButton');
   return (
     <WalletModalButton
       labels={{

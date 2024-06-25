@@ -8,13 +8,13 @@ export default function NotFound() {
   const dictionary = useTranslations('notFound');
   return (
     <div className="-mt-header-displacement flex h-screen w-full items-center justify-center p-32 align-middle">
-      <div className="flex flex-row items-center justify-center gap-10 align-middle lg:h-[140px]">
+      <div className="flex flex-col items-center justify-center text-center align-middle md:flex-row md:gap-10 md:text-left lg:h-[140px]">
         <span className="font-monument-extended text-9xl font-bold leading-none lg:mt-[-30px] lg:max-h-[140px] lg:text-[192px]">
           404
         </span>
         <div className="m-0 hidden h-full w-px bg-gray-300 p-0 lg:block" />
-        <div className="flex h-full flex-col justify-between">
-          <p className="max-w-[380px] text-2xl">{dictionary('description')}</p>
+        <div className="flex h-full flex-col justify-between gap-4 md:gap-0">
+          <p className="max-w-[380px] text-xl md:text-2xl">{dictionary('description')}</p>
           <Link href="/" prefetch={false}>
             <Button
               size="lg"

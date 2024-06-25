@@ -9,7 +9,8 @@
         "NEXT_PUBLIC_SITE_ENV",
         "NEXT_PUBLIC_SENT_STAKING_API_URL",
         "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID",
-        "FAUCET_WALLET_PRIVATE_KEY"
+        "FAUCET_WALLET_PRIVATE_KEY",
+        "NEXT_PUBLIC_ENV_FLAG"
       ],
       "outputs": [".next/**", "!.next/cache/**"]
     },
@@ -18,7 +19,8 @@
         "NEXT_PUBLIC_SITE_ENV",
         "NEXT_PUBLIC_SENT_STAKING_API_URL",
         "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID",
-        "FAUCET_WALLET_PRIVATE_KEY"
+        "FAUCET_WALLET_PRIVATE_KEY",
+        "NEXT_PUBLIC_ENV_FLAG"
       ]
     },
     "lint": {

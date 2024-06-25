@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "exports": {
     "./components/*": "./components/*.tsx",
+    "./hooks/*": "./hooks/*.tsx",
     "./lib/*": "./lib/*.ts",
     "./providers/*": "./providers/*.tsx"
   },
@@ -26,8 +27,8 @@
     "@session/ui": "workspace:*",
     "@tanstack/react-query": "^5.32.1",
     "@web3modal/wagmi": "^4.1.11",
-    "viem": "^2.9.31",
-    "wagmi": "^2.8.0"
+    "viem": "2.13.7",
+    "wagmi": "2.9.10"
   },
   "engines": {
     "node": ">=22",

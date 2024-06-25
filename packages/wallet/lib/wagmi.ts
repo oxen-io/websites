@@ -5,7 +5,8 @@ import { cookieStorage, createStorage } from 'wagmi';
 export type WagmiMetadata = Parameters<typeof defaultWagmiConfig>[0]['metadata'];
 export type WagmiConfig = ReturnType<typeof defaultWagmiConfig>;
 
-const chains = [mainnet, testnet, ethereum] as const;
+// TODO: Change chain order when not mainnet is ready
+const chains = [testnet, mainnet, ethereum] as const;
 
 /**
  * Creates a Wagmi configuration object.

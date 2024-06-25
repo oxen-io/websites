@@ -172,9 +172,9 @@ const StakedNodeCard = forwardRef<
   const nodeNotification = useMemo(() => {
     if (isBeingDeregistered(node)) {
       return (
-        <span className="text-orange-400">
-          • {formatTimeDistanceToNowClient(node.deregistrationDate)}{' '}
-          {state === NODE_STATE.RUNNING ? ' till voluntary deregistration' : ' till deregistration'}
+        <span className={cn(state === NODE_STATE.RUNNING ? 'text-destructive' : 'text-orange-500')}>
+          • {state === NODE_STATE.RUNNING ? 'Unlocking' : ' Deregistration'}{' '}
+          {formatTimeDistanceToNowClient(node.deregistrationDate, { addSuffix: true })}
         </span>
       );
     }

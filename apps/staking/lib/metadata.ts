@@ -7,7 +7,7 @@ export const siteMetadata: Metadata = {
   description: 'Session Staking',
 };
 
-const url = isProduction() ? 'https://staking.getsession.org' : 'http://localhost:3000';
+const url = isProduction() ? 'https://stake.getsession.org' : 'http://localhost:3000';
 
 export const wagmiMetadata: WagmiMetadata = {
   name: 'Session Staking',

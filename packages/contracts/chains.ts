@@ -19,6 +19,8 @@ export enum CHAIN {
   ETHEREUM = 'ethereum',
 }
 
+const chainNames = Object.values(CHAIN);
+
 export const chains = {
   [CHAIN.MAINNET]: mainnet,
   [CHAIN.TESTNET]: testnet,
@@ -28,10 +30,13 @@ export const chains = {
 export const chainIdMap = {
   [mainnet.id]: CHAIN.MAINNET,
   [testnet.id]: CHAIN.TESTNET,
-  [ethereum.id]: CHAIN.ETHEREUM,
 } as const;
 
 export type ChainId = keyof typeof chainIdMap;
 export type ChainData = keyof typeof chains;
+
+export function isChain(chain: string): chain is CHAIN {
+  return chainNames.includes(chain as CHAIN);
+}
 
 export { ethereum };
