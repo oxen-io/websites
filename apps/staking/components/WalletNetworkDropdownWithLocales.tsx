@@ -1,10 +1,11 @@
 import WalletNetworkDropdown from '@session/wallet/components/WalletNetworkDropdown';
 import { useTranslations } from 'next-intl';
 
-export function WalletNetworkDropdownWithLocales() {
+export function WalletNetworkDropdownWithLocales({ className }: { className?: string }) {
   const dictionary = useTranslations('wallet.networkDropdown');
   return (
     <WalletNetworkDropdown
+      className={className}
       labels={{
         mainnet: dictionary('mainnet'),
         testnet: dictionary('testnet'),

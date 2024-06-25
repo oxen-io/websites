@@ -1,5 +1,5 @@
 'use client';
-import { Module, ModuleText, ModuleTitle } from '@session/ui/components/Module';
+import { Module, ModuleText, ModuleTitle, ModuleTooltip } from '@session/ui/components/Module';
 /* import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { useAccount } from 'wagmi';
 import { ModuleQueryText } from '@/components/ModuleDynamic';
@@ -10,6 +10,7 @@ export default function UnclaimedTokensModule() {
   // const { address } = useAccount();
   return (
     <Module>
+      <ModuleTooltip>Example tooltip</ModuleTooltip>
       <ModuleTitle>Unclaimed Tokens:</ModuleTitle>
       <ModuleText>0</ModuleText>
       {/* {address ? <UnclaimedTokensQueryContainer address={address} /> : null} */}

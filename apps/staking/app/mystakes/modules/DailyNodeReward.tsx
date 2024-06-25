@@ -1,7 +1,7 @@
 'use client';
 import { ModuleContractReadText } from '@/components/ModuleDynamic';
 import useDailyNodeReward from '@/hooks/daily-node-reward';
-import { Module, ModuleTitle } from '@session/ui/components/Module';
+import { Module, ModuleTitle, ModuleTooltip } from '@session/ui/components/Module';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 
@@ -13,6 +13,7 @@ export default function DailyNodeReward() {
 
   return (
     <Module>
+      <ModuleTooltip>Example tooltip</ModuleTooltip>
       <ModuleTitle>{dictionary('title')}</ModuleTitle>
       <ModuleContractReadText
         status={status}

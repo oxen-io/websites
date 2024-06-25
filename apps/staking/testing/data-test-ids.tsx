@@ -27,11 +27,14 @@ export enum NodeCardDataTestId {
   Open_Node_Card = 'node-card:open-node-card',
 }
 
-export enum StakedNodeDateTestId {
-  Staked_Node_Card_Header = 'staked-node-card:staked-node-header',
-  Staked_Node_Card_Text = 'staked-node-card:staked-node-text',
-  Staked_Node_Card_Title = 'staked-node-card:staked-node-title',
-  Staked_Node_Card_Pub_Key = 'staked-node-card:staked-node-pub-key',
+export enum StakedNodeDataTestId {
+  Indicator = 'staked-node-card:staked-node-indicator',
+  Title = 'staked-node-card:staked-node-title',
+  Notification = 'staked-node-card:staked-node-notification',
+  Contributor_List = 'staked-node-card:staked-node-contributor-list',
+  Expand_Button = 'staked-node-card:staked-node-expand-button',
+  Collapse_Button = 'staked-node-card:staked-node-collapse-button',
+  Pub_Key = 'staked-node-card:staked-node-pub-key',
 }
 
 export enum OpenNodeDataTestId {

@@ -75,7 +75,6 @@ export async function sentTestSent({ address, chain }: { address?: Address; chai
     const serverWallet = createServerWallet(privateKey, chain);
 
     const walletAddress = (await serverWallet.getAddresses())[0];
-
     const targetEthBalancePromise = getEthBalance({ address, chain });
     const faucetEthBalancePromise = getEthBalance({ address: walletAddress, chain });
     const faucetSENTBalancePromise = getSENTBalance({ address: walletAddress, chain });

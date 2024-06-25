@@ -3,16 +3,16 @@ import { forwardRef, type HTMLAttributes } from 'react';
 import { cn } from '../lib/utils';
 import { Loading } from './loading';
 
-const moduleGridVariants = cva('module-grid h-max', {
+const moduleGridVariants = cva('module-grid', {
   variants: {
     variant: {
-      grid: 'grid',
+      grid: 'grid auto-rows-min',
       section:
-        'from-[#0A0C0C] to-[#081512] bg-gradient-to-b bg-blend-lighten shadow-md border-[2px] rounded-[40px] border-[#54797241] flex flex-col',
+        'from-[#0A0C0C] to-[#081512] bg-gradient-to-b bg-blend-lighten shadow-md border-[2px] rounded-3xl border-[#54797241] flex flex-col',
     },
     size: {
-      md: 'gap-4 grid-cols-1 sm:grid-cols-2',
-      lg: 'gap-8 xl:grid-cols-3 lg:grid-cols-2 grid-cols-1',
+      md: 'gap-2 md:gap-4 grid-cols-1 sm:grid-cols-2',
+      lg: 'lg:gap-8 xl:grid-cols-3 grid-cols-1',
     },
     colSpan: {
       1: 'xl:col-span-1 col-span-1',
@@ -38,7 +38,7 @@ const ModuleGrid = forwardRef<HTMLDivElement, ModuleGridProps>(
   ({ className, variant, size, colSpan, loading, children, ...props }, ref) => {
     return (
       <div
-        className={cn(moduleGridVariants({ variant, size, colSpan, className }))}
+        className={cn('relative', moduleGridVariants({ variant, size, colSpan, className }))}
         ref={ref}
         {...props}
       >
@@ -54,7 +54,10 @@ const ModuleGridTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadin
   ({ className, ...props }, ref) => (
     <h2
       ref={ref}
-      className={cn('my-2 text-5xl font-normal leading-none tracking-tight', className)}
+      className={cn(
+        'my-2 text-lg font-medium leading-none tracking-tight md:block md:text-3xl',
+        className
+      )}
       {...props}
     />
   )
@@ -65,7 +68,10 @@ const ModuleGridHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElemen
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex w-full flex-row items-center justify-between p-8 pb-0', className)}
+      className={cn(
+        'absolute -top-16 flex w-full flex-row items-center justify-between px-8 pt-6 md:relative md:top-0',
+        className
+      )}
       {...props}
     />
   )
@@ -76,7 +82,7 @@ const ModuleGridContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex flex-col gap-2 p-6 pt-0 align-middle', className)}
+      className={cn('flex flex-col gap-2 p-2 align-middle md:p-8 md:pt-0', className)}
       {...props}
     />
   )

@@ -17,6 +17,14 @@ export default {
         '3xl': '1920px',
       },
     },
+    screens: {
+      sm: '375px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
+      '3xl': '1920px',
+    },
     fontFamily: {
       'atyp-display': ['var(--font-atyp-display)'],
       'atyp-text': ['var(--font-atyp-text)'],
@@ -29,6 +37,15 @@ export default {
       padding: {
         'header-displacement': 'var(--header-displacement)',
       },
+      height: {
+        'screen-minus-header': 'calc(100vh - var(--header-displacement))',
+      },
+      maxHeight: {
+        'screen-minus-header': 'calc(100vh - var(--header-displacement))',
+      },
+      minHeight: {
+        'screen-minus-header': 'calc(100vh - var(--header-displacement))',
+      },
       colors: {
         session: {
           green: 'var(--session-green)',
@@ -38,7 +55,6 @@ export default {
         },
         text: {
           primary: 'var(--session-text)',
-          gradient: 'session-text-gradient',
         },
         background: {
           DEFAULT: 'var(--session-background)',
@@ -95,6 +111,10 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+      },
+      backgroundImage: {
+        module: 'var(--session-module-gradient)',
+        'module-outline': 'var(--session-module-outline-gradient)',
       },
     },
     keyframes: {

@@ -29,4 +29,4 @@ export const addresses: Record<ContractName, Record<CHAIN.MAINNET | CHAIN.TESTNE
 } as const;
 
 export const SENT_DECIMALS = 9;
-export const SENT_SYMBOL = '$SENT';
+export const SENT_SYMBOL = 'SENT';

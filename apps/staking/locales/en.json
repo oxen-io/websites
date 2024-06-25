@@ -54,7 +54,7 @@
     "homeButton": "Return Home"
   },
   "home": {
-    "title": "Stake <bold>{tokenSymbol}</bold> Earn Rewards",
+    "title": "Stake <semibold>{tokenSymbol}</semibold> Earn Rewards",
     "buttons": {
       "primary": "STAKE NOW",
       "secondary": "HOW TO RUN A SESSION NODE"
@@ -156,10 +156,33 @@
       "maxContributionDescription": "Maximum amount of {tokenSymbol} that can be staked.",
       "fee": "Fee:",
       "feeDescription": "The node operator fee.",
-      "stakeButton": {
-        "stake": "STAKE",
-        "ariaLabel": "Open the stake to a node form"
+      "button": {
+        "text": "View",
+        "ariaLabel": "View the node details in the side pannel"
       }
+    },
+    "staked": {
+      "operator": "Operator",
+      "labelExpand": "Expand",
+      "ariaExpand": "Expand node details",
+      "labelCollapse": "Collapse",
+      "ariaCollapse": "Collapse node details",
+      "lastUptime": "Last Uptime: {time}",
+      "lastUptimeDescription": "Last time the node was online.",
+      "lastRewardHeight": "Last Reward Height: {height}",
+      "lastRewardHeightDescription": "Last block height the node received rewards.",
+      "pubKey": "<medium>Public Key:</medium> {pubKey}",
+      "pubKeyDescription": "Public key of the node.",
+      "stakedBalance": "<medium>Staked Balance:</medium> {balance} {tokenSymbol}",
+      "stakedBalanceDescription": "Total {tokenSymbol} staked in the node.",
+      "operatorFee": "<medium>Operator Fee:</medium> {fee}",
+      "operatorFeeDescription": "The node operator fee.",
+      "unlockingTimerNotification": "Unlocking {time}",
+      "unlockingTimerDescription": "Time left until the node is unlocked.",
+      "deregistrationTimerNotification": "Deregistration {time}",
+      "deregistrationTimerDescription": "Time left until the node is deregistered.",
+      "liquidationNotification": "Awaiting liquidation",
+      "liquidationDescription": "Node is awaiting liquidation by the network."
     }
   }
 }

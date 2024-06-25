@@ -1,12 +1,18 @@
 'use client';
-import { formatTimeDistanceToNowClient } from '@/lib/locale-client';
+import { formatPercentage, formatTimeDistanceToNowClient } from '@/lib/locale-client';
+import { NodeCardDataTestId, StakedNodeDataTestId } from '@/testing/data-test-ids';
 import { NODE_STATE } from '@session/sent-staking-js';
+import { TextSeparator } from '@session/ui/components/Separator';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import { ArrowDownIcon } from '@session/ui/icons/ArrowDownIcon';
 import { HumanIcon } from '@session/ui/icons/HumanIcon';
+import { SpannerAndScrewdriverIcon } from '@session/ui/icons/SpannerAndScrewdriverIcon';
 import { cn } from '@session/ui/lib/utils';
-import { type VariantProps } from 'class-variance-authority';
-import { forwardRef, useId, useMemo, type HTMLAttributes } from 'react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
+import { useWallet } from '@session/wallet/hooks/wallet-hooks';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { useTranslations } from 'next-intl';
+import { forwardRef, useId, useState, type HTMLAttributes } from 'react';
 import { NodeCard, NodeCardText, NodeCardTitle, NodePubKey } from './NodeCard';
 
 export const NODE_STATE_VALUES = Object.values(NODE_STATE);
@@ -29,7 +35,7 @@ export interface GenericStakedNode {
 
 type RunningStakedNode = GenericStakedNode & {
   state: NODE_STATE.RUNNING;
-  deregistrationDate?: Date;
+  unlockDate?: Date;
 };
 
 type AwaitingContributorsStakedNode = GenericStakedNode & {
@@ -41,6 +47,7 @@ type CancelledStakedNode = GenericStakedNode & { state: NODE_STATE.CANCELLED };
 type DecommissionedStakedNode = GenericStakedNode & {
   state: NODE_STATE.DECOMMISSIONED;
   deregistrationDate: Date;
+  unlockDate?: Date;
 };
 
 type DeregisteredStakedNode = GenericStakedNode & {
@@ -48,8 +55,8 @@ type DeregisteredStakedNode = GenericStakedNode & {
   requiresLiquidation?: boolean;
 };
 
-type VoluntaryDeregistrationStakedNode = GenericStakedNode & {
-  state: NODE_STATE.VOLUNTARY_DEREGISTRATION;
+type UnlockedStakedNode = GenericStakedNode & {
+  state: NODE_STATE.UNLOCKED;
 };
 
 export type StakedNode =
@@ -58,7 +65,7 @@ export type StakedNode =
   | CancelledStakedNode
   | DecommissionedStakedNode
   | DeregisteredStakedNode
-  | VoluntaryDeregistrationStakedNode;
+  | UnlockedStakedNode;
 
 /** Type assertions */
 const isRunning = (node: StakedNode): node is RunningStakedNode =>
@@ -76,8 +83,8 @@ const isDecommissioned = (node: StakedNode): node is DecommissionedStakedNode =>
 const isDeregistered = (node: StakedNode): node is DeregisteredStakedNode =>
   node.state === NODE_STATE.DEREGISTERED;
 
-const isVoluntaryDeregistration = (node: StakedNode): node is VoluntaryDeregistrationStakedNode =>
-  node.state === NODE_STATE.VOLUNTARY_DEREGISTRATION;
+const isUnlocked = (node: StakedNode): node is UnlockedStakedNode =>
+  node.state === NODE_STATE.UNLOCKED;
 
 /** State assertions */
 
@@ -88,8 +95,13 @@ const isVoluntaryDeregistration = (node: StakedNode): node is VoluntaryDeregistr
  */
 const isBeingDeregistered = (
   node: StakedNode
-): node is (RunningStakedNode | DecommissionedStakedNode) & { deregistrationDate: Date } =>
+): node is DecommissionedStakedNode & { deregistrationDate: Date } =>
   'deregistrationDate' in node && node.deregistrationDate !== undefined;
+
+const isBeingUnlocked = (
+  node: StakedNode
+): node is (RunningStakedNode | DecommissionedStakedNode) & { unlockDate: Date } =>
+  'unlockDate' in node && node.unlockDate !== undefined;
 
 /**
  * Checks if a given node is awaiting liquidation.
@@ -129,126 +141,295 @@ function getNodeStatus(state: NODE_STATE): VariantProps<typeof statusVariants>['
     case NODE_STATE.CANCELLED:
     case NODE_STATE.DEREGISTERED:
       return 'red';
-    case NODE_STATE.VOLUNTARY_DEREGISTRATION:
+    case NODE_STATE.UNLOCKED:
     default:
       return 'grey';
   }
 }
 
-const StakedNodeContributorList = forwardRef<
-  HTMLDivElement,
-  HTMLAttributes<HTMLDivElement> & { node: Pick<StakedNode, 'contributors' | 'state'> }
->(({ className, node: { contributors, state }, ...props }, ref) => {
-  return (
-    <div
-      className={cn('-mb-0.5 flex flex-row gap-1 self-baseline align-baseline', className)}
+type StakedNodeContributorListProps = HTMLAttributes<HTMLDivElement> & {
+  contributors: Contributor[];
+  showEmptySlots?: boolean;
+  expanded?: boolean;
+};
+
+const StakedNodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorListProps>(
+  ({ className, contributors, showEmptySlots, ...props }, ref) => {
+    const { address: userAddress } = useWallet();
+    const userContributor = contributors.find(({ address }) => address === userAddress);
+    const otherContributors = contributors.filter(({ address }) => address !== userAddress);
+    return (
+      <>
+        <ContributorIcon className="-mr-1" contributor={userContributor} isUser />
+        <div
+          className={cn(
+            'flex w-min flex-row items-center overflow-x-hidden align-middle md:peer-checked:gap-1 [&>span]:w-max [&>span]:opacity-100 md:peer-checked:[&>span]:w-0 md:peer-checked:[&>span]:opacity-0 [&>svg]:w-0 [&>svg]:transition-all [&>svg]:duration-300 [&>svg]:motion-reduce:transition-none md:peer-checked:[&>svg]:w-4',
+            className
+          )}
+          ref={ref}
+          {...props}
+        >
+          {otherContributors.map((contributor) => (
+            <ContributorIcon
+              key={contributor.address}
+              contributor={contributor}
+              className={cn('fill-text-primary h-4')}
+            />
+          ))}
+          {showEmptySlots
+            ? Array.from({
+                length: 10 - contributors.length,
+              }).map((_, index) => (
+                <ContributorIcon key={index} className="fill-text-primary h-4" />
+              ))
+            : null}
+          <span className={cn('mt-0.5 block text-lg transition-all duration-300 ease-in-out')}>
+            {contributors.length}
+            {showEmptySlots ? '/10' : null}
+          </span>
+        </div>
+      </>
+    );
+  }
+);
+
+type ToggleCardExpansionButtonProps = HTMLAttributes<HTMLLabelElement> & {
+  htmlFor: string;
+};
+
+const ToggleCardExpansionButton = forwardRef<HTMLLabelElement, ToggleCardExpansionButtonProps>(
+  ({ className, ...props }, ref) => {
+    const [expanded, setExpanded] = useState(false);
+    const dictionary = useTranslations('nodeCard.staked');
+    return (
+      <label
+        ref={ref}
+        role="button"
+        onClick={() => setExpanded((prev) => !prev)}
+        aria-label={expanded ? dictionary(`ariaCollapse`) : dictionary(`ariaExpand`)}
+        data-testid={
+          expanded ? StakedNodeDataTestId.Collapse_Button : StakedNodeDataTestId.Expand_Button
+        }
+        className={cn(
+          'ml-auto flex w-max cursor-pointer select-none items-center align-middle peer-checked:[&>svg]:rotate-180',
+          className
+        )}
+        {...props}
+      >
+        <span className="text-gradient-white hidden font-medium lg:inline-block">
+          {expanded ? dictionary('labelCollapse') : dictionary('labelExpand')}
+        </span>
+        <ArrowDownIcon
+          className={cn(
+            'ml-1 h-4 w-4 transform transition-all duration-300 ease-in-out motion-reduce:transition-none'
+          )}
+        />
+      </label>
+    );
+  }
+);
+
+const NodeNotification = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
+  ({ className, children, ...props }, ref) => (
+    <span
       ref={ref}
+      className={cn(
+        'flex w-3/4 flex-row gap-2 text-xs font-normal sm:w-max md:text-base',
+        className
+      )}
       {...props}
     >
-      {Array.from({
-        length: state === NODE_STATE.AWAITING_CONTRIBUTORS ? 10 : contributors.length,
-      }).map((_, i) => (
-        <HumanIcon
-          key={i}
-          full={i < contributors.length}
-          className={cn(i === 0 ? 'block' : 'hidden xl:block')}
-        />
-      ))}
-      <span className={'block text-xl xl:hidden'}>
-        {contributors.length}
-        {state === NODE_STATE.AWAITING_CONTRIBUTORS ? '/10' : null}
-      </span>
-    </div>
-  );
-});
+      <span>•</span>
+      {children}
+    </span>
+  )
+);
 
+const NodeOperatorIndicator = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
+  ({ className, ...props }, ref) => {
+    const dictionary = useTranslations('nodeCard.staked');
+
+    return (
+      <>
+        <span
+          ref={ref}
+          className={cn(
+            'text-session-green flex w-max flex-row items-center gap-1 align-middle text-sm font-normal sm:w-max md:text-base',
+            className
+          )}
+          {...props}
+        >
+          <SpannerAndScrewdriverIcon className="fill-session-green mb-1 h-3.5 w-3.5" />
+          <span>{dictionary('operator')}</span>
+        </span>
+        <TextSeparator className="mx-1 font-medium" />
+      </>
+    );
+  }
+);
+
+const ContributorIcon = ({
+  className,
+  contributor,
+  isUser,
+}: {
+  className?: string;
+  contributor?: Contributor;
+  isUser?: boolean;
+}) => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <HumanIcon
+        className={cn('fill-text-primary h-4 w-4 cursor-pointer', className)}
+        full={Boolean(contributor)}
+      />
+    </TooltipTrigger>
+    <TooltipContent>
+      <p>
+        {contributor
+          ? `${isUser ? 'You' : ''} ${contributor.address} | ${contributor.amount}`
+          : 'Empty contributor slot'}
+      </p>
+    </TooltipContent>
+  </Tooltip>
+);
+
+const NodeSummary = ({ node }: { node: StakedNode }) => {
+  const dictionary = useTranslations('nodeCard.staked');
+  if (isAwaitingLiquidation(node)) {
+    return (
+      <NodeNotification className="text-destructive">
+        {dictionary('liquidationNotification')}
+      </NodeNotification>
+    );
+  }
+
+  if (isBeingDeregistered(node)) {
+    return (
+      <NodeNotification className="text-destructive">
+        {dictionary('deregistrationTimerNotification', {
+          time: formatTimeDistanceToNowClient(node.deregistrationDate, { addSuffix: true }),
+        })}
+      </NodeNotification>
+    );
+  }
+
+  if (isBeingUnlocked(node)) {
+    return (
+      <NodeNotification className="text-orange-500">
+        {dictionary('deregistrationTimerNotification', {
+          time: formatTimeDistanceToNowClient(node.unlockDate, { addSuffix: true }),
+        })}
+      </NodeNotification>
+    );
+  }
+
+  if (node.state === NODE_STATE.AWAITING_CONTRIBUTORS || node.state === NODE_STATE.RUNNING) {
+    //separate user from others
+
+    return (
+      <StakedNodeContributorList
+        contributors={node.contributors}
+        showEmptySlots={node.state === NODE_STATE.AWAITING_CONTRIBUTORS}
+        data-testid={StakedNodeDataTestId.Contributor_List}
+      />
+    );
+  }
+
+  return null;
+};
+
+const collapsableContentVariants = cva(
+  'h-full max-h-0 w-full select-none gap-1 overflow-y-hidden transition-all duration-300 ease-in-out peer-checked:select-auto motion-reduce:transition-none',
+  {
+    variants: {
+      size: {
+        xs: 'text-xs md:text-xs peer-checked:max-h-4',
+        base: 'text-sm md:text-base peer-checked:max-h-6',
+      },
+    },
+    defaultVariants: {
+      size: 'base',
+    },
+  }
+);
+
+type CollapsableContentProps = React.HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof collapsableContentVariants>;
+
+const CollapsableContent = forwardRef<HTMLDivElement, CollapsableContentProps>(
+  ({ className, size, ...props }, ref) => (
+    <NodeCardText
+      ref={ref}
+      className={cn(collapsableContentVariants({ size, className }))}
+      {...props}
+    />
+  )
+);
+``;
 const StakedNodeCard = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement> & { node: StakedNode }
 >(({ className, node, ...props }, ref) => {
+  const dictionary = useTranslations('nodeCard.staked');
   const id = useId();
+  const { address } = useWallet();
   const { state, pubKey, balance, operatorFee, lastRewardHeight, lastUptime } = node;
 
-  const nodeNotification = useMemo(() => {
-    if (isBeingDeregistered(node)) {
-      return (
-        <span className={cn(state === NODE_STATE.RUNNING ? 'text-destructive' : 'text-orange-500')}>
-          • {state === NODE_STATE.RUNNING ? 'Unlocking' : ' Deregistration'}{' '}
-          {formatTimeDistanceToNowClient(node.deregistrationDate, { addSuffix: true })}
-        </span>
-      );
-    }
-
-    if (isAwaitingLiquidation(node)) {
-      return <span className="text-red-500">• Awaiting liquidation</span>;
-    }
-
-    return null;
-  }, [node]);
-
   return (
-    <NodeCard ref={ref} {...props}>
-      <div className={cn('grid grid-cols-10', className)}>
-        <label
-          className="col-span-8 flex w-full cursor-pointer items-baseline gap-4 align-middle"
-          htmlFor={id}
-          aria-label="Toggle details expansion"
-          title="Toggle details expansion"
-        >
-          <div className="p-0.5">
-            <StatusIndicator status={getNodeStatus(state)} />
-          </div>
-          <NodeCardTitle>{state}</NodeCardTitle>
-          {nodeNotification ?? (
-            <StakedNodeContributorList
-              node={node}
-              className={cn(
-                state !== NODE_STATE.AWAITING_CONTRIBUTORS &&
-                  state !== NODE_STATE.RUNNING &&
-                  'hidden'
-              )}
-            />
-          )}
-        </label>
-        <input type="checkbox" className="peer hidden appearance-none" id={id} />
-        <label
-          className="col-span-2 flex w-full cursor-pointer items-center justify-end align-middle peer-checked:hidden"
-          htmlFor={id}
-          aria-label="Expand"
-          title="Expand"
-        >
-          <span className="hidden xl:block">Expand</span>
-          <ArrowDownIcon className="ml-1 h-5 w-5" />
-        </label>
-        <label
-          className="col-span-2 hidden w-full cursor-pointer items-center justify-end align-middle peer-checked:flex"
-          htmlFor={id}
-          aria-label="Collapse"
-          title="Collapse"
-        >
-          <span className="hidden xl:block">Collapse</span>
-          <ArrowDownIcon className="ml-1 h-5 w-5 rotate-180 transform" />
-        </label>
-        <div className="col-span-10 mt-3 hidden max-h-0 flex-col align-middle peer-checked:flex peer-checked:max-h-max">
-          <div className="mb-2 flex flex-col text-xs opacity-40">
-            <span className="font-bold">Last Reward Height: {lastRewardHeight}</span>
-            <span className="font-bold">
-              Last Uptime: {formatTimeDistanceToNowClient(lastUptime)}
-            </span>
-          </div>
-        </div>
-        <NodeCardText className="col-span-10 flex flex-row gap-1 peer-checked:[&>div>button]:block peer-checked:[&>div>div]:block peer-checked:[&>div>span]:hidden">
-          <span className="font-bold">Public Key:</span> <NodePubKey pubKey={pubKey} />
-        </NodeCardText>
-        <div className="col-span-10 hidden max-h-0 flex-col align-middle peer-checked:flex peer-checked:max-h-max">
-          <NodeCardText>
-            <span className="font-bold">Balance:</span> {balance.toFixed(2)}
-          </NodeCardText>
-          <NodeCardText>
-            <span className="font-bold">Operator Fee:</span> {(operatorFee * 100).toFixed(2)}%
-          </NodeCardText>
-        </div>
-      </div>
+    <NodeCard
+      ref={ref}
+      {...props}
+      className={cn(
+        'flex flex-row flex-wrap items-center gap-x-2 gap-y-0.5 overflow-hidden pb-4 align-middle',
+        className
+      )}
+      data-testid={NodeCardDataTestId.Staked_Node}
+    >
+      <input id={id} type="checkbox" className="peer hidden appearance-none" />
+      <StatusIndicator
+        status={getNodeStatus(state)}
+        className="mb-1"
+        data-testid={StakedNodeDataTestId.Indicator}
+      />
+      <NodeCardTitle data-testid={StakedNodeDataTestId.Title}>{state}</NodeCardTitle>
+      <NodeSummary node={node} />
+      <ToggleCardExpansionButton htmlFor={id} />
+      {isBeingDeregistered(node) && isBeingUnlocked(node) ? (
+        <CollapsableContent className="text-orange-500 opacity-60" size="xs">
+          {dictionary('deregistrationTimerNotification', {
+            time: formatTimeDistanceToNowClient(node.unlockDate, { addSuffix: true }),
+          })}
+        </CollapsableContent>
+      ) : null}
+      {state === NODE_STATE.DECOMMISSIONED ||
+      state === NODE_STATE.DEREGISTERED ||
+      state === NODE_STATE.UNLOCKED ? (
+        <CollapsableContent className="font-medium opacity-60" size="xs">
+          {dictionary('lastRewardHeight', { height: lastRewardHeight })}
+        </CollapsableContent>
+      ) : null}
+      <CollapsableContent className="font-medium opacity-60" size="xs">
+        {dictionary('lastUptime', { time: formatTimeDistanceToNowClient(lastUptime) })}
+      </CollapsableContent>
+      <NodeCardText className="flex w-full flex-row gap-1 peer-checked:[&>span>span>button]:block peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">
+        {/** TODO - Investigating having react components as localized variables */}
+        <span className="flex flex-row gap-1">
+          {address && isNodeOperator(node, address) ? <NodeOperatorIndicator /> : null}
+          {dictionary.rich('pubKey', { pubKey: '' })}
+          <NodePubKey pubKey={pubKey} />
+        </span>
+      </NodeCardText>
+      <CollapsableContent>
+        {dictionary.rich('stakedBalance', {
+          balance: `${balance.toFixed(2)}`,
+        })}
+      </CollapsableContent>
+      <CollapsableContent>
+        {dictionary.rich('operatorFee', {
+          fee: formatPercentage(operatorFee),
+        })}
+      </CollapsableContent>
     </NodeCard>
   );
 });

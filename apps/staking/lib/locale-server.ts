@@ -3,6 +3,7 @@
 import { getLocale, getMessages, getRequestConfig as i18nGetRequestConfig } from 'next-intl/server';
 import { headers } from 'next/headers';
 import { getLangDir } from 'rtl-detect';
+import { defaultTranslationValues } from './locale-defaults';
 import { matchClosestLocale } from './locale-util';
 
 export const getServerSideLocale = () => {
@@ -22,6 +23,7 @@ const getRequestConfig: ReturnType<typeof i18nGetRequestConfig> = i18nGetRequest
   return {
     locale,
     messages: (await import(`../locales/${locale}.json`)).default,
+    defaultTranslationValues,
   };
 });
 

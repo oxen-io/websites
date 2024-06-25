@@ -6,6 +6,11 @@
   },
   "editor.formatOnSave": true,
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+    ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
   "spellright.language": ["en-US-10-1."],
   "spellright.documentTypes": ["markdown", "latex", "plaintext"]
 }
