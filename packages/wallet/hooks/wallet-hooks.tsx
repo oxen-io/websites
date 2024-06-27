@@ -2,8 +2,8 @@ import { SENT_DECIMALS, SENT_SYMBOL, addresses } from '@session/contracts';
 import { CHAIN, ChainId, chainIdMap, chains } from '@session/contracts/chains';
 import { useEns } from '@session/contracts/hooks/ens';
 import { useMemo, useState } from 'react';
-import { createWalletClient, custom, type Address } from 'viem';
-import { useAccount, useConfig } from 'wagmi';
+import { createWalletClient, custom, formatEther, type Address } from 'viem';
+import { useAccount, useBalance, useConfig } from 'wagmi';
 import { switchChain as switchChainWagmi } from 'wagmi/actions';
 import { useArbName } from './arb';
 
@@ -53,6 +53,8 @@ type UseWalletType = {
   ensAvatar?: string | null;
   /** The .arb name of the wallet. */
   arbName?: string | null;
+  /** The balance of the wallet. */
+  ethBalance?: string | null;
   /** The status of the wallet. */
   status: WALLET_STATUS;
   /** Whether the wallet is connected. */
@@ -61,6 +63,10 @@ type UseWalletType = {
 
 export function useWallet(): UseWalletType {
   const { address, isConnected, isConnecting, isDisconnected, isReconnecting } = useAccount();
+  const { data: ethBalanceData } = useBalance({
+    address,
+    query: { enabled: isConnected },
+  });
   const { ensName, ensAvatar } = useEns({
     address,
     enabled: isConnected,
@@ -68,12 +74,17 @@ export function useWallet(): UseWalletType {
 
   const { arbName } = useArbName({ address });
 
+  const ethBalance = useMemo(
+    () => (ethBalanceData ? formatEther(ethBalanceData?.value) : null),
+    [ethBalanceData]
+  );
+
   const status = useMemo(
     () => parseWalletStatus({ isConnected, isConnecting, isDisconnected, isReconnecting }),
     [isConnected, isConnecting, isDisconnected, isReconnecting]
   );
 
-  return { address, ensName, ensAvatar, arbName, status, isConnected };
+  return { address, ensName, ensAvatar, arbName, status, isConnected, ethBalance };
 }
 
 export function useWalletChain() {
