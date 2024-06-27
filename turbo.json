@@ -16,6 +16,10 @@
       "persistent": true,
       "cache": false
     },
+    "start": {
+      "persistent": true,
+      "cache": false
+    },
     "check-types": {
       "dependsOn": ["^check-types"]
     },
