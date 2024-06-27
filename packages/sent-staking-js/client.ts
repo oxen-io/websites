@@ -1,4 +1,4 @@
-import { generateMockNodeData } from './test';
+import { generateMockNodeData, genereateOpenNodes } from './test';
 
 /** /info */
 interface NetworkInfoResponse {
@@ -68,6 +68,19 @@ export interface ServiceNode {
   /** TODO - Add this to the backend api */
   awaiting_liquidation?: boolean;
   //can_restake?: boolean;
+}
+
+export interface OpenNode {
+  pubKey: string;
+  operatorFee: number;
+  minContribution: number;
+  maxContribution: number;
+  contributors: Contributor[];
+  operatorAddress: string;
+}
+
+export interface GetOpenNodesResponse {
+  nodes: OpenNode[];
 }
 
 /** /store */
@@ -171,6 +184,19 @@ export class SessionStakingClient {
       method: 'GET',
     };
     return this.request<NetworkInfoResponse>(options);
+  }
+
+  public async getOpenNodes({
+    userAddress,
+  }: {
+    userAddress: string;
+  }): Promise<SSBResponse<GetOpenNodesResponse>> {
+    const nodes = genereateOpenNodes({ userAddress });
+    return {
+      body: { nodes },
+      status: 200,
+      statusText: 'MOCK',
+    };
   }
 
   /**
@@ -289,6 +315,7 @@ export type SessionStakingClientMethodResponseMap = {
   getNetworkInfo: NetworkInfoResponse;
   getNodesForEthWallet: GetNodesForWalletResponse;
   getNodesForOxenWallet: GetNodesForWalletResponse;
+  getOpenNodes: GetOpenNodesResponse;
   storeRegistration: StoreRegistrationResponse;
   loadRegistrations: LoadRegistrationsResponse;
   getOperatorRegistrations: LoadRegistrationsResponse;

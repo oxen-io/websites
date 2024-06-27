@@ -1,5 +1,6 @@
 import {
   NODE_STATE,
+  OpenNode,
   type Contributor,
   type GetNodesForWalletResponse,
   type ServiceNode,
@@ -304,4 +305,72 @@ export const generateMockNodeData = ({
   mockNodeData.nodes.push(generateUnlockedNode({ userAddress, operatorAddress, canRestake: true }));
 
   return mockNodeData;
+};
+
+export const genereateOpenNodes = ({ userAddress }: { userAddress: string }): Array<OpenNode> => {
+  return [
+    {
+      pubKey:
+        'LCys52dasGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtMTfb6BSoT8eb3G7Fd6p4',
+      maxContribution: 1000,
+      minContribution: 100,
+      operatorFee: 0.1,
+      contributors: generateContributors(0),
+      operatorAddress: generateWalletAddress(),
+    },
+    {
+      pubKey:
+        'LCys52dasGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtMTfA6BSoT8eb3G7Fd6p4',
+      maxContribution: 1000,
+      minContribution: 100,
+      operatorFee: 0.1,
+      contributors: generateContributors(0),
+      operatorAddress: userAddress,
+    },
+    {
+      pubKey:
+        'LCyJd2dFcGmZsz5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtMTfA6BSoT8eb3G7Fd6p5',
+      maxContribution: 1000,
+      minContribution: 100,
+      operatorFee: 0.1,
+      contributors: generateContributors(1),
+      operatorAddress: generateWalletAddress(),
+    },
+    {
+      pubKey:
+        'LCya52dFcGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtaTfA6BSoT8eb3G7Fd6p6',
+      maxContribution: 1000,
+      minContribution: 100,
+      operatorFee: 0.1,
+      contributors: generateContributors(2, userAddress),
+      operatorAddress: userAddress,
+    },
+    {
+      pubKey:
+        'LCya52dFcGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtMTfA6BSoT8eb3G7Fd6p6',
+      maxContribution: 1000,
+      minContribution: 100,
+      operatorFee: 0.1,
+      contributors: generateContributors(2),
+      operatorAddress: generateWalletAddress(),
+    },
+    {
+      pubKey:
+        'LCyJg2dFcGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCfMTfA6BSoT8eb3G7Fd6p7',
+      maxContribution: 1000,
+      minContribution: 100,
+      operatorFee: 0.1,
+      contributors: generateContributors(4),
+      operatorAddress: generateWalletAddress(),
+    },
+    {
+      pubKey:
+        'LCyJ5bdFcGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtMTfA6BSoT8eb3G7Fd6p8',
+      maxContribution: 1000,
+      minContribution: 100,
+      operatorFee: 0.1,
+      contributors: generateContributors(10),
+      operatorAddress: generateWalletAddress(),
+    },
+  ];
 };
