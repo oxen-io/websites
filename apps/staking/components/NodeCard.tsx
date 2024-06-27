@@ -1,11 +1,18 @@
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { CopyToClipboardButton } from '@session/ui/components/CopyToClipboardButton';
 import { Loading } from '@session/ui/components/loading';
+import { HumanIcon } from '@session/ui/icons/HumanIcon';
 import { cn } from '@session/ui/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
+import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { useTranslations } from 'next-intl';
 import { forwardRef, useEffect, useMemo, useState, type HTMLAttributes } from 'react';
+
+export interface Contributor {
+  address: string;
+  amount: number;
+}
 
 export const outerNodeCardVariants = cva(
   'rounded-xl transition-all ease-in-out bg-module-outline bg-blend-lighten shadow-md p-px',
@@ -181,4 +188,88 @@ const NodePubKey = forwardRef<HTMLDivElement, NodePubKeyType>(
 );
 NodePubKey.displayName = 'NodePubKey';
 
-export { NodeCard, NodeCardHeader, NodeCardText, NodeCardTitle, NodePubKey, innerNodeCardVariants };
+const ContributorIcon = ({
+  className,
+  contributor,
+  isUser,
+}: {
+  className?: string;
+  contributor?: Contributor;
+  isUser?: boolean;
+}) => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <HumanIcon
+        className={cn('fill-text-primary h-4 w-4 cursor-pointer', className)}
+        full={Boolean(contributor)}
+      />
+    </TooltipTrigger>
+    <TooltipContent>
+      <p>
+        {contributor
+          ? `${isUser ? 'You' : ''} ${contributor.address} | ${contributor.amount}`
+          : 'Empty contributor slot'}
+      </p>
+    </TooltipContent>
+  </Tooltip>
+);
+
+type StakedNodeContributorListProps = HTMLAttributes<HTMLDivElement> & {
+  contributors: Contributor[];
+  showEmptySlots?: boolean;
+  forceExpand?: boolean;
+};
+
+const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorListProps>(
+  ({ className, contributors, showEmptySlots, forceExpand, ...props }, ref) => {
+    const { address: userAddress } = useWallet();
+    const userContributor = contributors.find(({ address }) => address === userAddress);
+    const otherContributors = contributors.filter(({ address }) => address !== userAddress);
+    return (
+      <>
+        <ContributorIcon className="-mr-1" contributor={userContributor} isUser />
+        <div
+          className={cn(
+            'flex w-min flex-row items-center overflow-x-hidden align-middle',
+            forceExpand
+              ? 'md:gap-1 md:[&>span]:w-0 md:[&>span]:opacity-0 md:[&>svg]:w-4'
+              : 'md:peer-checked:gap-1 [&>span]:w-max [&>span]:opacity-100 md:peer-checked:[&>span]:w-0 md:peer-checked:[&>span]:opacity-0 [&>svg]:w-0 [&>svg]:transition-all [&>svg]:duration-300 [&>svg]:motion-reduce:transition-none md:peer-checked:[&>svg]:w-4',
+            className
+          )}
+          ref={ref}
+          {...props}
+        >
+          {otherContributors.map((contributor) => (
+            <ContributorIcon
+              key={contributor.address}
+              contributor={contributor}
+              className={cn('fill-text-primary h-4')}
+            />
+          ))}
+          {showEmptySlots
+            ? Array.from({
+                length: 10 - contributors.length,
+              }).map((_, index) => (
+                <ContributorIcon key={index} className="fill-text-primary h-4" />
+              ))
+            : null}
+          <span className={cn('mt-0.5 block text-lg transition-all duration-300 ease-in-out')}>
+            {contributors.length}
+            {showEmptySlots ? '/10' : null}
+          </span>
+        </div>
+      </>
+    );
+  }
+);
+
+export {
+  ContributorIcon,
+  NodeCard,
+  NodeCardHeader,
+  NodeCardText,
+  NodeCardTitle,
+  NodeContributorList,
+  NodePubKey,
+  innerNodeCardVariants,
+};

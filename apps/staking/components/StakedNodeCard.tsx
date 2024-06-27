@@ -5,22 +5,22 @@ import { NODE_STATE } from '@session/sent-staking-js';
 import { TextSeparator } from '@session/ui/components/Separator';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import { ArrowDownIcon } from '@session/ui/icons/ArrowDownIcon';
-import { HumanIcon } from '@session/ui/icons/HumanIcon';
 import { SpannerAndScrewdriverIcon } from '@session/ui/icons/SpannerAndScrewdriverIcon';
 import { cn } from '@session/ui/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { useTranslations } from 'next-intl';
 import { forwardRef, useId, useState, type HTMLAttributes } from 'react';
-import { NodeCard, NodeCardText, NodeCardTitle, NodePubKey } from './NodeCard';
+import {
+  Contributor,
+  NodeCard,
+  NodeCardText,
+  NodeCardTitle,
+  NodeContributorList,
+  NodePubKey,
+} from './NodeCard';
 
 export const NODE_STATE_VALUES = Object.values(NODE_STATE);
-
-interface Contributor {
-  address: string;
-  amount: number;
-}
 
 export interface GenericStakedNode {
   state: NODE_STATE;
@@ -147,52 +147,6 @@ function getNodeStatus(state: NODE_STATE): VariantProps<typeof statusVariants>['
   }
 }
 
-type StakedNodeContributorListProps = HTMLAttributes<HTMLDivElement> & {
-  contributors: Contributor[];
-  showEmptySlots?: boolean;
-  expanded?: boolean;
-};
-
-const StakedNodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorListProps>(
-  ({ className, contributors, showEmptySlots, ...props }, ref) => {
-    const { address: userAddress } = useWallet();
-    const userContributor = contributors.find(({ address }) => address === userAddress);
-    const otherContributors = contributors.filter(({ address }) => address !== userAddress);
-    return (
-      <>
-        <ContributorIcon className="-mr-1" contributor={userContributor} isUser />
-        <div
-          className={cn(
-            'flex w-min flex-row items-center overflow-x-hidden align-middle md:peer-checked:gap-1 [&>span]:w-max [&>span]:opacity-100 md:peer-checked:[&>span]:w-0 md:peer-checked:[&>span]:opacity-0 [&>svg]:w-0 [&>svg]:transition-all [&>svg]:duration-300 [&>svg]:motion-reduce:transition-none md:peer-checked:[&>svg]:w-4',
-            className
-          )}
-          ref={ref}
-          {...props}
-        >
-          {otherContributors.map((contributor) => (
-            <ContributorIcon
-              key={contributor.address}
-              contributor={contributor}
-              className={cn('fill-text-primary h-4')}
-            />
-          ))}
-          {showEmptySlots
-            ? Array.from({
-                length: 10 - contributors.length,
-              }).map((_, index) => (
-                <ContributorIcon key={index} className="fill-text-primary h-4" />
-              ))
-            : null}
-          <span className={cn('mt-0.5 block text-lg transition-all duration-300 ease-in-out')}>
-            {contributors.length}
-            {showEmptySlots ? '/10' : null}
-          </span>
-        </div>
-      </>
-    );
-  }
-);
-
 type ToggleCardExpansionButtonProps = HTMLAttributes<HTMLLabelElement> & {
   htmlFor: string;
 };
@@ -268,32 +222,6 @@ const NodeOperatorIndicator = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpa
   }
 );
 
-const ContributorIcon = ({
-  className,
-  contributor,
-  isUser,
-}: {
-  className?: string;
-  contributor?: Contributor;
-  isUser?: boolean;
-}) => (
-  <Tooltip>
-    <TooltipTrigger asChild>
-      <HumanIcon
-        className={cn('fill-text-primary h-4 w-4 cursor-pointer', className)}
-        full={Boolean(contributor)}
-      />
-    </TooltipTrigger>
-    <TooltipContent>
-      <p>
-        {contributor
-          ? `${isUser ? 'You' : ''} ${contributor.address} | ${contributor.amount}`
-          : 'Empty contributor slot'}
-      </p>
-    </TooltipContent>
-  </Tooltip>
-);
-
 const NodeSummary = ({ node }: { node: StakedNode }) => {
   const dictionary = useTranslations('nodeCard.staked');
   if (isAwaitingLiquidation(node)) {
@@ -328,7 +256,7 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
     //separate user from others
 
     return (
-      <StakedNodeContributorList
+      <NodeContributorList
         contributors={node.contributors}
         showEmptySlots={node.state === NODE_STATE.AWAITING_CONTRIBUTORS}
         data-testid={StakedNodeDataTestId.Contributor_List}
@@ -412,6 +340,7 @@ const StakedNodeCard = forwardRef<
       <CollapsableContent className="font-medium opacity-60" size="xs">
         {dictionary('lastUptime', { time: formatTimeDistanceToNowClient(lastUptime) })}
       </CollapsableContent>
+      {/** NOTE - ensure any changes here still work with the pubkey component */}
       <NodeCardText className="flex w-full flex-row gap-1 peer-checked:[&>span>span>button]:block peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">
         {/** TODO - Investigating having react components as localized variables */}
         <span className="flex flex-row gap-1">
