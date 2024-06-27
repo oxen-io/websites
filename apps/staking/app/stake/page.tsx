@@ -1,18 +1,17 @@
-import { ModuleGrid } from '@session/ui/components/ModuleGrid';
-import PriceModule from '../mystakes/modules/PriceModule';
-import OpenNodesModule from './OpenNodes';
+import { Input } from '@session/ui/ui/input';
+import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import ActionModule from './ActionModule';
 
 export default function Page() {
+  const dictionary = useTranslations('actionModules.register');
   return (
-    <ModuleGrid size="lg" className="h-full px-4 md:auto-rows-auto md:px-10">
-      <div className="md:max-h-screen-minus-header col-span-1 flex h-full min-h-max flex-col gap-4 py-6 md:overflow-y-auto md:overflow-x-hidden">
-        <PriceModule />
+    <ActionModule background={1}>
+      <div className="flex h-full w-full flex-col items-center px-20 pt-[30%]">
+        <p>{dictionary('description')}</p>
+        <Input placeholder={dictionary('input.placeholder')} />
+        <Link href="/">{dictionary('learnMore')}</Link>
       </div>
-      <div className="md:max-h-screen-minus-header col-span-2 h-full py-6">
-        <ModuleGrid variant="section" colSpan={2} className="h-full">
-          <OpenNodesModule />
-        </ModuleGrid>
-      </div>
-    </ModuleGrid>
+    </ActionModule>
   );
 }
