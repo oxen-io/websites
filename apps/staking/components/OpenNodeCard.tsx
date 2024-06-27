@@ -2,19 +2,14 @@
 import { formatPercentage } from '@/lib/locale-client';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { SENT_SYMBOL } from '@session/contracts';
+import { OpenNode } from '@session/sent-staking-js';
 import { TextSeparator } from '@session/ui/components/Separator';
 import { StatusIndicator } from '@session/ui/components/StatusIndicator';
 import { Button } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { forwardRef, type HTMLAttributes } from 'react';
 import { NodeCard, NodeCardText, NodeCardTitle, NodePubKey } from './NodeCard';
-
-export interface OpenNode {
-  pubKey: string;
-  operatorFee: number;
-  minContribution: number;
-  maxContribution: number;
-}
 
 const OpenNodeCard = forwardRef<
   HTMLDivElement,
@@ -60,9 +55,11 @@ const OpenNodeCard = forwardRef<
         </NodeCardText>
       </div>
       <div>
-        <Button variant="outline" size="lg" data-testid={ButtonDataTestId.Node_Card_Stake}>
-          {dictionary('button.text')}
-        </Button>
+        <Link href={`/stake/node/${node.pubKey}`}>
+          <Button variant="outline" size="lg" data-testid={ButtonDataTestId.Node_Card_Stake}>
+            {dictionary('button.text')}
+          </Button>
+        </Link>
       </div>
     </NodeCard>
   );
