@@ -2,11 +2,13 @@
   "name": "websites",
   "private": true,
   "scripts": {
-    "build": "turbo build",
-    "start": "turbo start",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "lint-staged": "turbo lint-staged",
+    "turbo": "DO_NOT_TRACK=1 turbo",
+    "build": "pnpm turbo build",
+    "start": "pnpm turbo start",
+    "dev": "pnpm turbo dev",
+    "check-types": "pnpm turbo check-types",
+    "lint": "pnpm turbo lint",
+    "lint-staged": "pnpm turbo lint-staged",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "engines": "./scripts/engines.sh",
     "clean:nm": "./scripts/clean-node-modules.sh",
@@ -26,7 +28,7 @@
     "lint-staged": "^15.2.5",
     "prettier": "3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.1",
-    "turbo": "1.13.3",
+    "turbo": "2.0.5",
     "typescript": "5.4.5"
   },
   "engines": {

@@ -1,28 +1,23 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
-  "globalDotEnv": [".env"],
   "globalEnv": ["NEXT_PUBLIC_ENV_FLAG"],
-  "pipeline": {
-    "@session/staking#build": {
-      "dotEnv": [".env.production.local", ".env.local", ".env.production", ".env"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "inputs": ["$TURBO_DEFAULT$", ".env.local"],
       "env": [
-        "NEXT_PUBLIC_SITE_ENV",
         "NEXT_PUBLIC_SENT_STAKING_API_URL",
         "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID",
-        "FAUCET_WALLET_PRIVATE_KEY",
-        "NEXT_PUBLIC_ENV_FLAG"
-      ],
-      "outputs": [".next/**", "!.next/cache/**"]
-    },
-    "@session/staking#start": {
-      "env": [
-        "NEXT_PUBLIC_SITE_ENV",
-        "NEXT_PUBLIC_SENT_STAKING_API_URL",
-        "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID",
-        "FAUCET_WALLET_PRIVATE_KEY",
-        "NEXT_PUBLIC_ENV_FLAG"
+        "FAUCET_WALLET_PRIVATE_KEY"
       ]
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
+    "check-types": {
+      "dependsOn": ["^check-types"]
     },
     "lint": {
       "dependsOn": ["^lint"]
@@ -31,14 +26,8 @@
       "dependsOn": ["^lint-staged"],
       "cache": false
     },
-    "dev": {
-      "dotEnv": [".env.development.local", ".env.local", ".env.development", ".env"],
-
-      "cache": false,
-      "persistent": true
-    },
     "test": {
-      "dotEnv": [".env.test.local", ".env.test", ".env"]
+      "dependsOn": ["^test"]
     }
   }
 }

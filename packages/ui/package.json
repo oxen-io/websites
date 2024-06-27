@@ -12,6 +12,7 @@
     "./postcss": "./postcss.config.js"
   },
   "scripts": {
+    "check-types": "tsc --noEmit",
     "lint": "eslint .",
     "lint-staged": "lint-staged",
     "component:generate": "turbo gen react-component",
