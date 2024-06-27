@@ -5,7 +5,6 @@ import {
   ModuleHeader,
   ModuleText,
   ModuleTitle,
-  ModuleTooltip,
 } from '@session/ui/components/Module';
 import { useTranslations } from 'next-intl';
 
@@ -14,7 +13,6 @@ export default function PriceModule() {
   const generalDictionary = useTranslations('general');
   return (
     <Module size="lg" className="hidden flex-grow lg:flex">
-      <ModuleTooltip>Example tooltip</ModuleTooltip>
       <ModuleHeader variant="overlay">
         <ModuleTitle>{dictionary('title')}</ModuleTitle>
         <ModuleText>{generalDictionary('comingSoon')}</ModuleText>

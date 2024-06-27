@@ -13,7 +13,7 @@ export default function DailyNodeReward() {
 
   return (
     <Module>
-      <ModuleTooltip>Example tooltip</ModuleTooltip>
+      <ModuleTooltip>{dictionary('tooltip')}</ModuleTooltip>
       <ModuleTitle>{dictionary('title')}</ModuleTitle>
       <ModuleContractReadText
         status={status}

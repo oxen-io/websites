@@ -119,21 +119,24 @@
       "description": "Current daily rewards per node.",
       "error": "Failed to fetch daily rewards.",
       "refetching": "Refetching daily rewards...",
-      "refetchSuccess": "Successfully refetched daily rewards"
+      "refetchSuccess": "Successfully refetched daily rewards",
+      "tooltip": "The current daily rewards for running one node. linkLearn morelink"
     },
     "totalRewards": {
       "title": "Total Rewards Earned:",
       "description": "Total rewards earned from staking.",
       "error": "Failed to fetch total rewards.",
       "refetching": "Refetching total rewards...",
-      "refetchSuccess": "Successfully refetched total rewards"
+      "refetchSuccess": "Successfully refetched total rewards",
+      "tooltip": "The total amount of lifetime rewards earned from staking. linkLearn morelink"
     },
     "unclaimedTokens": {
       "title": "Unclaimed Tokens:",
       "description": "Total rewards that have not been claimed.",
       "error": "Failed to fetch unclaimed tokens.",
       "refetching": "Refetching unclaimed tokens...",
-      "refetchSuccess": "Successfully refetched unclaimed tokens"
+      "refetchSuccess": "Successfully refetched unclaimed tokens",
+      "tooltip": "The total amount of rewards that have not been claimed yet. linkLearn morelink"
     },
     "claim": {
       "title": "Claim",
@@ -145,14 +148,48 @@
       "description": "Current price of {tokenSymbol}."
     }
   },
+  "actionModules": {
+    "register": {
+      "description": "Please start the registration process from your client or select from the list of open Service Nodes.",
+      "learnMore": "Learn more",
+      "input": {
+        "placeholder": "Enter link"
+      }
+    },
+    "node": {
+      "title": "Stake to a Node",
+      "viewOnExplorer": "View on Explorer",
+      "minimumContribution": "Minimum Contribution",
+      "minimumContributionTooltip": "Minimum amount of {tokenSymbol} that can be staked to this node.",
+      "maximumContribution": "Maximum Contribution",
+      "maximumContributionTooltip": "Maximum amount of {tokenSymbol} that can be staked to this node.",
+      "stakeAmount": "Stake Amount",
+      "stakeAmountTooltip": "Amount of {tokenSymbol} to stake.",
+      "contributors": "Shared Contributors",
+      "contributorsTooltip": "The number of contributors staking to this node.",
+      "snKey": "SN Key",
+      "snKeyTooltip": "The identifier for the Session Node.",
+      "operatorAddress": "Operator Address",
+      "operatorAddressTooltip": "The wallet address of the node operator.",
+      "operatorFee": "Operator Fee",
+      "operatorFeeTooltip": "The percentage of rewards the operator takes before splitting the rest with contributors.",
+      "button": {
+        "submit": "Stake {amount} {tokenSymbol}",
+        "submitting": "Staking {amount} {tokenSymbol}...",
+        "waitingForWallet": "Waiting for wallet authorization...",
+        "submittingToArbitrum": "Submitting request to Arbitrum...",
+        "success": "Successfully staked {amount} {tokenSymbol}."
+      }
+    }
+  },
   "nodeCard": {
     "pubKey": {
-      "sessionNodePubkey": "Session Node Pubkey",
+      "sessionNodePubkey": "Session Node Public Key",
       "copyPubkeyToClipboard": "Copy to Clipboard",
-      "copyPubkeyToClipboardSuccessToast": "Copied Session Node Pubkey to clipboard!"
+      "copyPubkeyToClipboardSuccessToast": "Copied Session Node Public Key to clipboard!"
     },
     "open": {
-      "title": "SN Pubkey:",
+      "title": "SN Key:",
       "minContribution": "Min Contribution:",
       "minContributionDescription": "Minimum amount of {tokenSymbol} required to stake.",
       "maxContribution": "Max Contribution:",
@@ -171,21 +208,21 @@
       "labelCollapse": "Collapse",
       "ariaCollapse": "Collapse node details",
       "lastUptime": "Last Uptime: {time}",
-      "lastUptimeDescription": "Last time the node was online.",
+      "lastUptimeDescription": "The last time the node provided a proof of availability.",
       "lastRewardHeight": "Last Reward Height: {height}",
       "lastRewardHeightDescription": "Last block height the node received rewards.",
-      "pubKey": "<medium>Public Key:</medium> {pubKey}",
+      "pubKey": "<medium>SN Key:</medium> {pubKey}",
       "pubKeyDescription": "Public key of the node.",
       "stakedBalance": "<medium>Staked Balance:</medium> {balance} {tokenSymbol}",
-      "stakedBalanceDescription": "Total {tokenSymbol} staked in the node.",
+      "stakedBalanceDescription": "Your total staked {tokenSymbol} in the node.",
       "operatorFee": "<medium>Operator Fee:</medium> {fee}",
-      "operatorFeeDescription": "The node operator fee.",
+      "operatorFeeDescription": "The percentage of rewards the operator takes before splitting the rest with contributors.",
       "unlockingTimerNotification": "Unlocking {time}",
-      "unlockingTimerDescription": "Time left until the node is unlocked.",
+      "unlockingTimerDescription": "Time left until the node is unlocked. After unlocking, you can withdraw your stake.",
       "deregistrationTimerNotification": "Deregistration {time}",
-      "deregistrationTimerDescription": "Time left until the node is deregistered.",
+      "deregistrationTimerDescription": "Time left until the node is deregistered and funds are locked for {time}.",
       "liquidationNotification": "Awaiting liquidation",
-      "liquidationDescription": "Node is awaiting liquidation by the network."
+      "liquidationDescription": "The node is inactive and waiting to be removed by the network."
     }
   }
 }
