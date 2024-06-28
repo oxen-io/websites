@@ -4,7 +4,7 @@ import { Loading } from '@session/ui/components/loading';
 import { cn } from '@session/ui/lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { useTranslations } from 'next-intl';
-import { forwardRef, useEffect, useMemo, useState, type HTMLAttributes } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useState, type HTMLAttributes } from 'react';
 
 export const outerNodeCardVariants = cva(
   'rounded-xl transition-all ease-in-out bg-module-outline bg-blend-lighten shadow-md p-px',
@@ -115,24 +115,25 @@ const NodePubKey = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & {
     const dictionary = useTranslations('nodeCard.pubKey');
     const [isSelected, setIsSelected] = useState(false);
     const [pubKeyStart, pubKeyEnd] = useMemo(() => getPublicKeyEnds(pubKey), [pubKey]);
+
+    const handleSelectionChange = useCallback(() => {
+      const selection = window.getSelection();
+      if (selection?.toString().includes(pubKey)) {
+        setIsSelected(true);
+      } else {
+        setIsSelected(false);
+      }
+    }, [pubKey]);
+
     useEffect(() => {
       /**
        * Keeps the full pubkey visible when selected.
        */
-      const handleSelectionChange = () => {
-        const selection = window.getSelection();
-        if (selection?.toString().includes(pubKey)) {
-          setIsSelected(true);
-        } else {
-          setIsSelected(false);
-        }
-      };
-
       document.addEventListener('selectionchange', handleSelectionChange);
       return () => {
         document.removeEventListener('selectionchange', handleSelectionChange);
       };
-    }, [pubKey]);
+    }, [handleSelectionChange]);
 
     return (
       <span ref={ref} className={cn('group flex select-all', className)} {...props}>
@@ -142,15 +143,12 @@ const NodePubKey = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & {
           {pubKeyStart}...{pubKeyEnd}
         </span>
         <div
-          className={cn(
-            'hidden select-all break-all group-hover:block',
-            isSelected ? 'block' : 'hidden'
-          )}
+          className={cn('select-all break-all group-hover:block', isSelected ? 'block' : 'hidden')}
         >
           {pubKey}
         </div>
         <CopyToClipboardButton
-          className={cn('hidden group-hover:block', isSelected ? 'block' : 'hidden')}
+          className={cn('group-hover:block', isSelected ? 'block' : 'hidden')}
           textToCopy={pubKey}
           data-testid={ButtonDataTestId.Copy_Node_Id_To_Clipboard}
           aria-label={dictionary('copyPubkeyToClipboard')}
