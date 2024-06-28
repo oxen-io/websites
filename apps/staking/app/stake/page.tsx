@@ -11,6 +11,7 @@ import OpenNodes from './OpenNodes';
 
 export default function Page() {
   const dictionary = useTranslations('stakeNow');
+
   return (
     <ModuleGrid size="lg" className="h-full w-screen px-10 py-6">
       <ModuleGrid variant="section" colSpan={1}>
