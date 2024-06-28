@@ -5,6 +5,7 @@ export const preferredChain = CHAIN.TESTNET as const;
 
 export enum URL {
   ARB_SEP_FAUCET = 'https://faucet.quicknode.com/arbitrum/sepolia',
+  SESSION_NODE_DOCS = 'https://docs.getsession.org/session-nodes',
 }
 
 export enum FAUCET {
