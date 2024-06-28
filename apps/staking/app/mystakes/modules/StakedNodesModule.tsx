@@ -12,6 +12,25 @@ import { Switch } from '@session/ui/ui/switch';
 import { useTranslations } from 'next-intl';
 import { useAccount } from 'wagmi';
 
+function StakedNodesWithAddress({ address }: { address: string }) {
+  const { data } = useSessionStakingQuery({
+    query: 'getNodesForEthWallet',
+    args: { address },
+  });
+  return (
+    <ModuleGridContent className="h-full md:overflow-y-auto">
+      {data
+        ? data.nodes.map((node) => (
+            <StakedNodeCard
+              key={node.service_node_pubkey}
+              node={parseSessionNodeData(node) as StakedNode}
+            />
+          ))
+        : null}
+    </ModuleGridContent>
+  );
+}
+
 export default function StakedNodesModule() {
   const dictionary = useTranslations('modules.stakedNodes');
   const { address } = useAccount();
@@ -55,22 +74,3 @@ const parseSessionNodeData = (node: ServiceNode): GenericStakedNode => {
       : {}),
   };
 };
-
-function StakedNodesWithAddress({ address }: { address: string }) {
-  const { data } = useSessionStakingQuery({
-    query: 'getNodesForEthWallet',
-    args: { address },
-  });
-  return (
-    <ModuleGridContent className="h-full md:overflow-y-auto">
-      {data
-        ? data.nodes.map((node) => (
-            <StakedNodeCard
-              key={node.service_node_pubkey}
-              node={parseSessionNodeData(node) as StakedNode}
-            />
-          ))
-        : null}
-    </ModuleGridContent>
-  );
-}
