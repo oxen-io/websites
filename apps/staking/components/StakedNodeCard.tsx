@@ -13,10 +13,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip'
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { useTranslations } from 'next-intl';
-import { forwardRef, useId, useState, type HTMLAttributes } from 'react';
+import { forwardRef, useId, useMemo, useState, type HTMLAttributes } from 'react';
 import { NodeCard, NodeCardText, NodeCardTitle, NodePubKey } from './NodeCard';
 
 export const NODE_STATE_VALUES = Object.values(NODE_STATE);
+
+// #region - Types
 
 interface Contributor {
   address: string;
@@ -67,7 +69,7 @@ export type StakedNode =
   | DecommissionedStakedNode
   | DeregisteredStakedNode
   | UnlockedStakedNode;
-
+// #region - Assertions
 /** Type assertions */
 const isRunning = (node: StakedNode): node is RunningStakedNode =>
   node.state === NODE_STATE.RUNNING;
@@ -148,6 +150,8 @@ function getNodeStatus(state: NODE_STATE): VariantProps<typeof statusVariants>['
   }
 }
 
+// #region - Components
+
 type StakedNodeContributorListProps = HTMLAttributes<HTMLDivElement> & {
   contributors: Contributor[];
   showEmptySlots?: boolean;
@@ -157,8 +161,30 @@ type StakedNodeContributorListProps = HTMLAttributes<HTMLDivElement> & {
 const StakedNodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorListProps>(
   ({ className, contributors, showEmptySlots, ...props }, ref) => {
     const { address: userAddress } = useWallet();
-    const userContributor = contributors.find(({ address }) => address === userAddress);
-    const otherContributors = contributors.filter(({ address }) => address !== userAddress);
+
+    const userContributor = useMemo(
+      () => contributors.find(({ address }) => address === userAddress),
+      [contributors]
+    );
+
+    const otherContributors = useMemo(
+      () => contributors.filter(({ address }) => address !== userAddress),
+      [contributors]
+    );
+
+    const emptyContributorSlots = useMemo(
+      () =>
+        showEmptySlots
+          ? Array.from(
+              {
+                length: 10 - contributors.length,
+              },
+              (_, index) => `empty-slot-${index}`
+            )
+          : [],
+      [showEmptySlots, contributors.length]
+    );
+
     return (
       <>
         <ContributorIcon className="-mr-1" contributor={userContributor} isUser />
@@ -178,10 +204,8 @@ const StakedNodeContributorList = forwardRef<HTMLDivElement, StakedNodeContribut
             />
           ))}
           {showEmptySlots
-            ? Array.from({
-                length: 10 - contributors.length,
-              }).map((_, index) => (
-                <ContributorIcon key={index} className="fill-text-primary h-4" />
+            ? emptyContributorSlots.map((key) => (
+                <ContributorIcon key={key} className="fill-text-primary h-4" />
               ))
             : null}
           <span className={cn('mt-0.5 block text-lg transition-all duration-300 ease-in-out')}>
@@ -367,7 +391,7 @@ const CollapsableContent = forwardRef<HTMLDivElement, CollapsableContentProps>(
     />
   )
 );
-``;
+
 const StakedNodeCard = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement> & { node: StakedNode }
