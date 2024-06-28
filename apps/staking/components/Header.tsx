@@ -42,7 +42,7 @@ function NavLink({ href, label, pathname, children, ariaLabel }: NavLinkProps) {
   return (
     <Link
       href={href}
-      className={cn('hover:text-green', pathname.startsWith(href) && 'text-session-green')}
+      className={cn('hover:text-session-green', pathname.startsWith(href) && 'text-session-green')}
       aria-label={ariaLabel}
     >
       {children ?? label}
