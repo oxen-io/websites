@@ -30,7 +30,7 @@ export default function LandingPage() {
               {dictionary('buttons.primary')}
             </Button>
           </Link>
-          <Link href="https://docs.getsession.org/session-nodes">
+          <Link href="https://docs.getsession.org/session-nodes" target="_blank">
             <Button size="sm" variant="outline" data-testid={ButtonDataTestId.Home_Run_Node}>
               {dictionary('buttons.secondary')}
             </Button>
