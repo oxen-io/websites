@@ -47,7 +47,7 @@ const parseSessionNodeData = (node: ServiceNode): GenericStakedNode => {
     operatorFee: node.portions_for_operator,
     operator_address: node.operator_address,
     requiresLiquidation: node.awaiting_liquidation,
-    // canRestake: node.can_restake, FRONT END WORK CAN THIS OUT
+    // TODO - canRestake: node.can_restake, FRONT END WORK CAN THIS OUT
     ...(node.requested_unlock_height
       ? {
           deregistrationDate: new Date(Date.now() + msToBlockHeight(node.requested_unlock_height)),
