@@ -1,6 +1,6 @@
 'use client';
 
-import { ModuleContractReadText } from '@/components/ModuleDynamic';
+import { ModuleDynamicContractReadText } from '@/components/ModuleDynamic';
 import useSentBalance from '@/hooks/balance';
 import { SENT_SYMBOL } from '@session/contracts';
 import { Module, ModuleTitle } from '@session/ui/components/Module';
@@ -12,7 +12,7 @@ export default function BalanceModule() {
   return (
     <Module size="lg" variant="hero">
       <ModuleTitle>{dictionary('title', { tokenSymbol: SENT_SYMBOL })}</ModuleTitle>
-      <ModuleContractReadText
+      <ModuleDynamicContractReadText
         status={status}
         fallback={0}
         errorToast={{
@@ -25,7 +25,7 @@ export default function BalanceModule() {
         }}
       >
         {balance}
-      </ModuleContractReadText>
+      </ModuleDynamicContractReadText>
     </Module>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { ModuleContractReadText } from '@/components/ModuleDynamic';
+import { ModuleDynamicContractReadText } from '@/components/ModuleDynamic';
 import useDailyNodeReward from '@/hooks/daily-node-reward';
 import { Module, ModuleTitle, ModuleTooltip } from '@session/ui/components/Module';
 import { useTranslations } from 'next-intl';
@@ -16,7 +16,7 @@ export default function DailyNodeReward() {
     <Module>
       <ModuleTooltip>Example tooltip</ModuleTooltip>
       <ModuleTitle>{dictionary('title')}</ModuleTitle>
-      <ModuleContractReadText
+      <ModuleDynamicContractReadText
         status={status}
         fallback={0}
         errorToast={{
@@ -29,7 +29,7 @@ export default function DailyNodeReward() {
         }}
       >
         {data}
-      </ModuleContractReadText>
+      </ModuleDynamicContractReadText>
     </Module>
   );
 }

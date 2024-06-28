@@ -16,7 +16,7 @@ type ModuleContractReadTextProps = HTMLAttributes<HTMLSpanElement> & {
   status: CONTRACT_READ_STATUS;
 } & GenericQueryProps;
 
-const ModuleContractReadText = forwardRef<HTMLSpanElement, ModuleContractReadTextProps>(
+const ModuleDynamicContractReadText = forwardRef<HTMLSpanElement, ModuleContractReadTextProps>(
   ({ className, children, status, fallback, errorToast, ...props }, ref) => {
     const toastId = useId();
     if (status === CONTRACT_READ_STATUS.ERROR) {
@@ -38,13 +38,13 @@ const ModuleContractReadText = forwardRef<HTMLSpanElement, ModuleContractReadTex
     );
   }
 );
-ModuleContractReadText.displayName = 'ModuleContractReadText';
+ModuleDynamicContractReadText.displayName = 'ModuleDynamicContractReadText';
 
 type ModuleQueryTextProps = HTMLAttributes<HTMLSpanElement> & {
   status: QUERY_STATUS;
 } & GenericQueryProps;
 
-const ModuleQueryText = forwardRef<HTMLSpanElement, ModuleQueryTextProps>(
+const ModuleDynamicQueryText = forwardRef<HTMLSpanElement, ModuleQueryTextProps>(
   ({ className, children, status, fallback, errorToast, ...props }, ref) => {
     const toastId = useId();
     if (status === QUERY_STATUS.ERROR) {
@@ -66,6 +66,6 @@ const ModuleQueryText = forwardRef<HTMLSpanElement, ModuleQueryTextProps>(
     );
   }
 );
-ModuleQueryText.displayName = 'ModuleQueryText';
+ModuleDynamicQueryText.displayName = 'ModuleDynamicQueryText';
 
-export { ModuleContractReadText, ModuleQueryText };
+export { ModuleDynamicContractReadText, ModuleDynamicQueryText };
