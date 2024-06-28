@@ -15,6 +15,7 @@ import { sentTestSent } from './actions';
 
 import { WalletAddTokenWithLocales } from '@/components/WalletAddTokenWithLocales';
 import { WalletModalButtonWithLocales } from '@/components/WalletModalButtonWithLocales';
+import { URL } from '@/lib/constants';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { toast } from '@session/ui/lib/sonner';
 import {
@@ -132,7 +133,7 @@ export default function FaucetModule() {
             {dictionary.rich('form.lowEthBalance', {
               link: (chunks) => (
                 <a
-                  href="https://faucet.quicknode.com/arbitrum/sepolia"
+                  href={URL.ARB_SEP_FAUCET}
                   target="_blank"
                   rel="noreferrer"
                   className="text-blue-400 underline"
