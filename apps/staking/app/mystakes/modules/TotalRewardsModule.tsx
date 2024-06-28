@@ -3,6 +3,7 @@ import { Module, ModuleText, ModuleTitle, ModuleTooltip } from '@session/ui/comp
 import { useTranslations } from 'next-intl';
 export default function TotalRewardsModule() {
   const dictionary = useTranslations('modules.totalRewards');
+
   return (
     <Module>
       <ModuleTooltip>Example tooltip</ModuleTooltip>
