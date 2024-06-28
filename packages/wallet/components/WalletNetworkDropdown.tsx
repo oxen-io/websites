@@ -1,6 +1,5 @@
 import { CHAIN, isChain } from '@session/contracts/chains';
 import { Button, type ButtonVariantProps } from '@session/ui/components/ui/button';
-import { GlobeIcon } from '@session/ui/icons/GlobeIcon';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -75,7 +74,9 @@ export function NetworkDropdown({
           {...props}
         >
           {chain === null ? null : (
-            <GlobeIcon className="fill-session-green group-hover:fill-session-black mr-1 h-4 w-4" />
+            <div className="mr-1 h-4 w-4">
+              <img src="/images/arbitrum.svg" />
+            </div>
           )}
           {label}
         </Button>
