@@ -99,7 +99,8 @@
   },
   "modules": {
     "stakedNodes": {
-      "title": "My Stakes"
+      "title": "My Stakes",
+      "showHiddenText": "Show Hidden"
     },
     "buttons": {
       "refetch": "Refetch"
