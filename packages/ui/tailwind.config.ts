@@ -38,13 +38,13 @@ export default {
         'header-displacement': 'var(--header-displacement)',
       },
       height: {
-        'screen-minus-header': 'calc(100vh - var(--header-displacement))',
+        'screen-without-header': 'var(--screen-without-header)',
       },
       maxHeight: {
-        'screen-minus-header': 'calc(100vh - var(--header-displacement))',
+        'screen-without-header': 'var(--screen-without-header)',
       },
       minHeight: {
-        'screen-minus-header': 'calc(100vh - var(--header-displacement))',
+        'screen-without-header': 'var(--screen-without-header)',
       },
       colors: {
         session: {
