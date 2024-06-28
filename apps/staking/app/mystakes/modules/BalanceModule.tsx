@@ -1,4 +1,5 @@
 'use client';
+
 import { ModuleContractReadText } from '@/components/ModuleDynamic';
 import useSentBalance from '@/hooks/balance';
 import { SENT_SYMBOL } from '@session/contracts';

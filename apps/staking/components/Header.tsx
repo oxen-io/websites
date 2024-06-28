@@ -1,4 +1,5 @@
 'use client';
+
 import type { LocaleKey } from '@/lib/locale-util';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { HamburgerIcon } from '@session/ui/icons/HamburgerIcon';

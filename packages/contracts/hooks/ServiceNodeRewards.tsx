@@ -1,4 +1,5 @@
 'use client';
+
 import type { Address, ContractFunctionArgs } from 'viem';
 import type { ReadContractData } from 'wagmi/query';
 import type { ServiceNodeRewardsAbi } from '../abis';

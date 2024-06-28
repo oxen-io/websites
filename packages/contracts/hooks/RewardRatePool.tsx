@@ -1,4 +1,5 @@
 'use client';
+
 import { getUnixTimestampNowSeconds } from '@session/util/date';
 import { ContractFunctionArgs } from 'viem';
 import type { ReadContractData } from 'wagmi/query';

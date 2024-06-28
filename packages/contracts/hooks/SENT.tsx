@@ -1,4 +1,5 @@
 'use client';
+
 import { Address, ContractFunctionArgs } from 'viem';
 import { useAccount } from 'wagmi';
 import { ReadContractData } from 'wagmi/query';

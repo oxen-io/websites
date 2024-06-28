@@ -1,4 +1,5 @@
 'use client';
+
 import { QUERY_STATUS } from '@/providers/sent-staking-provider';
 import { CONTRACT_READ_STATUS } from '@session/contracts/hooks/contract-hooks';
 import { ModuleText } from '@session/ui/components/Module';

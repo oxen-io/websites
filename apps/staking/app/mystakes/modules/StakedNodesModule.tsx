@@ -1,4 +1,5 @@
 'use client';
+
 import { GenericStakedNode, StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
 import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { ServiceNode } from '@session/sent-staking-js';

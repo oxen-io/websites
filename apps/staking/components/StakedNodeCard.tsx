@@ -1,4 +1,5 @@
 'use client';
+
 import { formatPercentage, formatTimeDistanceToNowClient } from '@/lib/locale-client';
 import { NodeCardDataTestId, StakedNodeDataTestId } from '@/testing/data-test-ids';
 import { NODE_STATE } from '@session/sent-staking-js';

@@ -1,4 +1,5 @@
 'use client';
+
 import { Module, ModuleContent, ModuleText } from '@session/ui/components/Module';
 import { PresentIcon } from '@session/ui/icons/PresentIcon';
 

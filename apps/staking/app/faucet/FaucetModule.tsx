@@ -1,4 +1,5 @@
 'use client';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CHAIN, SENT_SYMBOL, chains } from '@session/contracts';
 import { Module, ModuleContent } from '@session/ui/components/Module';

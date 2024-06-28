@@ -1,4 +1,5 @@
 'use client';
+
 import { OpenNode, OpenNodeCard } from '@/components/OpenNodeCard';
 import { ModuleGridContent } from '@session/ui/components/ModuleGrid';
 
