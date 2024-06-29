@@ -13,7 +13,7 @@ export function WalletButton({
   handleClick,
   isConnected,
   isLoading,
-  isModalOpen,
+  forceBalanceOpen,
   status,
   address,
   ensAvatar,
@@ -38,7 +38,7 @@ export function WalletButton({
         isConnected
           ? 'bg-session-green hover:bg-session-green hover:text-session-black px-0 py-0 hover:brightness-110'
           : 'px-3 py-1',
-        isModalOpen && 'max-w-full'
+        forceBalanceOpen && 'max-w-full'
       )}
       aria-label={isConnected ? ariaLabels.connected : ariaLabels.disconnected}
     >
@@ -54,7 +54,7 @@ export function WalletButton({
           </div>
           <div
             className={cn(
-              'border-session-green bg-session-green inline-flex h-full w-36 items-center justify-center gap-1 whitespace-nowrap rounded-full rounded-s-full border px-3 py-2'
+              'border-session-green bg-session-green inline-flex h-full w-36 min-w-36 items-center justify-evenly gap-1 whitespace-nowrap rounded-full rounded-s-full border px-3 py-2'
             )}
           >
             <ConnectedWalletAvatar className="h-6 w-6" avatarSrc={ensAvatar} />

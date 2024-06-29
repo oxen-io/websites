@@ -1,5 +1,6 @@
 import { useWeb3Modal, useWeb3ModalState } from '@web3modal/wagmi/react';
 import { WALLET_STATUS, useWallet } from '../hooks/wallet-hooks';
+import { useWalletButton } from '../providers/wallet-button-provider';
 import { WalletButton } from './WalletButton';
 
 type WalletModalButtonProps = {
@@ -15,6 +16,7 @@ export default function WalletModalButton(props: WalletModalButtonProps) {
   const { address, ensName, arbName, ethBalance, status, isConnected } = useWallet();
   const { open } = useWeb3Modal();
   const { open: isOpen } = useWeb3ModalState();
+  const { isBalanceVisible } = useWalletButton();
 
   const isLoading = status === WALLET_STATUS.CONNECTING || status === WALLET_STATUS.RECONNECTING;
 
@@ -29,7 +31,7 @@ export default function WalletModalButton(props: WalletModalButtonProps) {
       handleClick={handleClick}
       isConnected={isConnected}
       isLoading={isLoading}
-      isModalOpen={isOpen}
+      forceBalanceOpen={isBalanceVisible || isOpen}
       status={status}
       address={address}
       ensName={ensName}
@@ -45,5 +47,5 @@ export type WalletButtonProps = WalletModalButtonProps &
     fallbackName: string;
     isLoading?: boolean;
     isConnected?: boolean;
-    isModalOpen?: boolean;
+    forceBalanceOpen?: boolean;
   };

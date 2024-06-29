@@ -7,6 +7,7 @@ import { AtypDisplay, AtypText, MonumentExtended } from '@session/ui/fonts';
 import LocalizationProvider from '@/providers/localization-provider';
 import '@session/ui/styles';
 import { createWagmiConfig } from '@session/wallet/lib/wagmi';
+import { WalletButtonProvider } from '@session/wallet/providers/wallet-button-provider';
 import { Web3ModalProvider } from '@session/wallet/providers/web3-modal-provider';
 import { headers } from 'next/headers';
 import { cookieToInitialState } from 'wagmi';
@@ -30,20 +31,22 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={`${AtypDisplay.variable} ${AtypText.variable} ${MonumentExtended.variable}`}
     >
       <LocalizationProvider messages={messages} locale={locale}>
-        <Web3ModalProvider
-          initialState={initialWagmiState}
-          wagmiMetadata={wagmiMetadata}
-          projectId={NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID}
-        >
-          <SentStakingClientProvider>
-            <body className="bg-session-black text-session-text font-atyp-text overflow-x-hidden">
-              <ChainBanner />
-              <Header />
-              <main>{children}</main>
-              <Toaster />
-            </body>
-          </SentStakingClientProvider>
-        </Web3ModalProvider>
+        <WalletButtonProvider>
+          <Web3ModalProvider
+            initialState={initialWagmiState}
+            wagmiMetadata={wagmiMetadata}
+            projectId={NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID}
+          >
+            <SentStakingClientProvider>
+              <body className="bg-session-black text-session-text font-atyp-text overflow-x-hidden">
+                <ChainBanner />
+                <Header />
+                <main>{children}</main>
+                <Toaster />
+              </body>
+            </SentStakingClientProvider>
+          </Web3ModalProvider>
+        </WalletButtonProvider>
       </LocalizationProvider>
     </html>
   );
