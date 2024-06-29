@@ -1,6 +1,6 @@
 'use client';
 
-import { formatPercentage, formatTimeDistanceToNowClient } from '@/lib/locale-client';
+import { formatLocalizedRelativeTimeToNowClient, formatPercentage } from '@/lib/locale-client';
 import { NodeCardDataTestId, StakedNodeDataTestId } from '@/testing/data-test-ids';
 import { NODE_STATE } from '@session/sent-staking-js';
 import { TextSeparator } from '@session/ui/components/Separator';
@@ -336,7 +336,9 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
     return (
       <NodeNotification level="error">
         {dictionary('deregistrationTimerNotification', {
-          time: formatTimeDistanceToNowClient(node.deregistrationDate, { addSuffix: true }),
+          time: formatLocalizedRelativeTimeToNowClient(node.deregistrationDate, {
+            addSuffix: true,
+          }),
         })}
       </NodeNotification>
     );
@@ -346,7 +348,7 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
     return (
       <NodeNotification level="warning">
         {dictionary('unlockingTimerNotification', {
-          time: formatTimeDistanceToNowClient(node.unlockDate, { addSuffix: true }),
+          time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, { addSuffix: true }),
         })}
       </NodeNotification>
     );
@@ -426,7 +428,7 @@ const StakedNodeCard = forwardRef<
       {isBeingDeregistered(node) && isBeingUnlocked(node) ? (
         <CollapsableContent className="text-warning" size="xs">
           {dictionary('unlockingTimerNotification', {
-            time: formatTimeDistanceToNowClient(node.unlockDate, { addSuffix: true }),
+            time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, { addSuffix: true }),
           })}
         </CollapsableContent>
       ) : null}
@@ -438,7 +440,7 @@ const StakedNodeCard = forwardRef<
         </CollapsableContent>
       ) : null}
       <CollapsableContent className="font-medium opacity-60" size="xs">
-        {dictionary('lastUptime', { time: formatTimeDistanceToNowClient(lastUptime) })}
+        {dictionary('lastUptime', { time: formatLocalizedRelativeTimeToNowClient(lastUptime) })}
       </CollapsableContent>
       <NodeCardText className="flex w-full flex-row gap-1 peer-checked:[&>span>span>button]:block peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">
         {/** TODO - Investigating having react components as localized variables */}
