@@ -192,6 +192,13 @@ export function useContractWriteQuery<
   };
 }
 
+export type ContractReadQueryFetchOptions<Args = unknown> = {
+  /** Set startEnabled to true to enable automatic fetching when the query mounts or changes query keys. To manually fetch the query, use the readContract method returned from the useContractReadQuery instance. Defaults to false. */
+  startEnabled?: boolean;
+  /** The initial arguments to use when fetching the contract. */
+  args?: Args;
+};
+
 export function useContractReadQuery<
   T extends ContractName,
   C extends ContractAbis[T],
@@ -206,9 +213,7 @@ export function useContractReadQuery<
 }: {
   contract: T;
   functionName: FName;
-  startEnabled?: boolean;
-  args?: Args;
-}): GenericContractReadQuery<Args, Data> {
+} & ContractReadQueryFetchOptions<Args>): GenericContractReadQuery<Args, Data> {
   const [internalError, setInternalError] = useState<Error | null>(null);
   const [args, setArgs] = useState<Args | null>(initialArgs ?? null);
   const enabled = useMemo(() => startEnabled || args !== null, [startEnabled, args]);

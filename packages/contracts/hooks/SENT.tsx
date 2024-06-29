@@ -4,7 +4,11 @@ import { Address, ContractFunctionArgs } from 'viem';
 import { useAccount } from 'wagmi';
 import { ReadContractData } from 'wagmi/query';
 import { SENTAbi } from '../abis';
-import { ReadContractQuery, useContractReadQuery } from './contract-hooks';
+import {
+  ContractReadQueryFetchOptions,
+  ReadContractQuery,
+  useContractReadQuery,
+} from './contract-hooks';
 
 export type SENTBalanceQuery = ReadContractQuery & {
   /** Get the reward rate */
@@ -14,15 +18,9 @@ export type SENTBalanceQuery = ReadContractQuery & {
 };
 
 export function useSENTBalanceQuery(
-  props?:
-    | {
-        startEnabled: never;
-        args: never;
-      }
-    | {
-        startEnabled: boolean;
-        args: ContractFunctionArgs<typeof SENTAbi, 'pure' | 'view', 'balanceOf'>;
-      }
+  props?: ContractReadQueryFetchOptions<
+    ContractFunctionArgs<typeof SENTAbi, 'pure' | 'view', 'balanceOf'>
+  >
 ): SENTBalanceQuery {
   const { address } = useAccount();
   const {

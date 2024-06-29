@@ -4,7 +4,11 @@ import { getUnixTimestampNowSeconds } from '@session/util/date';
 import { ContractFunctionArgs } from 'viem';
 import type { ReadContractData } from 'wagmi/query';
 import type { RewardRatePoolAbi } from '../abis';
-import { ReadContractQuery, useContractReadQuery } from './contract-hooks';
+import {
+  ContractReadQueryFetchOptions,
+  ReadContractQuery,
+  useContractReadQuery,
+} from './contract-hooks';
 
 export type RewardRateQuery = ReadContractQuery & {
   /** Get the reward rate */
@@ -14,15 +18,9 @@ export type RewardRateQuery = ReadContractQuery & {
 };
 
 export function useRewardRateQuery(
-  props?:
-    | {
-        startEnabled: never;
-        args: never;
-      }
-    | {
-        startEnabled: boolean;
-        args: ContractFunctionArgs<typeof RewardRatePoolAbi, 'pure' | 'view', 'rewardRate'>;
-      }
+  props?: ContractReadQueryFetchOptions<
+    ContractFunctionArgs<typeof RewardRatePoolAbi, 'pure' | 'view', 'rewardRate'>
+  >
 ): RewardRateQuery {
   const {
     data: rewardRate,
