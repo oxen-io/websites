@@ -246,7 +246,7 @@ const ToggleCardExpansionButton = forwardRef<HTMLLabelElement, ToggleCardExpansi
         </span>
         <ArrowDownIcon
           className={cn(
-            'ml-1 h-4 w-4 transform transition-all duration-300 ease-in-out motion-reduce:transition-none'
+            'fill-session-text stroke-session-text ml-1 h-4 w-4 transform transition-all duration-300 ease-in-out motion-reduce:transition-none'
           )}
         />
       </label>
