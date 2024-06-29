@@ -37,11 +37,7 @@ export default function SentStakingClientProvider({ children }: { children: Reac
     createSessionStakingClient({ baseUrl: '/api/sent', request })
   );
 
-  return (
-    <Context.Provider value={{ sentStakingClient }}>
-      <>{children}</>
-    </Context.Provider>
-  );
+  return <Context.Provider value={{ sentStakingClient }}>{children}</Context.Provider>;
 }
 
 export const useSentStakingClient = () => {
