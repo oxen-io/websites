@@ -254,12 +254,17 @@ const ToggleCardExpansionButton = forwardRef<HTMLLabelElement, ToggleCardExpansi
   }
 );
 
-const NodeNotification = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
-  ({ className, children, ...props }, ref) => (
+type NodeNotificationProps = HTMLAttributes<HTMLSpanElement> & {
+  level?: 'info' | 'warning' | 'error';
+};
+
+const NodeNotification = forwardRef<HTMLSpanElement, NodeNotificationProps>(
+  ({ className, children, level, ...props }, ref) => (
     <span
       ref={ref}
       className={cn(
         'flex w-3/4 flex-row gap-2 text-xs font-normal sm:w-max md:text-base',
+        level === 'warning' ? 'text-warning' : level === 'error' ? 'text-destructive' : 'text-info',
         className
       )}
       {...props}
@@ -323,15 +328,13 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
   const dictionary = useTranslations('nodeCard.staked');
   if (isAwaitingLiquidation(node)) {
     return (
-      <NodeNotification className="text-destructive">
-        {dictionary('liquidationNotification')}
-      </NodeNotification>
+      <NodeNotification level="error">{dictionary('liquidationNotification')}</NodeNotification>
     );
   }
 
   if (isBeingDeregistered(node)) {
     return (
-      <NodeNotification className="text-destructive">
+      <NodeNotification level="error">
         {dictionary('deregistrationTimerNotification', {
           time: formatTimeDistanceToNowClient(node.deregistrationDate, { addSuffix: true }),
         })}
@@ -341,7 +344,7 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
 
   if (isBeingUnlocked(node)) {
     return (
-      <NodeNotification className="text-warning">
+      <NodeNotification level="warning">
         {dictionary('unlockingTimerNotification', {
           time: formatTimeDistanceToNowClient(node.unlockDate, { addSuffix: true }),
         })}
