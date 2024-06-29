@@ -40,7 +40,7 @@ export default function StakedNodesModule() {
       <ModuleGridHeader>
         <ModuleGridTitle>{dictionary('title')}</ModuleGridTitle>
         <div className="flex flex-row gap-2 align-middle">
-          {dictionary('showHidden')} <Switch />
+          {dictionary('showHiddenText')} <Switch />
         </div>
       </ModuleGridHeader>
       {address ? <StakedNodesWithAddress address={address} /> : <Loading />}
@@ -66,11 +66,14 @@ const parseSessionNodeData = (node: ServiceNode): GenericStakedNode => {
     balance: node.total_contributed,
     operatorFee: node.portions_for_operator,
     operator_address: node.operator_address,
-    requiresLiquidation: node.awaiting_liquidation,
-    // TODO - canRestake: node.can_restake, FRONT END WORK CAN THIS OUT
+    ...(node.decomm_blocks_remaining
+      ? {
+          deregistrationDate: new Date(Date.now() + msToBlockHeight(node.decomm_blocks_remaining)),
+        }
+      : {}),
     ...(node.requested_unlock_height
       ? {
-          deregistrationDate: new Date(Date.now() + msToBlockHeight(node.requested_unlock_height)),
+          unlockDate: new Date(Date.now() + msToBlockHeight(node.requested_unlock_height)),
         }
       : {}),
   };
