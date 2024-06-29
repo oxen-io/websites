@@ -9,9 +9,25 @@ import {
 import { getUnixTimestampNowSeconds } from '@session/util/date';
 import { useMemo } from 'react';
 
+/**
+ * Calculate the daily node reward of a node on the network based on the total number of nodes and the last block reward rate.
+ *
+ * The daily node reward is calculated as follows:
+ *
+ * dailyNodeReward = (rewardRate / totalNodes) * 720
+ *
+ * Where:
+ * - rewardRate is the last block reward rate.
+ * - totalNodes is the total number of nodes on the network.
+ * - 720 is the average number of blocks in a day.
+ *
+ * TODO - Update the calculation to use a better estimate of the number of blocks in a day.
+ *
+ * @param totalNodes The total number of nodes on the network.
+ * @param rewardRate The last block reward rate.
+ * @returns The daily node reward.
+ */
 function calculateDailyNodeReward(totalNodes: bigint, rewardRate: bigint) {
-  console.log('totalNodes', totalNodes);
-  console.log('rewardRate', rewardRate);
   return (Number(rewardRate) / Number(totalNodes)) * 720;
 }
 

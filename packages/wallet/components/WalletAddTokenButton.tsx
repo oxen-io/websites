@@ -2,7 +2,7 @@ import { CHAIN } from '@session/contracts/chains';
 import { Button, type ButtonVariantProps } from '@session/ui/components/ui/button';
 import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { useMemo } from 'react';
-import { useAddToken, useWalletChain } from '../hooks/wallet-hooks';
+import { useAddSessionTokenToWallet, useWalletChain } from '../hooks/wallet-hooks';
 import { ButtonDataTestId } from '../testing/data-test-ids';
 
 export type WalletAddTokenButtonProps = ButtonVariantProps & {
@@ -19,7 +19,7 @@ export type WalletAddTokenButtonProps = ButtonVariantProps & {
 };
 
 export default function WalletAddTokenButton(props: WalletAddTokenButtonProps) {
-  const { addToken, error, isPending } = useAddToken();
+  const { addToken, error, isPending } = useAddSessionTokenToWallet();
   const { chain } = useWalletChain();
   const { open } = useWeb3Modal();
 

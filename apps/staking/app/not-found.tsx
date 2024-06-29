@@ -12,7 +12,7 @@ export default function NotFound() {
         <span className="font-monument-extended text-9xl font-bold leading-none lg:mt-[-30px] lg:max-h-[140px] lg:text-[192px]">
           404
         </span>
-        <div className="m-0 hidden h-full w-px bg-gray-300 p-0 lg:block" />
+        <div className="bg-text-primary m-0 hidden h-full w-px p-0 lg:block" />
         <div className="flex h-full flex-col justify-between gap-4 md:gap-0">
           <p className="max-w-[380px] text-xl md:text-2xl">{dictionary('description')}</p>
           <Link href="/" prefetch={false}>

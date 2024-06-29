@@ -1,3 +1,4 @@
+import { URL } from '@/lib/constants';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { Button } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
@@ -18,7 +19,7 @@ export default function LandingPage() {
               {dictionary('buttons.primary')}
             </Button>
           </Link>
-          <Link href="https://docs.getsession.org/session-nodes">
+          <Link href={URL.SESSION_NODE_DOCS} target="_blank">
             <Button size="lg" variant="outline" data-testid={ButtonDataTestId.Home_Run_Node}>
               {dictionary('buttons.secondary')}
             </Button>
@@ -30,7 +31,7 @@ export default function LandingPage() {
               {dictionary('buttons.primary')}
             </Button>
           </Link>
-          <Link href="https://docs.getsession.org/session-nodes">
+          <Link href={URL.SESSION_NODE_DOCS} target="_blank">
             <Button size="sm" variant="outline" data-testid={ButtonDataTestId.Home_Run_Node}>
               {dictionary('buttons.secondary')}
             </Button>

@@ -1,5 +1,6 @@
 'use client';
-import { formatPercentage, formatTimeDistanceToNowClient } from '@/lib/locale-client';
+
+import { formatLocalizedRelativeTimeToNowClient, formatPercentage } from '@/lib/locale-client';
 import { NodeCardDataTestId, StakedNodeDataTestId } from '@/testing/data-test-ids';
 import { NODE_STATE } from '@session/sent-staking-js';
 import { TextSeparator } from '@session/ui/components/Separator';
@@ -21,6 +22,13 @@ import {
 } from './NodeCard';
 
 export const NODE_STATE_VALUES = Object.values(NODE_STATE);
+
+// #region - Types
+
+interface Contributor {
+  address: string;
+  amount: number;
+}
 
 export interface GenericStakedNode {
   state: NODE_STATE;
@@ -66,7 +74,7 @@ export type StakedNode =
   | DecommissionedStakedNode
   | DeregisteredStakedNode
   | UnlockedStakedNode;
-
+// #region - Assertions
 /** Type assertions */
 const isRunning = (node: StakedNode): node is RunningStakedNode =>
   node.state === NODE_STATE.RUNNING;
@@ -147,6 +155,8 @@ function getNodeStatus(state: NODE_STATE): VariantProps<typeof statusVariants>['
   }
 }
 
+// #region - Components
+
 type ToggleCardExpansionButtonProps = HTMLAttributes<HTMLLabelElement> & {
   htmlFor: string;
 };
@@ -175,7 +185,7 @@ const ToggleCardExpansionButton = forwardRef<HTMLLabelElement, ToggleCardExpansi
         </span>
         <ArrowDownIcon
           className={cn(
-            'ml-1 h-4 w-4 transform transition-all duration-300 ease-in-out motion-reduce:transition-none'
+            'fill-session-text stroke-session-text ml-1 h-4 w-4 transform transition-all duration-300 ease-in-out motion-reduce:transition-none'
           )}
         />
       </label>
@@ -183,12 +193,17 @@ const ToggleCardExpansionButton = forwardRef<HTMLLabelElement, ToggleCardExpansi
   }
 );
 
-const NodeNotification = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
-  ({ className, children, ...props }, ref) => (
+type NodeNotificationProps = HTMLAttributes<HTMLSpanElement> & {
+  level?: 'info' | 'warning' | 'error';
+};
+
+const NodeNotification = forwardRef<HTMLSpanElement, NodeNotificationProps>(
+  ({ className, children, level, ...props }, ref) => (
     <span
       ref={ref}
       className={cn(
         'flex w-3/4 flex-row gap-2 text-xs font-normal sm:w-max md:text-base',
+        level === 'warning' ? 'text-warning' : level === 'error' ? 'text-destructive' : 'text-info',
         className
       )}
       {...props}
@@ -226,17 +241,17 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
   const dictionary = useTranslations('nodeCard.staked');
   if (isAwaitingLiquidation(node)) {
     return (
-      <NodeNotification className="text-destructive">
-        {dictionary('liquidationNotification')}
-      </NodeNotification>
+      <NodeNotification level="error">{dictionary('liquidationNotification')}</NodeNotification>
     );
   }
 
   if (isBeingDeregistered(node)) {
     return (
-      <NodeNotification className="text-destructive">
+      <NodeNotification level="error">
         {dictionary('deregistrationTimerNotification', {
-          time: formatTimeDistanceToNowClient(node.deregistrationDate, { addSuffix: true }),
+          time: formatLocalizedRelativeTimeToNowClient(node.deregistrationDate, {
+            addSuffix: true,
+          }),
         })}
       </NodeNotification>
     );
@@ -244,9 +259,9 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
 
   if (isBeingUnlocked(node)) {
     return (
-      <NodeNotification className="text-orange-500">
-        {dictionary('deregistrationTimerNotification', {
-          time: formatTimeDistanceToNowClient(node.unlockDate, { addSuffix: true }),
+      <NodeNotification level="warning">
+        {dictionary('unlockingTimerNotification', {
+          time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, { addSuffix: true }),
         })}
       </NodeNotification>
     );
@@ -294,7 +309,7 @@ const CollapsableContent = forwardRef<HTMLDivElement, CollapsableContentProps>(
     />
   )
 );
-``;
+
 const StakedNodeCard = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement> & { node: StakedNode }
@@ -324,9 +339,9 @@ const StakedNodeCard = forwardRef<
       <NodeSummary node={node} />
       <ToggleCardExpansionButton htmlFor={id} />
       {isBeingDeregistered(node) && isBeingUnlocked(node) ? (
-        <CollapsableContent className="text-orange-500 opacity-60" size="xs">
-          {dictionary('deregistrationTimerNotification', {
-            time: formatTimeDistanceToNowClient(node.unlockDate, { addSuffix: true }),
+        <CollapsableContent className="text-warning" size="xs">
+          {dictionary('unlockingTimerNotification', {
+            time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, { addSuffix: true }),
           })}
         </CollapsableContent>
       ) : null}
@@ -338,7 +353,7 @@ const StakedNodeCard = forwardRef<
         </CollapsableContent>
       ) : null}
       <CollapsableContent className="font-medium opacity-60" size="xs">
-        {dictionary('lastUptime', { time: formatTimeDistanceToNowClient(lastUptime) })}
+        {dictionary('lastUptime', { time: formatLocalizedRelativeTimeToNowClient(lastUptime) })}
       </CollapsableContent>
       {/** NOTE - ensure any changes here still work with the pubkey component */}
       <NodeCardText className="flex w-full flex-row gap-1 peer-checked:[&>span>span>button]:block peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">

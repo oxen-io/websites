@@ -99,7 +99,8 @@
   },
   "modules": {
     "stakedNodes": {
-      "title": "My Stakes"
+      "title": "My Stakes",
+      "showHiddenText": "Show Hidden"
     },
     "openNodes": {
       "title": "Open Session Nodes"

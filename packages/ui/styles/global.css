@@ -50,7 +50,7 @@
       rgba(174, 208, 216, 0.8) 98.84%
     );
 
-    --session-module-outline-gradient: linear-gradient(135deg, #7FB1AE 0%, #2A4337 100%);
+    --session-module-outline-gradient: linear-gradient(135deg, #7fb1ae 0%, #2a4337 100%);
 
     --session-module-gradient: linear-gradient(135deg, #0a0a0a 0%, #081b14 100%);
 
@@ -68,6 +68,10 @@
     --accent-foreground: 0 0% 98%;
     --destructive: 0 100% 61%;
     --destructive-foreground: 0 85.7% 97.3%;
+    --warning: 32.39 96% 67%;
+    --warning-foreground: 0 0% 98%;
+    --info: 0.56 100%	48%;
+    --info-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
@@ -77,6 +81,7 @@
     --header-height: 2.25rem;
     --header-vertical-padding: 1.5rem;
     --header-displacement: calc(var(--header-height) + var(--header-vertical-padding) * 2);
+    --screen-without-header: calc(100vh - var(--header-displacement));
   }
 }
 
@@ -89,7 +94,8 @@
 }
 
 /* Text Selection */
-::-moz-selection {
+::-moz-selection,
+::selection {
   /* Code for Firefox */
   @apply bg-session-green text-session-black;
 }

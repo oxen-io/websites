@@ -1,4 +1,5 @@
 'use client';
+
 import { preferredChain } from '@/lib/constants';
 import { SpecialDataTestId } from '@/testing/data-test-ids';
 import { CHAIN } from '@session/contracts/chains';

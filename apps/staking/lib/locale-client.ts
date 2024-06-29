@@ -6,12 +6,12 @@ import {
   formatDistanceStrict,
   formatDistanceToNowStrict,
 } from 'date-fns';
-import { useLocale as nextIntlUseLocale } from 'next-intl';
+import { useLocale as _useLocale } from 'next-intl';
 import { getDateFnsLocale, type Locale } from './locale-util';
 
-export const useLocale = (): Locale => nextIntlUseLocale() as Locale;
+const useLocale = (): Locale => _useLocale() as Locale;
 
-export const formatTimeDistanceClient = (
+export const formatLocalizedRelativeTimeClient = (
   date: Date,
   baseDate: Date,
   options?: Omit<FormatDistanceStrictOptions, 'locale'>
@@ -23,7 +23,7 @@ export const formatTimeDistanceClient = (
   });
 };
 
-export const formatTimeDistanceToNowClient = (
+export const formatLocalizedRelativeTimeToNowClient = (
   date: Date,
   options?: Omit<FormatDistanceToNowStrictOptions, 'locale'>
 ) => {

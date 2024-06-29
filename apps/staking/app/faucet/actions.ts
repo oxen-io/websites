@@ -1,11 +1,9 @@
 'use server';
-import { CHAIN, addresses, formatSENT, parseSENT } from '@session/contracts';
+import { FAUCET, TICKER } from '@/lib/constants';
+import { CHAIN, SENT_SYMBOL, addresses, formatSENT, parseSENT } from '@session/contracts';
 import { SENTAbi } from '@session/contracts/abis';
 import { createPublicWalletClient, createServerWallet } from '@session/wallet/lib/server-wallet';
 import { formatEther, isAddress as isAddressViem, type Address } from 'viem';
-
-const minEthBalance = 0.001;
-const faucetDrip = 420;
 
 const faucetGasWarning = 0.01;
 const faucetSENTWarning = 20000;
@@ -85,27 +83,27 @@ export async function sentTestSent({ address, chain }: { address?: Address; chai
       faucetSENTBalancePromise,
     ]);
 
-    if (parseFloat(targetEthBalance) < minEthBalance) {
+    if (parseFloat(targetEthBalance) < FAUCET.MIN_ETH_BALANCE) {
       throw new Error(
-        `Insufficient ETH balance (${targetEthBalance} ETH): faucet requires at least ${minEthBalance} ETH`
+        `Insufficient ${TICKER.ETH} balance (${targetEthBalance} ${TICKER.ETH}): faucet requires at least ${FAUCET.MIN_ETH_BALANCE.toLocaleString()} ${TICKER.ETH}`
       );
     }
 
-    if (parseFloat(faucetSENTBalance) < faucetDrip) {
+    if (parseFloat(faucetSENTBalance) < FAUCET.DRIP) {
       throw new Error(
-        `Insufficient SENT balance: faucet requires at least ${faucetDrip}. Please contact support`
+        `Insufficient ${SENT_SYMBOL} balance: faucet requires at least ${FAUCET.DRIP}. Please contact support`
       );
     }
 
     if (parseFloat(faucetEthBalance) < faucetGasWarning) {
       console.warn(
-        `Faucet wallet ETH balance (${faucetEthBalance} ETH) if below the warning threshold (${faucetGasWarning})`
+        `Faucet wallet ${TICKER.ETH} balance (${faucetEthBalance} ${TICKER.ETH}) if below the warning threshold (${faucetGasWarning})`
       );
     }
 
     if (parseFloat(faucetSENTBalance) < faucetSENTWarning) {
       console.warn(
-        `Faucet wallet SENT balance (${faucetSENTBalance} $SENT) if below the warning threshold (${faucetSENTWarning})`
+        `Faucet wallet ${SENT_SYMBOL} balance (${faucetSENTBalance} ${SENT_SYMBOL}) if below the warning threshold (${faucetSENTWarning})`
       );
     }
 
@@ -113,7 +111,7 @@ export async function sentTestSent({ address, chain }: { address?: Address; chai
       address: addresses.SENT[chain],
       abi: SENTAbi,
       functionName: 'transfer',
-      args: [address, parseSENT(faucetDrip.toString())],
+      args: [address, parseSENT(FAUCET.DRIP.toLocaleString())],
     });
 
     return { hash };

@@ -1,4 +1,4 @@
-'server only';
+import 'server-only';
 
 import { getLocale, getMessages, getRequestConfig as i18nGetRequestConfig } from 'next-intl/server';
 import { headers } from 'next/headers';

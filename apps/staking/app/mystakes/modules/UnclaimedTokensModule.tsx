@@ -1,4 +1,5 @@
 'use client';
+
 import { Module, ModuleText, ModuleTitle, ModuleTooltip } from '@session/ui/components/Module';
 import { useTranslations } from 'next-intl';
 /* import { useSessionStakingQuery } from '@/providers/sent-staking-provider';

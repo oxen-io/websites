@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import { createWalletClient, custom, formatEther, type Address } from 'viem';
 import { useAccount, useBalance, useConfig } from 'wagmi';
 import { switchChain as switchChainWagmi } from 'wagmi/actions';
+import { getEthereumWindowProvider } from '../lib/eth';
 import { useArbName } from './arb';
 
 /**
@@ -100,15 +101,15 @@ export function useWalletChain() {
     return validChain;
   }, [chainId]);
 
-  const switchChain = async (chain: CHAIN) =>
+  const switchChain = async (targetChain: CHAIN) =>
     switchChainWagmi(config, {
-      chainId: chains[chain].id,
+      chainId: chains[targetChain].id,
     });
 
   return { chain, switchChain };
 }
 
-export function useAddToken() {
+export function useAddSessionTokenToWallet() {
   const [isPending, setIsPending] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -122,14 +123,14 @@ export function useAddToken() {
         throw new Error('Invalid chain');
       }
 
-      if (!('ethereum' in window) || !window.ethereum) {
-        throw new Error('No ethereum provider');
+      const ethereumProvider = getEthereumWindowProvider();
+      if (!ethereumProvider) {
+        throw new Error('No ethereum provider detected in window object');
       }
 
       const walletClient = createWalletClient({
         chain: chains[chain],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- eth provider is not typed
-        transport: custom(window.ethereum as any),
+        transport: custom(ethereumProvider),
       });
 
       const wasAdded = await walletClient.watchAsset({
@@ -173,14 +174,14 @@ export function useAddChain() {
     setIsPending(true);
     setIsSuccess(false);
     try {
-      if (!('ethereum' in window) || !window.ethereum) {
-        throw new Error('No ethereum provider');
+      const ethereumProvider = getEthereumWindowProvider();
+      if (!ethereumProvider) {
+        throw new Error('No ethereum provider detected in window object');
       }
 
       const walletClient = createWalletClient({
         chain: chains[chain],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- eth provider is not typed
-        transport: custom(window.ethereum as any),
+        transport: custom(ethereumProvider),
       });
 
       await walletClient.addChain({ chain: chains[chain] });

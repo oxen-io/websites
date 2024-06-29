@@ -1,3 +1,8 @@
-export const TextSeparator = ({ className }: { className?: string }) => (
-  <span className={className}> | </span>
+type TextSeparatorProps = {
+  separator?: string;
+  className?: string;
+};
+
+export const TextSeparator = ({ separator = '|', className }: TextSeparatorProps) => (
+  <span className={className}> {separator} </span>
 );

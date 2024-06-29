@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip'
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { useTranslations } from 'next-intl';
-import { forwardRef, useEffect, useMemo, useState, type HTMLAttributes } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useState, type HTMLAttributes } from 'react';
 
 export interface Contributor {
   address: string;
@@ -129,24 +129,24 @@ const NodePubKey = forwardRef<HTMLDivElement, NodePubKeyType>(
     const [isSelected, setIsSelected] = useState(false);
     const [pubKeyStart, pubKeyEnd] = useMemo(() => getPublicKeyEnds(pubKey), [pubKey]);
 
+    const handleSelectionChange = useCallback(() => {
+      const selection = window.getSelection();
+      if (selection?.toString().includes(pubKey) || selection?.toString().includes(pubKeyStart)) {
+        setIsSelected(true);
+      } else {
+        setIsSelected(false);
+      }
+    }, [pubKey]);
+
     useEffect(() => {
       /**
        * Keeps the full pubkey visible when selected.
        */
-      const handleSelectionChange = () => {
-        const selection = window.getSelection();
-        if (selection?.toString().includes(pubKey) || selection?.toString().includes(pubKeyStart)) {
-          setIsSelected(true);
-        } else {
-          setIsSelected(false);
-        }
-      };
-
       document.addEventListener('selectionchange', handleSelectionChange);
       return () => {
         document.removeEventListener('selectionchange', handleSelectionChange);
       };
-    }, [pubKey]);
+    }, [handleSelectionChange]);
 
     return (
       <span ref={ref} className={cn('group flex select-all', className)} {...props}>
@@ -176,7 +176,7 @@ const NodePubKey = forwardRef<HTMLDivElement, NodePubKeyType>(
           {pubKey}
         </div>
         <CopyToClipboardButton
-          className={cn('hidden group-hover:block', isSelected ? 'block' : 'hidden')}
+          className={cn('group-hover:block', isSelected ? 'block' : 'hidden')}
           textToCopy={pubKey}
           data-testid={ButtonDataTestId.Copy_Node_Id_To_Clipboard}
           aria-label={dictionary('copyPubkeyToClipboard')}
@@ -223,8 +223,30 @@ type StakedNodeContributorListProps = HTMLAttributes<HTMLDivElement> & {
 const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorListProps>(
   ({ className, contributors, showEmptySlots, forceExpand, ...props }, ref) => {
     const { address: userAddress } = useWallet();
-    const userContributor = contributors.find(({ address }) => address === userAddress);
-    const otherContributors = contributors.filter(({ address }) => address !== userAddress);
+
+    const userContributor = useMemo(
+      () => contributors.find(({ address }) => address === userAddress),
+      [contributors]
+    );
+
+    const otherContributors = useMemo(
+      () => contributors.filter(({ address }) => address !== userAddress),
+      [contributors]
+    );
+
+    const emptyContributorSlots = useMemo(
+      () =>
+        showEmptySlots
+          ? Array.from(
+              {
+                length: 10 - contributors.length,
+              },
+              (_, index) => `empty-slot-${index}`
+            )
+          : [],
+      [showEmptySlots, contributors.length]
+    );
+
     return (
       <>
         <ContributorIcon className="-mr-1" contributor={userContributor} isUser />
@@ -247,10 +269,8 @@ const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorList
             />
           ))}
           {showEmptySlots
-            ? Array.from({
-                length: 10 - contributors.length,
-              }).map((_, index) => (
-                <ContributorIcon key={index} className="fill-text-primary h-4" />
+            ? emptyContributorSlots.map((key) => (
+                <ContributorIcon key={key} className="fill-text-primary h-4" />
               ))
             : null}
           <span className={cn('mt-0.5 block text-lg transition-all duration-300 ease-in-out')}>

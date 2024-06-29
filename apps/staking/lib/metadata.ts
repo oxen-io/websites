@@ -1,13 +1,14 @@
-import { isProduction } from '@session/util/env';
+import { getEnvironmentTaggedDomain } from '@session/util/env';
 import type { WagmiMetadata } from '@session/wallet/lib/wagmi';
 import type { Metadata } from 'next';
 
+// TODO - Fill out all require site metadata fields
 export const siteMetadata: Metadata = {
   title: 'Session Staking',
   description: 'Session Staking',
 };
 
-const url = isProduction() ? 'https://stake.getsession.org' : 'http://localhost:3000';
+const url = `https://${getEnvironmentTaggedDomain('stake')}.getsession.org`;
 
 export const wagmiMetadata: WagmiMetadata = {
   name: 'Session Staking',
