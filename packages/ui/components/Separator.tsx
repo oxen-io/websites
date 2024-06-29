@@ -1,5 +1,5 @@
 type TextSeparatorProps = {
-  separator: string;
+  separator?: string;
   className?: string;
 };
 
