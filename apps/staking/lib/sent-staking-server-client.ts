@@ -1,4 +1,5 @@
-'server only';
+import 'server-only';
+
 import {
   SSBRequestOptions,
   SSBResponse,

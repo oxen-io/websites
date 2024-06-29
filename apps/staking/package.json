@@ -24,6 +24,7 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.51.5",
     "rtl-detect": "^1.1.2",
+    "server-only": "^0.0.1",
     "wagmi": "2.9.10",
     "zod": "^3.23.8"
   },
