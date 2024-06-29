@@ -341,8 +341,8 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
 
   if (isBeingUnlocked(node)) {
     return (
-      <NodeNotification className="text-orange-500">
-        {dictionary('deregistrationTimerNotification', {
+      <NodeNotification className="text-warning">
+        {dictionary('unlockingTimerNotification', {
           time: formatTimeDistanceToNowClient(node.unlockDate, { addSuffix: true }),
         })}
       </NodeNotification>
@@ -421,8 +421,8 @@ const StakedNodeCard = forwardRef<
       <NodeSummary node={node} />
       <ToggleCardExpansionButton htmlFor={id} />
       {isBeingDeregistered(node) && isBeingUnlocked(node) ? (
-        <CollapsableContent className="text-orange-500 opacity-60" size="xs">
-          {dictionary('deregistrationTimerNotification', {
+        <CollapsableContent className="text-warning" size="xs">
+          {dictionary('unlockingTimerNotification', {
             time: formatTimeDistanceToNowClient(node.unlockDate, { addSuffix: true }),
           })}
         </CollapsableContent>

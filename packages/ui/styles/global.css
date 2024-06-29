@@ -68,6 +68,8 @@
     --accent-foreground: 0 0% 98%;
     --destructive: 0 100% 61%;
     --destructive-foreground: 0 85.7% 97.3%;
+    --warning: 32.39 96% 67%;
+    --warning-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
