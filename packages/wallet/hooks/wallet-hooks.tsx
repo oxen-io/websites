@@ -1,4 +1,3 @@
-import { getEthereumWindowProvider } from '@/lib/eth';
 import { SENT_DECIMALS, SENT_SYMBOL, addresses } from '@session/contracts';
 import { CHAIN, ChainId, chainIdMap, chains } from '@session/contracts/chains';
 import { useEns } from '@session/contracts/hooks/ens';
@@ -6,6 +5,7 @@ import { useMemo, useState } from 'react';
 import { createWalletClient, custom, type Address } from 'viem';
 import { useAccount, useConfig } from 'wagmi';
 import { switchChain as switchChainWagmi } from 'wagmi/actions';
+import { getEthereumWindowProvider } from '../lib/eth';
 import { useArbName } from './arb';
 
 /**
