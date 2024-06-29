@@ -42,7 +42,7 @@ const CopyToClipboardButton = forwardRef<HTMLButtonElement, CopyToClipboardButto
         {...props}
         data-testid={props['data-testid']}
       >
-        <ClipboardIcon className="fill-session-white" />
+        <ClipboardIcon className="fill-session-white h-5 w-5" />
       </Button>
     );
   }

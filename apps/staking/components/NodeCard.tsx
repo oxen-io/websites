@@ -273,7 +273,11 @@ const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorList
                 <ContributorIcon key={key} className="fill-text-primary h-4" />
               ))
             : null}
-          <span className={cn('mt-0.5 block text-lg transition-all duration-300 ease-in-out')}>
+          <span
+            className={cn(
+              'letter mt-0.5 block text-lg tracking-widest transition-all duration-300 ease-in-out'
+            )}
+          >
             {contributors.length}
             {showEmptySlots ? '/10' : null}
           </span>

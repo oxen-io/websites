@@ -11,7 +11,7 @@ import { cn } from '@session/ui/lib/utils';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { useTranslations } from 'next-intl';
-import { forwardRef, useId, useState, type HTMLAttributes } from 'react';
+import { ReactNode, forwardRef, useId, useState, type HTMLAttributes } from 'react';
 import {
   Contributor,
   NodeCard,
@@ -24,11 +24,6 @@ import {
 export const NODE_STATE_VALUES = Object.values(NODE_STATE);
 
 // #region - Types
-
-interface Contributor {
-  address: string;
-  amount: number;
-}
 
 export interface GenericStakedNode {
   state: NODE_STATE;
@@ -288,7 +283,7 @@ const collapsableContentVariants = cva(
     variants: {
       size: {
         xs: 'text-xs md:text-xs peer-checked:max-h-4',
-        base: 'text-sm md:text-base peer-checked:max-h-6',
+        base: cn('text-sm peer-checked:max-h-5', 'md:text-base md:peer-checked:max-h-6'),
       },
     },
     defaultVariants: {
@@ -308,6 +303,10 @@ const CollapsableContent = forwardRef<HTMLDivElement, CollapsableContentProps>(
       {...props}
     />
   )
+);
+
+const rowLabel = (children: ReactNode) => (
+  <span className="text-nowrap font-semibold">{children}</span>
 );
 
 const StakedNodeCard = forwardRef<
@@ -348,29 +347,34 @@ const StakedNodeCard = forwardRef<
       {state === NODE_STATE.DECOMMISSIONED ||
       state === NODE_STATE.DEREGISTERED ||
       state === NODE_STATE.UNLOCKED ? (
-        <CollapsableContent className="font-medium opacity-60" size="xs">
+        <CollapsableContent className="font-medium opacity-75" size="xs">
           {dictionary('lastRewardHeight', { height: lastRewardHeight })}
         </CollapsableContent>
       ) : null}
-      <CollapsableContent className="font-medium opacity-60" size="xs">
+      <CollapsableContent className="font-medium opacity-75" size="xs">
         {dictionary('lastUptime', { time: formatLocalizedRelativeTimeToNowClient(lastUptime) })}
       </CollapsableContent>
       {/** NOTE - ensure any changes here still work with the pubkey component */}
-      <NodeCardText className="flex w-full flex-row gap-1 peer-checked:[&>span>span>button]:block peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">
+      <NodeCardText className="flex w-full flex-row gap-1 peer-checked:mt-1 peer-checked:[&>span>span>button]:block peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">
         {/** TODO - Investigating having react components as localized variables */}
-        <span className="flex flex-row gap-1">
+        <span className="flex flex-row flex-wrap gap-1">
           {address && isNodeOperator(node, address) ? <NodeOperatorIndicator /> : null}
-          {dictionary.rich('pubKey', { pubKey: '' })}
+          {dictionary.rich('pubKey', {
+            'row-label': rowLabel,
+            pubKey: '',
+          })}
           <NodePubKey pubKey={pubKey} expandOnHover />
         </span>
       </NodeCardText>
       <CollapsableContent>
         {dictionary.rich('stakedBalance', {
+          'row-label': rowLabel,
           balance: `${balance.toFixed(2)}`,
         })}
       </CollapsableContent>
       <CollapsableContent>
         {dictionary.rich('operatorFee', {
+          'row-label': rowLabel,
           fee: formatPercentage(operatorFee),
         })}
       </CollapsableContent>
