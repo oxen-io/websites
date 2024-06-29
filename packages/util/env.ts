@@ -18,3 +18,18 @@ export const getEnvironment = (): Environment => {
 };
 
 export const isProduction = (): boolean => getEnvironment() === Environment.PRD;
+
+/**
+ * Returns the domain with environment tag based on the root subdomain and current environment.
+ * @param rootSubdomain - The root subdomain to be used in the domain. This is required if the production site is on a subdomain.
+ * @returns The domain with environment tag.
+ */
+export const getEnvironmentTaggedDomain = (rootSubdomain?: string): string => {
+  const environment = getEnvironment();
+
+  if (rootSubdomain) {
+    return environment === Environment.PRD ? rootSubdomain : `${rootSubdomain}-${environment}`;
+  }
+
+  return environment === Environment.PRD ? '' : environment;
+};
