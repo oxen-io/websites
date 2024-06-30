@@ -9,14 +9,29 @@ import { StatusIndicator } from '@session/ui/components/StatusIndicator';
 import { Button } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { forwardRef, type HTMLAttributes } from 'react';
+import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { NodeCard, NodeCardText, NodeCardTitle, NodePubKey } from './NodeCard';
+
+const NodeItem = ({ children }: { children: ReactNode }) => <span className="">{children}</span>;
+
+const NodeItemSeparator = () => <TextSeparator className="hidden md:block" />;
+
+const NodeItemLabel = ({ children }: { children: ReactNode }) => (
+  <span className="font-normal"> {children}</span>
+);
+
+const NodeItemValue = ({ children }: { children: ReactNode }) => (
+  <span className="text-nowrap font-semibold"> {children}</span>
+);
 
 const OpenNodeCard = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement> & { node: OpenNode }
 >(({ className, node, ...props }, ref) => {
   const dictionary = useTranslations('nodeCard.open');
+  const generalNodeDictionary = useTranslations('sessionNodes.general');
+  const titleFormat = useTranslations('modules.title');
+
   const { pubKey, operatorFee, minContribution, maxContribution } = node;
 
   return (
@@ -30,35 +45,49 @@ const OpenNodeCard = forwardRef<
           <div className="p-0.5">
             <StatusIndicator status="green" />
           </div>
-          <NodeCardTitle className="inline-flex gap-2">
-            <span className="text-nowrap font-normal">{dictionary('title')}</span>
+          <NodeCardTitle className="inline-flex flex-wrap gap-2">
+            <span className="text-nowrap font-normal">
+              {titleFormat('format', { title: generalNodeDictionary('publicKeyShort') })}
+            </span>
             <NodePubKey pubKey={pubKey} />
           </NodeCardTitle>
         </div>
-        <NodeCardText className="col-span-10 inline-flex max-h-max gap-2 align-middle font-normal">
-          <span>
-            {dictionary('minContribution')}{' '}
-            <b>
+        <NodeCardText className="col-span-10 mt-2 inline-flex max-h-max flex-col gap-2 align-middle font-normal md:mt-0 md:flex-row">
+          <NodeItem>
+            <NodeItemLabel>
+              {titleFormat('format', { title: dictionary('minContribution') })}
+            </NodeItemLabel>
+            <NodeItemValue>
               {minContribution} {SENT_SYMBOL}
-            </b>
-          </span>
-          <TextSeparator />
-          <span>
-            {dictionary('maxContribution')}{' '}
-            <b>
+            </NodeItemValue>
+          </NodeItem>
+          <NodeItemSeparator />
+          <NodeItem>
+            <NodeItemLabel>
+              {titleFormat('format', { title: dictionary('maxContribution') })}
+            </NodeItemLabel>
+            <NodeItemValue>
               {maxContribution} {SENT_SYMBOL}
-            </b>
-          </span>
-          <TextSeparator />
-          <span>
-            {dictionary('fee')} <b>{formatPercentage(operatorFee)}</b>
-          </span>
+            </NodeItemValue>
+          </NodeItem>
+          <NodeItemSeparator />
+          <NodeItem>
+            <NodeItemLabel>
+              {titleFormat('format', { title: generalNodeDictionary('operatorFee') })}
+            </NodeItemLabel>
+            <NodeItemValue>{formatPercentage(operatorFee)}</NodeItemValue>
+          </NodeItem>
         </NodeCardText>
       </div>
       <div>
         <Link href={`/stake/node/${node.pubKey}`}>
-          <Button variant="outline" size="lg" data-testid={ButtonDataTestId.Node_Card_Stake}>
-            {dictionary('button.text')}
+          <Button
+            variant="outline"
+            size="lg"
+            aria-label={dictionary('viewButton.ariaLabel')}
+            data-testid={ButtonDataTestId.Node_Card_Stake}
+          >
+            {dictionary('viewButton.text')}
           </Button>
         </Link>
       </div>
