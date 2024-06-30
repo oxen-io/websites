@@ -125,7 +125,7 @@ type NodePubKeyType = HTMLAttributes<HTMLDivElement> & {
 
 const NodePubKey = forwardRef<HTMLDivElement, NodePubKeyType>(
   ({ className, pubKey, expandOnHover, ...props }, ref) => {
-    const dictionary = useTranslations('nodeCard.pubKey');
+    const dictionary = useTranslations('clipboard');
     const [isSelected, setIsSelected] = useState(false);
     const [pubKeyStart, pubKeyEnd] = useMemo(() => getPublicKeyEnds(pubKey), [pubKey]);
 
@@ -179,8 +179,8 @@ const NodePubKey = forwardRef<HTMLDivElement, NodePubKeyType>(
           className={cn('group-hover:block', isSelected ? 'block' : 'hidden')}
           textToCopy={pubKey}
           data-testid={ButtonDataTestId.Copy_Node_Id_To_Clipboard}
-          aria-label={dictionary('copyPubkeyToClipboard')}
-          copyToClipboardToastMessage={dictionary('copyPubkeyToClipboardSuccessToast')}
+          aria-label={dictionary('copyToClipboard')}
+          copyToClipboardToastMessage={dictionary('copyToClipboardSuccessToast')}
         />
       </span>
     );
@@ -237,15 +237,14 @@ const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorList
   ({ className, contributors, showEmptySlots, forceExpand, ...props }, ref) => {
     const { address: userAddress } = useWallet();
 
-    const userContributor = useMemo(
-      () => contributors.find(({ address }) => address === userAddress),
-      [contributors]
-    );
+    const [mainContributor, ...otherContributors] = useMemo(() => {
+      const userContributor = contributors.find(({ address }) => address === userAddress);
+      const otherContributors = contributors
+        .filter(({ address }) => address !== userAddress)
+        .sort((a, b) => b.amount - a.amount);
 
-    const otherContributors = useMemo(
-      () => contributors.filter(({ address }) => address !== userAddress),
-      [contributors]
-    );
+      return userContributor ? [userContributor, ...otherContributors] : otherContributors;
+    }, [contributors]);
 
     const emptyContributorSlots = useMemo(
       () =>
@@ -262,7 +261,11 @@ const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorList
 
     return (
       <>
-        <ContributorIcon className="-mr-1" contributor={userContributor} isUser />
+        <ContributorIcon
+          className="-mr-1"
+          contributor={mainContributor}
+          isUser={mainContributor?.address === userAddress}
+        />
         <div
           className={cn(
             'flex w-min flex-row items-center overflow-x-hidden align-middle',
