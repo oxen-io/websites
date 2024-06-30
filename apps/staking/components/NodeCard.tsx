@@ -214,6 +214,19 @@ const ContributorIcon = ({
   </Tooltip>
 );
 
+export const getTotalStakedAmount = (contributors: Contributor[]): number => {
+  return contributors.reduce((acc, { amount }) => acc + amount, 0);
+};
+
+export const getTotalStakedAmountForAddress = (
+  contributors: Contributor[],
+  address: string
+): number => {
+  return contributors.reduce((acc, { amount, address: contributorAddress }) => {
+    return contributorAddress === address ? acc + amount : acc;
+  }, 0);
+};
+
 type StakedNodeContributorListProps = HTMLAttributes<HTMLDivElement> & {
   contributors: Contributor[];
   showEmptySlots?: boolean;
