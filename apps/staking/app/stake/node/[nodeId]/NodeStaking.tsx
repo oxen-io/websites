@@ -1,17 +1,19 @@
 'use client';
 
-import { NodeContributorList, NodePubKey } from '@/components/NodeCard';
+import { NodeContributorList, NodePubKey, getTotalStakedAmount } from '@/components/NodeCard';
+import { SessionTokenInput } from '@/components/SessionTokenInput';
 import useSentBalance from '@/hooks/balance';
 import { formatPercentage } from '@/lib/locale-client';
 import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
+import { ButtonDataTestId } from '@/testing/data-test-ids';
+import { SENT_SYMBOL } from '@session/contracts';
 import { GetOpenNodesResponse } from '@session/sent-staking-js';
 import { Loading } from '@session/ui/components/loading';
 import { Button } from '@session/ui/ui/button';
-import { Input } from '@session/ui/ui/input';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
-import { ActionModuleDivider, ActionModuleRow, ActionModuleTooltip } from '../../ActionModule';
+import { ActionModuleDivider, ActionModuleRow } from '../../ActionModule';
 
 export default function NodeStaking({ nodeId }: { nodeId: string }) {
   const { address } = useWallet();
@@ -40,6 +42,8 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
   const { balance } = useSentBalance();
   const [value, setValue] = useState<number>(node.minContribution);
   const dictionary = useTranslations('actionModules.node');
+  const sessionNodeDictionary = useTranslations('sessionNodes.general');
+  const sessionNodeStakingDictionary = useTranslations('sessionNodes.staking');
 
   return (
     <div className="flex flex-col gap-4 px-9">
@@ -47,12 +51,22 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
         label={dictionary('contributors')}
         tooltip={dictionary('contributorsTooltip')}
       >
-        <span className="flex flex-row flex-wrap items-center align-middle">
+        <span className="flex flex-row flex-wrap items-center gap-2 align-middle">
           <NodeContributorList contributors={node.contributors} forceExpand showEmptySlots />
         </span>
       </ActionModuleRow>
       <ActionModuleDivider />
-      <ActionModuleRow label={dictionary('snKey')} tooltip={dictionary('snKeyTooltip')}>
+      <ActionModuleRow
+        label={sessionNodeStakingDictionary('stakedAmount')}
+        tooltip={sessionNodeStakingDictionary('stakedAmountDescription')}
+      >
+        {getTotalStakedAmount(node.contributors)} {SENT_SYMBOL}
+      </ActionModuleRow>
+      <ActionModuleDivider />
+      <ActionModuleRow
+        label={sessionNodeDictionary('publicKeyShort')}
+        tooltip={sessionNodeDictionary('publicKeyDescription')}
+      >
         <NodePubKey pubKey={node.pubKey} />
       </ActionModuleRow>
       <ActionModuleDivider />
@@ -63,29 +77,14 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
         {node.operatorAddress}
       </ActionModuleRow>
       <ActionModuleDivider />
-      <ActionModuleRow label={dictionary('operatorFee')} tooltip={dictionary('operatorFeeTooltip')}>
+      <ActionModuleRow
+        label={sessionNodeDictionary('operatorFee')}
+        tooltip={sessionNodeDictionary('operatorFeeDescription')}
+      >
         {formatPercentage(node.operatorFee)}
       </ActionModuleRow>
       <ActionModuleDivider />
-      <ActionModuleRow
-        label={dictionary('minimumContribution')}
-        tooltip={dictionary('minimumContributionTooltip')}
-      >
-        {node.minContribution}
-      </ActionModuleRow>
-      <ActionModuleDivider />
-      <ActionModuleRow
-        label={dictionary('maximumContribution')}
-        tooltip={dictionary('maximumContributionTooltip')}
-      >
-        {node.maxContribution}
-      </ActionModuleRow>
-      <ActionModuleDivider />
-      <span className="inline-flex items-center gap-2 align-middle text-xl font-medium">
-        {dictionary('stakeAmount')}
-        <ActionModuleTooltip>{dictionary('stakeAmountTooltip')}</ActionModuleTooltip>
-      </span>
-      <Input
+      <SessionTokenInput
         type="number"
         value={value}
         onChange={(e) => setValue(parseFloat(e.target.value))}
@@ -97,7 +96,9 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
         Balance: {balance}
         <span className="text-session-green">Max</span>
       </span>
-      <Button>{dictionary('button.submit', { amount: value })}</Button>
+      <Button data-testid={ButtonDataTestId.Stake_Submit}>
+        {dictionary('button.submit', { amount: value })}
+      </Button>
     </div>
   );
 }
