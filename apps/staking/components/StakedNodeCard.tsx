@@ -305,8 +305,8 @@ const CollapsableContent = forwardRef<HTMLDivElement, CollapsableContentProps>(
   )
 );
 
-const rowLabel = (children: ReactNode) => (
-  <span className="text-nowrap font-semibold">{children}</span>
+const RowLabel = ({ children }: { children: ReactNode }) => (
+  <span className="font-semibold">{children} </span>
 );
 
 const StakedNodeCard = forwardRef<
@@ -314,6 +314,10 @@ const StakedNodeCard = forwardRef<
   HTMLAttributes<HTMLDivElement> & { node: StakedNode }
 >(({ className, node, ...props }, ref) => {
   const dictionary = useTranslations('nodeCard.staked');
+  const generalNodeDictionary = useTranslations('sessionNodes.general');
+  const stakingNodeDictionary = useTranslations('sessionNodes.staking');
+  const titleFormat = useTranslations('modules.title');
+
   const id = useId();
   const { address } = useWallet();
   const { state, pubKey, balance, operatorFee, lastRewardHeight, lastUptime } = node;
@@ -359,24 +363,23 @@ const StakedNodeCard = forwardRef<
         {/** TODO - Investigating having react components as localized variables */}
         <span className="flex flex-row flex-wrap gap-1">
           {address && isNodeOperator(node, address) ? <NodeOperatorIndicator /> : null}
-          {dictionary.rich('pubKey', {
-            'row-label': rowLabel,
-            pubKey: '',
-          })}
+          <RowLabel>
+            {titleFormat('format', { title: generalNodeDictionary('publicKeyShort') })}
+          </RowLabel>
           <NodePubKey pubKey={pubKey} expandOnHover />
         </span>
       </NodeCardText>
       <CollapsableContent>
-        {dictionary.rich('stakedBalance', {
-          'row-label': rowLabel,
-          balance: `${balance.toFixed(2)}`,
-        })}
+        <RowLabel>
+          {titleFormat('format', { title: stakingNodeDictionary('stakedBalance') })}
+        </RowLabel>
+        {balance.toFixed(2)}
       </CollapsableContent>
       <CollapsableContent>
-        {dictionary.rich('operatorFee', {
-          'row-label': rowLabel,
-          fee: formatPercentage(operatorFee),
-        })}
+        <RowLabel>
+          {titleFormat('format', { title: generalNodeDictionary('operatorFee') })}
+        </RowLabel>
+        {formatPercentage(operatorFee)}
       </CollapsableContent>
     </NodeCard>
   );
