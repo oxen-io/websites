@@ -15,24 +15,34 @@ export default function LandingPage() {
         </h1>
         <div className="hidden gap-4 lg:flex lg:flex-row lg:justify-start">
           <Link href="/stake" prefetch>
-            <Button size="lg" data-testid={ButtonDataTestId.Home_Run_Node}>
+            <Button size="lg" data-testid={ButtonDataTestId.Home_Run_Node} className="uppercase">
               {dictionary('buttons.primary')}
             </Button>
           </Link>
           <Link href={URL.SESSION_NODE_DOCS} target="_blank">
-            <Button size="lg" variant="outline" data-testid={ButtonDataTestId.Home_Run_Node}>
+            <Button
+              size="lg"
+              variant="outline"
+              data-testid={ButtonDataTestId.Home_Run_Node}
+              className="uppercase"
+            >
               {dictionary('buttons.secondary')}
             </Button>
           </Link>
         </div>
         <div className="flex flex-col-reverse items-center justify-center gap-4 lg:hidden">
           <Link href="/stake" prefetch>
-            <Button size="sm" data-testid={ButtonDataTestId.Home_Run_Node}>
+            <Button size="sm" data-testid={ButtonDataTestId.Home_Run_Node} className="uppercase">
               {dictionary('buttons.primary')}
             </Button>
           </Link>
           <Link href={URL.SESSION_NODE_DOCS} target="_blank">
-            <Button size="sm" variant="outline" data-testid={ButtonDataTestId.Home_Run_Node}>
+            <Button
+              size="sm"
+              variant="outline"
+              data-testid={ButtonDataTestId.Home_Run_Node}
+              className="uppercase"
+            >
               {dictionary('buttons.secondary')}
             </Button>
           </Link>

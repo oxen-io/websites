@@ -1,7 +1,14 @@
 {
   "general": {
     "comingSoon": "Coming Soon",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "or": "or",
+    "and": "and",
+    "unknownError": "An unknown error occurred."
+  },
+  "clipboard": {
+    "copyToClipboard": "Copy to Clipboard",
+    "copyToClipboardSuccessToast": "Copied to clipboard!"
   },
   "navigation": {
     "home": "Home",
@@ -34,18 +41,16 @@
     },
     "addTokenButton": {
       "addToken": "Add {tokenSymbol} to Wallet",
-      "ariaAddToken": "Add {tokenSymbol} to Wallet",
+      "ariaAddToken": "Add {tokenSymbol} to your wallet watch list",
       "changeNetwork": "Change Network",
-      "ariaChangeNetwork": "Change Network",
+      "ariaChangeNetwork": "Switch to a supported network",
       "pending": "Pending",
-      "ariaPending": "Pending"
+      "ariaPending": "Adding {tokenSymbol} to your wallet watch list"
     },
     "networkDropdown": {
-      "mainnet": "MAINNET",
-      "testnet": "TESTNET",
-      "invalid": "INVALID NETWORK",
-      "ariaMainnet": "Switch to Mainnet",
-      "ariaTestnet": "Switch to Testnet",
+      "invalid": "Invalid network",
+      "ariaMainnet": "Switch to {mainnetName}",
+      "ariaTestnet": "Switch to {testnetName}",
       "ariaDropdown": "Open network dropdown"
     }
   },
@@ -54,126 +59,147 @@
     "homeButton": "Return Home"
   },
   "home": {
-    "title": "Stake <semibold>{tokenSymbol}</semibold> Earn Rewards",
+    "title": "Stake <text-semibold>{tokenSymbol}</text-semibold> to Earn Rewards",
     "buttons": {
-      "primary": "STAKE NOW",
-      "secondary": "HOW TO RUN A SESSION NODE"
+      "primary": "Stake Now",
+      "secondary": "How to Run a Session Node"
     },
     "heroImageAlt": "Glass cube with green highlights"
   },
-  "stakeNow": {
-    "title": "Open Session Nodes"
-  },
   "faucet": {
-    "title": "Faucet",
-    "connectedWalletInfo": "Your wallet's account {address} is connected and is being used to fill out this form. We will not ask you to make any transactions.",
-    "or": "or",
-    "addTokenInfo": "You may need to add {tokenSymbol} to your wallet to make it show up, click the button below to add it.",
+    "information": {
+      "title": "Getting test {tokenSymbol}",
+      "communityTitle": "Session Token Community Members",
+      "communityDescription": "If you were part of the Session Token Community <link>Snapshot</link> taken on {snapshotDate}, you are eligible to receive test {tokenSymbol}. Connect to {connectionOptions}, and then connect your wallet or enter your wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
+      "oxenTitle": "Oxen Service Nodes",
+      "oxenDescription": "If you registered for the <link>Oxen Service Node Bonus</link> program by {oxenRegistrationDate}, you are also eligible. Connect the wallet that you registered for the program with, or enter the wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
+      "walletRequirementTitle": "Wallet Requirements:",
+      "walletRequirementDescription": "You need to have a minimum of {minimumGasAmount} test {gasTokenSymbol} on the {testNetworkChain} network to be able to receive test {tokenSymbol}. Add some to your wallet using the {recommendedGasFaucetLink}.",
+      "notEligible": "Not eligible? {testnetName} and its Incentive Program is currently closed to the public, however we will be inviting new users to join our testnet in the future. Join {discordServerLink} to stay in the loop about opportunities to join the {incentiveProgramLink}. "
+    },
+    "connectedWalletInfo": "Your connected wallet's account {address} is being used to fill out this form. You will not be asked to make any transactions.",
+    "addTokenInfo": "You may need to manually add {tokenSymbol} to your wallet's token list to make it show up, click the button below to add it.",
     "form": {
-      "disconnectWallet": "Disconnect Wallet",
-      "label": "Enter your wallet address",
-      "placeholder": "Wallet address",
-      "description": "Enter your wallet address to receive test {tokenSymbol} from the faucet.",
-      "button": "Get test {tokenSymbol}",
-      "testnet": "Swap to Arbitrum Sepolia testnet",
-      "lowEthBalance": "It looks like you dont have enough test eth on Arbitrum Sepolia, go to <link>QuickNode Arbitrum Sepolia Faucet</link> to get some. You have {ethAmount} ETH",
+      "disconnectWallet": "Disconnect",
+      "inputPlaceholder": "Wallet address",
+      "inputAria": "Enter your wallet address to receive test {tokenSymbol} from the faucet.",
+      "connectWalletButtonText": "Connect Wallet",
+      "connectWalletButtonAria": "Connect your wallet to receive test {tokenSymbol} from the faucet.",
+      "disconnectWalletButtonText": "Disconnect",
+      "disconnectWalletButtonAria": "Disconnect your wallet.",
+      "connectedWalletButtonText": "Connected",
+      "connectedWalletButtonAria": "Connected to wallet, click to disconnect.",
+      "telegramConnectButtonAria": "Click to connect your Telegram account",
+      "discordConnectButtonAria": "Click to connect your Discord account",
+      "swapToTestnet": "Swap to {testnetName}",
+      "lowEthBalance": "It looks like you don't have enough test {gasTokenSymbol} on {testNetworkChain}, go to {recommendedGasFaucetLink} to get some. You have {gasAmount} test {gasTokenSymbol}",
+      "submitButton": {
+        "continueText": "Continue",
+        "continueAria": "Continue to receive test {tokenSymbol} from the faucet.",
+        "getTestTokensText": "Get Test {tokenSymbol}",
+        "getTestTokensAria": "Get test {tokenSymbol} from the faucet.",
+        "checkingEligibilityText": "Checking Eligibility...",
+        "checkingEligibilityAria": "Checking if you are eligible to receive test {tokenSymbol} from the faucet.",
+        "sendingTokensText": "Sending Test {tokenSymbol}...",
+        "sendingTokensAria": "Sending test {tokenSymbol} to your wallet address."
+      },
+      "error": {
+        "invalidAddress": "Wallet address is not valid. It must be a valid {ethTokenSymbol} address: {example}",
+        "incorrectChain": "Faucet only works on {testnetName}, switch to {testNetworkChain} network to use the faucet.",
+        "faucetGasWarning": "Faucet is low on gas, Please {contactSupportLink} for assistance.",
+        "faucetTokenWarning": "Faucet is low on {tokenSymbol}, Please {contactSupportLink} for assistance.",
+        "invalidService": "The {service} account you connected was not part of the community snapshot on {snapshotDate} and is not eligible for testnet access.",
+        "invalidOxen": "This wallet address was not registered for the {oxenProgram} on {oxenRegistrationDate} and is not eligible for testnet access. Try connecting with Discord or Telegram instead.",
+        "alreadyUsedService": "The connected {service} account has already been used to claim testnet {tokenSymbol} for another wallet address.",
+        "alreadyUsed": "The connected wallet address has already been used to claim testnet {tokenSymbol}.",
+        "authFailed": "{service} authentication failed. Please refresh the page and try again."
+      },
       "transactionHash": "Transaction Hash: {hash}",
       "transactionHashDescription": "Transaction hash of the faucet transaction.",
       "copyTransactionHash": "Copy Transaction Hash",
-      "copyTransactionHashSuccessToast": "Copied Transaction Hash to clipboard!",
-      "error": "Failed to get test {tokenSymbol}.",
-      "errorInvalidAddress": "Wallet address is not valid. It must be a valid address: {example}",
-      "success": "Successfully received test {tokenSymbol}.",
-      "loading": "Getting test {tokenSymbol}..."
-    },
-    "disconnectWallet": "Disconnect Wallet",
-    "description": "This wallet will"
+      "copyTransactionHashSuccessToast": "Copied Transaction Hash to clipboard!"
+    }
   },
   "chainBanner": {
-    "unsupportedChain": "You are currently on an unsupported chain. <change>Click here to switch chain</change>",
-    "ariaUnsupportedChain": "Click here to switch chain"
-  },
-  "chainBannerMainnetNotLive": {
-    "mainnetNotLive": "Mainnet is not live yet. <change>Click here to switch to Testnet</change>",
-    "ariaMainnetNotLive": "Click here to switch chain"
+    "unsupportedChain": "You are currently on an unsupported chain. <link>Click here to switch chain</link>",
+    "mainnetNotLive": "{mainnetName} is not live yet. <link>Click here to switch to {testnetName}</link>",
+    "testnet": "You are currently on {testnetName}."
   },
   "modules": {
+    "title": {
+      "format": "{title}:"
+    },
+    "openNodes": {
+      "title": "Open Session Nodes",
+      "description": "Nodes that are open for staking. <link>Learn more</link>"
+    },
     "stakedNodes": {
       "title": "My Stakes",
       "showHiddenText": "Show Hidden"
     },
-    "openNodes": {
-      "title": "Open Session Nodes"
-    },
-    "buttons": {
-      "refetch": "Refetch"
+    "toast": {
+      "error": "Failed to fetch {module}.",
+      "refetching": "Trying again...",
+      "retryButton": "Retry",
+      "refetchSuccess": "Successfully refetched {module}"
     },
     "balance": {
-      "title": "Total Staked {tokenSymbol}:",
-      "description": "Total {tokenSymbol} in your wallet.",
-      "error": "Failed to fetch balance.",
-      "refetching": "Refetching balance...",
-      "refetchSuccess": "Successfully refetched balance"
+      "title": "Total Staked {tokenSymbol}",
+      "description": "Total {tokenSymbol} in your wallet."
     },
     "dailyRewards": {
-      "title": "Daily Node Rewards:",
-      "description": "Current daily rewards per node.",
-      "error": "Failed to fetch daily rewards.",
-      "refetching": "Refetching daily rewards...",
-      "refetchSuccess": "Successfully refetched daily rewards",
-      "tooltip": "The current daily rewards for running one node. linkLearn morelink"
+      "title": "Daily Node Rewards",
+      "description": "The current daily rewards for running one node. <link>Learn more</link>"
     },
     "totalRewards": {
-      "title": "Total Rewards Earned:",
-      "description": "Total rewards earned from staking.",
-      "error": "Failed to fetch total rewards.",
-      "refetching": "Refetching total rewards...",
-      "refetchSuccess": "Successfully refetched total rewards",
-      "tooltip": "The total amount of lifetime rewards earned from staking. linkLearn morelink"
+      "title": "Total Rewards Earned",
+      "description": "The total amount of lifetime rewards earned from staking. <link>Learn more</link>"
     },
     "unclaimedTokens": {
-      "title": "Unclaimed Tokens:",
-      "description": "Total rewards that have not been claimed.",
-      "error": "Failed to fetch unclaimed tokens.",
-      "refetching": "Refetching unclaimed tokens...",
-      "refetchSuccess": "Successfully refetched unclaimed tokens",
-      "tooltip": "The total amount of rewards that have not been claimed yet. linkLearn morelink"
+      "title": "Unclaimed Tokens",
+      "description": "The total amount of rewards that have not been claimed yet. <link>Learn more</link>"
     },
     "claim": {
       "title": "Claim",
-      "description": "Claim your rewards from staking.",
       "error": "Failed to claim rewards."
     },
     "price": {
-      "title": "Price:",
+      "title": "Price",
       "description": "Current price of {tokenSymbol}."
+    }
+  },
+  "sessionNodes": {
+    "general": {
+      "publicKeyShort": "SN Key",
+      "publicKeyLong": "Session Node Public Key",
+      "publicKeyDescription": "The identifier for the Session Node.",
+      "operatorFee": "Operator Fee",
+      "operatorFeeDescription": "The percentage of rewards the operator takes before splitting the rest with contributors."
+    },
+    "staking": {
+      "stakedBalance": "Staked Balance",
+      "stakedBalanceDescription": "Your total staked {tokenSymbol} in the node.",
+      "minimumContribution": "Minimum Contribution",
+      "minimumContributionDescription": "Minimum amount of {tokenSymbol} that can be staked to this node.",
+      "maximumContribution": "Maximum Contribution",
+      "maximumContributionDescription": "Maximum amount of {tokenSymbol} that can be staked to this node.",
+      "stakedAmount": "Staked Amount",
+      "stakedAmountDescription": "Amount of {tokenSymbol} staked to this node.",
+      "stakeAmount": "Stake Amount",
+      "stakeAmountDescription": "Amount of {tokenSymbol} to stake."
     }
   },
   "actionModules": {
     "register": {
-      "description": "Please start the registration process from your client or select from the list of open Service Nodes.",
-      "learnMore": "Learn more",
-      "input": {
-        "placeholder": "Enter link"
-      }
+      "description": "Please start the registration process from your client or select from the list of open Session Node."
     },
     "node": {
       "title": "Stake to a Node",
       "viewOnExplorer": "View on Explorer",
-      "minimumContribution": "Minimum Contribution",
-      "minimumContributionTooltip": "Minimum amount of {tokenSymbol} that can be staked to this node.",
-      "maximumContribution": "Maximum Contribution",
-      "maximumContributionTooltip": "Maximum amount of {tokenSymbol} that can be staked to this node.",
-      "stakeAmount": "Stake Amount",
-      "stakeAmountTooltip": "Amount of {tokenSymbol} to stake.",
       "contributors": "Shared Contributors",
       "contributorsTooltip": "The number of contributors staking to this node.",
-      "snKey": "SN Key",
-      "snKeyTooltip": "The identifier for the Session Node.",
       "operatorAddress": "Operator Address",
       "operatorAddressTooltip": "The wallet address of the node operator.",
-      "operatorFee": "Operator Fee",
-      "operatorFeeTooltip": "The percentage of rewards the operator takes before splitting the rest with contributors.",
       "button": {
         "submit": "Stake {amount} {tokenSymbol}",
         "submitting": "Staking {amount} {tokenSymbol}...",
@@ -184,22 +210,16 @@
     }
   },
   "nodeCard": {
-    "pubKey": {
-      "sessionNodePubkey": "Session Node Public Key",
-      "copyPubkeyToClipboard": "Copy to Clipboard",
-      "copyPubkeyToClipboardSuccessToast": "Copied Session Node Public Key to clipboard!"
-    },
     "open": {
-      "title": "SN Key:",
-      "minContribution": "Min Contribution:",
-      "minContributionDescription": "Minimum amount of {tokenSymbol} required to stake.",
-      "maxContribution": "Max Contribution:",
-      "maxContributionDescription": "Maximum amount of {tokenSymbol} that can be staked.",
-      "fee": "Fee:",
-      "feeDescription": "The node operator fee.",
-      "button": {
+      "minContribution": "Min Contribution",
+      "maxContribution": "Max Contribution",
+      "viewButton": {
         "text": "View",
-        "ariaLabel": "View the node details in the side pannel"
+        "ariaLabel": "View the node details in the side panel"
+      },
+      "registerButton": {
+        "text": "Register",
+        "ariaLabel": "View the node registration details in the side panel"
       }
     },
     "staked": {
@@ -212,12 +232,6 @@
       "lastUptimeDescription": "The last time the node provided a proof of availability.",
       "lastRewardHeight": "Last Reward Height: {height}",
       "lastRewardHeightDescription": "Last block height the node received rewards.",
-      "pubKey": "<medium>SN Key:</medium> {pubKey}",
-      "pubKeyDescription": "Public key of the node.",
-      "stakedBalance": "<medium>Staked Balance:</medium> {balance} {tokenSymbol}",
-      "stakedBalanceDescription": "Your total staked {tokenSymbol} in the node.",
-      "operatorFee": "<medium>Operator Fee:</medium> {fee}",
-      "operatorFeeDescription": "The percentage of rewards the operator takes before splitting the rest with contributors.",
       "unlockingTimerNotification": "Unlocking {time}",
       "unlockingTimerDescription": "Time left until the node is unlocked. After unlocking, you can withdraw your stake.",
       "deregistrationTimerNotification": "Deregistration {time}",

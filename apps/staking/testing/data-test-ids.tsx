@@ -8,6 +8,7 @@ export enum ButtonDataTestId {
   Faucet_Submit = 'button:faucet-submit',
   Faucet_Disconnect = 'button:faucet-disconnect',
   Dropdown_Hamburger_Menu = 'button:dropdown-hamburger-menu',
+  Stake_Submit = 'button:stake-submit',
 }
 
 export enum SpecialDataTestId {

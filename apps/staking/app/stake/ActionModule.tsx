@@ -81,8 +81,8 @@ export const ActionModuleRow = ({
   tooltip: string;
   children: React.ReactNode;
 }) => (
-  <div className="flex flex-row items-center justify-between">
-    <span className="inline-flex items-center gap-2 align-middle text-xl font-medium">
+  <div className="flex flex-row flex-wrap items-center justify-between">
+    <span className="inline-flex items-center gap-2 text-nowrap align-middle">
       {label}
       <ActionModuleTooltip>{tooltip}</ActionModuleTooltip>
     </span>

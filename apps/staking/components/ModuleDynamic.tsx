@@ -19,6 +19,7 @@ type ModuleContractReadTextProps = HTMLAttributes<HTMLSpanElement> & {
 const ModuleDynamicContractReadText = forwardRef<HTMLSpanElement, ModuleContractReadTextProps>(
   ({ className, children, status, fallback, errorToast, ...props }, ref) => {
     const toastId = useId();
+
     if (status === CONTRACT_READ_STATUS.ERROR) {
       toastErrorRefetch({
         ...errorToast,

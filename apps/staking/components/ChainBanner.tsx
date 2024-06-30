@@ -29,7 +29,6 @@ export default function ChainBanner() {
           change: (chunks) => (
             <a
               role="button"
-              aria-label={dictionary('ariaUnsupportedChain')}
               data-testid={SpecialDataTestId.Unsupported_Chain_Link}
               onClick={handleClick}
               className="underline"
@@ -48,7 +47,7 @@ export default function ChainBanner() {
 function MainnetNotLiveBanner() {
   const { isConnected } = useWallet();
   const { chain, switchChain } = useWalletChain();
-  const dictionary = useTranslations('chainBannerMainnetNotLive');
+  const dictionary = useTranslations('chainBanner');
 
   const handleClick = () => {
     switchChain(CHAIN.TESTNET);
@@ -63,7 +62,6 @@ function MainnetNotLiveBanner() {
           change: (chunks) => (
             <a
               role="button"
-              aria-label={dictionary('ariaMainnetNotLive')}
               data-testid={SpecialDataTestId.Mainnet_Not_Live_Link}
               onClick={handleClick}
               className="underline"

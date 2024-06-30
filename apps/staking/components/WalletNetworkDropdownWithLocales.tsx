@@ -1,3 +1,4 @@
+import { NETWORK } from '@/lib/constants';
 import WalletNetworkDropdown from '@session/wallet/components/WalletNetworkDropdown';
 import { useTranslations } from 'next-intl';
 
@@ -7,8 +8,8 @@ export function WalletNetworkDropdownWithLocales({ className }: { className?: st
     <WalletNetworkDropdown
       className={className}
       labels={{
-        mainnet: dictionary('mainnet'),
-        testnet: dictionary('testnet'),
+        mainnet: NETWORK.MAINNET,
+        testnet: NETWORK.TESTNET,
         invalid: dictionary('invalid'),
       }}
       ariaLabels={{
