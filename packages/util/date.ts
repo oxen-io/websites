@@ -6,7 +6,7 @@ export function isValidUnixTimestampSeconds(value: number): boolean {
   // The Unix timestamp is a way to track time as a running total of seconds.
   // It counts the number of seconds since January 1, 1970 (UTC).
   // Hence, it should be a non-negative number.
-  if (typeof value !== 'number' || value < 0) {
+  if (typeof value !== 'number' || value < 0 || !Number.isInteger(value)) {
     return false;
   }
 

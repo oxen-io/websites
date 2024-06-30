@@ -1,5 +1,5 @@
 import { SENT_DECIMALS, SENT_SYMBOL, addresses } from '@session/contracts';
-import { CHAIN, ChainId, chainIdMap, chains } from '@session/contracts/chains';
+import { CHAIN, chains } from '@session/contracts/chains';
 import { useEns } from '@session/contracts/hooks/ens';
 import { useMemo, useState } from 'react';
 import { createWalletClient, custom, formatEther, type Address } from 'viem';
@@ -95,7 +95,11 @@ export function useWalletChain() {
   const chain = useMemo(() => {
     if (!chainId) return null;
 
-    const validChain = chainIdMap[chainId as ChainId];
+    //find the key where the value.id is equal to chainId
+
+    const validChain = Object.keys(chains).find((key) => chains[key as CHAIN].id === chainId) as
+      | CHAIN
+      | undefined;
     if (!validChain) return null;
 
     return validChain;

@@ -11,7 +11,7 @@ export const isEthereumWindowProvider = (provider: unknown): provider is Ethereu
   return typeof (provider as EthereumWindowProvider)?.request === 'function';
 };
 
-/**W
+/**
  * Retrieves the Ethereum window provider object if available.
  *
  * @returns The Ethereum window provider object if available, or `undefined` if not found.

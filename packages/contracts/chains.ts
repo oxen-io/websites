@@ -27,14 +27,13 @@ export const chains = {
   [CHAIN.ETHEREUM]: ethereum,
 } as const;
 
-export const chainIdMap = {
-  [mainnet.id]: CHAIN.MAINNET,
-  [testnet.id]: CHAIN.TESTNET,
-} as const;
-
-export type ChainId = keyof typeof chainIdMap;
 export type ChainData = keyof typeof chains;
 
+/**
+ * Checks if a given string is a valid chain.
+ * @param chain - The chain to check.
+ * @returns A boolean indicating whether the chain is valid.
+ */
 export function isChain(chain: string): chain is CHAIN {
   return chainNames.includes(chain as CHAIN);
 }

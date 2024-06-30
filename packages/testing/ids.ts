@@ -11,6 +11,9 @@ export function genericCreateDataTestId<BaseDataTestId extends string>(
   baseDataTestId: BaseDataTestId,
   testId: string
 ): GenericDataTestId<BaseDataTestId> {
+  if (baseDataTestId === '' || testId === '') {
+    throw new Error('Base data test ID and test ID must not be empty.');
+  }
   return `${baseDataTestId}:${testId}` as GenericDataTestId<BaseDataTestId>;
 }
 
@@ -23,7 +26,7 @@ export function genericIsDataTestId<BaseDataTestId extends string>(
   dataTestId: string
 ): dataTestId is GenericDataTestId<BaseDataTestId> {
   const splitId = dataTestId.split(':');
-  if (splitId.length !== 2 || splitId[0]?.length === 0 || splitId[0]?.length === 0) {
+  if (splitId.length !== 2 || splitId[0]?.length === 0 || splitId[1]?.length === 0) {
     return false;
   }
   return true;

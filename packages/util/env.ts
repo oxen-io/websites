@@ -1,12 +1,21 @@
-enum Environment {
+export enum Environment {
+  /** Production */
   PRD = 'prd',
+  /** Staging */
   STG = 'stg',
+  /** QA Testing */
   QA = 'qa',
+  /** Development */
   DEV = 'dev',
 }
 
 const environments = [Environment.PRD, Environment.STG, Environment.QA, Environment.DEV];
 
+/**
+ * Retrieves the current environment based on the value of the NEXT_PUBLIC_ENV_FLAG environment variable.
+ * If the environment flag is invalid or not set, it defaults to the development environment.
+ * @returns The current environment.
+ */
 export const getEnvironment = (): Environment => {
   const environment = process.env.NEXT_PUBLIC_ENV_FLAG;
   if (!environment || !environments.includes(environment as Environment)) {
@@ -17,6 +26,10 @@ export const getEnvironment = (): Environment => {
   return environment as Environment;
 };
 
+/**
+ * Checks if the current environment is production.
+ * @returns {boolean} Returns true if the current environment is production, false otherwise.
+ */
 export const isProduction = (): boolean => getEnvironment() === Environment.PRD;
 
 /**
