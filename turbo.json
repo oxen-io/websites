@@ -30,8 +30,6 @@
       "dependsOn": ["^lint-staged"],
       "cache": false
     },
-    "test": {
-      "dependsOn": ["^test"]
-    }
+    "test": {}
   }
 }

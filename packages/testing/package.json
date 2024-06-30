@@ -3,16 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./*": "./*.ts"
+    "./*": "./*.ts",
+    "./config/*": "./config/*.js"
   },
   "scripts": {
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "test": "jest"
   },
   "devDependencies": {
-    "@session/typescript-config": "workspace:*",
-    "@session/eslint-config": "workspace:*"
+    "@session/eslint-config": "workspace:*",
+    "@session/typescript-config": "workspace:*"
   },
   "engines": {
     "node": ">=22",
