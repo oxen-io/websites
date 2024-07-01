@@ -68,7 +68,7 @@ export default function BalanceModule() {
           refetch,
         }}
         style={{
-          fontSize: `clamp(16px, min(${(formattedTotalStakedAmount?.length ?? 0) / 3}ch, 4vw), 100px)`,
+          fontSize: `clamp(32px, min(${(formattedTotalStakedAmount?.length ?? 0) / 2}ch, 8vw), 100px)`,
         }}
       >
         {formattedTotalStakedAmount}
