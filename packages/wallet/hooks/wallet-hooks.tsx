@@ -1,8 +1,9 @@
 import { SENT_DECIMALS, SENT_SYMBOL, addresses } from '@session/contracts';
 import { CHAIN, chains } from '@session/contracts/chains';
+import { useSENTBalanceQuery } from '@session/contracts/hooks/SENT';
 import { useEns } from '@session/contracts/hooks/ens';
 import { useMemo, useState } from 'react';
-import { createWalletClient, custom, formatEther, type Address } from 'viem';
+import { createWalletClient, custom, type Address } from 'viem';
 import { useAccount, useBalance, useConfig } from 'wagmi';
 import { switchChain as switchChainWagmi } from 'wagmi/actions';
 import { getEthereumWindowProvider } from '../lib/eth';
@@ -54,8 +55,10 @@ type UseWalletType = {
   ensAvatar?: string | null;
   /** The .arb name of the wallet. */
   arbName?: string | null;
-  /** The balance of the wallet. */
-  ethBalance?: string | null;
+  /** The token balance of the wallet. */
+  tokenBalance?: bigint | null;
+  /** The eth balance of the wallet. */
+  ethBalance?: bigint | null;
   /** The status of the wallet. */
   status: WALLET_STATUS;
   /** Whether the wallet is connected. */
@@ -64,6 +67,10 @@ type UseWalletType = {
 
 export function useWallet(): UseWalletType {
   const { address, isConnected, isConnecting, isDisconnected, isReconnecting } = useAccount();
+  const { balance: tokenBalanceData } = useSENTBalanceQuery({
+    startEnabled: Boolean(address),
+    args: [address!],
+  });
   const { data: ethBalanceData } = useBalance({
     address,
     query: { enabled: isConnected },
@@ -75,8 +82,13 @@ export function useWallet(): UseWalletType {
 
   const { arbName } = useArbName({ address });
 
+  const tokenBalance = useMemo(
+    () => (tokenBalanceData ? tokenBalanceData : null),
+    [tokenBalanceData]
+  );
+
   const ethBalance = useMemo(
-    () => (ethBalanceData ? formatEther(ethBalanceData?.value) : null),
+    () => (ethBalanceData ? ethBalanceData?.value : null),
     [ethBalanceData]
   );
 
@@ -85,7 +97,7 @@ export function useWallet(): UseWalletType {
     [isConnected, isConnecting, isDisconnected, isReconnecting]
   );
 
-  return { address, ensName, ensAvatar, arbName, status, isConnected, ethBalance };
+  return { address, ensName, ensAvatar, arbName, status, isConnected, tokenBalance, ethBalance };
 }
 
 export function useWalletChain() {

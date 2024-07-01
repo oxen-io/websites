@@ -1,4 +1,4 @@
-import { formatTokenValue, roundTokenValue } from '../maths';
+import { formatBigIntTokenValue, formatTokenValue, roundTokenValue } from '../maths';
 
 // #region - roundTokenValue
 
@@ -55,7 +55,7 @@ describe('roundTokenValue', () => {
 
 // #region - formatTokenValue
 
-describe('roundTokenValue', () => {
+describe('formatTokenValue', () => {
   test('when using default decimals', () => {
     expect(formatTokenValue(0)).toBe('0');
     expect(formatTokenValue(0.0001)).toBe('0.0001');
@@ -109,5 +109,53 @@ describe('roundTokenValue', () => {
     expect(formatTokenValue(123456789.00023456, 2)).toBe('123,456,789');
     expect(formatTokenValue(0.00023456789, 4)).toBe('0.0002');
     expect(formatTokenValue(0.00023456789, 2)).toBe('0');
+  });
+});
+
+// #region - formatBigIntTokenValue
+
+describe('formatBigIntTokenValue', () => {
+  test('should format bigint token values as expected', () => {
+    expect(formatBigIntTokenValue(BigInt(1000000000), 9, 4)).toBe('1');
+    expect(formatBigIntTokenValue(BigInt(10000000000), 9, 4)).toBe('10');
+    expect(formatBigIntTokenValue(BigInt(100000000000), 9, 4)).toBe('100');
+    expect(formatBigIntTokenValue(BigInt(1000000000000), 9, 4)).toBe('1,000');
+    expect(formatBigIntTokenValue(BigInt(10000000000000), 9, 4)).toBe('10,000');
+    expect(formatBigIntTokenValue(BigInt(100000000000000), 9, 4)).toBe('100,000');
+    expect(formatBigIntTokenValue(BigInt(1000000000000000), 9, 4)).toBe('1,000,000');
+  });
+
+  test('should format bigint token values with decimals as expected', () => {
+    expect(formatBigIntTokenValue(BigInt(10111111100), 9, 4)).toBe('10.1111');
+    expect(formatBigIntTokenValue(BigInt(101000011111100), 9, 4)).toBe('101,000.0111');
+    expect(formatBigIntTokenValue(BigInt(100021), 9, 4)).toBe('0.0001');
+    expect(formatBigIntTokenValue(BigInt(1), 9, 12)).toBe('0.000000001');
+  });
+
+  describe('safe for javascript number range', () => {
+    const upperNumberLimit = 2 ** 53;
+    const lowerNumberLimit = -(2 ** 53);
+
+    test('should allow numbers within the safe JavaScript range', () => {
+      expect(() => formatBigIntTokenValue(BigInt(10), 9, 4)).not.toThrow();
+      expect(() => formatBigIntTokenValue(BigInt(-10), 9, 4)).not.toThrow();
+      expect(() => formatBigIntTokenValue(BigInt(100000000), 9, 4)).not.toThrow();
+      expect(() => formatBigIntTokenValue(BigInt(-100000000), 9, 4)).not.toThrow();
+      expect(() => formatBigIntTokenValue(BigInt(upperNumberLimit - 1), 9, 4)).not.toThrow();
+      expect(() => formatBigIntTokenValue(BigInt(lowerNumberLimit + 1), 9, 4)).not.toThrow();
+    });
+
+    test('should throw an error for values outside the safe JavaScript range', () => {
+      const expectedError = new RangeError('Value is outside the safe JavaScript range');
+
+      expect(() => formatBigIntTokenValue(BigInt(upperNumberLimit), 9, 4)).toThrow(expectedError);
+      expect(() => formatBigIntTokenValue(BigInt(lowerNumberLimit), 9, 4)).toThrow(expectedError);
+      expect(() => formatBigIntTokenValue(BigInt(upperNumberLimit * 2), 9, 4)).toThrow(
+        expectedError
+      );
+      expect(() => formatBigIntTokenValue(BigInt(lowerNumberLimit * 2), 9, 4)).toThrow(
+        expectedError
+      );
+    });
   });
 });
