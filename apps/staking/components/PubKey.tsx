@@ -8,15 +8,31 @@ import { HTMLAttributes, forwardRef, useCallback, useEffect, useMemo, useState }
 
 type PubKeyType = HTMLAttributes<HTMLDivElement> & {
   pubKey: string;
+  leadingChars?: number;
+  trailingChars?: number;
   expandOnHover?: boolean;
   alwaysShowCopyButton?: boolean;
 };
 
 const PubKey = forwardRef<HTMLDivElement, PubKeyType>(
-  ({ className, pubKey, expandOnHover, alwaysShowCopyButton, ...props }, ref) => {
+  (
+    {
+      className,
+      pubKey,
+      leadingChars,
+      trailingChars,
+      expandOnHover,
+      alwaysShowCopyButton,
+      ...props
+    },
+    ref
+  ) => {
     const dictionary = useTranslations('clipboard');
     const [isSelected, setIsSelected] = useState(false);
-    const collapsedPubKey = useMemo(() => collapseString(pubKey, 6, 6), [pubKey]);
+    const collapsedPubKey = useMemo(
+      () => collapseString(pubKey, leadingChars ?? 6, trailingChars ?? 6),
+      [pubKey]
+    );
 
     const handleSelectionChange = useCallback(() => {
       const selection = window.getSelection();
