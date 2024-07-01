@@ -36,11 +36,11 @@ export function WalletButton({
       data-testid={ButtonDataTestId.Wallet_Modal}
       className={cn(
         'group',
-        'h-full w-full max-w-36 select-none justify-end overflow-x-hidden transition-all duration-300 ease-in-out hover:max-w-full focus:max-w-full active:max-w-full motion-reduce:transition-none',
+        'h-full w-full max-w-36 select-none justify-end overflow-x-hidden transition-all duration-300 ease-in-out motion-reduce:transition-none lg:hover:max-w-full lg:focus:max-w-full lg:active:max-w-full',
         isConnected
           ? 'bg-session-green hover:bg-session-green hover:text-session-black px-0 py-0 hover:brightness-110'
           : 'px-3 py-2',
-        forceBalanceOpen && 'max-w-full'
+        forceBalanceOpen && 'lg:max-w-full'
       )}
       aria-label={isConnected ? ariaLabels.connected : ariaLabels.disconnected}
     >
