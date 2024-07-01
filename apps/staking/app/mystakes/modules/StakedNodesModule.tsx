@@ -66,6 +66,7 @@ const parseSessionNodeData = (node: ServiceNode): GenericStakedNode => {
     balance: node.total_contributed,
     operatorFee: node.portions_for_operator,
     operator_address: node.operator_address,
+    ...(node.awaiting_liquidation ? { awaitingLiquidation: true } : {}),
     ...(node.decomm_blocks_remaining
       ? {
           deregistrationDate: new Date(Date.now() + msToBlockHeight(node.decomm_blocks_remaining)),

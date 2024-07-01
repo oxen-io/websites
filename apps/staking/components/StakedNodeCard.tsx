@@ -58,7 +58,7 @@ type DecommissionedStakedNode = GenericStakedNode & {
 
 type DeregisteredStakedNode = GenericStakedNode & {
   state: NODE_STATE.DEREGISTERED;
-  requiresLiquidation?: boolean;
+  awaitingLiquidation?: boolean;
 };
 
 type UnlockedStakedNode = GenericStakedNode & {
@@ -115,7 +115,7 @@ const isBeingUnlocked = (
  * @returns A boolean indicating whether the node requires liquidation.
  */
 const isAwaitingLiquidation = (node: StakedNode): boolean =>
-  'requiresLiquidation' in node && node.requiresLiquidation === true;
+  'awaitingLiquidation' in node && node.awaitingLiquidation === true;
 
 /**
  * Checks if a given node is operated by a specific operator.
@@ -201,7 +201,11 @@ const NodeNotification = forwardRef<HTMLSpanElement, NodeNotificationProps>(
       ref={ref}
       className={cn(
         'flex w-3/4 flex-row gap-2 text-xs font-normal sm:w-max md:text-base',
-        level === 'warning' ? 'text-warning' : level === 'error' ? 'text-destructive' : 'text-info',
+        level === 'warning'
+          ? 'text-warning'
+          : level === 'error'
+            ? 'text-destructive'
+            : 'text-session-text',
         className
       )}
       {...props}
@@ -237,9 +241,10 @@ const NodeOperatorIndicator = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpa
 
 const NodeSummary = ({ node }: { node: StakedNode }) => {
   const dictionary = useTranslations('nodeCard.staked');
+
   if (isAwaitingLiquidation(node)) {
     return (
-      <NodeNotification level="error">{dictionary('liquidationNotification')}</NodeNotification>
+      <NodeNotification level="info">{dictionary('liquidationNotification')}</NodeNotification>
     );
   }
 
@@ -257,17 +262,21 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
 
   if (isBeingUnlocked(node)) {
     return (
-      <NodeNotification level="warning">
-        {dictionary('unlockingTimerNotification', {
-          time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, { addSuffix: true }),
-        })}
-      </NodeNotification>
+      <>
+        <NodeContributorList
+          contributors={node.contributors}
+          data-testid={StakedNodeDataTestId.Contributor_List}
+        />
+        <NodeNotification level="warning">
+          {dictionary('unlockingTimerNotification', {
+            time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, { addSuffix: true }),
+          })}
+        </NodeNotification>
+      </>
     );
   }
 
   if (node.state === NODE_STATE.AWAITING_CONTRIBUTORS || node.state === NODE_STATE.RUNNING) {
-    //separate user from others
-
     return (
       <NodeContributorList
         contributors={node.contributors}
