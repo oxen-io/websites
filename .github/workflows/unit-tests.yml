@@ -20,6 +20,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: 'pnpm'
+          node-version-file: '.tool-versions'
 
       - name: Get pnpm store directory
         shell: bash
@@ -37,5 +38,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+  run-tests:
+    runs-on: ubuntu-latest
+
+    needs: cache-and-install
+
+    steps:
       - name: Run unit tests
         run: pnpm test
+
+      
