@@ -15,7 +15,6 @@
     "lint": "eslint .",
     "lint-staged": "lint-staged",
     "tsc": "pnpm generate",
-    "postinstall": "pnpm generate",
     "test": "jest"
   },
   "dependencies": {

@@ -35,9 +35,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Add yarn to pnpm
-        run: pnpm add -g yarn
-
       - name: Install dependencies
         run: pnpm install
 
