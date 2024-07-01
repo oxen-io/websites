@@ -1,5 +1,6 @@
 'use client';
 
+import { NodeContributorList, getTotalStakedAmount } from '@/components/NodeCard';
 import { PubKey } from '@/components/PubKey';
 import { SessionTokenInput } from '@/components/SessionTokenInput';
 import useSentBalance from '@/hooks/balance';
@@ -10,6 +11,7 @@ import { SENT_SYMBOL } from '@session/contracts';
 import { GetOpenNodesResponse } from '@session/sent-staking-js';
 import { Loading } from '@session/ui/components/loading';
 import { Button } from '@session/ui/ui/button';
+import { formatTokenValue } from '@session/util/maths';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
@@ -45,6 +47,11 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
   const sessionNodeDictionary = useTranslations('sessionNodes.general');
   const sessionNodeStakingDictionary = useTranslations('sessionNodes.staking');
 
+  const formattedTotalStakedAmount = useMemo(() => {
+    if (!node.contributors || node.contributors.length === 0) return '0';
+    return formatTokenValue(getTotalStakedAmount(node.contributors));
+  }, [node.contributors]);
+
   return (
     <div className="flex flex-col gap-4 px-9">
       <ActionModuleRow
@@ -60,7 +67,7 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
         label={sessionNodeStakingDictionary('stakedAmount')}
         tooltip={sessionNodeStakingDictionary('stakedAmountDescription')}
       >
-        {getTotalStakedAmount(node.contributors)} {SENT_SYMBOL}
+        {formattedTotalStakedAmount} {SENT_SYMBOL}
       </ActionModuleRow>
       <ActionModuleDivider />
       <ActionModuleRow

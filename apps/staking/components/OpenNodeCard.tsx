@@ -7,8 +7,11 @@ import { OpenNode } from '@session/sent-staking-js';
 import { TextSeparator } from '@session/ui/components/Separator';
 import { StatusIndicator } from '@session/ui/components/StatusIndicator';
 import { Button } from '@session/ui/ui/button';
+import { formatTokenValue } from '@session/util/maths';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { forwardRef, useMemo, type HTMLAttributes, type ReactNode } from 'react';
+import { NodeCard, NodeCardText, NodeCardTitle } from './NodeCard';
 import { PubKey } from './PubKey';
 
 const NodeItem = ({ children }: { children: ReactNode }) => <span className="">{children}</span>;
@@ -32,6 +35,16 @@ const OpenNodeCard = forwardRef<
   const titleFormat = useTranslations('modules.title');
 
   const { pubKey, operatorFee, minContribution, maxContribution } = node;
+
+  const formattedMinContributon = useMemo(() => {
+    if (!minContribution) return '0';
+    return formatTokenValue(minContribution);
+  }, [minContribution]);
+
+  const formattedMaxContributon = useMemo(() => {
+    if (!maxContribution) return '0';
+    return formatTokenValue(maxContribution);
+  }, [maxContribution]);
 
   return (
     <NodeCard
@@ -57,7 +70,7 @@ const OpenNodeCard = forwardRef<
               {titleFormat('format', { title: dictionary('minContribution') })}
             </NodeItemLabel>
             <NodeItemValue>
-              {minContribution} {SENT_SYMBOL}
+              {formattedMinContributon} {SENT_SYMBOL}
             </NodeItemValue>
           </NodeItem>
           <NodeItemSeparator />
@@ -66,7 +79,7 @@ const OpenNodeCard = forwardRef<
               {titleFormat('format', { title: dictionary('maxContribution') })}
             </NodeItemLabel>
             <NodeItemValue>
-              {maxContribution} {SENT_SYMBOL}
+              {formattedMaxContributon} {SENT_SYMBOL}
             </NodeItemValue>
           </NodeItem>
           <NodeItemSeparator />
