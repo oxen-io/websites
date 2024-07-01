@@ -78,7 +78,7 @@
       "notEligible": "Not eligible? {testnetName} and its Incentive Program is currently closed to the public, however we will be inviting new users to join our testnet in the future. Join {discordServerLink} to stay in the loop about opportunities to join the {incentiveProgramLink}. "
     },
     "connectedWalletInfo": "Your connected wallet's account {address} is being used to fill out this form. You will not be asked to make any transactions.",
-    "addTokenInfo": "You may need to manually add {tokenSymbol} to your wallet's token list to make it show up, click the button below to add it.",
+    "addTokenInfo": "Make {tokenSymbol} visible in your wallet by manually importing the token.",
     "form": {
       "disconnectWallet": "Disconnect",
       "inputPlaceholder": "Wallet address",
@@ -197,7 +197,7 @@
       "title": "Stake to a Node",
       "viewOnExplorer": "View on Explorer",
       "contributors": "Shared Contributors",
-      "contributorsTooltip": "The number of contributors staking to this node.",
+      "contributorsTooltip": "The contributors currently staking to this node.",
       "operatorAddress": "Operator Address",
       "operatorAddressTooltip": "The wallet address of the node operator.",
       "button": {
