@@ -1,4 +1,4 @@
-import { SENT_SYMBOL } from '@session/contracts';
+import { CHAIN, SENT_SYMBOL, chains } from '@session/contracts';
 import { cn } from '@session/ui/lib/utils';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
@@ -51,12 +51,14 @@ export const defaultTranslationVariables = {
   ethTokenSymbol: TICKER.ETH,
   mainnetName: NETWORK.MAINNET,
   testnetName: NETWORK.TESTNET,
-  mainNetworkChain: 'Arbitrum Sepolia',
-  testNetworkChain: 'Arbitrum Sepolia',
+  mainNetworkChain: chains[CHAIN.MAINNET].name,
+  testNetworkChain: chains[CHAIN.TESTNET].name,
   discordServerLink: externalLink(URL.DISCORD_INVITE)("Session Token's Discord server"),
   contactSupportLink: externalLink(URL.DISCORD_INVITE)('contact the Session team via Discord.'),
   incentiveProgramLink: externalLink(URL.INCENTIVE_PROGRAM)('Session Testnet Incentive Program'),
-  recommendedGasFaucetLink: externalLink(URL.ARB_SEP_FAUCET)('QuickNode Arbitrum Sepolia Faucet'),
+  recommendedGasFaucetLink: externalLink(URL.ARB_SEP_FAUCET)(
+    `QuickNode ${chains[CHAIN.TESTNET].name} Faucet`
+  ),
 };
 
 export const defaultTranslationValues = {

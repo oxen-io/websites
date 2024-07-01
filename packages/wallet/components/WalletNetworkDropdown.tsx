@@ -1,5 +1,6 @@
 import { CHAIN, isChain } from '@session/contracts/chains';
 import { Button, type ButtonVariantProps } from '@session/ui/components/ui/button';
+import { ArbitrumIcon } from '@session/ui/icons/ArbitrumIcon';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -73,11 +74,7 @@ export function NetworkDropdown({
           aria-label={ariaLabels.dropdown}
           {...props}
         >
-          {chain === null ? null : (
-            <div className="mr-1 h-4 w-4">
-              <img src="/images/arbitrum.svg" />
-            </div>
-          )}
+          {chain === null ? null : <ArbitrumIcon className="mr-1 h-4 w-4" />}
           {label}
         </Button>
       </DropdownMenuTrigger>
