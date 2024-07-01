@@ -216,23 +216,23 @@ const NodeNotification = forwardRef<HTMLSpanElement, NodeNotificationProps>(
   )
 );
 
-const NodeOperatorIndicator = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
+const NodeOperatorIndicator = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => {
     const dictionary = useTranslations('nodeCard.staked');
 
     return (
       <>
-        <span
+        <div
           ref={ref}
           className={cn(
-            'text-session-green flex w-max flex-row items-center gap-1 align-middle text-sm font-normal sm:w-max md:text-base',
+            'text-session-green flex flex-row items-center gap-1 align-middle text-sm font-normal md:text-base',
             className
           )}
           {...props}
         >
           <SpannerAndScrewdriverIcon className="fill-session-green mb-1 h-3.5 w-3.5" />
-          <span>{dictionary('operator')}</span>
-        </span>
+          {dictionary('operator')}
+        </div>
         <TextSeparator className="mx-1 font-medium" />
       </>
     );
@@ -376,15 +376,12 @@ const StakedNodeCard = forwardRef<
         {dictionary('lastUptime', { time: formatLocalizedRelativeTimeToNowClient(lastUptime) })}
       </CollapsableContent>
       {/** NOTE - ensure any changes here still work with the pubkey component */}
-      <NodeCardText className="flex w-full flex-row gap-1 peer-checked:mt-1 peer-checked:[&>span>span>button]:block peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">
-        {/** TODO - Investigating having react components as localized variables */}
-        <span className="flex flex-row flex-wrap gap-1">
-          {address && isNodeOperator(node, address) ? <NodeOperatorIndicator /> : null}
-          <RowLabel>
-            {titleFormat('format', { title: generalNodeDictionary('publicKeyShort') })}
-          </RowLabel>
-          <PubKey pubKey={pubKey} expandOnHover />
-        </span>
+      <NodeCardText className="flex w-full flex-row gap-1 peer-checked:mt-1 peer-checked:[&>span>button]:block peer-checked:[&>span>div]:block peer-checked:[&>span>span]:hidden">
+        {address && isNodeOperator(node, address) ? <NodeOperatorIndicator /> : null}
+        <RowLabel>
+          {titleFormat('format', { title: generalNodeDictionary('publicKeyShort') })}
+        </RowLabel>
+        <PubKey pubKey={pubKey} expandOnHover />
       </NodeCardText>
       <CollapsableContent>
         <RowLabel>

@@ -72,7 +72,7 @@
       "communityTitle": "Session Token Community Members",
       "communityDescription": "If you were part of the Session Token Community <link>Snapshot</link> taken on {snapshotDate}, you are eligible to receive test {tokenSymbol}. Connect to {connectionOptions}, and then connect your wallet or enter your wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
       "oxenTitle": "Oxen Service Nodes",
-      "oxenDescription": "If you registered for the <link>Oxen Service Node Bonus</link> program by {oxenRegistrationDate}, you are also eligible. Connect the wallet that you registered for the program with, or enter the wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
+      "oxenDescription": "If you registered for the <link>{oxenProgram}</link> by {oxenRegistrationDate}, you are also eligible. Connect the wallet that you registered for the program with, or enter the wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
       "walletRequirementTitle": "Wallet Requirements:",
       "walletRequirementDescription": "You need to have a minimum of {minimumGasAmount} test {gasTokenSymbol} on the {testNetworkChain} network to be able to receive test {tokenSymbol}. Add some to your wallet using the {recommendedGasFaucetLink}.",
       "notEligible": "Not eligible? {testnetName} and its Incentive Program is currently closed to the public, however we will be inviting new users to join our testnet in the future. Join {discordServerLink} to stay in the loop about opportunities to join the {incentiveProgramLink}. "
