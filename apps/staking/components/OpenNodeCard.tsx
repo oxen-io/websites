@@ -9,8 +9,7 @@ import { StatusIndicator } from '@session/ui/components/StatusIndicator';
 import { Button } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
-import { NodeCard, NodeCardText, NodeCardTitle, NodePubKey } from './NodeCard';
+import { PubKey } from './PubKey';
 
 const NodeItem = ({ children }: { children: ReactNode }) => <span className="">{children}</span>;
 
@@ -49,7 +48,7 @@ const OpenNodeCard = forwardRef<
             <span className="text-nowrap font-normal">
               {titleFormat('format', { title: generalNodeDictionary('publicKeyShort') })}
             </span>
-            <NodePubKey pubKey={pubKey} />
+            <PubKey pubKey={pubKey} />
           </NodeCardTitle>
         </div>
         <NodeCardText className="col-span-10 mt-2 inline-flex max-h-max flex-col gap-2 align-middle font-normal md:mt-0 md:flex-row">

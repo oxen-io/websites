@@ -2,24 +2,27 @@
 
 import { formatLocalizedRelativeTimeToNowClient, formatPercentage } from '@/lib/locale-client';
 import { NodeCardDataTestId, StakedNodeDataTestId } from '@/testing/data-test-ids';
+import { SENT_SYMBOL } from '@session/contracts';
 import { NODE_STATE } from '@session/sent-staking-js';
 import { TextSeparator } from '@session/ui/components/Separator';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import { ArrowDownIcon } from '@session/ui/icons/ArrowDownIcon';
 import { SpannerAndScrewdriverIcon } from '@session/ui/icons/SpannerAndScrewdriverIcon';
 import { cn } from '@session/ui/lib/utils';
+import { formatTokenValue } from '@session/util/maths';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { useTranslations } from 'next-intl';
-import { ReactNode, forwardRef, useId, useState, type HTMLAttributes } from 'react';
+import { ReactNode, forwardRef, useId, useMemo, useState, type HTMLAttributes } from 'react';
 import {
   Contributor,
   NodeCard,
   NodeCardText,
   NodeCardTitle,
   NodeContributorList,
-  NodePubKey,
+  getTotalStakedAmountForAddress,
 } from './NodeCard';
+import { PubKey } from './PubKey';
 
 export const NODE_STATE_VALUES = Object.values(NODE_STATE);
 
@@ -320,7 +323,12 @@ const StakedNodeCard = forwardRef<
 
   const id = useId();
   const { address } = useWallet();
-  const { state, pubKey, balance, operatorFee, lastRewardHeight, lastUptime } = node;
+  const { state, pubKey, operatorFee, lastRewardHeight, lastUptime, contributors } = node;
+
+  const formattedTotalStakedAmount = useMemo(() => {
+    if (!contributors || contributors.length === 0 || !address) return '0';
+    return formatTokenValue(getTotalStakedAmountForAddress(contributors, address));
+  }, [contributors]);
 
   return (
     <NodeCard
@@ -366,14 +374,14 @@ const StakedNodeCard = forwardRef<
           <RowLabel>
             {titleFormat('format', { title: generalNodeDictionary('publicKeyShort') })}
           </RowLabel>
-          <NodePubKey pubKey={pubKey} expandOnHover />
+          <PubKey pubKey={pubKey} expandOnHover />
         </span>
       </NodeCardText>
       <CollapsableContent>
         <RowLabel>
           {titleFormat('format', { title: stakingNodeDictionary('stakedBalance') })}
         </RowLabel>
-        {balance.toFixed(2)}
+        {formattedTotalStakedAmount} {SENT_SYMBOL}
       </CollapsableContent>
       <CollapsableContent>
         <RowLabel>

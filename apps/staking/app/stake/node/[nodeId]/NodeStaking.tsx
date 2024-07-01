@@ -1,6 +1,6 @@
 'use client';
 
-import { NodeContributorList, NodePubKey, getTotalStakedAmount } from '@/components/NodeCard';
+import { PubKey } from '@/components/PubKey';
 import { SessionTokenInput } from '@/components/SessionTokenInput';
 import useSentBalance from '@/hooks/balance';
 import { formatPercentage } from '@/lib/locale-client';
@@ -67,14 +67,14 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
         label={sessionNodeDictionary('publicKeyShort')}
         tooltip={sessionNodeDictionary('publicKeyDescription')}
       >
-        <NodePubKey pubKey={node.pubKey} />
+        <PubKey pubKey={node.pubKey} alwaysShowCopyButton />
       </ActionModuleRow>
       <ActionModuleDivider />
       <ActionModuleRow
         label={dictionary('operatorAddress')}
         tooltip={dictionary('operatorAddressTooltip')}
       >
-        {node.operatorAddress}
+        <PubKey pubKey={node.operatorAddress} alwaysShowCopyButton />
       </ActionModuleRow>
       <ActionModuleDivider />
       <ActionModuleRow
