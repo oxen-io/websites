@@ -92,11 +92,11 @@ function DropdownHamburgerMenu() {
       <DropdownMenuTrigger asChild>
         <Button
           data-testid={ButtonDataTestId.Dropdown_Hamburger_Menu}
-          className="group p-0"
+          className="group px-1 py-0"
           aria-label={dictionary('ariaLabel')}
           variant="outline"
         >
-          <HamburgerIcon className="stroke-session-green group-hover:stroke-session-black h-7 w-7" />
+          <HamburgerIcon className="stroke-session-green group-hover:stroke-session-black h-9 w-9" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-max">
