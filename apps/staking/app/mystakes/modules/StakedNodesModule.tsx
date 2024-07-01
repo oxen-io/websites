@@ -40,7 +40,7 @@ export default function StakedNodesModule() {
       <ModuleGridHeader>
         <ModuleGridTitle>{dictionary('title')}</ModuleGridTitle>
         <div className="flex flex-row gap-2 align-middle">
-          {dictionary('showHiddenText')} <Switch />
+          <span className="hidden sm:block">{dictionary('showHiddenText')}</span> <Switch />
         </div>
       </ModuleGridHeader>
       {address ? <StakedNodesWithAddress address={address} /> : <Loading />}

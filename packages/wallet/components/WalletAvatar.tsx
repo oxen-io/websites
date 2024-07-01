@@ -1,3 +1,4 @@
+import { SessionTokenIcon } from '@session/ui/icons/SessionTokenIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@session/ui/ui/avatar';
 import { useWalletInfo } from '@web3modal/wagmi/react';
 import { useWallet } from '../hooks/wallet-hooks';
@@ -45,7 +46,9 @@ export function WalletAvatar({
         {ensAvatar ? <AvatarImage src={ensAvatar} alt={ensName ?? 'Ens Avatar'} /> : null}
         <Avatar className={className}>
           <AvatarImage src={walletIcon ?? undefined} alt={walletName ?? 'Wallet Icon'} />
-          <AvatarFallback className="bg-session-green" />
+          <AvatarFallback className="bg-session-black">
+            <SessionTokenIcon className="h-4 w-4" />
+          </AvatarFallback>
         </Avatar>
       </Avatar>
     </Avatar>

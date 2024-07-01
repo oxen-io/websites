@@ -89,8 +89,8 @@
       "disconnectWalletButtonAria": "Disconnect your wallet.",
       "connectedWalletButtonText": "Connected",
       "connectedWalletButtonAria": "Connected to wallet, click to disconnect.",
-      "telegramConnectButtonAria": "Click to connect your Telegram account",
-      "discordConnectButtonAria": "Click to connect your Discord account",
+      "telegramConnectButtonAria": "Connect your Telegram account",
+      "discordConnectButtonAria": "Connect your Discord account",
       "swapToTestnet": "Swap to {testnetName}",
       "lowEthBalance": "It looks like you don't have enough test {gasTokenSymbol} on {testNetworkChain}, go to {recommendedGasFaucetLink} to get some. You have {gasAmount} test {gasTokenSymbol}",
       "submitButton": {
