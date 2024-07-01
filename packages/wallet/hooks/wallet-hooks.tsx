@@ -95,8 +95,7 @@ export function useWalletChain() {
   const chain = useMemo(() => {
     if (!chainId) return null;
 
-    //find the key where the value.id is equal to chainId
-
+    // Finds the key (CHAIN) where value.id is equal to chainId
     const validChain = Object.keys(chains).find((key) => chains[key as CHAIN].id === chainId) as
       | CHAIN
       | undefined;

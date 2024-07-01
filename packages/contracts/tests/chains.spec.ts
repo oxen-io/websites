@@ -1,4 +1,4 @@
-import { CHAIN, isChain } from '../chains';
+import { CHAIN, chains, ethereum, isChain, mainnet, testnet } from '../chains';
 
 // #region - isChain
 
@@ -23,9 +23,25 @@ describe('isChain', () => {
 
 describe('chains object', () => {
   test('should have the correct keys', () => {
-    expect(Object.keys(CHAIN)).toEqual(['MAINNET', 'TESTNET', 'ETHEREUM']);
+    const obj = Object.keys(chains);
+
+    expect(obj).toContain(CHAIN.MAINNET);
+    expect(obj).toContain(CHAIN.TESTNET);
+    expect(obj).toContain(CHAIN.ETHEREUM);
   });
 
+  test('should have the correct values', () => {
+    const obj = Object.values(chains);
+
+    expect(obj).toContainEqual(mainnet);
+    expect(obj).toContainEqual(testnet);
+    expect(obj).toContainEqual(ethereum);
+  });
+});
+
+// #region - chain enum
+
+describe('chain enum', () => {
   test('should have the correct values', () => {
     expect(CHAIN.MAINNET).toBe('mainnet');
     expect(CHAIN.TESTNET).toBe('testnet');
