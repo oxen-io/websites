@@ -1,6 +1,8 @@
+import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import { Button } from '@session/ui/components/ui/button';
-import { EthIcon } from '@session/ui/icons/EthIcon';
+import { SessionTokenIcon } from '@session/ui/icons/SessionTokenIcon';
 import { cn } from '@session/ui/lib/utils';
+import { formatBigIntTokenValue } from '@session/util/maths';
 import { collapseString } from '@session/util/string';
 import { useMemo } from 'react';
 import { ButtonDataTestId } from '../testing/data-test-ids';
@@ -19,7 +21,7 @@ export function WalletButton({
   ensAvatar,
   ensName,
   arbName,
-  ethBalance,
+  tokenBalance,
   fallbackName,
 }: WalletButtonProps) {
   const name = useMemo(
@@ -46,11 +48,11 @@ export function WalletButton({
         <>
           <div
             className={cn(
-              'text-session-white border-session-green bg-session-black -mr-4 inline-flex h-full w-full items-center justify-center whitespace-nowrap rounded-s-full border border-s-2 py-2 pe-5 ps-3'
+              'text-session-white border-session-green bg-session-black -mr-4 inline-flex h-full w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-s-full border border-s-2 py-2 pe-5 ps-3'
             )}
           >
-            <EthIcon className="h-5 w-5" />
-            {ethBalance} ETH
+            <SessionTokenIcon className="h-4 w-4" />
+            {tokenBalance ? formatBigIntTokenValue(tokenBalance, SENT_DECIMALS) : 0} {SENT_SYMBOL}
           </div>
           <div
             className={cn(

@@ -11,9 +11,9 @@ import {
 } from './contract-hooks';
 
 export type SENTBalanceQuery = ReadContractQuery & {
-  /** Get the reward rate */
+  /** Get the session token balance */
   getBalance: () => void;
-  /** The reward rate */
+  /** The session token balance */
   balance: ReadContractData<typeof SENTAbi, 'balanceOf', [Address]>;
 };
 
@@ -37,7 +37,7 @@ export function useSENTBalanceQuery(
 
   const getBalance = () => {
     if (!address) {
-      throwError(new Error('Address is required to get reward rate'));
+      throwError(new Error('Address is required to get balance'));
       return;
     }
     readContract({ args: [address] });

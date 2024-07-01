@@ -13,7 +13,7 @@ type WalletModalButtonProps = {
 };
 
 export default function WalletModalButton(props: WalletModalButtonProps) {
-  const { address, ensName, arbName, ethBalance, status, isConnected } = useWallet();
+  const { address, ensName, arbName, tokenBalance, ethBalance, status, isConnected } = useWallet();
   const { open } = useWeb3Modal();
   const { open: isOpen } = useWeb3ModalState();
   const { isBalanceVisible } = useWalletButton();
@@ -36,6 +36,7 @@ export default function WalletModalButton(props: WalletModalButtonProps) {
       address={address}
       ensName={ensName}
       arbName={arbName}
+      tokenBalance={tokenBalance}
       ethBalance={ethBalance}
     />
   );
