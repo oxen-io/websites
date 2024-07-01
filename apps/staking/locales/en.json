@@ -31,8 +31,8 @@
     "modalButton": {
       "connect": "Connect Wallet",
       "connected": "Open Wallet",
-      "connecting": "Connecting Wallet...",
-      "reconnecting": "Reconnecting Wallet...",
+      "connecting": "Connecting...",
+      "reconnecting": "Reconnecting...",
       "ariaConnected": "Open wallet account modal",
       "ariaDisconnected": "Open connect wallet modal",
       "balance": "Balance",
