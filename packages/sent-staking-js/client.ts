@@ -1,4 +1,4 @@
-import { generateMockNodeData, genereateOpenNodes } from './test';
+import { genereateOpenNodes } from './test';
 
 /** /info */
 interface NetworkInfoResponse {
@@ -211,17 +211,11 @@ export class SessionStakingClient {
   }: {
     address: string;
   }): Promise<SSBResponse<GetNodesForWalletResponse>> {
-    const mockData = generateMockNodeData({ userAddress: address });
-    return {
-      body: mockData,
-      status: 200,
-      statusText: 'MOCK',
-    };
-    /* const options: SSBRequestOptions = {
+    const options: SSBRequestOptions = {
       url: `${this.baseUrl}/nodes/${address}`,
       method: 'GET',
     };
-     return this.request<GetNodesForWalletResponse>(options); */
+    return this.request<GetNodesForWalletResponse>(options);
   }
 
   /**

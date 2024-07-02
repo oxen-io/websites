@@ -1,6 +1,7 @@
 export enum ButtonDataTestId {
   New_Stake = 'button:new-stake',
-  Home_Stake_Now = 'button:stake-now',
+  Home_Stake_Now = 'button:home-stake-now',
+  My_Stakes_Stake_Now = 'button:my-stakes-stake-now',
   Home_Run_Node = 'button:how-to-run-a-session-node',
   Not_Found_Return_Home = 'button:not-found-return-home',
   Copy_Public_Key_To_Clipboard = 'button:copy-public-key-to-clipboard',

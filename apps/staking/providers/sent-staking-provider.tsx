@@ -6,7 +6,7 @@ import {
   SessionStakingClientMethodResponseMap,
   createSessionStakingClient,
   type SessionStakingClient,
-} from '@session/sent-staking-js';
+} from '@session/sent-staking-js/client';
 import { useQuery } from '@tanstack/react-query';
 import { createContext, useContext, useMemo, useState } from 'react';
 

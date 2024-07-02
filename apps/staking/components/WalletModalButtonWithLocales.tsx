@@ -1,21 +1,33 @@
-import WalletModalButton from '@session/wallet/components/WalletModalButton';
+import WalletModalButton, {
+  WalletModalButtonProps,
+} from '@session/wallet/components/WalletModalButton';
 import { useTranslations } from 'next-intl';
 
-export function WalletModalButtonWithLocales() {
+export function WalletModalButtonWithLocales({
+  labels,
+  ariaLabels,
+  fallbackName,
+  ...props
+}: Partial<WalletModalButtonProps>) {
   const dictionary = useTranslations('wallet.modalButton');
   return (
     <WalletModalButton
-      labels={{
-        disconnected: dictionary('connect'),
-        connected: dictionary('connected'),
-        connecting: dictionary('connecting'),
-        reconnecting: dictionary('reconnecting'),
-      }}
-      ariaLabels={{
-        connected: dictionary('ariaConnected'),
-        disconnected: dictionary('ariaDisconnected'),
-      }}
-      fallbackName={dictionary('fallbackName')}
+      labels={
+        labels ?? {
+          disconnected: dictionary('connect'),
+          connected: dictionary('connected'),
+          connecting: dictionary('connecting'),
+          reconnecting: dictionary('reconnecting'),
+        }
+      }
+      ariaLabels={
+        ariaLabels ?? {
+          connected: dictionary('ariaConnected'),
+          disconnected: dictionary('ariaDisconnected'),
+        }
+      }
+      fallbackName={fallbackName ?? dictionary('fallbackName')}
+      {...props}
     />
   );
 }

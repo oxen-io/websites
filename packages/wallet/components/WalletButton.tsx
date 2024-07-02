@@ -23,6 +23,7 @@ export function WalletButton({
   arbName,
   tokenBalance,
   fallbackName,
+  ...props
 }: WalletButtonProps) {
   const name = useMemo(
     () => collapseString(arbName ?? ensName ?? address ?? fallbackName, 6, 4),
@@ -33,16 +34,17 @@ export function WalletButton({
     <Button
       onClick={handleClick}
       disabled={isLoading}
-      data-testid={ButtonDataTestId.Wallet_Modal}
       className={cn(
         'group',
-        'h-full w-full max-w-36 select-none justify-end overflow-x-hidden transition-all duration-1000 ease-in-out motion-reduce:transition-none lg:hover:max-w-full lg:focus:max-w-full lg:active:max-w-full',
+        'select-none justify-end overflow-x-hidden',
         isConnected
-          ? 'bg-session-green hover:bg-session-green hover:text-session-black border-2 px-0 py-0 hover:brightness-110'
+          ? 'bg-session-green hover:bg-session-green hover:text-session-black h-full w-full max-w-36 border-2 px-0 py-0 transition-all duration-1000 ease-in-out hover:brightness-110 motion-reduce:transition-none lg:hover:max-w-full lg:focus:max-w-full lg:active:max-w-full'
           : 'px-3 py-2',
         forceBalanceOpen && 'lg:max-w-full'
       )}
       aria-label={isConnected ? ariaLabels.connected : ariaLabels.disconnected}
+      data-testid={ButtonDataTestId.Wallet_Modal}
+      {...props}
     >
       {isConnected ? (
         <>

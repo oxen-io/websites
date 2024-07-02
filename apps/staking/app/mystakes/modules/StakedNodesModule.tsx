@@ -1,33 +1,63 @@
 'use client';
 
+import Loading from '@/app/loading';
 import { GenericStakedNode, StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
+import { WalletModalButtonWithLocales } from '@/components/WalletModalButtonWithLocales';
+import { internalLink } from '@/lib/locale-defaults';
+import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
-import { ServiceNode } from '@session/sent-staking-js';
+import { ButtonDataTestId } from '@/testing/data-test-ids';
+import type { ServiceNode } from '@session/sent-staking-js/client';
+import { generateMockNodeData } from '@session/sent-staking-js/test';
 import {
   ModuleGridContent,
   ModuleGridHeader,
   ModuleGridTitle,
 } from '@session/ui/components/ModuleGrid';
-import { Loading } from '@session/ui/components/loading';
+import { Button } from '@session/ui/ui/button';
 import { Switch } from '@session/ui/ui/switch';
+import { useToggleWalletModal } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { ReactNode, useMemo } from 'react';
 import { useAccount } from 'wagmi';
 
 function StakedNodesWithAddress({ address }: { address: string }) {
-  const { data } = useSessionStakingQuery({
+  const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_STAKED_NODES);
+  const showNoNodes = useFeatureFlag(FEATURE_FLAG.MOCK_NO_STAKED_NODES);
+
+  if (showMockNodes && showNoNodes) {
+    console.error('Cannot show mock nodes and no nodes at the same time');
+  }
+
+  const { data, isLoading } = useSessionStakingQuery({
     query: 'getNodesForEthWallet',
     args: { address },
   });
+
+  const nodes = useMemo(() => {
+    if (showMockNodes) {
+      return generateMockNodeData({ userAddress: address }).nodes;
+    } else if (showNoNodes) {
+      return [] as Array<ServiceNode>;
+    }
+    return data?.nodes as Array<ServiceNode>;
+  }, [data, showMockNodes, showNoNodes]);
+
   return (
     <ModuleGridContent className="h-full md:overflow-y-auto">
-      {data
-        ? data.nodes.map((node) => (
-            <StakedNodeCard
-              key={node.service_node_pubkey}
-              node={parseSessionNodeData(node) as StakedNode}
-            />
-          ))
-        : null}
+      {isLoading ? (
+        <Loading />
+      ) : nodes && nodes.length > 0 ? (
+        nodes.map((node) => (
+          <StakedNodeCard
+            key={node.service_node_pubkey}
+            node={parseSessionNodeData(node) as StakedNode}
+          />
+        ))
+      ) : (
+        <NoNodes />
+      )}
     </ModuleGridContent>
   );
 }
@@ -43,8 +73,58 @@ export default function StakedNodesModule() {
           <span className="hidden sm:block">{dictionary('showHiddenText')}</span> <Switch />
         </div>
       </ModuleGridHeader>
-      {address ? <StakedNodesWithAddress address={address} /> : <Loading />}
+      {address ? <StakedNodesWithAddress address={address} /> : <NoWallet />}
     </>
+  );
+}
+
+function Content({ children }: { children: ReactNode }) {
+  return (
+    <ModuleGridContent className="text-session-text flex h-full w-1/2 flex-col items-center justify-center gap-6 self-center text-center text-lg">
+      {children}
+    </ModuleGridContent>
+  );
+}
+
+function NoWallet() {
+  const dictionary = useTranslations('modules.stakedNodes');
+  return (
+    <Content>
+      <p>{dictionary('noWalletP1')}</p>
+      <p>
+        {dictionary.rich('noWalletP2', {
+          link: (children) => {
+            const { open } = useToggleWalletModal();
+            return (
+              <a onClick={() => open()} className="text-session-green cursor-pointer underline">
+                {children}
+              </a>
+            );
+          },
+        })}
+      </p>
+      <WalletModalButtonWithLocales rounded="md" size="lg" />
+    </Content>
+  );
+}
+
+function NoNodes() {
+  const dictionary = useTranslations('modules.stakedNodes');
+  return (
+    <Content>
+      <p>{dictionary('noNodesP1')}</p>
+      <p>{dictionary.rich('noNodesP2', { link: internalLink('/stake') })}</p>
+      <Link href="/stake" prefetch>
+        <Button
+          aria-label={dictionary('stakeNowButtonAria')}
+          data-testid={ButtonDataTestId.My_Stakes_Stake_Now}
+          rounded="md"
+          size="lg"
+        >
+          {dictionary('stakeNowButtonText')}
+        </Button>
+      </Link>
+    </Content>
   );
 }
 

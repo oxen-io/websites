@@ -2,12 +2,17 @@ import { SENT_DECIMALS, SENT_SYMBOL, addresses } from '@session/contracts';
 import { CHAIN, chains } from '@session/contracts/chains';
 import { useSENTBalanceQuery } from '@session/contracts/hooks/SENT';
 import { useEns } from '@session/contracts/hooks/ens';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { useMemo, useState } from 'react';
 import { createWalletClient, custom, type Address } from 'viem';
 import { useAccount, useBalance, useConfig } from 'wagmi';
 import { switchChain as switchChainWagmi } from 'wagmi/actions';
 import { getEthereumWindowProvider } from '../lib/eth';
 import { useArbName } from './arb';
+
+export const useToggleWalletModal = (): ReturnType<typeof useWeb3Modal> => {
+  return useWeb3Modal();
+};
 
 /**
  * The status of a wallet.

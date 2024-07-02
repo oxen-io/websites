@@ -6,7 +6,7 @@ import {
   SessionStakingClient,
   SessionStakingClientMethodResponseMap,
   createSessionStakingClient,
-} from '@session/sent-staking-js';
+} from '@session/sent-staking-js/client';
 import { QueryClient } from '@tanstack/react-query';
 import { NEXT_PUBLIC_SENT_STAKING_API_URL } from './env';
 
