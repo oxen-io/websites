@@ -6,6 +6,7 @@ import { SENT_SYMBOL } from '@session/contracts';
 import { OpenNode } from '@session/sent-staking-js';
 import { TextSeparator } from '@session/ui/components/Separator';
 import { StatusIndicator } from '@session/ui/components/StatusIndicator';
+import { cn } from '@session/ui/lib/utils';
 import { Button } from '@session/ui/ui/button';
 import { formatTokenValue } from '@session/util/maths';
 import { useTranslations } from 'next-intl';
@@ -14,9 +15,13 @@ import { forwardRef, useMemo, type HTMLAttributes, type ReactNode } from 'react'
 import { NodeCard, NodeCardText, NodeCardTitle } from './NodeCard';
 import { PubKey } from './PubKey';
 
-const NodeItem = ({ children }: { children: ReactNode }) => <span className="">{children}</span>;
+const NodeItem = ({ children, className }: { children: ReactNode; className?: string }) => (
+  <span className={className}>{children}</span>
+);
 
-const NodeItemSeparator = () => <TextSeparator className="hidden md:block" />;
+const NodeItemSeparator = ({ className }: { className?: string }) => (
+  <TextSeparator className={className} />
+);
 
 const NodeItemLabel = ({ children }: { children: ReactNode }) => (
   <span className="font-normal"> {children}</span>
@@ -50,21 +55,21 @@ const OpenNodeCard = forwardRef<
     <NodeCard
       ref={ref}
       {...props}
-      className="flex flex-row items-center justify-between gap-10 align-middle"
+      className="flex flex-col items-center justify-between gap-2 align-middle sm:flex-row md:gap-10"
     >
-      <div className={className}>
-        <div className="flex w-full cursor-pointer items-baseline gap-3 align-middle">
-          <div className="p-0.5">
+      <div className={cn('text-center sm:text-start', className)}>
+        <div className="flex w-full cursor-pointer items-baseline gap-3 text-center align-middle sm:text-start">
+          <div className="-mr-2 scale-75 p-0 sm:mr-0 md:scale-100 md:p-0.5">
             <StatusIndicator status="green" />
           </div>
-          <NodeCardTitle className="inline-flex flex-wrap gap-2">
+          <NodeCardTitle className="inline-flex flex-wrap gap-2 text-sm md:text-lg">
             <span className="text-nowrap font-normal">
               {titleFormat('format', { title: generalNodeDictionary('publicKeyShort') })}
             </span>
             <PubKey pubKey={pubKey} />
           </NodeCardTitle>
         </div>
-        <NodeCardText className="col-span-10 mt-2 inline-flex max-h-max flex-col gap-2 align-middle font-normal md:mt-0 md:flex-row">
+        <NodeCardText className="col-span-10 mt-1 inline-flex max-h-max flex-row-reverse justify-center gap-2 text-center align-middle text-xs font-normal sm:justify-start sm:text-start md:mt-0 md:flex-row md:text-base">
           <NodeItem>
             <NodeItemLabel>
               {titleFormat('format', { title: dictionary('minContribution') })}
@@ -73,8 +78,8 @@ const OpenNodeCard = forwardRef<
               {formattedMinContributon} {SENT_SYMBOL}
             </NodeItemValue>
           </NodeItem>
-          <NodeItemSeparator />
-          <NodeItem>
+          <NodeItemSeparator className="hidden md:block" />
+          <NodeItem className="hidden md:block">
             <NodeItemLabel>
               {titleFormat('format', { title: dictionary('maxContribution') })}
             </NodeItemLabel>
@@ -85,24 +90,24 @@ const OpenNodeCard = forwardRef<
           <NodeItemSeparator />
           <NodeItem>
             <NodeItemLabel>
-              {titleFormat('format', { title: generalNodeDictionary('operatorFee') })}
+              {titleFormat('format', { title: generalNodeDictionary('operatorFeeShort') })}
             </NodeItemLabel>
             <NodeItemValue>{formatPercentage(operatorFee)}</NodeItemValue>
           </NodeItem>
         </NodeCardText>
       </div>
-      <div>
-        <Link href={`/stake/node/${node.pubKey}`}>
-          <Button
-            variant="outline"
-            size="lg"
-            aria-label={dictionary('viewButton.ariaLabel')}
-            data-testid={ButtonDataTestId.Node_Card_Stake}
-          >
-            {dictionary('viewButton.text')}
-          </Button>
-        </Link>
-      </div>
+      <Link href={`/stake/node/${node.pubKey}`} className="w-full sm:w-auto">
+        <Button
+          variant="outline"
+          size="md"
+          rounded="md"
+          aria-label={dictionary('viewButton.ariaLabel')}
+          data-testid={ButtonDataTestId.Node_Card_Stake}
+          className="w-full sm:w-auto"
+        >
+          {dictionary('viewButton.text')}
+        </Button>
+      </Link>
     </NodeCard>
   );
 });

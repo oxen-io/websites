@@ -310,18 +310,18 @@ export const genereateOpenNodes = ({ userAddress }: { userAddress: string }): Ar
     {
       pubKey:
         'LCys52dasGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtMTfb6BSoT8eb3G7Fd6p4',
-      maxContribution: 1000,
-      minContribution: 100,
-      operatorFee: 0.1,
+      maxContribution: 15000.12,
+      minContribution: 500,
+      operatorFee: 0.132,
       contributors: generateContributors(0),
       operatorAddress: generateWalletAddress(),
     },
     {
       pubKey:
         'LCys52dasGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtMTfA6BSoT8eb3G7Fd6p4',
-      maxContribution: 1000,
+      maxContribution: 12892.11,
       minContribution: 100,
-      operatorFee: 0.1,
+      operatorFee: 0.1221,
       contributors: generateContributors(0),
       operatorAddress: userAddress,
     },
@@ -329,8 +329,8 @@ export const genereateOpenNodes = ({ userAddress }: { userAddress: string }): Ar
       pubKey:
         'LCyJd2dFcGmZsz5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtMTfA6BSoT8eb3G7Fd6p5',
       maxContribution: 1000,
-      minContribution: 100,
-      operatorFee: 0.1,
+      minContribution: 12020.55,
+      operatorFee: 0.5,
       contributors: generateContributors(1),
       operatorAddress: generateWalletAddress(),
     },
