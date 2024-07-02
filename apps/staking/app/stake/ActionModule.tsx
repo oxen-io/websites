@@ -1,5 +1,10 @@
 'use client';
-import { ModuleGrid, ModuleGridHeader, ModuleGridTitle } from '@session/ui/components/ModuleGrid';
+import {
+  ModuleGrid,
+  ModuleGridContent,
+  ModuleGridHeader,
+  ModuleGridTitle,
+} from '@session/ui/components/ModuleGrid';
 import { QuestionIcon } from '@session/ui/icons/QuestionIcon';
 import { cn } from '@session/ui/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
@@ -22,7 +27,7 @@ export default function ActionModule({
     <ModuleGrid
       variant="section"
       colSpan={1}
-      className="h-full w-full overflow-y-auto"
+      className="h-full w-full"
       style={background ? actionModuleBackground[background] : undefined}
     >
       {title ? (
@@ -31,7 +36,7 @@ export default function ActionModule({
           {headerAction}
         </ModuleGridHeader>
       ) : null}
-      {children}
+      <ModuleGridContent className="p-8">{children}</ModuleGridContent>
     </ModuleGrid>
   );
 }
@@ -40,7 +45,7 @@ export const actionModuleBackground = {
   1: {
     background: 'url(/images/action-module-background-1.png)',
     backgroundPositionX: '85%',
-    backgroundPositionY: 'bottom',
+    backgroundPositionY: '-30%',
     backgroundSize: '350%',
     backgroundRepeat: 'no-repeat',
   },

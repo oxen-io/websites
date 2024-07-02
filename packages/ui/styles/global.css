@@ -78,7 +78,7 @@
 
     --radius: 0.5rem;
 
-    --header-height: 2.25rem;
+    --header-height: 2.5rem;
     --header-vertical-padding: 1.5rem;
     --header-displacement: calc(var(--header-height) + var(--header-vertical-padding) * 2);
     --screen-without-header: calc(100vh - var(--header-displacement));

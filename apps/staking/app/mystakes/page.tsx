@@ -10,7 +10,7 @@ import UnclaimedTokensModule from './modules/UnclaimedTokensModule';
 export default function Page() {
   return (
     <ModuleGrid size="lg" className="h-full px-4 md:px-10 xl:auto-rows-auto">
-      <div className="md:max-h-screen-without-header col-span-1 flex h-full min-h-max flex-col gap-4 py-6 md:overflow-y-auto md:overflow-x-hidden">
+      <div className="md:max-h-screen-without-header col-span-1 flex h-full min-h-max flex-col gap-4 pb-8 md:overflow-y-auto md:overflow-x-hidden">
         <ModuleGrid>
           <BalanceModule />
           <DailyNodeReward />
@@ -20,7 +20,7 @@ export default function Page() {
         </ModuleGrid>
         <PriceModule />
       </div>
-      <div className="md:max-h-screen-without-header col-span-2 h-full py-6">
+      <div className="md:max-h-screen-without-header col-span-2 mt-6 h-full pb-8 md:mt-0">
         <ModuleGrid variant="section" colSpan={2} className="h-full">
           <StakedNodesModule />
         </ModuleGrid>
