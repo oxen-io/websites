@@ -8,10 +8,10 @@ import { formatPercentage } from '@/lib/locale-client';
 import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { SENT_SYMBOL } from '@session/contracts';
-import { GetOpenNodesResponse } from '@session/sent-staking-js';
+import type { GetOpenNodesResponse } from '@session/sent-staking-js/client';
 import { Loading } from '@session/ui/components/loading';
 import { Button } from '@session/ui/ui/button';
-import { formatTokenValue } from '@session/util/maths';
+import { formatNumber } from '@session/util/maths';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
@@ -49,7 +49,7 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
 
   const formattedTotalStakedAmount = useMemo(() => {
     if (!node.contributors || node.contributors.length === 0) return '0';
-    return formatTokenValue(getTotalStakedAmount(node.contributors));
+    return formatNumber(getTotalStakedAmount(node.contributors));
   }, [node.contributors]);
 
   return (

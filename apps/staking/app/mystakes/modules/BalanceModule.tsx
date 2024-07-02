@@ -4,9 +4,9 @@ import { ModuleDynamicQueryText } from '@/components/ModuleDynamic';
 import { getTotalStakedAmountForAddress } from '@/components/NodeCard';
 import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { SENT_SYMBOL } from '@session/contracts';
-import { ServiceNode } from '@session/sent-staking-js';
+import type { ServiceNode } from '@session/sent-staking-js/client';
 import { Module, ModuleTitle } from '@session/ui/components/Module';
-import { formatTokenValue } from '@session/util/maths';
+import { formatNumber } from '@session/util/maths';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
@@ -50,7 +50,7 @@ export default function BalanceModule() {
 
   const formattedTotalStakedAmount = useMemo(() => {
     if (!totalStakedAmount) return '0';
-    return formatTokenValue(totalStakedAmount);
+    return formatNumber(totalStakedAmount);
   }, [totalStakedAmount]);
 
   return (

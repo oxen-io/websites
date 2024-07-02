@@ -3,13 +3,13 @@
 import { formatLocalizedRelativeTimeToNowClient, formatPercentage } from '@/lib/locale-client';
 import { NodeCardDataTestId, StakedNodeDataTestId } from '@/testing/data-test-ids';
 import { SENT_SYMBOL } from '@session/contracts';
-import { NODE_STATE } from '@session/sent-staking-js';
+import { NODE_STATE } from '@session/sent-staking-js/client';
 import { TextSeparator } from '@session/ui/components/Separator';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import { ArrowDownIcon } from '@session/ui/icons/ArrowDownIcon';
 import { SpannerAndScrewdriverIcon } from '@session/ui/icons/SpannerAndScrewdriverIcon';
 import { cn } from '@session/ui/lib/utils';
-import { formatTokenValue } from '@session/util/maths';
+import { formatNumber } from '@session/util/maths';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { useTranslations } from 'next-intl';
@@ -336,7 +336,7 @@ const StakedNodeCard = forwardRef<
 
   const formattedTotalStakedAmount = useMemo(() => {
     if (!contributors || contributors.length === 0 || !address) return '0';
-    return formatTokenValue(getTotalStakedAmountForAddress(contributors, address));
+    return formatNumber(getTotalStakedAmountForAddress(contributors, address));
   }, [contributors]);
 
   return (

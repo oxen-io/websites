@@ -1,114 +1,183 @@
-import { formatBigIntTokenValue, formatTokenValue, roundTokenValue } from '../maths';
+import { bigIntToNumber, formatBigIntTokenValue, formatNumber, roundNumber } from '../maths';
 
-// #region - roundTokenValue
+// #region - roundNumber
 
-describe('roundTokenValue', () => {
+describe('roundNumber', () => {
   test('when using default decimals', () => {
-    expect(roundTokenValue(1.23456789)).toBe(1.2346);
-    expect(roundTokenValue(123456789)).toBe(123456789);
-    expect(roundTokenValue(123456789.00023456)).toBe(123456789.0002);
-    expect(roundTokenValue(0.00023456789)).toBe(0.0002);
+    expect(roundNumber(1.23456789)).toBe(1.2346);
+    expect(roundNumber(123456789)).toBe(123456789);
+    expect(roundNumber(123456789.00023456)).toBe(123456789.0002);
+    expect(roundNumber(0.00023456789)).toBe(0.0002);
   });
 
   test('should round to zero to zero', () => {
-    expect(roundTokenValue(0, 2)).toBe(0);
-    expect(roundTokenValue(0, 4)).toBe(0);
-    expect(roundTokenValue(0, 6)).toBe(0);
-    expect(roundTokenValue(0.0, 2)).toBe(0);
-    expect(roundTokenValue(0.0, 4)).toBe(0);
-    expect(roundTokenValue(0.0, 6)).toBe(0);
+    expect(roundNumber(0, 2)).toBe(0);
+    expect(roundNumber(0, 4)).toBe(0);
+    expect(roundNumber(0, 6)).toBe(0);
+    expect(roundNumber(0.0, 2)).toBe(0);
+    expect(roundNumber(0.0, 4)).toBe(0);
+    expect(roundNumber(0.0, 6)).toBe(0);
   });
 
   test('should round negative values', () => {
-    expect(roundTokenValue(-123456789, 2)).toBe(-123456789);
-    expect(roundTokenValue(-1.23456789, 2)).toBe(-1.23);
-    expect(roundTokenValue(-1.23456789, 3)).toBe(-1.235);
-    expect(roundTokenValue(-1.23456789, 4)).toBe(-1.2346);
+    expect(roundNumber(-123456789, 2)).toBe(-123456789);
+    expect(roundNumber(-1.23456789, 2)).toBe(-1.23);
+    expect(roundNumber(-1.23456789, 3)).toBe(-1.235);
+    expect(roundNumber(-1.23456789, 4)).toBe(-1.2346);
   });
 
   test('should round infinity', () => {
-    expect(roundTokenValue(Infinity, 2)).toBe(Infinity);
-    expect(roundTokenValue(Infinity, 4)).toBe(Infinity);
+    expect(roundNumber(Infinity, 2)).toBe(Infinity);
+    expect(roundNumber(Infinity, 4)).toBe(Infinity);
   });
 
   test('should round negative infinity', () => {
-    expect(roundTokenValue(-Infinity, 2)).toBe(-Infinity);
-    expect(roundTokenValue(-Infinity, 4)).toBe(-Infinity);
+    expect(roundNumber(-Infinity, 2)).toBe(-Infinity);
+    expect(roundNumber(-Infinity, 4)).toBe(-Infinity);
   });
 
   test('should round NaN', () => {
-    expect(roundTokenValue(NaN, 2)).toBe(NaN);
-    expect(roundTokenValue(NaN, 4)).toBe(NaN);
+    expect(roundNumber(NaN, 2)).toBe(NaN);
+    expect(roundNumber(NaN, 4)).toBe(NaN);
   });
 
   test('should format values as expected', () => {
-    expect(roundTokenValue(1.23456789, 1)).toBe(1.2);
-    expect(roundTokenValue(1.23456789, 2)).toBe(1.23);
-    expect(roundTokenValue(1.23456789, 3)).toBe(1.235);
-    expect(roundTokenValue(1.23456789, 4)).toBe(1.2346);
-    expect(roundTokenValue(123456789, 2)).toBe(123456789);
-    expect(roundTokenValue(123456789.00023456, 2)).toBe(123456789);
-    expect(roundTokenValue(0.00023456789, 4)).toBe(0.0002);
-    expect(roundTokenValue(0.00023456789, 2)).toBe(0);
+    expect(roundNumber(1.23456789, 1)).toBe(1.2);
+    expect(roundNumber(1.23456789, 2)).toBe(1.23);
+    expect(roundNumber(1.23456789, 3)).toBe(1.235);
+    expect(roundNumber(1.23456789, 4)).toBe(1.2346);
+    expect(roundNumber(123456789, 2)).toBe(123456789);
+    expect(roundNumber(123456789.00023456, 2)).toBe(123456789);
+    expect(roundNumber(0.00023456789, 4)).toBe(0.0002);
+    expect(roundNumber(0.00023456789, 2)).toBe(0);
   });
 });
 
-// #region - formatTokenValue
+// #region - formatNumber
 
-describe('formatTokenValue', () => {
+describe('formatNumber', () => {
   test('when using default decimals', () => {
-    expect(formatTokenValue(0)).toBe('0');
-    expect(formatTokenValue(0.0001)).toBe('0.0001');
-    expect(formatTokenValue(0.0005)).toBe('0.0005');
-    expect(formatTokenValue(0.00001)).toBe('0');
-    expect(formatTokenValue(0.00005)).toBe('0.0001');
-    expect(formatTokenValue(123456)).toBe('123,456');
-    expect(formatTokenValue(123456.0001)).toBe('123,456.0001');
-    expect(formatTokenValue(123456.0005)).toBe('123,456.0005');
-    expect(formatTokenValue(123456.00001)).toBe('123,456');
-    expect(formatTokenValue(123456.00005)).toBe('123,456.0001');
-    expect(formatTokenValue(123456.123)).toBe('123,456.123');
-    expect(formatTokenValue(123456.12301)).toBe('123,456.123');
+    expect(formatNumber(0)).toBe('0');
+    expect(formatNumber(0.0001)).toBe('0.0001');
+    expect(formatNumber(0.0005)).toBe('0.0005');
+    expect(formatNumber(0.00001)).toBe('0');
+    expect(formatNumber(0.00005)).toBe('0.0001');
+    expect(formatNumber(123456)).toBe('123,456');
+    expect(formatNumber(123456.0001)).toBe('123,456.0001');
+    expect(formatNumber(123456.0005)).toBe('123,456.0005');
+    expect(formatNumber(123456.00001)).toBe('123,456');
+    expect(formatNumber(123456.00005)).toBe('123,456.0001');
+    expect(formatNumber(123456.123)).toBe('123,456.123');
+    expect(formatNumber(123456.12301)).toBe('123,456.123');
   });
 
   test('should format zero as zero', () => {
-    expect(formatTokenValue(0)).toBe('0');
-    expect(formatTokenValue(0, 2)).toBe('0');
-    expect(formatTokenValue(0, 6)).toBe('0');
-    expect(formatTokenValue(0.0)).toBe('0');
+    expect(formatNumber(0)).toBe('0');
+    expect(formatNumber(0, 2)).toBe('0');
+    expect(formatNumber(0, 6)).toBe('0');
+    expect(formatNumber(0.0)).toBe('0');
   });
 
   test('should format negative values', () => {
-    expect(formatTokenValue(-123456789, 2)).toBe('-123,456,789');
-    expect(formatTokenValue(-1.23456789, 2)).toBe('-1.23');
-    expect(formatTokenValue(-1.23456789, 3)).toBe('-1.235');
-    expect(formatTokenValue(-1.23456789, 4)).toBe('-1.2346');
+    expect(formatNumber(-123456789, 2)).toBe('-123,456,789');
+    expect(formatNumber(-1.23456789, 2)).toBe('-1.23');
+    expect(formatNumber(-1.23456789, 3)).toBe('-1.235');
+    expect(formatNumber(-1.23456789, 4)).toBe('-1.2346');
   });
 
   test('should format infinity', () => {
-    expect(formatTokenValue(Infinity, 2)).toBe('Infinity');
-    expect(formatTokenValue(Infinity, 4)).toBe('Infinity');
+    expect(formatNumber(Infinity, 2)).toBe('Infinity');
+    expect(formatNumber(Infinity, 4)).toBe('Infinity');
   });
 
   test('should format negative infinity', () => {
-    expect(formatTokenValue(-Infinity, 2)).toBe('-Infinity');
-    expect(formatTokenValue(-Infinity, 4)).toBe('-Infinity');
+    expect(formatNumber(-Infinity, 2)).toBe('-Infinity');
+    expect(formatNumber(-Infinity, 4)).toBe('-Infinity');
   });
 
   test('should format NaN', () => {
-    expect(formatTokenValue(NaN, 2)).toBe('NaN');
-    expect(formatTokenValue(NaN, 4)).toBe('NaN');
+    expect(formatNumber(NaN, 2)).toBe('NaN');
+    expect(formatNumber(NaN, 4)).toBe('NaN');
   });
 
   test('should format values as expected', () => {
-    expect(formatTokenValue(1.23456789, 1)).toBe('1.2');
-    expect(formatTokenValue(1.23456789, 2)).toBe('1.23');
-    expect(formatTokenValue(1.23456789, 3)).toBe('1.235');
-    expect(formatTokenValue(1.23456789, 4)).toBe('1.2346');
-    expect(formatTokenValue(123456789, 2)).toBe('123,456,789');
-    expect(formatTokenValue(123456789.00023456, 2)).toBe('123,456,789');
-    expect(formatTokenValue(0.00023456789, 4)).toBe('0.0002');
-    expect(formatTokenValue(0.00023456789, 2)).toBe('0');
+    expect(formatNumber(1.23456789, 1)).toBe('1.2');
+    expect(formatNumber(1.23456789, 2)).toBe('1.23');
+    expect(formatNumber(1.23456789, 3)).toBe('1.235');
+    expect(formatNumber(1.23456789, 4)).toBe('1.2346');
+    expect(formatNumber(123456789, 2)).toBe('123,456,789');
+    expect(formatNumber(123456789.00023456, 2)).toBe('123,456,789');
+    expect(formatNumber(0.00023456789, 4)).toBe('0.0002');
+    expect(formatNumber(0.00023456789, 2)).toBe('0');
+  });
+});
+
+// #region - bigIntToNumber
+
+describe('bigIntToNumber', () => {
+  test('should convert a positive BigInt value to a number with decimals', () => {
+    expect(bigIntToNumber(BigInt(1), 4)).toBe(0.0001);
+    expect(bigIntToNumber(BigInt(10), 4)).toBe(0.001);
+    expect(bigIntToNumber(BigInt(100), 4)).toBe(0.01);
+    expect(bigIntToNumber(BigInt(1000), 4)).toBe(0.1);
+    expect(bigIntToNumber(BigInt(10000), 4)).toBe(1);
+    expect(bigIntToNumber(BigInt(100000), 4)).toBe(10);
+    expect(bigIntToNumber(BigInt(1000000), 4)).toBe(100);
+    expect(bigIntToNumber(BigInt(10000000), 4)).toBe(1000);
+  });
+
+  test('should convert a negative BigInt value to a number with decimals', () => {
+    expect(bigIntToNumber(BigInt(-1), 4)).toBe(-0.0001);
+    expect(bigIntToNumber(BigInt(-10), 4)).toBe(-0.001);
+    expect(bigIntToNumber(BigInt(-100), 4)).toBe(-0.01);
+    expect(bigIntToNumber(BigInt(-1000), 4)).toBe(-0.1);
+    expect(bigIntToNumber(BigInt(-10000), 4)).toBe(-1);
+    expect(bigIntToNumber(BigInt(-100000), 4)).toBe(-10);
+    expect(bigIntToNumber(BigInt(-1000000), 4)).toBe(-100);
+    expect(bigIntToNumber(BigInt(-10000000), 4)).toBe(-1000);
+  });
+
+  test('should convert a BigInt value to a number with decimals', () => {
+    expect(bigIntToNumber(BigInt(123456789), 0)).toBe(123456789);
+    expect(bigIntToNumber(BigInt(123456789), 1)).toBe(12345678.9);
+    expect(bigIntToNumber(BigInt(123456789), 2)).toBe(1234567.89);
+    expect(bigIntToNumber(BigInt(123456789), 3)).toBe(123456.789);
+    expect(bigIntToNumber(BigInt(123456789), 4)).toBe(12345.6789);
+    expect(bigIntToNumber(BigInt(123456789), 5)).toBe(1234.56789);
+    expect(bigIntToNumber(BigInt(123456789), 6)).toBe(123.456789);
+    expect(bigIntToNumber(BigInt(123456789), 7)).toBe(12.3456789);
+    expect(bigIntToNumber(BigInt(123456789), 8)).toBe(1.23456789);
+    expect(bigIntToNumber(BigInt(123456789), 9)).toBe(0.123456789);
+    expect(bigIntToNumber(BigInt(123456789), 10)).toBe(0.0123456789);
+    expect(bigIntToNumber(BigInt(123456789), 11)).toBe(0.00123456789);
+    expect(bigIntToNumber(BigInt(123456789), 12)).toBe(0.000123456789);
+    expect(bigIntToNumber(BigInt(123456789), 13)).toBe(0.0000123456789);
+    expect(bigIntToNumber(BigInt(123456789), 14)).toBe(0.00000123456789);
+    expect(bigIntToNumber(BigInt(123456789), 15)).toBe(0.000000123456789);
+    expect(bigIntToNumber(BigInt(123456789), 16)).toBe(0.0000000123456789);
+  });
+
+  describe('safe for javascript number range', () => {
+    const scaledUpperNumberLimit = (2 ** 53 - 1) * 100;
+    const scaledLowerNumberLimit = -scaledUpperNumberLimit;
+
+    test('should allow numbers within the safe JavaScript range', () => {
+      expect(() => bigIntToNumber(BigInt(10), 9)).not.toThrow(RangeError);
+      expect(() => bigIntToNumber(BigInt(-10), 9)).not.toThrow(RangeError);
+      expect(() => bigIntToNumber(BigInt(100000000), 9)).not.toThrow(RangeError);
+      expect(() => bigIntToNumber(BigInt(-100000000), 9)).not.toThrow(RangeError);
+      expect(() => bigIntToNumber(BigInt(scaledLowerNumberLimit - 100), 4)).not.toThrow(RangeError);
+      expect(() => bigIntToNumber(BigInt(scaledLowerNumberLimit + 100), 4)).not.toThrow(RangeError);
+    });
+
+    test('should throw a RangeError for values outside the safe JavaScript range', () => {
+      expect(() => bigIntToNumber(BigInt(scaledUpperNumberLimit), 2)).not.toThrow(RangeError);
+      expect(() => bigIntToNumber(BigInt(scaledLowerNumberLimit), 2)).not.toThrow(RangeError);
+      expect(() => bigIntToNumber(BigInt(scaledUpperNumberLimit + 100), 2)).toThrow(RangeError);
+      expect(() => bigIntToNumber(BigInt(scaledLowerNumberLimit - 100), 2)).toThrow(RangeError);
+      expect(() => bigIntToNumber(BigInt(scaledUpperNumberLimit * 2), 2)).toThrow(RangeError);
+      expect(() => bigIntToNumber(BigInt(scaledLowerNumberLimit * -2), 2)).toThrow(RangeError);
+    });
   });
 });
 
@@ -125,37 +194,16 @@ describe('formatBigIntTokenValue', () => {
     expect(formatBigIntTokenValue(BigInt(1000000000000000), 9, 4)).toBe('1,000,000');
   });
 
+  test('should format bigint token values as expected using defaults', () => {
+    expect(formatBigIntTokenValue(BigInt(1000000000), 12)).toBe('0.001');
+    expect(formatBigIntTokenValue(BigInt(1000000000), 9)).toBe('1');
+    expect(formatBigIntTokenValue(BigInt(1000000000000000), 9)).toBe('1,000,000');
+  });
+
   test('should format bigint token values with decimals as expected', () => {
     expect(formatBigIntTokenValue(BigInt(10111111100), 9, 4)).toBe('10.1111');
     expect(formatBigIntTokenValue(BigInt(101000011111100), 9, 4)).toBe('101,000.0111');
-    expect(formatBigIntTokenValue(BigInt(100021), 9, 4)).toBe('0.0001');
     expect(formatBigIntTokenValue(BigInt(1), 9, 12)).toBe('0.000000001');
-  });
-
-  describe('safe for javascript number range', () => {
-    const upperNumberLimit = 2 ** 53;
-    const lowerNumberLimit = -(2 ** 53);
-
-    test('should allow numbers within the safe JavaScript range', () => {
-      expect(() => formatBigIntTokenValue(BigInt(10), 9, 4)).not.toThrow();
-      expect(() => formatBigIntTokenValue(BigInt(-10), 9, 4)).not.toThrow();
-      expect(() => formatBigIntTokenValue(BigInt(100000000), 9, 4)).not.toThrow();
-      expect(() => formatBigIntTokenValue(BigInt(-100000000), 9, 4)).not.toThrow();
-      expect(() => formatBigIntTokenValue(BigInt(upperNumberLimit - 1), 9, 4)).not.toThrow();
-      expect(() => formatBigIntTokenValue(BigInt(lowerNumberLimit + 1), 9, 4)).not.toThrow();
-    });
-
-    test('should throw an error for values outside the safe JavaScript range', () => {
-      const expectedError = new RangeError('Value is outside the safe JavaScript range');
-
-      expect(() => formatBigIntTokenValue(BigInt(upperNumberLimit), 9, 4)).toThrow(expectedError);
-      expect(() => formatBigIntTokenValue(BigInt(lowerNumberLimit), 9, 4)).toThrow(expectedError);
-      expect(() => formatBigIntTokenValue(BigInt(upperNumberLimit * 2), 9, 4)).toThrow(
-        expectedError
-      );
-      expect(() => formatBigIntTokenValue(BigInt(lowerNumberLimit * 2), 9, 4)).toThrow(
-        expectedError
-      );
-    });
+    expect(formatBigIntTokenValue(BigInt(1), 9, 12)).toBe('0.000000001');
   });
 });
