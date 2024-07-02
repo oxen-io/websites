@@ -59,7 +59,7 @@
     "homeButton": "Return Home"
   },
   "home": {
-    "title": "Stake <text-semibold>{tokenSymbol}</text-semibold> to Earn Rewards",
+    "title": "Stake <text-semibold>{tokenSymbol}</text-semibold> Earn Rewards",
     "buttons": {
       "primary": "Stake Now",
       "secondary": "How to Run a Session Node"
@@ -135,7 +135,13 @@
     },
     "stakedNodes": {
       "title": "My Stakes",
-      "showHiddenText": "Show Hidden"
+      "showHiddenText": "Show Hidden",
+      "noWalletP1": "You currently have no wallet connected.",
+      "noWalletP2": "Click the <link>Connect</link> button to view your staked Session node.",
+      "noNodesP1": "You have no staked Session Nodes.",
+      "noNodesP2": "Click the <link>Stake Now</link> button to stake to an open node or register a new Session node.",
+      "stakeNowButtonText": "Stake Now",
+      "stakeNowButtonAria": "Navigate to the staking page to stake to an open node."
     },
     "toast": {
       "error": "Failed to fetch {module}.",
