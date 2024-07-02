@@ -12,6 +12,7 @@ type PubKeyType = HTMLAttributes<HTMLDivElement> & {
   trailingChars?: number;
   expandOnHover?: boolean;
   alwaysShowCopyButton?: boolean;
+  forceExpand?: boolean;
 };
 
 const PubKey = forwardRef<HTMLDivElement, PubKeyType>(
@@ -23,26 +24,29 @@ const PubKey = forwardRef<HTMLDivElement, PubKeyType>(
       trailingChars,
       expandOnHover,
       alwaysShowCopyButton,
+      forceExpand,
       ...props
     },
     ref
   ) => {
     const dictionary = useTranslations('clipboard');
-    const [isSelected, setIsSelected] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(forceExpand ?? false);
     const collapsedPubKey = useMemo(
       () => collapseString(pubKey, leadingChars ?? 6, trailingChars ?? 6),
       [pubKey]
     );
 
     const handleSelectionChange = useCallback(() => {
+      if (forceExpand) return;
+
       const selection = window.getSelection();
       if (
         selection?.toString().includes(pubKey) ||
         selection?.toString().includes(collapsedPubKey)
       ) {
-        setIsSelected(true);
+        setIsExpanded(true);
       } else {
-        setIsSelected(false);
+        setIsExpanded(false);
       }
     }, [pubKey]);
 
@@ -58,27 +62,29 @@ const PubKey = forwardRef<HTMLDivElement, PubKeyType>(
 
     return (
       <span ref={ref} className={cn('group flex select-all', className)} {...props}>
-        <Tooltip>
-          <TooltipTrigger asChild disabled={expandOnHover}>
-            <span
-              className={cn(
-                'select-all break-all',
-                expandOnHover && 'group-hover:hidden',
-                expandOnHover && isSelected ? 'hidden' : 'block'
-              )}
-            >
-              {collapsedPubKey}
-            </span>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{pubKey}</p>
-          </TooltipContent>
-        </Tooltip>
+        {!isExpanded ? (
+          <Tooltip>
+            <TooltipTrigger asChild disabled={expandOnHover}>
+              <span
+                className={cn(
+                  'select-all break-all',
+                  expandOnHover && 'group-hover:hidden',
+                  expandOnHover && isExpanded ? 'hidden' : 'block'
+                )}
+              >
+                {collapsedPubKey}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{pubKey}</p>
+            </TooltipContent>
+          </Tooltip>
+        ) : null}
         <div
           className={cn(
             'select-all break-all',
             expandOnHover && 'group-hover:block',
-            expandOnHover && isSelected ? 'block' : 'hidden'
+            (expandOnHover && isExpanded) || isExpanded ? 'block' : 'hidden'
           )}
         >
           {pubKey}
@@ -86,7 +92,7 @@ const PubKey = forwardRef<HTMLDivElement, PubKeyType>(
         <CopyToClipboardButton
           className={cn(
             'group-hover:block',
-            alwaysShowCopyButton || isSelected ? 'block' : 'hidden'
+            alwaysShowCopyButton || isExpanded ? 'block' : 'hidden'
           )}
           textToCopy={pubKey}
           data-testid={ButtonDataTestId.Copy_Public_Key_To_Clipboard}

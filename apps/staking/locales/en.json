@@ -173,6 +173,8 @@
       "publicKeyShort": "SN Key",
       "publicKeyLong": "Session Node Public Key",
       "publicKeyDescription": "The identifier for the Session Node.",
+      "operatorAddress": "Operator Address",
+      "operatorAddressTooltip": "The wallet address of the node operator.",
       "operatorFee": "Operator Fee",
       "operatorFeeShort": "Fee",
       "operatorFeeDescription": "The percentage of rewards the operator takes before splitting the rest with contributors."
@@ -199,8 +201,6 @@
       "viewOnExplorer": "View on Explorer",
       "contributors": "Shared Contributors",
       "contributorsTooltip": "The contributors currently staking to this node.",
-      "operatorAddress": "Operator Address",
-      "operatorAddressTooltip": "The wallet address of the node operator.",
       "button": {
         "submit": "Stake {amount} {tokenSymbol}",
         "submitting": "Staking {amount} {tokenSymbol}...",
@@ -212,8 +212,8 @@
   },
   "nodeCard": {
     "open": {
-      "minContribution": "Min Contribution",
-      "maxContribution": "Max Contribution",
+      "minContribution": "Min",
+      "maxContribution": "Max",
       "viewButton": {
         "text": "View",
         "ariaLabel": "View the node details in the side panel"

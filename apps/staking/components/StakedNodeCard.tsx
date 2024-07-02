@@ -385,6 +385,12 @@ const StakedNodeCard = forwardRef<
           <PubKey pubKey={pubKey} expandOnHover />
         </span>
       </NodeCardText>
+      <CollapsableContent className="inline-flex gap-1">
+        <RowLabel>
+          {titleFormat('format', { title: generalNodeDictionary('operatorAddress') })}
+        </RowLabel>
+        <PubKey pubKey={node.operator_address} expandOnHover />
+      </CollapsableContent>
       <CollapsableContent>
         <RowLabel>
           {titleFormat('format', { title: stakingNodeDictionary('stakedBalance') })}

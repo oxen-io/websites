@@ -53,7 +53,7 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
   }, [node.contributors]);
 
   return (
-    <div className="flex flex-col gap-4 px-9">
+    <div className="flex flex-col gap-4">
       <ActionModuleRow
         label={dictionary('contributors')}
         tooltip={dictionary('contributorsTooltip')}
@@ -78,8 +78,8 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
       </ActionModuleRow>
       <ActionModuleDivider />
       <ActionModuleRow
-        label={dictionary('operatorAddress')}
-        tooltip={dictionary('operatorAddressTooltip')}
+        label={sessionNodeDictionary('operatorAddress')}
+        tooltip={sessionNodeDictionary('operatorAddressTooltip')}
       >
         <PubKey pubKey={node.operatorAddress} alwaysShowCopyButton />
       </ActionModuleRow>
