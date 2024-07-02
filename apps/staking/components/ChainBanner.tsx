@@ -59,14 +59,14 @@ function MainnetNotLiveBanner() {
     <Banner>
       <span>
         {dictionary.rich('mainnetNotLive', {
-          change: (chunks) => (
+          link: (children) => (
             <a
               role="button"
               data-testid={SpecialDataTestId.Mainnet_Not_Live_Link}
               onClick={handleClick}
               className="underline"
             >
-              {chunks}
+              {children}
             </a>
           ),
         })}
