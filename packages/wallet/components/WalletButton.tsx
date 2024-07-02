@@ -36,9 +36,9 @@ export function WalletButton({
       data-testid={ButtonDataTestId.Wallet_Modal}
       className={cn(
         'group',
-        'h-full w-full max-w-36 select-none justify-end overflow-x-hidden transition-all duration-[400ms] ease-in-out motion-reduce:transition-none lg:hover:max-w-full lg:focus:max-w-full lg:active:max-w-full',
+        'h-full w-full max-w-36 select-none justify-end overflow-x-hidden transition-all duration-1000 ease-in-out motion-reduce:transition-none lg:hover:max-w-full lg:focus:max-w-full lg:active:max-w-full',
         isConnected
-          ? 'bg-session-green hover:bg-session-green hover:text-session-black px-0 py-0 hover:brightness-110'
+          ? 'bg-session-green hover:bg-session-green hover:text-session-black border-2 px-0 py-0 hover:brightness-110'
           : 'px-3 py-2',
         forceBalanceOpen && 'lg:max-w-full'
       )}
@@ -48,7 +48,9 @@ export function WalletButton({
         <>
           <div
             className={cn(
-              'text-session-white border-session-green bg-session-black -mr-4 inline-flex h-full w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-s-full border border-s-2 py-2 pe-5 ps-3'
+              'text-session-white -mr-4 inline-flex h-full w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-s-full py-2.5 pe-6 ps-3',
+              'group-hover:bg-session-black group-active:bg-session-black group-focus:bg-session-black transition-colors delay-1000 duration-0 ease-in-out group-hover:delay-0 group-focus:delay-0 group-active:delay-0 motion-reduce:transition-none',
+              forceBalanceOpen && 'bg-session-black delay-0'
             )}
           >
             <SessionTokenIcon className="h-4 w-4" />
@@ -56,7 +58,7 @@ export function WalletButton({
           </div>
           <div
             className={cn(
-              'border-session-green bg-session-green inline-flex h-full w-36 min-w-36 items-center justify-evenly gap-1 whitespace-nowrap rounded-full rounded-s-full border px-3 py-2'
+              'bg-session-green inline-flex h-full w-36 min-w-36 items-center justify-evenly gap-1 whitespace-nowrap rounded-s-full px-2 py-2'
             )}
           >
             <ConnectedWalletAvatar className="h-6 w-6" avatarSrc={ensAvatar} />
