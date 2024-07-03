@@ -305,70 +305,60 @@ export const generateMockNodeData = ({
   return mockNodeData;
 };
 
-export const genereateOpenNodes = ({ userAddress }: { userAddress: string }): Array<OpenNode> => {
+const generateMinAndMaxContribution = ({
+  contributors,
+}: {
+  contributors: Array<Contributor>;
+}): { minContribution: number; maxContribution: number } => {
+  const totalStaked = contributors.reduce((acc, contributor) => acc + contributor.amount, 0);
+  const remainingSlots = 10 - contributors.length;
+
+  if (remainingSlots === 0) {
+    return { minContribution: 0, maxContribution: 0 };
+  }
+
+  const remainingStake = 25000 - totalStaked;
+
+  return {
+    minContribution: Math.max(0, remainingStake / remainingSlots),
+    maxContribution: remainingStake,
+  };
+};
+
+const generateOpenNode = ({
+  userAddress,
+  maxContributors,
+}: {
+  userAddress?: string;
+  maxContributors: number;
+}): OpenNode => {
+  const contributors = generateContributors(maxContributors, userAddress);
+  const { minContribution, maxContribution } = generateMinAndMaxContribution({ contributors });
+
+  return {
+    pubKey: generateNodePubKey(),
+    operatorFee: Math.random(),
+    minContribution,
+    maxContribution,
+    contributors,
+    operatorAddress: generateWalletAddress(),
+  };
+};
+
+export const generateOpenNodes = ({ userAddress }: { userAddress?: string }): Array<OpenNode> => {
   return [
-    {
-      pubKey:
-        'LCys52dasGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtMTfb6BSoT8eb3G7Fd6p4',
-      maxContribution: 15000.12,
-      minContribution: 500,
-      operatorFee: 0.132,
-      contributors: generateContributors(0),
-      operatorAddress: generateWalletAddress(),
-    },
-    {
-      pubKey:
-        'LCys52dasGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtMTfA6BSoT8eb3G7Fd6p4',
-      maxContribution: 12892.11,
-      minContribution: 100,
-      operatorFee: 0.1221,
-      contributors: generateContributors(0),
-      operatorAddress: userAddress,
-    },
-    {
-      pubKey:
-        'LCyJd2dFcGmZsz5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtMTfA6BSoT8eb3G7Fd6p5',
-      maxContribution: 1000,
-      minContribution: 12020.55,
-      operatorFee: 0.5,
-      contributors: generateContributors(1),
-      operatorAddress: generateWalletAddress(),
-    },
-    {
-      pubKey:
-        'LCya52dFcGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtaTfA6BSoT8eb3G7Fd6p6',
-      maxContribution: 1000,
-      minContribution: 100,
-      operatorFee: 0.1,
-      contributors: generateContributors(2, userAddress),
-      operatorAddress: userAddress,
-    },
-    {
-      pubKey:
-        'LCya52dFcGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtMTfA6BSoT8eb3G7Fd6p6',
-      maxContribution: 1000,
-      minContribution: 100,
-      operatorFee: 0.1,
-      contributors: generateContributors(2),
-      operatorAddress: generateWalletAddress(),
-    },
-    {
-      pubKey:
-        'LCyJg2dFcGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCfMTfA6BSoT8eb3G7Fd6p7',
-      maxContribution: 1000,
-      minContribution: 100,
-      operatorFee: 0.1,
-      contributors: generateContributors(4),
-      operatorAddress: generateWalletAddress(),
-    },
-    {
-      pubKey:
-        'LCyJ5bdFcGmZxo5uC9smEKJHeNGQgc6FU4UtfxXbK7u4H3asfL5dRfoRBajnuuQdEhXjHggCtMTfA6BSoT8eb3G7Fd6p8',
-      maxContribution: 1000,
-      minContribution: 100,
-      operatorFee: 0.1,
-      contributors: generateContributors(10),
-      operatorAddress: generateWalletAddress(),
-    },
+    generateOpenNode({ maxContributors: 1 }),
+    generateOpenNode({ maxContributors: 9 }),
+    generateOpenNode({ userAddress, maxContributors: 5 }),
+    generateOpenNode({ userAddress, maxContributors: 1 }),
+    generateOpenNode({ userAddress, maxContributors: 1 }),
+    generateOpenNode({ userAddress, maxContributors: 5 }),
+    generateOpenNode({ maxContributors: 9 }),
+    generateOpenNode({ maxContributors: 9 }),
+    generateOpenNode({ maxContributors: 5 }),
+    generateOpenNode({ maxContributors: 5 }),
+    generateOpenNode({ userAddress, maxContributors: 5 }),
+    generateOpenNode({ userAddress, maxContributors: 10 }),
+    generateOpenNode({ userAddress, maxContributors: 10 }),
   ];
 };

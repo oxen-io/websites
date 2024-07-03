@@ -1,5 +1,3 @@
-import { genereateOpenNodes } from './test';
-
 /** /info */
 interface NetworkInfoResponse {
   network: {
@@ -186,14 +184,9 @@ export class SessionStakingClient {
     return this.request<NetworkInfoResponse>(options);
   }
 
-  public async getOpenNodes({
-    userAddress,
-  }: {
-    userAddress: string;
-  }): Promise<SSBResponse<GetOpenNodesResponse>> {
-    const nodes = genereateOpenNodes({ userAddress });
+  public async getOpenNodes(): Promise<SSBResponse<GetOpenNodesResponse>> {
     return {
-      body: { nodes },
+      body: { nodes: [] },
       status: 200,
       statusText: 'MOCK',
     };
