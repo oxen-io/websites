@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import { forwardRef, type HTMLAttributes } from 'react';
+import { ReactNode, forwardRef, type HTMLAttributes } from 'react';
 import { cn } from '../lib/utils';
 import { Loading } from './loading';
 
@@ -89,4 +89,30 @@ const ModuleGridContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
 );
 ModuleGridContent.displayName = 'ModuleGridContent';
 
-export { ModuleGrid, ModuleGridContent, ModuleGridHeader, ModuleGridTitle, moduleGridVariants };
+function ModuleGridInfoContent({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <ModuleGridContent
+      className={cn(
+        'text-session-text flex h-full w-1/2 flex-col items-center justify-center gap-6 self-center text-center text-xl',
+        className
+      )}
+    >
+      {children}
+    </ModuleGridContent>
+  );
+}
+
+export {
+  ModuleGrid,
+  ModuleGridContent,
+  ModuleGridHeader,
+  ModuleGridInfoContent,
+  ModuleGridTitle,
+  moduleGridVariants,
+};
