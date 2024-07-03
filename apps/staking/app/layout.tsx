@@ -4,8 +4,11 @@ import { siteMetadata as metadata, wagmiMetadata } from '@/lib/metadata';
 import { Toaster } from '@session/ui/components/ui/sonner';
 import { AtypDisplay, AtypText, MonumentExtended } from '@session/ui/fonts';
 
+import { DevSheet } from '@/components/DevSheet';
+import FeatureFlagProvider from '@/providers/feature-flag-provider';
 import LocalizationProvider from '@/providers/localization-provider';
 import '@session/ui/styles';
+import { isProduction } from '@session/util/env';
 import { createWagmiConfig } from '@session/wallet/lib/wagmi';
 import { WalletButtonProvider } from '@session/wallet/providers/wallet-button-provider';
 import { Web3ModalProvider } from '@session/wallet/providers/web3-modal-provider';
@@ -30,24 +33,27 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       dir={direction}
       className={`${AtypDisplay.variable} ${AtypText.variable} ${MonumentExtended.variable}`}
     >
-      <LocalizationProvider messages={messages} locale={locale}>
-        <WalletButtonProvider>
-          <Web3ModalProvider
-            initialState={initialWagmiState}
-            wagmiMetadata={wagmiMetadata}
-            projectId={NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID}
-          >
-            <SentStakingClientProvider>
-              <body className="bg-session-black text-session-text font-atyp-text overflow-x-hidden">
-                <ChainBanner />
-                <Header />
-                <main>{children}</main>
-                <Toaster />
-              </body>
-            </SentStakingClientProvider>
-          </Web3ModalProvider>
-        </WalletButtonProvider>
-      </LocalizationProvider>
+      <FeatureFlagProvider>
+        <LocalizationProvider messages={messages} locale={locale}>
+          <WalletButtonProvider>
+            <Web3ModalProvider
+              initialState={initialWagmiState}
+              wagmiMetadata={wagmiMetadata}
+              projectId={NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID}
+            >
+              <SentStakingClientProvider>
+                <body className="bg-session-black text-session-text font-atyp-text overflow-x-hidden">
+                  <ChainBanner />
+                  <Header />
+                  <main>{children}</main>
+                  <Toaster />
+                  {!isProduction() ? <DevSheet /> : null}
+                </body>
+              </SentStakingClientProvider>
+            </Web3ModalProvider>
+          </WalletButtonProvider>
+        </LocalizationProvider>
+      </FeatureFlagProvider>
     </html>
   );
 }

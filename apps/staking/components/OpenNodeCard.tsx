@@ -23,8 +23,8 @@ const NodeItemSeparator = ({ className }: { className?: string }) => (
   <TextSeparator className={className} />
 );
 
-const NodeItemLabel = ({ children }: { children: ReactNode }) => (
-  <span className="font-normal"> {children}</span>
+const NodeItemLabel = ({ children, className }: { children: ReactNode; className?: string }) => (
+  <span className={cn('font-normal', className)}> {children}</span>
 );
 
 const NodeItemValue = ({ children }: { children: ReactNode }) => (
@@ -37,18 +37,19 @@ const OpenNodeCard = forwardRef<
 >(({ className, node, ...props }, ref) => {
   const dictionary = useTranslations('nodeCard.open');
   const generalNodeDictionary = useTranslations('sessionNodes.general');
+  const stakingNodeDictionary = useTranslations('sessionNodes.staking');
   const titleFormat = useTranslations('modules.title');
 
   const { pubKey, operatorFee, minContribution, maxContribution } = node;
 
   const formattedMinContributon = useMemo(() => {
     if (!minContribution) return '0';
-    return formatNumber(minContribution);
+    return formatNumber(minContribution, 2);
   }, [minContribution]);
 
   const formattedMaxContributon = useMemo(() => {
     if (!maxContribution) return '0';
-    return formatNumber(maxContribution);
+    return formatNumber(maxContribution, 2);
   }, [maxContribution]);
 
   return (
@@ -71,7 +72,10 @@ const OpenNodeCard = forwardRef<
         </div>
         <NodeCardText className="col-span-10 mt-1 inline-flex max-h-max flex-row-reverse justify-center gap-2 text-center align-middle text-xs font-normal sm:justify-start sm:text-start md:mt-0 md:flex-row md:text-base">
           <NodeItem>
-            <NodeItemLabel>
+            <NodeItemLabel className="inline-flex md:hidden">
+              {titleFormat('format', { title: dictionary('min') })}
+            </NodeItemLabel>
+            <NodeItemLabel className="hidden md:inline-flex">
               {titleFormat('format', { title: dictionary('minContribution') })}
             </NodeItemLabel>
             <NodeItemValue>
@@ -80,9 +84,7 @@ const OpenNodeCard = forwardRef<
           </NodeItem>
           <NodeItemSeparator className="hidden md:block" />
           <NodeItem className="hidden md:block">
-            <NodeItemLabel>
-              {titleFormat('format', { title: dictionary('maxContribution') })}
-            </NodeItemLabel>
+            <NodeItemLabel>{titleFormat('format', { title: dictionary('max') })}</NodeItemLabel>
             <NodeItemValue>
               {formattedMaxContributon} {SENT_SYMBOL}
             </NodeItemValue>
@@ -102,7 +104,7 @@ const OpenNodeCard = forwardRef<
           size="md"
           rounded="md"
           aria-label={dictionary('viewButton.ariaLabel')}
-          data-testid={ButtonDataTestId.Node_Card_Stake}
+          data-testid={ButtonDataTestId.Node_Card_View}
           className="w-full sm:w-auto"
         >
           {dictionary('viewButton.text')}

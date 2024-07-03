@@ -14,7 +14,7 @@ export const internalLink = (href: string, prefetch?: boolean) => {
 
 export const externalLink = (href: string) => {
   return (children: ReactNode) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-400 underline">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="text-session-green">
       {children}
     </a>
   );

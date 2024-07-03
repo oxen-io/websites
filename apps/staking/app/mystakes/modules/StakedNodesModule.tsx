@@ -12,6 +12,7 @@ import { generateMockNodeData } from '@session/sent-staking-js/test';
 import {
   ModuleGridContent,
   ModuleGridHeader,
+  ModuleGridInfoContent,
   ModuleGridTitle,
 } from '@session/ui/components/ModuleGrid';
 import { Button } from '@session/ui/ui/button';
@@ -19,7 +20,7 @@ import { Switch } from '@session/ui/ui/switch';
 import { useToggleWalletModal } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { ReactNode, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useAccount } from 'wagmi';
 
 function StakedNodesWithAddress({ address }: { address: string }) {
@@ -78,18 +79,10 @@ export default function StakedNodesModule() {
   );
 }
 
-function Content({ children }: { children: ReactNode }) {
-  return (
-    <ModuleGridContent className="text-session-text flex h-full w-1/2 flex-col items-center justify-center gap-6 self-center text-center text-lg">
-      {children}
-    </ModuleGridContent>
-  );
-}
-
 function NoWallet() {
   const dictionary = useTranslations('modules.stakedNodes');
   return (
-    <Content>
+    <ModuleGridInfoContent>
       <p>{dictionary('noWalletP1')}</p>
       <p>
         {dictionary.rich('noWalletP2', {
@@ -104,14 +97,14 @@ function NoWallet() {
         })}
       </p>
       <WalletModalButtonWithLocales rounded="md" size="lg" />
-    </Content>
+    </ModuleGridInfoContent>
   );
 }
 
 function NoNodes() {
   const dictionary = useTranslations('modules.stakedNodes');
   return (
-    <Content>
+    <ModuleGridInfoContent>
       <p>{dictionary('noNodesP1')}</p>
       <p>{dictionary.rich('noNodesP2', { link: internalLink('/stake') })}</p>
       <Link href="/stake" prefetch>
@@ -124,7 +117,7 @@ function NoNodes() {
           {dictionary('stakeNowButtonText')}
         </Button>
       </Link>
-    </Content>
+    </ModuleGridInfoContent>
   );
 }
 

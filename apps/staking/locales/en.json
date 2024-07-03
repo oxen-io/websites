@@ -131,7 +131,13 @@
     },
     "openNodes": {
       "title": "Open Session Nodes",
-      "description": "Nodes that are open for staking. <link>Learn more</link>"
+      "description": "Nodes that are open for staking. <link>Learn more</link>",
+      "noNodesP1": "There are currently no Open Session Nodes available to stake to.",
+      "noNodesP2": "Check out the <link>docs</link> to learn about setting up and registering your own Session Node.",
+      "landingP1": "Click on an Open Session Node to stake SENT and earn rewards.",
+      "landingP2": "Want to run your own Session Node? <link>Find out how</link>.",
+      "learnMoreButtonText": "Learn More",
+      "learnMoreButtonAria": "Navigate to the Session Node documentation page."
     },
     "stakedNodes": {
       "title": "My Stakes",
@@ -218,8 +224,9 @@
   },
   "nodeCard": {
     "open": {
-      "minContribution": "Min",
-      "maxContribution": "Max",
+      "min": "Min",
+      "max": "Max",
+      "minContribution": "Min Contribution",
       "viewButton": {
         "text": "View",
         "ariaLabel": "View the node details in the side panel"
