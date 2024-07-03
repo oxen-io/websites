@@ -1,4 +1,4 @@
-'use client';
+/* 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CHAIN, SENT_SYMBOL, chains } from '@session/contracts';
@@ -211,3 +211,4 @@ export default function FaucetModule() {
     </Module>
   );
 }
+ */
