@@ -5,11 +5,12 @@ export enum ButtonDataTestId {
   Home_Run_Node = 'button:how-to-run-a-session-node',
   Not_Found_Return_Home = 'button:not-found-return-home',
   Copy_Public_Key_To_Clipboard = 'button:copy-public-key-to-clipboard',
-  Node_Card_Stake = 'button:node-card-stake',
+  Node_Card_View = 'button:node-card-view',
   Faucet_Submit = 'button:faucet-submit',
   Faucet_Disconnect = 'button:faucet-disconnect',
   Dropdown_Hamburger_Menu = 'button:dropdown-hamburger-menu',
   Stake_Submit = 'button:stake-submit',
+  Learn_More_Open_Nodes = 'button:learn-more-open-nodes',
 }
 
 export enum SpecialDataTestId {

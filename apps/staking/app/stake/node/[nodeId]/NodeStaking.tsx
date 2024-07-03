@@ -3,7 +3,6 @@
 import { NodeContributorList, getTotalStakedAmount } from '@/components/NodeCard';
 import { PubKey } from '@/components/PubKey';
 import { SessionTokenInput } from '@/components/SessionTokenInput';
-import useSentBalance from '@/hooks/balance';
 import { formatPercentage } from '@/lib/locale-client';
 import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
@@ -12,16 +11,14 @@ import type { GetOpenNodesResponse } from '@session/sent-staking-js/client';
 import { Loading } from '@session/ui/components/loading';
 import { Button } from '@session/ui/ui/button';
 import { formatNumber } from '@session/util/maths';
-import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { ActionModuleDivider, ActionModuleRow } from '../../ActionModule';
 
 export default function NodeStaking({ nodeId }: { nodeId: string }) {
-  const { address } = useWallet();
   const { data, isLoading } = useSessionStakingQuery({
     query: 'getOpenNodes',
-    args: { userAddress: address! },
+    args: undefined,
   });
 
   const node = useMemo(() => data?.nodes.find((node) => node.pubKey === nodeId), [data, nodeId]);
@@ -35,13 +32,7 @@ export default function NodeStaking({ nodeId }: { nodeId: string }) {
   );
 }
 
-type StakeAmountInputProps = {
-  minContribution: number;
-  maxContribution: number;
-};
-
 export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][number] }) {
-  const { balance } = useSentBalance();
   const [value, setValue] = useState<number>(node.minContribution);
   const dictionary = useTranslations('actionModules.node');
   const sessionNodeDictionary = useTranslations('sessionNodes.general');
@@ -100,7 +91,6 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
         className="rounded-xl py-12 text-right text-3xl font-medium"
       />
       <span className="inline-flex w-full items-center justify-end gap-2 align-middle text-xl font-medium">
-        Balance: {balance}
         <span className="text-session-green">Max</span>
       </span>
       <Button data-testid={ButtonDataTestId.Stake_Submit}>

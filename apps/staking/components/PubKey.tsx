@@ -32,7 +32,7 @@ const PubKey = forwardRef<HTMLDivElement, PubKeyType>(
     const dictionary = useTranslations('clipboard');
     const [isExpanded, setIsExpanded] = useState(forceExpand ?? false);
     const collapsedPubKey = useMemo(
-      () => collapseString(pubKey, leadingChars ?? 6, trailingChars ?? 6),
+      () => (pubKey ? collapseString(pubKey, leadingChars ?? 6, trailingChars ?? 6) : ''),
       [pubKey]
     );
 
