@@ -9,7 +9,10 @@
       "env": [
         "NEXT_PUBLIC_SENT_STAKING_API_URL",
         "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID",
-        "FAUCET_WALLET_PRIVATE_KEY"
+        "FAUCET_WALLET_PRIVATE_KEY",
+        "DISCORD_CLIENT_SECRET",
+        "DISCORD_CLIENT_ID",
+        "TELEGRAM_BOT_TOKEN"
       ]
     },
     "dev": {
