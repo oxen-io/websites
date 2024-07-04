@@ -9,6 +9,7 @@ import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { SENT_SYMBOL } from '@session/contracts';
 import type { GetOpenNodesResponse } from '@session/sent-staking-js/client';
+import { generateOpenNodes } from '@session/sent-staking-js/test';
 import { Loading } from '@session/ui/components/loading';
 import { Button } from '@session/ui/ui/button';
 import { formatNumber } from '@session/util/maths';
