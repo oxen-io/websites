@@ -13,6 +13,7 @@ import { generateOpenNodes } from '@session/sent-staking-js/test';
 import { Loading } from '@session/ui/components/loading';
 import { Button } from '@session/ui/ui/button';
 import { formatNumber } from '@session/util/maths';
+import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { ActionModuleDivider, ActionModuleRow } from '../../ActionModule';
