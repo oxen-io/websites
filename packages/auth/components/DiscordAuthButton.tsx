@@ -21,7 +21,7 @@ export const DiscordAuthButton = forwardRef<HTMLButtonElement, DiscordAuthButton
 
     const handleClick = () => {
       if (!isConnected) {
-        signIn('discord');
+        signIn('discord', { callbackUrl: window.location.href });
       } else {
         signOut();
       }
