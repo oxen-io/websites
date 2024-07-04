@@ -25,10 +25,16 @@ export const TelegramProvider = ({ botToken }: TelegramProviderOptions) =>
 
       const user = await validator.validate(data);
 
-      return {
+      console.log('user', user);
+
+      const obj = {
         id: user.id,
         name: user.first_name,
         email: user.username,
       };
+
+      console.log('obj', obj);
+
+      return obj;
     },
   });
