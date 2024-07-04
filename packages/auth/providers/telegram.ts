@@ -42,6 +42,8 @@ export const TelegramProvider = ({ botToken }: TelegramProviderOptions) =>
   });
 
 export function handleTelegramSession({ session, token }: { session: Session; token: JWT }) {
+  console.log('token', token);
+  console.log('session', session);
   if (token) {
     console.log(token);
     if (token?.picture?.includes('telegram')) {
