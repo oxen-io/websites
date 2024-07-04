@@ -21,6 +21,8 @@ export default function NodeStaking({ nodeId }: { nodeId: string }) {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);
   const showNoNodes = useFeatureFlag(FEATURE_FLAG.MOCK_NO_OPEN_NODES);
 
+  const { address } = useWallet();
+
   if (showMockNodes && showNoNodes) {
     console.error('Cannot show mock nodes and no nodes at the same time');
   }
