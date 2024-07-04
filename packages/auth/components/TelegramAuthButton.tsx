@@ -1,7 +1,10 @@
 'use client';
 
+import { Button } from '@session/ui/ui/button';
 import { LoginButton } from '@telegram-auth/react';
+import { TelegramIcon } from 'icons/TelegramIcon';
 import { forwardRef } from 'react';
+import { ButtonDataTestId } from 'testing/data-test-ids';
 import { signIn, signOut, useSession } from '../lib/client';
 
 type TelegramAuthButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -20,8 +23,15 @@ export const TelegramAuthButton = forwardRef<HTMLButtonElement, TelegramAuthButt
 
     console.log('username', username);
 
+    const handleButtonClick = () => {
+      if (!isConnected) {
+        /** @ts-expect-error -- Exists at runtime */
+        return TWidgetLogin.auth();
+      }
+    };
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleClick = (data: any) => {
+    const handleAuth = (data: any) => {
       if (!isConnected) {
         signIn('telegram', {}, data);
       } else {
@@ -32,10 +42,10 @@ export const TelegramAuthButton = forwardRef<HTMLButtonElement, TelegramAuthButt
     return (
       <>
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-        {/* <div className="hidden"> */}
-        <LoginButton botUsername="session_testnet_bot" onAuthCallback={handleClick} />
-        {/* </div> */}
-        {/* <Button
+        <div className="hidden">
+          <LoginButton botUsername="session_testnet_bot" onAuthCallback={handleAuth} />
+        </div>
+        <Button
           onClick={handleButtonClick}
           data-testid={ButtonDataTestId.TELEGRAM_AUTH}
           ref={ref}
@@ -43,7 +53,7 @@ export const TelegramAuthButton = forwardRef<HTMLButtonElement, TelegramAuthButt
         >
           <TelegramIcon className="h-4 w-4" />
           {isConnected ? username ?? 'Connected' : 'Connect Telegram'}
-        </Button> */}
+        </Button>
       </>
     );
   }
