@@ -10,13 +10,8 @@ export default function FaucetPage() {
       <div className="flex justify-center p-4 align-middle">
         <AuthModule />
         <DiscordAuthButton />
-        <TelegramButton />
+        <TelegramAuthButton />
       </div>
     </NextAuthProvider>
   );
-}
-
-async function TelegramButton() {
-  const csrfToken = '';
-  return <TelegramAuthButton csrfToken={csrfToken} />;
 }

@@ -32,7 +32,7 @@ export const TelegramAuthButton = forwardRef<HTMLButtonElement, TelegramAuthButt
 
     return (
       <div className="relative">
-        <div className="absolute opacity-0">
+        <div className="peer absolute opacity-0">
           <LoginButton botUsername="session_testnet_bot" onAuthCallback={handleAuth} />
         </div>
         <Button
@@ -41,7 +41,7 @@ export const TelegramAuthButton = forwardRef<HTMLButtonElement, TelegramAuthButt
           {...props}
           rounded="md"
           size="lg"
-          className="text-session-black hover:text-session-black gap-2 border-transparent bg-[#2AABEE] hover:bg-[#2AABEE] hover:brightness-125"
+          className="text-session-black hover:text-session-black gap-2 border-transparent bg-[#2AABEE] hover:bg-[#2AABEE] peer-hover:brightness-125"
         >
           <TelegramIcon className="h-4 w-4" />
           {isConnected ? username ?? 'Connected' : 'Connect Telegram'}
