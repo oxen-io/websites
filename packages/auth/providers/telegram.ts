@@ -24,6 +24,8 @@ export const TelegramProvider = ({ botToken }: TelegramProviderOptions) =>
 
       const user = await validator.validate(data);
 
+      return JSON.parse(JSON.stringify(user));
+
       if (user.id && user.first_name) {
         return {
           id: user.id.toString(),
