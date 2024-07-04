@@ -1,5 +1,7 @@
 import { AuthDataValidator } from '@telegram-auth/server';
 import { objectToAuthDataMap } from '@telegram-auth/server/utils';
+import { Session } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 type TelegramProviderOptions = {
@@ -38,3 +40,13 @@ export const TelegramProvider = ({ botToken }: TelegramProviderOptions) =>
       return obj;
     },
   });
+
+export function handleTelegramSession({ session, token }: { session: Session; token: JWT }) {
+  if (token) {
+    console.log(token);
+    if (token?.picture?.includes('telegram')) {
+      // @ts-expect-error -- Next auth doesnt properly return the user id, this fixes that
+      session.user.telegramId = token.sub;
+    }
+  }
+}
