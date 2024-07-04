@@ -1,3 +1,22 @@
+'use client';
+import { NextAuthProvider } from '@session/auth/client';
+import { DiscordAuthButton } from '@session/auth/components/DiscordAuthButton';
+import { TelegramAuthButton } from '@session/auth/components/TelegramAuthButton';
+import { AuthModule } from './AuthModule';
+
 export default function FaucetPage() {
-  return <div className="flex justify-center p-4 align-middle">{/* <FaucetModule /> */}</div>;
+  return (
+    <NextAuthProvider>
+      <div className="flex justify-center p-4 align-middle">
+        <AuthModule />
+        <DiscordAuthButton />
+        <TelegramButton />
+      </div>
+    </NextAuthProvider>
+  );
+}
+
+async function TelegramButton() {
+  const csrfToken = '';
+  return <TelegramAuthButton csrfToken={csrfToken} />;
 }
