@@ -42,11 +42,8 @@ export const TelegramProvider = ({ botToken }: TelegramProviderOptions) =>
   });
 
 export function handleTelegramSession({ session, token }: { session: Session; token: JWT }) {
-  console.log('token', token);
-  console.log('session', session);
-  if (token) {
-    console.log(token);
-    if (token?.picture?.includes('telegram')) {
+  if (token.sub) {
+    if (!token?.picture?.includes('discord')) {
       // @ts-expect-error -- Next auth doesnt properly return the user id, this fixes that
       session.user.telegramId = token.sub;
     }
