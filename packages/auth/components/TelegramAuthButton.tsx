@@ -2,10 +2,10 @@
 
 import { Button } from '@session/ui/ui/button';
 import { LoginButton } from '@telegram-auth/react';
-import { TelegramIcon } from 'icons/TelegramIcon';
 import { forwardRef } from 'react';
-import { ButtonDataTestId } from 'testing/data-test-ids';
+import { TelegramIcon } from '../icons/TelegramIcon';
 import { signIn, signOut, useSession } from '../lib/client';
+import { ButtonDataTestId } from '../testing/data-test-ids';
 
 type TelegramAuthButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   csrfToken: string;
