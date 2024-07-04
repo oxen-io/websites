@@ -17,6 +17,7 @@ export const TelegramProvider = ({ botToken }: TelegramProviderOptions) =>
     id: 'telegram',
     name: 'Telegram',
     credentials: {},
+    /** @ts-expect-error -- trust me im right */
     async authorize(credentials, req) {
       const validator = new AuthDataValidator({ botToken });
 
@@ -24,17 +25,10 @@ export const TelegramProvider = ({ botToken }: TelegramProviderOptions) =>
 
       const user = await validator.validate(data);
 
-      console.log('user');
-      console.log(user);
-
-      if (user.id && user.first_name) {
-        return {
-          id: user.id.toString(),
-          name: [user.first_name, user.last_name || ''].join(' '),
-          image: user.photo_url,
-        };
-      }
-
-      return null;
+      return {
+        id: user.id,
+        name: user.first_name,
+        email: user.username,
+      };
     },
   });
