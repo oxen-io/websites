@@ -4,6 +4,7 @@ import { NodeContributorList, getTotalStakedAmount } from '@/components/NodeCard
 import { PubKey } from '@/components/PubKey';
 import { SessionTokenInput } from '@/components/SessionTokenInput';
 import { formatPercentage } from '@/lib/locale-client';
+import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { SENT_SYMBOL } from '@session/contracts';
