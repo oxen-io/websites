@@ -25,7 +25,8 @@
       "ariaSupport": "Go to support page",
       "faucet": "Faucet",
       "ariaFaucet": "Go to faucet page"
-    }
+    },
+    "managedBy": "/ Managed by the Session Network"
   },
   "wallet": {
     "modalButton": {
