@@ -1,6 +1,6 @@
 'use client';
 
-import type { LocaleKey } from '@/lib/locale-util';
+import { ROUTES } from '@/lib/constants';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { HamburgerIcon } from '@session/ui/icons/HamburgerIcon';
 import { cn } from '@session/ui/lib/utils';
@@ -18,16 +18,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { WalletModalButtonWithLocales } from './WalletModalButtonWithLocales';
 import { WalletNetworkDropdownWithLocales } from './WalletNetworkDropdownWithLocales';
-
-type LinkItem = {
-  href: string;
-  dictionaryKey: keyof Omit<LocaleKey['navigation'], 'hamburgerDropdown'>;
-};
-
-const links: LinkItem[] = [
-  { dictionaryKey: 'stake', href: '/stake' },
-  { dictionaryKey: 'myStakes', href: '/mystakes' },
-] as const;
 
 type NavLinkProps = {
   href: string;
@@ -61,7 +51,7 @@ export default function Header() {
           <Image src="/images/logo.png" alt="Session Token Logo" width={150} height={150} />
         </Link>
         <div className="hidden flex-row gap-10 md:flex">
-          {links.map(({ dictionaryKey, href }) => (
+          {ROUTES.map(({ dictionaryKey, href }) => (
             <NavLink key={href} href={href} label={dictionary(dictionaryKey)} pathname={pathname} />
           ))}
         </div>
@@ -108,7 +98,7 @@ function DropdownHamburgerMenu() {
         >
           {dictionary('language')}
         </DropdownMenuItem>
-        {links.map(({ dictionaryKey, href }) => (
+        {ROUTES.map(({ dictionaryKey, href }) => (
           <DropdownMenuItemNavLink
             key={href}
             href={href}
