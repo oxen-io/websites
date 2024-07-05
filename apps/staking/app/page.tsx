@@ -1,5 +1,6 @@
 import { URL } from '@/lib/constants';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
+import { cn } from '@session/ui/lib/utils';
 import { Button } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -8,20 +9,38 @@ import Link from 'next/link';
 export default function LandingPage() {
   const dictionary = useTranslations('home');
   return (
-    <div className="-mt-header-displacement max-w-screen-3xl mx-auto flex h-dvh w-screen flex-col-reverse items-center justify-around py-16 align-middle lg:grid lg:grid-cols-2 lg:p-32 lg:py-0">
-      <div className="flex flex-col gap-10 align-middle">
-        <h1 className="max-w-[700px] px-10 text-center text-5xl font-medium lg:px-0 lg:text-left lg:text-7xl 2xl:text-8xl">
+    <div
+      className={cn(
+        'max-w-screen-3xl mx-auto flex h-dvh w-screen flex-col-reverse items-center justify-around py-16 align-middle',
+        'md:-mt-header-displacement',
+        'lg:grid lg:grid-cols-2 lg:p-8 lg:py-0',
+        'xl:p-32'
+      )}
+    >
+      <div
+        className={cn('flex flex-col gap-10 align-middle', 'md:-mt-header-displacement', 'lg:mt-0')}
+      >
+        <h1
+          className={cn(
+            'w-full max-w-[700px] px-8 text-center text-4xl font-medium',
+            'sm:text-5xl',
+            'md:px-10 md:text-5xl',
+            'lg:px-0 lg:text-start lg:text-7xl',
+            'xl:pe-10 xl:ps-0',
+            '2xl:text-8xl'
+          )}
+        >
           {dictionary.rich('title')}
         </h1>
-        <div className="hidden gap-4 lg:flex lg:flex-row lg:justify-start">
-          <Link href="/stake" prefetch>
-            <Button size="lg" data-testid={ButtonDataTestId.Home_Run_Node} className="uppercase">
+        <div className="flex flex-row flex-wrap items-center justify-center gap-4 lg:flex-nowrap lg:justify-start">
+          <Link href="/stake" prefetch className="lg:hidden">
+            <Button size="sm" data-testid={ButtonDataTestId.Home_Run_Node} className="uppercase">
               {dictionary('buttons.primary')}
             </Button>
           </Link>
-          <Link href={URL.SESSION_NODE_DOCS} target="_blank">
+          <Link href={URL.SESSION_NODE_DOCS} target="_blank" className="lg:hidden">
             <Button
-              size="lg"
+              size="sm"
               variant="outline"
               data-testid={ButtonDataTestId.Home_Run_Node}
               className="uppercase"
@@ -29,16 +48,14 @@ export default function LandingPage() {
               {dictionary('buttons.secondary')}
             </Button>
           </Link>
-        </div>
-        <div className="flex flex-col-reverse items-center justify-center gap-4 lg:hidden">
-          <Link href="/stake" prefetch>
-            <Button size="sm" data-testid={ButtonDataTestId.Home_Run_Node} className="uppercase">
+          <Link href="/stake" prefetch className="hidden lg:inline">
+            <Button size="lg" data-testid={ButtonDataTestId.Home_Run_Node} className="uppercase">
               {dictionary('buttons.primary')}
             </Button>
           </Link>
-          <Link href={URL.SESSION_NODE_DOCS} target="_blank">
+          <Link href={URL.SESSION_NODE_DOCS} target="_blank" className="hidden lg:inline">
             <Button
-              size="sm"
+              size="lg"
               variant="outline"
               data-testid={ButtonDataTestId.Home_Run_Node}
               className="uppercase"

@@ -55,8 +55,8 @@ export default function Header() {
   const dictionary = useTranslations('navigation');
   const pathname = usePathname();
   return (
-    <nav className="flex flex-wrap items-center justify-between p-6">
-      <div className="flex flex-row gap-10">
+    <nav className="flex items-center justify-between p-6">
+      <div className={cn('flex max-w-28 flex-row gap-10', 'sm:max-w-none')}>
         <Link href="/">
           <Image src="/images/logo.png" alt="Session Token Logo" width={150} height={150} />
         </Link>
@@ -67,7 +67,9 @@ export default function Header() {
         </div>
       </div>
       <div className="flex flex-row justify-end gap-2">
-        <WalletModalButtonWithLocales />
+        <WalletModalButtonWithLocales
+          className={cn('max-w-28 text-xs', 'sm:max-w-none', 'md:text-sm')}
+        />
         {isConnected ? <WalletNetworkDropdownWithLocales className="hidden md:flex" /> : null}
         <DropdownHamburgerMenu />
       </div>
@@ -92,7 +94,7 @@ function DropdownHamburgerMenu() {
       <DropdownMenuTrigger asChild>
         <Button
           data-testid={ButtonDataTestId.Dropdown_Hamburger_Menu}
-          className="group px-1 py-0"
+          className="px-0.25 group py-0"
           aria-label={dictionary('ariaLabel')}
           variant="outline"
         >
