@@ -23,6 +23,15 @@ export enum COMMUNITY_DATE {
   OXEN_SERVICE_NODE_BONUS_PROGRAM = '2024-06-12',
 }
 
+export const SOCIALS: Partial<Record<Social, SocialLink>> = {
+  [Social.Discord]: { name: Social.Discord, link: 'https://discord.com/invite/J5BTQdCfXN' },
+  [Social.X]: { name: Social.X, link: 'https://x.com/session_token' },
+  [Social.Youtube]: { name: Social.Youtube, link: 'https://www.youtube.com/@sessiontv' },
+  [Social.Session]: { name: Social.Session, link: 'https://getsession.org/' },
+  [Social.Github]: { name: Social.Github, link: 'https://github.com/oxen-io/websites' },
+  [Social.RSS]: { name: Social.RSS, link: 'https://token.getsession.org/blog/feed' },
+};
+
 export enum FAUCET {
   MIN_ETH_BALANCE = 0.01,
   DRIP = 240,
@@ -51,6 +60,7 @@ export enum NETWORK {
 type LinkItem = {
   href: string;
   dictionaryKey: keyof Omit<LocaleKey['navigation'], 'hamburgerDropdown'>;
+  linkType?: 'internal' | 'external';
 };
 
 export const ROUTES: LinkItem[] = [
@@ -58,11 +68,10 @@ export const ROUTES: LinkItem[] = [
   { dictionaryKey: 'myStakes', href: '/mystakes' },
 ] as const;
 
-export const SOCIALS: Partial<Record<Social, SocialLink>> = {
-  [Social.Discord]: { name: Social.Discord, link: 'https://discord.com/invite/J5BTQdCfXN' },
-  [Social.Github]: { name: Social.Github, link: 'https://github.com/oxen-io/websites' },
-  [Social.RSS]: { name: Social.RSS, link: 'https://token.getsession.org/blog/feed' },
-  [Social.Session]: { name: Social.Session, link: 'https://getsession.org/' },
-  [Social.X]: { name: Social.X, link: 'https://x.com/session_token' },
-  [Social.Youtube]: { name: Social.Youtube, link: 'https://www.youtube.com/@sessiontv' },
-};
+export const FOOTER_LINKS: LinkItem[] = [
+  ...ROUTES,
+  { dictionaryKey: 'faucet', href: '/faucet' },
+  { dictionaryKey: 'tokenSite', href: 'https://token.getsession.org', linkType: 'external' },
+  { dictionaryKey: 'support', href: '/support', linkType: 'external' },
+  { dictionaryKey: 'docs', href: 'https://docs.getsession.org', linkType: 'external' },
+] as const;

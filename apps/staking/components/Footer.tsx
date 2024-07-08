@@ -1,4 +1,4 @@
-import { ROUTES, SOCIALS } from '@/lib/constants';
+import { FOOTER_LINKS, SOCIALS } from '@/lib/constants';
 import { Footer as FooterComp } from '@session/ui/components/Footer';
 import { cn } from '@session/ui/lib/utils';
 
@@ -6,9 +6,10 @@ import { useTranslations } from 'next-intl';
 export function Footer() {
   const dictionary = useTranslations('navigation');
 
-  const menuItems = ROUTES.map(({ dictionaryKey, href }) => ({
+  const menuItems = FOOTER_LINKS.map(({ dictionaryKey, href, linkType = 'internal' }) => ({
     title: dictionary(dictionaryKey),
     href: href,
+    linkType,
   }));
 
   const socialLinks = Object.values(SOCIALS);
