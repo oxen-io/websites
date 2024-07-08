@@ -295,7 +295,7 @@ export const AuthModule = () => {
               {dictionary('submit.getTestTokensText')}
             </FormSubmitButton>
           ) : (
-            /** NOTE: FormSubmitButton contians FormErrorMessage, but we still want to render the error message when the submit button isnt visible */
+            /** NOTE: FormSubmitButton contaians FormErrorMessage, but we still want to render the error message when the submit button isnt visible */
             <FormErrorMessage />
           )}
         </form>
