@@ -19,6 +19,7 @@ import { toast } from '@session/ui/lib/sonner';
 import {
   Form,
   FormControl,
+  FormErrorMessage,
   FormField,
   FormItem,
   FormMessage,
@@ -293,7 +294,10 @@ export const AuthModule = () => {
             >
               {dictionary('submit.getTestTokensText')}
             </FormSubmitButton>
-          ) : null}
+          ) : (
+            /** NOTE: FormSubmitButton contians FormErrorMessage, but we still want to render the error message when the submit button isnt visible */
+            <FormErrorMessage />
+          )}
         </form>
       </Form>
       {formState !== FORM_STATE.LANDING && transactionHash ? (
