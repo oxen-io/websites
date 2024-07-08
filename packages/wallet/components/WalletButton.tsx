@@ -23,6 +23,7 @@ export function WalletButton({
   arbName,
   tokenBalance,
   fallbackName,
+  hideBalance,
   ...props
 }: WalletButtonProps) {
   const name = useMemo(
@@ -48,19 +49,22 @@ export function WalletButton({
     >
       {isConnected ? (
         <>
+          {!hideBalance ? (
+            <div
+              className={cn(
+                'text-session-white -mr-4 inline-flex h-full w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-s-full py-2.5 pe-6 ps-3',
+                'group-hover:bg-session-black group-active:bg-session-black group-focus:bg-session-black transition-colors delay-1000 duration-0 ease-in-out group-hover:delay-0 group-focus:delay-0 group-active:delay-0 motion-reduce:transition-none',
+                forceBalanceOpen && 'bg-session-black delay-0'
+              )}
+            >
+              <SessionTokenIcon className="h-4 w-4" />
+              {tokenBalance ? formatBigIntTokenValue(tokenBalance, SENT_DECIMALS) : 0} {SENT_SYMBOL}
+            </div>
+          ) : null}
           <div
             className={cn(
-              'text-session-white -mr-4 inline-flex h-full w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-s-full py-2.5 pe-6 ps-3',
-              'group-hover:bg-session-black group-active:bg-session-black group-focus:bg-session-black transition-colors delay-1000 duration-0 ease-in-out group-hover:delay-0 group-focus:delay-0 group-active:delay-0 motion-reduce:transition-none',
-              forceBalanceOpen && 'bg-session-black delay-0'
-            )}
-          >
-            <SessionTokenIcon className="h-4 w-4" />
-            {tokenBalance ? formatBigIntTokenValue(tokenBalance, SENT_DECIMALS) : 0} {SENT_SYMBOL}
-          </div>
-          <div
-            className={cn(
-              'bg-session-green inline-flex h-full w-36 min-w-36 items-center justify-evenly gap-1 whitespace-nowrap rounded-s-full px-2 py-2'
+              'inline-flex h-full items-center justify-evenly gap-1 whitespace-nowrap px-2 py-2',
+              !hideBalance && 'bg-session-green w-36 min-w-36 rounded-s-full'
             )}
           >
             <ConnectedWalletAvatar className="h-6 w-6" avatarSrc={ensAvatar} />

@@ -12,6 +12,7 @@ export type WalletModalButtonProps = Omit<ButtonProps, 'data-testid'> & {
     disconnected: string;
   };
   fallbackName: string;
+  hideBalance?: boolean;
 };
 
 export default function WalletModalButton(props: WalletModalButtonProps) {
@@ -51,4 +52,5 @@ export type WalletButtonProps = WalletModalButtonProps &
     isLoading?: boolean;
     isConnected?: boolean;
     forceBalanceOpen?: boolean;
+    hideBalance?: boolean;
   };
