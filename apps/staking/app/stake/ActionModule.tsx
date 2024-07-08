@@ -15,6 +15,7 @@ type ActionModuleProps = {
   children?: React.ReactNode;
   headerAction?: React.ReactNode;
   background?: keyof typeof actionModuleBackground;
+  className?: string;
 };
 
 export default function ActionModule({
@@ -22,12 +23,13 @@ export default function ActionModule({
   headerAction,
   background,
   children,
+  className,
 }: ActionModuleProps) {
   return (
     <ModuleGrid
       variant="section"
       colSpan={1}
-      className="h-full w-full"
+      className={cn('h-full w-full', className)}
       style={background ? actionModuleBackground[background] : undefined}
     >
       {title ? (
