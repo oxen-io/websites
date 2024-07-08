@@ -29,24 +29,24 @@ export const DiscordAuthButton = forwardRef<HTMLButtonElement, DiscordAuthButton
 
     return (
       <Button
-        onClick={handleClick}
+        className="text-session-black hover:text-session-black justify-center gap-2 border-transparent bg-[#5865F2] px-2 uppercase hover:bg-[#4853A4] hover:brightness-125"
         data-testid={ButtonDataTestId.DISCORD_AUTH}
-        ref={ref}
-        {...props}
         rounded="md"
         size="lg"
-        className="text-session-black hover:text-session-black gap-2 border-transparent bg-[#5865F2] hover:bg-[#4853A4] hover:brightness-125"
+        onClick={handleClick}
+        ref={ref}
+        {...props}
       >
         <DiscordIcon className="h-5 w-5" />
         {isConnected ? (
-          <div className={'inline-flex w-full items-center justify-evenly gap-1 overflow-x-hidden'}>
+          <div className={'inline-flex items-center justify-evenly gap-1 overflow-x-hidden'}>
             {showAvatar ? (
               <Avatar className="h-6 w-6">
                 {avatarSrc ? <AvatarImage src={avatarSrc} alt="Discord Avatar" /> : null}
                 <AvatarFallback className="bg-session-black" />
               </Avatar>
             ) : null}
-            {username ?? 'Connected'}
+            Connected To {username ?? 'Discord'}
           </div>
         ) : (
           'Connect Discord'

@@ -7,19 +7,18 @@ import { TelegramIcon } from '../icons/TelegramIcon';
 import { signIn, signOut, useSession } from '../lib/client';
 import { ButtonDataTestId } from '../testing/data-test-ids';
 
-type TelegramAuthButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+type TelegramAuthButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  locale?: string;
+};
 
 export const TelegramAuthButton = forwardRef<HTMLButtonElement, TelegramAuthButtonProps>(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  (props, ref) => {
+  ({ locale, ...props }, ref) => {
     const { data, status } = useSession();
 
     const isConnected = status === 'authenticated';
-    const username = data?.user?.name;
-
-    console.log(data);
-
-    console.log('username', username);
+    /** @ts-expect-error -- username exists */
+    const username = data?.user?.username ?? data?.user?.name;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleAuth = (data: any) => {
@@ -31,20 +30,29 @@ export const TelegramAuthButton = forwardRef<HTMLButtonElement, TelegramAuthButt
     };
 
     return (
-      <div className="relative">
-        <div className="peer absolute opacity-0">
-          <LoginButton botUsername="session_testnet_bot" onAuthCallback={handleAuth} />
-        </div>
+      <div className="group relative w-min overflow-hidden rounded-md">
+        {!isConnected ? (
+          <div className="absolute w-full scale-150 opacity-0">
+            <LoginButton
+              botUsername="session_testnet_bot"
+              onAuthCallback={handleAuth}
+              buttonSize="large"
+              cornerRadius={0}
+              lang={locale}
+            />
+          </div>
+        ) : null}
         <Button
-          data-testid={ButtonDataTestId.TELEGRAM_AUTH}
-          ref={ref}
-          {...props}
+          className="text-session-black hover:text-session-black w-full gap-2 border-transparent bg-[#2AABEE] px-2 uppercase hover:bg-[#2AABEE] group-hover:brightness-125"
           rounded="md"
           size="lg"
-          className="text-session-black hover:text-session-black gap-2 border-transparent bg-[#2AABEE] hover:bg-[#2AABEE] peer-hover:brightness-125"
+          data-testid={ButtonDataTestId.TELEGRAM_AUTH}
+          {...(isConnected ? { onClick: handleAuth } : {})}
+          ref={ref}
+          {...props}
         >
-          <TelegramIcon className="h-4 w-4" />
-          {isConnected ? username ?? 'Connected' : 'Connect Telegram'}
+          <TelegramIcon className="h-5 w-5" />
+          {isConnected ? `Connected To ${username ?? 'Telegram'}` : 'Connect Telegram'}
         </Button>
       </div>
     );
