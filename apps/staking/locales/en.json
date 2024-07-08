@@ -70,17 +70,17 @@
     "information": {
       "title": "Getting test {tokenSymbol}",
       "communityTitle": "Session Token Community Members",
-      "communityDescription": "If you were part of the Session Token Community <link>Snapshot</link> taken on {snapshotDate}, you are eligible to receive test {tokenSymbol}. Connect to {connectionOptions}, and then connect your wallet or enter your wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
+      "communityDescription": "If you were part of the Session Token Community <session-token-community-snapshot-link></session-token-community-snapshot-link> taken on {snapshotDate}, you are eligible to receive test {tokenSymbol}. Connect to {connectionOptions}, and then connect your wallet or enter your wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
       "oxenTitle": "Oxen Service Nodes",
-      "oxenDescription": "If you registered for the <link>{oxenProgram}</link> by {oxenRegistrationDate}, you are also eligible. Connect the wallet that you registered for the program with, or enter the wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
+      "oxenDescription": "If you registered for the <oxen-program-link></oxen-program-link> by {oxenRegistrationDate}, you are also eligible. Connect the wallet that you registered for the program with, or enter the wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
       "walletRequirementTitle": "Wallet Requirements:",
-      "walletRequirementDescription": "You need to have a minimum of {minimumGasAmount} test {gasTokenSymbol} on the {testNetworkChain} network to be able to receive test {tokenSymbol}. Add some to your wallet using the {recommendedGasFaucetLink}.",
-      "notEligible": "Not eligible? {testnetName} and its Incentive Program is currently closed to the public, however we will be inviting new users to join our testnet in the future. Join {discordServerLink} to stay in the loop about opportunities to join the {incentiveProgramLink}. "
+      "walletRequirementDescription": "You need to have a minimum of {minimumFaucetGasAmount} test {gasTokenSymbol} on the {testNetworkChain} network to be able to receive test {tokenSymbol}. Add some to your wallet using the <recommended-gas-faucet-link></recommended-gas-faucet-link>.",
+      "notEligible": "Not eligible? {testnetName} and its Incentive Program is currently closed to the public, however we will be inviting new users to join our testnet in the future. Join {discordServerLink} to stay in the loop about opportunities to join the <incentive-program-link></incentive-program-link>. "
     },
-    "connectedWalletInfo": "Your connected wallet's account {address} is being used to fill out this form. You will not be asked to make any transactions.",
+
     "addTokenInfo": "Make {tokenSymbol} visible in your wallet by manually importing the token.",
     "form": {
-      "disconnectWallet": "Disconnect",
+      "back": "back",
       "inputPlaceholder": "Wallet address",
       "inputAria": "Enter your wallet address to receive test {tokenSymbol} from the faucet.",
       "connectWalletButtonText": "Connect Wallet",
@@ -92,8 +92,14 @@
       "telegramConnectButtonAria": "Connect your Telegram account",
       "discordConnectButtonAria": "Connect your Discord account",
       "swapToTestnet": "Swap to {testnetName}",
-      "lowEthBalance": "It looks like you don't have enough test {gasTokenSymbol} on {testNetworkChain}, go to {recommendedGasFaucetLink} to get some. You have {gasAmount} test {gasTokenSymbol}",
-      "submitButton": {
+      "confirm": {
+        "connectedWalletInfo": "Your connected wallet's account <address></address> is being used to fill out this form. You will not be asked to make any transactions.",
+        "discordDisclaimer": "Your connected <tooltip>Discord User ID</tooltip> will be sent with this form.",
+        "discordDisclaimerUserIdTooltip": "Your Discord User ID is the unique identifier for your Discord account.",
+        "telegramDisclaimer": "Your connected <tooltip>Telegram User ID</tooltip> will be sent with this form.",
+        "telegramDisclaimerUserIdTooltip": "Your Telegram User ID is the unique identifier for your Telegram account."
+      },
+      "submit": {
         "continueText": "Continue",
         "continueAria": "Continue to receive test {tokenSymbol} from the faucet.",
         "getTestTokensText": "Get Test {tokenSymbol}",
@@ -101,21 +107,27 @@
         "checkingEligibilityText": "Checking Eligibility...",
         "checkingEligibilityAria": "Checking if you are eligible to receive test {tokenSymbol} from the faucet.",
         "sendingTokensText": "Sending Test {tokenSymbol}...",
-        "sendingTokensAria": "Sending test {tokenSymbol} to your wallet address."
+        "sendingTokensAria": "Sending test {tokenSymbol} to your wallet address.",
+        "transactionSuccess": "Transaction Successful",
+        "transactionSuccessDescription": "Test {tokenSymbol} has been sent to your wallet address.",
+        "transactionError": "Transaction Failed"
       },
       "error": {
         "invalidAddress": "Wallet address is not valid. It must be a valid {ethTokenSymbol} address: {example}",
+        "insufficientEth": "It looks like you don't have enough test {gasTokenSymbol} on {testNetworkChain}, go to <recommended-gas-faucet-link></recommended-gas-faucet-link> to get some. You have {gasAmount} test {gasTokenSymbol}",
+        "insufficientEthTextOnly": "It looks like you don't have enough test {gasTokenSymbol} on {testNetworkChain}. You have {gasAmount} test {gasTokenSymbol}",
         "incorrectChain": "Faucet only works on {testnetName}, switch to {testNetworkChain} network to use the faucet.",
-        "faucetGasWarning": "Faucet is low on gas, Please {contactSupportLink} for assistance.",
-        "faucetTokenWarning": "Faucet is low on {tokenSymbol}, Please {contactSupportLink} for assistance.",
+        "faucetOutOfTokens": "Faucet is out of {tokenSymbol}, Please <contact-support-link></contact-support-link> for assistance.",
+        "faucetOutOfTokensTextOnly": "Faucet is out of {tokenSymbol}, Please contact support for assistance.",
         "invalidService": "The {service} account you connected was not part of the community snapshot on {snapshotDate} and is not eligible for testnet access.",
-        "invalidOxen": "This wallet address was not registered for the {oxenProgram} on {oxenRegistrationDate} and is not eligible for testnet access. Try connecting with Discord or Telegram instead.",
+        "invalidOxenAddress": "This wallet address was not registered for the {oxenProgram} on {oxenRegistrationDate} and is not eligible for testnet access. Try connecting with Discord or Telegram instead.",
         "alreadyUsedService": "The connected {service} account has already been used to claim testnet {tokenSymbol} for another wallet address.",
         "alreadyUsed": "The connected wallet address has already been used to claim testnet {tokenSymbol}.",
         "authFailed": "{service} authentication failed. Please refresh the page and try again."
       },
       "transactionHash": "Transaction Hash: {hash}",
       "transactionHashDescription": "Transaction hash of the faucet transaction.",
+      "haveSomeMore": "Alright then, you can have some more",
       "copyTransactionHash": "Copy Transaction Hash",
       "copyTransactionHashSuccessToast": "Copied Transaction Hash to clipboard!"
     }

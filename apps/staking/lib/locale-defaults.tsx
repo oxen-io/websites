@@ -3,7 +3,7 @@ import { cn } from '@session/ui/lib/utils';
 import { RichTranslationValues } from 'next-intl';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { NETWORK, TICKER } from './constants';
+import { FAUCET, NETWORK, TICKER, URL } from './constants';
 
 export const internalLink = (href: string, prefetch?: boolean) => {
   return (children: ReactNode) => (
@@ -13,13 +13,21 @@ export const internalLink = (href: string, prefetch?: boolean) => {
   );
 };
 
-export const externalLink = (href: string) => {
+export const externalLink = (href: string, className?: string) => {
   return (children: ReactNode) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-session-green">
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className ?? 'text-session-green'}
+    >
       {children}
     </a>
   );
 };
+
+const defaultExternalLink = (href: string, text: string, className?: string) => () =>
+  externalLink(href, className ?? 'text-white underline')(text);
 
 type FontWeight =
   | 'font-extralight'
@@ -44,6 +52,30 @@ export const defaultTranslationElements = {
   'text-bold': text('font-bold'),
   'text-extrabold': text('font-extrabold'),
   'text-black': text('font-black'),
+  'discord-server-link': defaultExternalLink(URL.DISCORD_INVITE, "Session Token's Discord server"),
+  'contact-support-link': defaultExternalLink(
+    URL.DISCORD_INVITE,
+    'contact the Session team via Discord.'
+  ),
+  'incentive-program-link': defaultExternalLink(
+    URL.INCENTIVE_PROGRAM,
+    'Session Testnet Incentive Program'
+  ),
+  'recommended-gas-faucet-link': defaultExternalLink(
+    URL.ARB_SEP_FAUCET,
+    `QuickNode ${chains[CHAIN.TESTNET].name} Faucet`,
+    'text-session-green'
+  ),
+  'oxen-program-link': defaultExternalLink(
+    URL.OXEN_SERVICE_NODE_BONUS_PROGRAM,
+    'Oxen Service Node Bonus program',
+    'text-session-green'
+  ),
+  'session-token-community-snapshot-link': defaultExternalLink(
+    URL.SESSION_TOKEN_COMMUNITY_SNAPSHOT,
+    'Snapshot',
+    'text-session-green'
+  ),
 } satisfies RichTranslationValues;
 
 export const defaultTranslationVariables = {
@@ -54,12 +86,8 @@ export const defaultTranslationVariables = {
   testnetName: NETWORK.TESTNET,
   mainNetworkChain: chains[CHAIN.MAINNET].name,
   testNetworkChain: chains[CHAIN.TESTNET].name,
-  /* discordServerLink: externalLink(URL.DISCORD_INVITE)("Session Token's Discord server"),
-  contactSupportLink: externalLink(URL.DISCORD_INVITE)('contact the Session team via Discord.'),
-  incentiveProgramLink: externalLink(URL.INCENTIVE_PROGRAM)('Session Testnet Incentive Program'),
-  recommendedGasFaucetLink: externalLink(URL.ARB_SEP_FAUCET)(
-    `QuickNode ${chains[CHAIN.TESTNET].name} Faucet`
-  ), */
+  minimumFaucetGasAmount: FAUCET.MIN_ETH_BALANCE,
+  oxenProgram: 'Oxen Service Node Bonus program',
 } satisfies RichTranslationValues;
 
 export const defaultTranslationValues: RichTranslationValues = {
