@@ -22,6 +22,15 @@ const nextConfig = {
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
     return config;
   },
+  redirects: async () => {
+    return [
+      {
+        source: '/support',
+        destination: 'https://discord.com/invite/J5BTQdCfXN',
+        permanent: false,
+      },
+    ];
+  },
   rewrites: async () => {
     return [
       {

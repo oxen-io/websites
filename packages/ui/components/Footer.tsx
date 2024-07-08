@@ -30,6 +30,7 @@ export type FooterItem = {
   title: string;
   slug?: string;
   href?: string;
+  linkType?: 'internal' | 'external';
 };
 
 export type FooterProps = {
@@ -93,12 +94,17 @@ export function Footer(props: FooterProps) {
               return (
                 <div
                   key={`${item.title}-${index}`}
-                  className={cn('cursor-pointer text-sm', 'sm:text-base', 'hover:text-primary')}
+                  className={cn(
+                    'cursor-pointer text-sm',
+                    'sm:text-base',
+                    'hover:text-session-green'
+                  )}
                 >
                   {item.slug || item.href ? (
                     <Link
                       key={`${item.title}-${index}`}
                       href={item.slug ? `/${item.slug}` : item.href ?? '/'}
+                      target={item.linkType === 'external' ? '_blank' : '_self'}
                     >
                       {item.title}
                     </Link>
