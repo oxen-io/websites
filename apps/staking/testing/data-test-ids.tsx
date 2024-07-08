@@ -6,6 +6,7 @@ export enum ButtonDataTestId {
   Not_Found_Return_Home = 'button:not-found-return-home',
   Copy_Public_Key_To_Clipboard = 'button:copy-public-key-to-clipboard',
   Node_Card_View = 'button:node-card-view',
+  Faucet_Continue = 'button:faucet-continue',
   Faucet_Submit = 'button:faucet-submit',
   Faucet_Disconnect = 'button:faucet-disconnect',
   Dropdown_Hamburger_Menu = 'button:dropdown-hamburger-menu',

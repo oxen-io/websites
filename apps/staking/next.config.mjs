@@ -17,7 +17,12 @@ const getSENTStakingApiUrl = () => {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@session/ui', '@session/wallet', '@session/contracts'],
+  transpilePackages: [
+    '@session/ui',
+    '@session/wallet',
+    '@session/contracts',
+    'better-sqlite3-multiple-ciphers',
+  ],
   webpack: (config) => {
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
     return config;
