@@ -13,7 +13,7 @@ import ActionModule, { ActionModuleDivider } from '../stake/ActionModule';
 import { FAUCET, FAUCET_ERROR } from '@/lib/constants';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CHAIN, chains } from '@session/contracts';
+import { CHAIN } from '@session/contracts';
 import { ArrowDownIcon } from '@session/ui/icons/ArrowDownIcon';
 import { toast } from '@session/ui/lib/sonner';
 import {
@@ -26,11 +26,10 @@ import {
 } from '@session/ui/ui/form';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
 import { collapseString } from '@session/util/string';
-import { useWalletChain } from '@session/wallet/hooks/wallet-hooks';
+import { WALLET_STATUS, useWallet, useWalletChain } from '@session/wallet/hooks/wallet-hooks';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Address, formatEther, isAddress } from 'viem';
-import { useAccount, useBalance, useDisconnect } from 'wagmi';
 import { z } from 'zod';
 import { transferTestTokens } from './actions';
 
@@ -71,14 +70,8 @@ export const AuthModule = () => {
   const [faucetError, setFaucetError] = useState<FAUCET_ERROR | null>(null);
   const { data, status: authStatus } = useSession();
   const [transactionHash, setTransactionHash] = useState<Address | null>(null);
-  const { address, status: accountStatus } = useAccount();
-  const { disconnect } = useDisconnect();
+  const { address, disconnect, status: walletStatus, ethBalance } = useWallet();
   const { chain, switchChain } = useWalletChain();
-  const { data: ethBalance } = useBalance({
-    address,
-    chainId: chains[CHAIN.TESTNET].id,
-    query: { enabled: !!address },
-  });
 
   const FormSchema = getFaucetFormSchema();
 
@@ -159,14 +152,14 @@ export const AuthModule = () => {
   };
 
   const ethAmount = useMemo(() => {
-    if (!address || ethBalance === undefined) {
-      return null;
+    if (ethBalance) {
+      return parseFloat(formatEther(ethBalance));
     }
-    return parseFloat(formatEther(ethBalance.value));
-  }, [ethBalance, address]);
+    return null;
+  }, [ethBalance]);
 
   useEffect(() => {
-    if (ethAmount !== null && ethAmount < FAUCET.MIN_ETH_BALANCE) {
+    if (address && ethAmount !== null && ethAmount < FAUCET.MIN_ETH_BALANCE) {
       form.setError('root', {
         type: 'deps',
         message: dictionary('error.insufficientEth', {
@@ -175,10 +168,10 @@ export const AuthModule = () => {
         }),
       });
     }
-  }, [address, ethAmount]);
+  }, [address, ethAmount, form]);
 
   useEffect(() => {
-    if (accountStatus === 'connected') {
+    if (walletStatus === WALLET_STATUS.CONNECTED && address) {
       form.clearErrors();
       form.setValue('walletAddress', address, {
         shouldValidate: true,
@@ -189,12 +182,12 @@ export const AuthModule = () => {
       if (chain !== CHAIN.TESTNET) {
         switchChain(CHAIN.TESTNET);
       }
-    } else if (accountStatus === 'disconnected') {
+    } else if (walletStatus === WALLET_STATUS.DISCONNECTED) {
       form.reset({ walletAddress: '' });
       form.clearErrors();
       setTransactionHash(null);
     }
-  }, [accountStatus, address, form]);
+  }, [walletStatus, address, form]);
 
   useEffect(() => {
     if (authStatus === 'authenticated') {

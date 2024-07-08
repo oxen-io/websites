@@ -17,11 +17,10 @@ import {
 } from '@session/ui/components/ModuleGrid';
 import { Button } from '@session/ui/ui/button';
 import { Switch } from '@session/ui/ui/switch';
-import { useToggleWalletModal } from '@session/wallet/hooks/wallet-hooks';
+import { useToggleWalletModal, useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useMemo } from 'react';
-import { useAccount } from 'wagmi';
 
 function StakedNodesWithAddress({ address }: { address: string }) {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_STAKED_NODES);
@@ -65,7 +64,7 @@ function StakedNodesWithAddress({ address }: { address: string }) {
 
 export default function StakedNodesModule() {
   const dictionary = useTranslations('modules.stakedNodes');
-  const { address } = useAccount();
+  const { address } = useWallet();
   return (
     <>
       <ModuleGridHeader>
