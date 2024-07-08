@@ -107,6 +107,14 @@ export const AuthModule = () => {
       });
     }
 
+    if (discordId) {
+      data.discordId = discordId;
+    }
+
+    if (telegramId) {
+      data.telegramId = telegramId;
+    }
+
     const promise: Promise<Address> = new Promise((resolve, reject) =>
       transferTestTokens(data).then((res) => {
         if (!res) {
@@ -189,13 +197,6 @@ export const AuthModule = () => {
       setTransactionHash(null);
     }
   }, [walletStatus, address, form]);
-
-  useEffect(() => {
-    if (authStatus === 'authenticated') {
-      form.setValue('discordId', discordId);
-      form.setValue('telegramId', telegramId);
-    }
-  }, [authStatus, discordId, telegramId, form]);
 
   return (
     <ActionModule className="gap-4 p-10">
