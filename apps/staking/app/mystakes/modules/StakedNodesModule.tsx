@@ -17,7 +17,7 @@ import {
 } from '@session/ui/components/ModuleGrid';
 import { Button } from '@session/ui/ui/button';
 import { Switch } from '@session/ui/ui/switch';
-import { useToggleWalletModal, useWallet } from '@session/wallet/hooks/wallet-hooks';
+import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -83,18 +83,7 @@ function NoWallet() {
   return (
     <ModuleGridInfoContent>
       <p>{dictionary('noWalletP1')}</p>
-      <p>
-        {dictionary.rich('noWalletP2', {
-          link: (children) => {
-            const { open } = useToggleWalletModal();
-            return (
-              <a onClick={() => open()} className="text-session-green cursor-pointer underline">
-                {children}
-              </a>
-            );
-          },
-        })}
-      </p>
+      <p>{dictionary('noWalletP2')}</p>
       <WalletModalButtonWithLocales rounded="md" size="lg" />
     </ModuleGridInfoContent>
   );
