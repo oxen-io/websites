@@ -1,10 +1,11 @@
 import { getEnvironmentTaggedDomain } from '@session/util/env';
 import type { WagmiMetadata } from '@session/wallet/lib/wagmi';
 
+const BASE_URL = `https://${getEnvironmentTaggedDomain('stake')}.getsession.org`;
 const SITE_TITLE = 'Session Staking Portal';
 const SITE_DESCRIPTION = 'Stake and get rewarded for securing the Session Network.';
-const SITE_IMAGE = '/images/link_preview.png';
-const SITE_ICON = '/images/icon.png';
+const SITE_IMAGE = `${BASE_URL}/images/link_preview.png`;
+const SITE_ICON = `${BASE_URL}/images/icon.png`;
 
 export const siteMetadata = (props: { title?: string; description?: string; image?: string }) => {
   const { title, description = SITE_DESCRIPTION, image = SITE_IMAGE } = props;
@@ -24,11 +25,9 @@ export const siteMetadata = (props: { title?: string; description?: string; imag
   };
 };
 
-const url = `https://${getEnvironmentTaggedDomain('stake')}.getsession.org`;
-
 export const wagmiMetadata: WagmiMetadata = {
   name: SITE_TITLE,
   description: SITE_DESCRIPTION,
-  url,
-  icons: [`${url}${SITE_ICON}`],
+  url: BASE_URL,
+  icons: [SITE_ICON],
 };
