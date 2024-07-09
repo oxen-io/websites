@@ -10,6 +10,7 @@ import { Input } from '@session/ui/ui/input';
 import { useTranslations } from 'next-intl';
 import ActionModule, { ActionModuleDivider } from '../stake/ActionModule';
 
+import { WalletAddTokenWithLocales } from '@/components/WalletAddTokenWithLocales';
 import { FAUCET, FAUCET_ERROR } from '@/lib/constants';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -380,6 +381,13 @@ export const AuthModule = () => {
             gasAmount: ethAmount,
           })}
         </p>
+      ) : null}
+
+      {formState === FORM_STATE.SUCCESS ? (
+        <>
+          <p>{dictionary('watchSENTInfo')}</p>
+          <WalletAddTokenWithLocales rounded="md" size="md" variant="outline" />
+        </>
       ) : null}
     </ActionModule>
   );

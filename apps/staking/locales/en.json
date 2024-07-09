@@ -130,6 +130,8 @@
       "transactionHash": "Transaction Hash: {hash}",
       "transactionHashDescription": "Transaction hash of the faucet transaction.",
       "haveSomeMore": "Alright then, you can have some more",
+      "watchSENTInfo": "You may need to add {tokenSymbol} to your wallet to make it show up, click the button below to add it.",
+      "watchSENTButtonText": "Add {tokenSymbol} to wallet",
       "copyTransactionHash": "Copy Transaction Hash",
       "copyTransactionHashSuccessToast": "Copied Transaction Hash to clipboard!"
     }
