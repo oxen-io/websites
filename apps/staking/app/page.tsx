@@ -10,7 +10,7 @@ export default function LandingPage() {
   const dictionary = useTranslations('home');
   return (
     <div className="-mt-header-displacement max-w-screen-3xl mx-auto flex h-dvh w-screen flex-col-reverse items-center justify-around py-16 align-middle lg:grid lg:grid-cols-2 lg:p-32 lg:py-0">
-      // TODO Review after https://github.com/oxen-io/websites/pull/10 is merged
+      {/* TODO Review after https://github.com/oxen-io/websites/pull/10 is merged */}
       <div className="flex w-full flex-col gap-10 align-middle">
         <div className={'z-10 flex flex-col items-center justify-start lg:items-start'}>
           <h1 className="whitespace-nowrap text-center text-5xl font-medium md:text-7xl lg:text-start 2xl:text-8xl">
