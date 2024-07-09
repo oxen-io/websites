@@ -69,12 +69,15 @@ export interface ServiceNode {
 }
 
 export interface OpenNode {
-  pubKey: string;
-  operatorFee: number;
-  minContribution: number;
-  maxContribution: number;
-  contributors: Contributor[];
-  operatorAddress: string;
+  bls_pubkey: string;
+  cancelled: boolean;
+  contract: string;
+  contributions: Array<Contributor>;
+  fee: number;
+  finalized: boolean;
+  service_node_pubkey: string;
+  service_node_signature: string;
+  total_contributions: number;
 }
 
 export interface GetOpenNodesResponse {

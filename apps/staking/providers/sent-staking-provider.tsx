@@ -96,6 +96,8 @@ export function useSessionStakingQuery<Q extends keyof SessionStakingClient>({
     queryFn,
   });
 
+  console.log('qres', rest.data);
+
   const status = useMemo(
     () => parseQueryStatus({ isPending, isLoading, isSuccess, isError }),
     [isLoading, isPending, isError, isSuccess]
