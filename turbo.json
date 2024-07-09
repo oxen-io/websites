@@ -15,7 +15,9 @@
         "FAUCET_CHAIN",
         "DISCORD_CLIENT_SECRET",
         "DISCORD_CLIENT_ID",
-        "TELEGRAM_BOT_TOKEN"
+        "TELEGRAM_BOT_TOKEN",
+        "NEXTAUTH_SECRET",
+        "NEXTAUTH_URL"
       ]
     },
     "dev": {

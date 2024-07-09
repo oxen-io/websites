@@ -196,7 +196,7 @@ export const AuthModule = () => {
       form.clearErrors();
       setTransactionHash(null);
     }
-  }, [walletStatus, address, form]);
+  }, [walletStatus, chain, address, form]);
 
   return (
     <ActionModule className="gap-4 p-10">

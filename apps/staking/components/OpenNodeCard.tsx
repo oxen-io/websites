@@ -67,7 +67,7 @@ const OpenNodeCard = forwardRef<
             <span className="text-nowrap font-normal">
               {titleFormat('format', { title: generalNodeDictionary('publicKeyShort') })}
             </span>
-            <PubKey pubKey={pubKey} />
+            <PubKey pubKey={pubKey} force="collapse" />
           </NodeCardTitle>
         </div>
         <NodeCardText className="col-span-10 mt-1 inline-flex max-h-max flex-row-reverse justify-center gap-2 text-center align-middle text-xs font-normal sm:justify-start sm:text-start md:mt-0 md:flex-row md:text-base">

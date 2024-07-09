@@ -19,7 +19,7 @@ export const externalLink = (href: string, className?: string) => {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={className ?? 'text-session-green'}
+      className={className ?? 'text-session-green cursor-pointer'}
     >
       {children}
     </a>

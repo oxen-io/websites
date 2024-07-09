@@ -19,7 +19,7 @@ export const TelegramProvider = ({ botToken }: TelegramProviderOptions) =>
     id: 'telegram',
     name: 'Telegram',
     credentials: {},
-    /** @ts-expect-error -- trust me im right */
+    /** @ts-expect-error -- trust me im right -- we are enforcing the return to include the telegram id */
     async authorize(credentials, req) {
       const validator = new AuthDataValidator({ botToken });
 
@@ -35,6 +35,24 @@ export const TelegramProvider = ({ botToken }: TelegramProviderOptions) =>
     },
   });
 
+/**
+ * Handles the Telegram session by updating the session object with the Telegram user ID. This is necessary because NextAuth does not properly return the user ID.
+ *
+ * @param options The options for handling the Telegram session.
+ * @param options.session The session object.
+ * @param options.token The JWT token.
+ * @returns The updated session object.
+ *
+ * @example
+ * ```ts
+ * callbacks: {
+      async session({ session, token }) {
+        handleTelegramSession({ session, token });
+        return session;
+      },
+    },
+ * ```
+ */
 export function handleTelegramSession({ session, token }: { session: Session; token: JWT }) {
   if (token.sub) {
     if (!token?.picture?.includes('discord')) {
