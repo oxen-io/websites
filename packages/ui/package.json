@@ -8,6 +8,7 @@
     "./components/*": "./components/*.tsx",
     "./lib/*": "./lib/*.ts",
     "./icons/*": "./icons/*.tsx",
+    "./icons/types": "./icons/types.ts",
     "./taiwind": "./tailwind.config.ts",
     "./postcss": "./postcss.config.js"
   },

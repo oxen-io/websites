@@ -49,7 +49,13 @@ export default function LandingPage() {
         </div>
       </div>
       <div className="flex max-w-[50vh] items-center justify-center align-middle lg:max-w-full">
-        <Image src="/images/cube.png" alt={dictionary('heroImageAlt')} height={1024} width={1024} />
+        <Image
+          src="/images/cube.png"
+          alt={dictionary('heroImageAlt')}
+          height={1024}
+          width={1024}
+          priority
+        />
       </div>
     </div>
   );

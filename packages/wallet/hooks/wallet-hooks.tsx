@@ -5,7 +5,7 @@ import { useEns } from '@session/contracts/hooks/ens';
 import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { useMemo, useState } from 'react';
 import { createWalletClient, custom, type Address } from 'viem';
-import { useAccount, useBalance, useConfig } from 'wagmi';
+import { useAccount, useBalance, useConfig, useDisconnect } from 'wagmi';
 import { switchChain as switchChainWagmi } from 'wagmi/actions';
 import { getEthereumWindowProvider } from '../lib/eth';
 import { useArbName } from './arb';
@@ -68,10 +68,13 @@ type UseWalletType = {
   status: WALLET_STATUS;
   /** Whether the wallet is connected. */
   isConnected: boolean;
+  /** Disconnect the wallet. */
+  disconnect: () => void;
 };
 
 export function useWallet(): UseWalletType {
   const { address, isConnected, isConnecting, isDisconnected, isReconnecting } = useAccount();
+  const { disconnect } = useDisconnect();
   const { balance: tokenBalanceData } = useSENTBalanceQuery({
     startEnabled: Boolean(address),
     args: [address!],
@@ -102,7 +105,17 @@ export function useWallet(): UseWalletType {
     [isConnected, isConnecting, isDisconnected, isReconnecting]
   );
 
-  return { address, ensName, ensAvatar, arbName, status, isConnected, tokenBalance, ethBalance };
+  return {
+    address,
+    ensName,
+    ensAvatar,
+    arbName,
+    status,
+    isConnected,
+    tokenBalance,
+    ethBalance,
+    disconnect,
+  };
 }
 
 export function useWalletChain() {

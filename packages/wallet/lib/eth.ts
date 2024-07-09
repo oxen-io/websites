@@ -28,3 +28,5 @@ export function getEthereumWindowProvider(): EthereumWindowProvider | undefined 
 
   return window.ethereum;
 }
+
+export const ETH_DECIMALS = 18;

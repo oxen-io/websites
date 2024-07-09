@@ -1,0 +1,36 @@
+{
+  "name": "@session/auth",
+  "version": "0.0.0",
+  "exports": {
+    "./*": "./lib/*.ts",
+    "./providers/*": "./providers/*.ts",
+    "./components/*": "./components/*.tsx"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint-staged": "lint-staged"
+  },
+  "devDependencies": {
+    "@session/eslint-config": "workspace:*",
+    "@session/typescript-config": "workspace:*",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
+    "react": "^18.2.0"
+  },
+  "dependencies": {
+    "@session/testing": "workspace:*",
+    "@session/ui": "workspace:*",
+    "@telegram-auth/react": "^1.0.3",
+    "@telegram-auth/server": "^1.0.3",
+    "next": "14.2.3",
+    "next-auth": "^4.24.7"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9",
+    "yarn": "use pnpm",
+    "npm": "use pnpm"
+  }
+}
