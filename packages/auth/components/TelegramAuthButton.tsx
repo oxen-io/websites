@@ -20,8 +20,7 @@ export const TelegramAuthButton = forwardRef<HTMLButtonElement, TelegramAuthButt
     /** @ts-expect-error -- username exists */
     const username = data?.user?.username ?? data?.user?.name;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleAuth = (data: any) => {
+    const handleAuth = (data: unknown) => {
       if (!isConnected && data) {
         signIn('telegram', {}, data as SignInAuthorizationParams);
       } else {
