@@ -12,6 +12,8 @@ const getSENTStakingApiUrl = () => {
     url += '/';
   }
 
+  console.log('SENT Staking API URL:', url);
+
   return url;
 };
 

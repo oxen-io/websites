@@ -305,26 +305,28 @@ export const generateMockNodeData = ({
   return mockNodeData;
 };
 
-const generateMinAndMaxContribution = ({
+export const generateMinAndMaxContribution = ({
   contributors,
 }: {
   contributors: Array<Contributor>;
 }): { minContribution: number; maxContribution: number } => {
-  const totalStaked = contributors.reduce((acc, contributor) => acc + contributor.amount, 0);
+  const totalStaked =
+    contributors.reduce((acc, contributor) => acc + contributor.amount, 0) / Math.pow(10, 9);
   const remainingSlots = 10 - contributors.length;
 
   if (remainingSlots === 0) {
     return { minContribution: 0, maxContribution: 0 };
   }
 
-  const remainingStake = 25000 - totalStaked;
+  // NOTE: 120 is current stake requirement
+  const remainingStake = 120 - totalStaked;
 
   return {
     minContribution: Math.max(0, remainingStake / remainingSlots),
     maxContribution: remainingStake,
   };
 };
-
+/* 
 const generateOpenNode = ({
   userAddress,
   maxContributors,
@@ -336,18 +338,17 @@ const generateOpenNode = ({
   const { minContribution, maxContribution } = generateMinAndMaxContribution({ contributors });
 
   return {
-    pubKey: generateNodePubKey(),
-    operatorFee: Math.random(),
-    minContribution,
-    maxContribution,
-    contributors,
+    service_node_pubkey: generateNodePubKey(),
+    fee: Math.random(),
+    contributions,
     operatorAddress: generateWalletAddress(),
   };
-};
+}; */
 
-export const generateOpenNodes = ({ userAddress }: { userAddress?: string }): Array<OpenNode> => {
-  return [
-    generateOpenNode({ maxContributors: 1 }),
+export const generateOpenNodes =
+  (/* { userAddress }: { userAddress?: string } */): Array<OpenNode> => {
+    return [
+      /* generateOpenNode({ maxContributors: 1 }),
     generateOpenNode({ maxContributors: 9 }),
     generateOpenNode({ userAddress, maxContributors: 5 }),
     generateOpenNode({ userAddress, maxContributors: 1 }),
@@ -359,6 +360,6 @@ export const generateOpenNodes = ({ userAddress }: { userAddress?: string }): Ar
     generateOpenNode({ maxContributors: 5 }),
     generateOpenNode({ userAddress, maxContributors: 5 }),
     generateOpenNode({ userAddress, maxContributors: 10 }),
-    generateOpenNode({ userAddress, maxContributors: 10 }),
-  ];
-};
+    generateOpenNode({ userAddress, maxContributors: 10 }), */
+    ];
+  };
