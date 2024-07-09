@@ -39,35 +39,51 @@ interface OperatorAddressExport {
 }
 
 const importDiscordIds = (discordExport: Array<DiscordIdExport>) => {
-  const db = openDatabase();
+  let db: BetterSql3.Database | undefined;
 
-  const insert = db.prepare(`INSERT INTO ${TABLE.DISCORD} (${DISCORD_TABLE.ID}) VALUES (?)`);
+  try {
+    const db = openDatabase();
 
-  const transaction = db.transaction((discordExport: Array<DiscordIdExport>) => {
-    for (const { id } of discordExport) {
-      insert.run(BigInt(id).toString());
+    const insert = db.prepare(`INSERT INTO ${TABLE.DISCORD} (${DISCORD_TABLE.ID}) VALUES (?)`);
+
+    const transaction = db.transaction((discordExport: Array<DiscordIdExport>) => {
+      for (const { id } of discordExport) {
+        insert.run(BigInt(id).toString());
+      }
+    });
+
+    transaction(discordExport);
+  } catch (error) {
+    console.error('Failed to import Discord IDs', error);
+  } finally {
+    if (db) {
+      db.close();
     }
-  });
-
-  transaction(discordExport);
-
-  db.close();
+  }
 };
 
 const importTelegramIds = (telegramExport: Array<TelegramIdExport>) => {
-  const db = openDatabase();
+  let db: BetterSql3.Database | undefined;
 
-  const insert = db.prepare(`INSERT INTO ${TABLE.TELEGRAM} (${TELEGRAM_TABLE.ID}) VALUES (?)`);
+  try {
+    const db = openDatabase();
 
-  const transaction = db.transaction((telegramExport: Array<TelegramIdExport>) => {
-    for (const { id } of telegramExport) {
-      insert.run(BigInt(id).toString());
+    const insert = db.prepare(`INSERT INTO ${TABLE.TELEGRAM} (${TELEGRAM_TABLE.ID}) VALUES (?)`);
+
+    const transaction = db.transaction((telegramExport: Array<TelegramIdExport>) => {
+      for (const { id } of telegramExport) {
+        insert.run(BigInt(id).toString());
+      }
+    });
+
+    transaction(telegramExport);
+  } catch (error) {
+    console.error('Failed to import Telegram IDs', error);
+  } finally {
+    if (db) {
+      db.close();
     }
-  });
-
-  transaction(telegramExport);
-
-  db.close();
+  }
 };
 
 const parseCSV = (csv: string) => {
@@ -88,19 +104,27 @@ const importOperatorIds = (operatorExport: Array<OperatorAddressExport>) => {
     return index === self.findIndex((t) => t.destination === row.destination);
   });
 
-  const db = openDatabase();
+  let db: BetterSql3.Database | undefined;
 
-  const insert = db.prepare(`INSERT INTO ${TABLE.OPERATOR} (${OPERATOR_TABLE.ID}) VALUES (?)`);
+  try {
+    const db = openDatabase();
 
-  const transaction = db.transaction((operatorExport: Array<OperatorAddressExport>) => {
-    for (const { destination } of operatorExport) {
-      insert.run(destination);
+    const insert = db.prepare(`INSERT INTO ${TABLE.OPERATOR} (${OPERATOR_TABLE.ID}) VALUES (?)`);
+
+    const transaction = db.transaction((operatorExport: Array<OperatorAddressExport>) => {
+      for (const { destination } of operatorExport) {
+        insert.run(destination);
+      }
+    });
+
+    transaction(filtered);
+  } catch (error) {
+    console.error('Failed to import Operator IDs', error);
+  } finally {
+    if (db) {
+      db.close();
     }
-  });
-
-  transaction(filtered);
-
-  db.close();
+  }
 };
 
 enum TABLE {
@@ -193,6 +217,8 @@ const faucetGasWarning = BigInt(0.01 * Math.pow(10, ETH_DECIMALS));
 const faucetTokenDrip = BigInt(FAUCET.DRIP * Math.pow(10, SENT_DECIMALS));
 
 const minTargetEthBalance = BigInt(FAUCET.MIN_ETH_BALANCE * Math.pow(10, ETH_DECIMALS));
+
+const hoursBetweenTransactions = parseInt(process.env.FAUCET_HOURS_BETWEEN_USES ?? 0);
 
 const isAddress = (address?: string): address is Address => {
   return !!address && isAddressViem(address, { strict: false });
@@ -458,12 +484,11 @@ export async function transferTestTokens({
       }
 
       usedOperatorAddress = true;
-    }
 
-    /**
-     * If the user has provided a Discord ID they must be in the approved list of Discord IDs and not have used the faucet recently.
-     */
-    if (discordId) {
+      /**
+       * If the user has provided a Discord ID they must be in the approved list of Discord IDs and not have used the faucet recently.
+       */
+    } else if (discordId) {
       if (
         !idIsInTable({
           db,
@@ -490,12 +515,11 @@ export async function transferTestTokens({
           })
         );
       }
-    }
 
-    /**
-     * If the user has provided a Telegram ID they must be in the approved list of Telegram IDs and not have used the faucet recently.
-     */
-    if (telegramId) {
+      /**
+       * If the user has provided a Telegram ID they must be in the approved list of Telegram IDs and not have used the faucet recently.
+       */
+    } else if (telegramId) {
       if (
         !idIsInTable({
           db,
@@ -594,7 +618,7 @@ async function connectFaucetWallet() {
 
 type IdTableParams = {
   db: BetterSql3.Database;
-  source: TRANSACTIONS_TABLE.DISCORD | TRANSACTIONS_TABLE.TELEGRAM | TRANSACTIONS_TABLE.OPERATOR;
+  source: TABLE.DISCORD | TABLE.TELEGRAM | TABLE.OPERATOR;
   id: string;
 };
 
@@ -624,9 +648,8 @@ function idIsInTable({ db, source, id }: IdTableParams) {
  * @returns A boolean indicating whether a recent transaction exists.
  */
 function hasRecentTransaction({ db, source, id }: IdTableParams) {
-  const hoursBetweenTransactions = process.env.FAUCET_HOURS_BETWEEN_USES;
   const lastTransactionCutoff = hoursBetweenTransactions
-    ? Date.now() - parseInt(hoursBetweenTransactions) * 60 * 60 * 1000
+    ? Date.now() - hoursBetweenTransactions * 60 * 60 * 1000
     : 0;
 
   const row = db
