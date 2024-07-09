@@ -376,20 +376,20 @@ const StakedNodeCard = forwardRef<
         {dictionary('lastUptime', { time: formatLocalizedRelativeTimeToNowClient(lastUptime) })}
       </CollapsableContent>
       {/** NOTE - ensure any changes here still work with the pubkey component */}
-      <NodeCardText className="flex w-full flex-row flex-wrap gap-1 peer-checked:mt-1 peer-checked:[&>span>span>button]:block peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">
+      <NodeCardText className="flex w-full flex-row flex-wrap gap-1 peer-checked:mt-1 peer-checked:[&>span>span>button]:opacity-100 peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">
         {address && isNodeOperator(node, address) ? <NodeOperatorIndicator /> : null}
         <span className="inline-flex flex-nowrap gap-1">
           <RowLabel>
             {titleFormat('format', { title: generalNodeDictionary('publicKeyShort') })}
           </RowLabel>
-          <PubKey pubKey={pubKey} expandOnHover />
+          <PubKey pubKey={pubKey} expandOnHover={true} />
         </span>
       </NodeCardText>
       <CollapsableContent className="inline-flex gap-1">
         <RowLabel>
           {titleFormat('format', { title: generalNodeDictionary('operatorAddress') })}
         </RowLabel>
-        <PubKey pubKey={node.operator_address} expandOnHover />
+        <PubKey pubKey={node.operator_address} expandOnHover={true} />
       </CollapsableContent>
       <CollapsableContent>
         <RowLabel>

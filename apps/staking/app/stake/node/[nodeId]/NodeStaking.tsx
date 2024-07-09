@@ -8,7 +8,7 @@ import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider'
 import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { SENT_SYMBOL } from '@session/contracts';
-import type { GetOpenNodesResponse } from '@session/sent-staking-js/client';
+import type { GetOpenNodesResponse, OpenNode } from '@session/sent-staking-js/client';
 import { generateOpenNodes } from '@session/sent-staking-js/test';
 import { Loading } from '@session/ui/components/loading';
 import { Button } from '@session/ui/ui/button';
@@ -27,7 +27,7 @@ export default function NodeStaking({ nodeId }: { nodeId: string }) {
   if (showMockNodes && showNoNodes) {
     console.error('Cannot show mock nodes and no nodes at the same time');
   }
-  
+
   const { data, isLoading } = useSessionStakingQuery({
     query: 'getOpenNodes',
     args: undefined,
@@ -84,14 +84,14 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
         label={sessionNodeDictionary('publicKeyShort')}
         tooltip={sessionNodeDictionary('publicKeyDescription')}
       >
-        <PubKey pubKey={node.pubKey} alwaysShowCopyButton />
+        <PubKey pubKey={node.pubKey} force="collapse" alwaysShowCopyButton />
       </ActionModuleRow>
       <ActionModuleDivider />
       <ActionModuleRow
         label={sessionNodeDictionary('operatorAddress')}
         tooltip={sessionNodeDictionary('operatorAddressTooltip')}
       >
-        <PubKey pubKey={node.operatorAddress} alwaysShowCopyButton />
+        <PubKey pubKey={node.operatorAddress} force="collapse" alwaysShowCopyButton />
       </ActionModuleRow>
       <ActionModuleDivider />
       <ActionModuleRow
