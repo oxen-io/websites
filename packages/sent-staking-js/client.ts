@@ -185,11 +185,11 @@ export class SessionStakingClient {
   }
 
   public async getOpenNodes(): Promise<SSBResponse<GetOpenNodesResponse>> {
-    return {
-      body: { nodes: [] },
-      status: 200,
-      statusText: 'MOCK',
+    const options: SSBRequestOptions = {
+      url: `${this.baseUrl}/nodes/open`,
+      method: 'GET',
     };
+    return this.request<GetOpenNodesResponse>(options);
   }
 
   /**
