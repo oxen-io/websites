@@ -32,8 +32,8 @@ export const TelegramAuthButton = forwardRef<HTMLButtonElement, TelegramAuthButt
       <div className="group relative w-full overflow-hidden rounded-md">
         {!isConnected ? (
           <div
-            className="absolute w-full scale-150 opacity-0"
-            style={{ transform: 'scaleX(4)', zIndex: '50' }}
+            className="absolute w-full scale-150"
+            style={{ transform: 'scaleX(4)', zIndex: '50', opacity: '0.001' }}
           >
             <LoginButton
               botUsername="session_testnet_bot"
