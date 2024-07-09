@@ -32,6 +32,11 @@ const nextConfig = {
   redirects: async () => {
     return [
       {
+        source: '/explorer/:contract*',
+        destination: 'https://sepolia.arbiscan.io/address/:contract*',
+        permanent: false,
+      },
+      {
         source: '/support',
         destination: 'https://discord.com/invite/J5BTQdCfXN',
         permanent: false,
@@ -43,15 +48,6 @@ const nextConfig = {
       {
         source: '/api/sent/:path*',
         destination: `${getSENTStakingApiUrl()}:path*`,
-      },
-    ];
-  },
-  redirects: async () => {
-    return [
-      {
-        source: '/explorer/:contract*',
-        destination: 'https://sepolia.arbiscan.io/address/:contract*',
-        permanent: true,
       },
     ];
   },
