@@ -126,6 +126,7 @@ export const AuthModule = () => {
         const { hash, error, faucetError } = res;
         if (hash) {
           setTransactionHash(hash);
+          setFormState(FORM_STATE.SUCCESS);
           return resolve(hash);
         }
 
