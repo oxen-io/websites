@@ -48,7 +48,7 @@ export const actionModuleBackground = {
     background: 'url(/images/action-module-background-1.png)',
     backgroundPositionX: '85%',
     backgroundPositionY: 'bottom',
-    backgroundSize: '350%',
+    backgroundSize: '150%',
     backgroundRepeat: 'no-repeat',
   },
   2: {
