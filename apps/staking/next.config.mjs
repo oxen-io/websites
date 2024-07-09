@@ -35,6 +35,15 @@ const nextConfig = {
       },
     ];
   },
+  redirects: async () => {
+    return [
+      {
+        source: '/explorer/:contract*',
+        destination: 'https://sepolia.arbiscan.io/address/:contract*',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default withNextIntl(nextConfig);
