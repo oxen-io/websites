@@ -32,7 +32,7 @@ export const BlockExplorerLink = ({ nodeId }: { nodeId: string }) => {
   return loading ? (
     <LoadingText />
   ) : node?.contract ? (
-    <Link href={`/explorer/${node?.contract}`}>
+    <Link href={`/explorer/${node?.contract}`} target="_blank">
       <span className="text-session-green fill-session-green inline-flex items-center gap-1 align-middle">
         {dictionary('viewOnExplorer')}
         <LinkOutIcon className="h-4 w-4" />
