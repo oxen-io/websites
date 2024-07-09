@@ -441,7 +441,7 @@ export async function transferTestTokens({
      */
     if (faucetEthBalance < faucetGasWarning) {
       console.warn(
-        `Faucet wallet ${TICKER.ETH} balance (${formatEther(faucetEthBalance)} ${TICKER.ETH}) if below the warning threshold (${formatEther(faucetGasWarning)})`
+        `Faucet wallet ${TICKER.ETH} balance (${formatEther(faucetEthBalance)} ${TICKER.ETH}) is below the warning threshold (${formatEther(faucetGasWarning)})`
       );
     }
 
@@ -450,7 +450,7 @@ export async function transferTestTokens({
      */
     if (faucetSENTBalance < faucetTokenWarning) {
       console.warn(
-        `Faucet wallet ${SENT_SYMBOL} balance (${formatSENT(faucetSENTBalance)} ${SENT_SYMBOL}) if below the warning threshold (${formatSENT(faucetTokenWarning)})`
+        `Faucet wallet ${SENT_SYMBOL} balance (${formatSENT(faucetSENTBalance)} ${SENT_SYMBOL}) is below the warning threshold (${formatSENT(faucetTokenWarning)})`
       );
     }
 
