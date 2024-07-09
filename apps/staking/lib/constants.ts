@@ -11,9 +11,9 @@ export enum URL {
   ARB_SEP_FAUCET = 'https://faucet.quicknode.com/arbitrum/sepolia',
   SESSION_NODE_DOCS = 'https://docs.getsession.org/session-nodes',
   INCENTIVE_PROGRAM = 'https://token.getsession.org/testnet-incentive-program',
-  LEARN_MORE_DAILY_REWARDS = 'https://docs.getsession.org/',
-  LEARN_MORE_TOTAL_REWARDS = 'https://docs.getsession.org/',
-  LEARN_MORE_UNCLAIMED_REWARDS = 'https://docs.getsession.org/',
+  LEARN_MORE_DAILY_REWARDS = 'https://docs.getsession.org/staking-reward-pool#network-reward-rate',
+  LEARN_MORE_TOTAL_REWARDS = 'https://docs.getsession.org/staking-reward-pool#network-reward-rate',
+  LEARN_MORE_UNCLAIMED_REWARDS = 'https://docs.getsession.org/staking-reward-pool#claiming-rewards',
   OXEN_SERVICE_NODE_BONUS_PROGRAM = 'https://swap.oxen.io/',
   SESSION_TOKEN_COMMUNITY_SNAPSHOT = 'https://token.getsession.org/testnet-incentive-program',
 }
