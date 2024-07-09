@@ -31,7 +31,10 @@ export const TelegramAuthButton = forwardRef<HTMLButtonElement, TelegramAuthButt
     return (
       <div className="group relative w-full overflow-hidden rounded-md">
         {!isConnected ? (
-          <div className="absolute w-full scale-150 opacity-0" style={{ transform: 'scaleX(4)' }}>
+          <div
+            className="absolute w-full scale-150 opacity-0"
+            style={{ transform: 'scaleX(4)', zIndex: '50' }}
+          >
             <LoginButton
               botUsername="session_testnet_bot"
               onAuthCallback={handleAuth}
