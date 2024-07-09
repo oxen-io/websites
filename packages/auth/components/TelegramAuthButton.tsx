@@ -29,9 +29,17 @@ export const TelegramAuthButton = forwardRef<HTMLButtonElement, TelegramAuthButt
     };
 
     return (
-      <div className="group relative w-min overflow-hidden rounded-md">
+      <div className="group relative w-full overflow-hidden rounded-md">
         {!isConnected ? (
-          <div className="absolute w-full scale-150 opacity-0">
+          <div
+            className="absolute w-full scale-150"
+            style={{
+              transform: 'scaleX(4)',
+              zIndex: '50',
+              // NOTE: This is a workaround to make the iframe almost invisible as opacity: 0 doesn't work
+              opacity: '0.001',
+            }}
+          >
             <LoginButton
               botUsername="session_testnet_bot"
               onAuthCallback={handleAuth}
