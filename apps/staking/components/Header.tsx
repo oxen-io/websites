@@ -82,7 +82,7 @@ function DropdownHamburgerMenu() {
       <DropdownMenuTrigger asChild>
         <Button
           data-testid={ButtonDataTestId.Dropdown_Hamburger_Menu}
-          className="px-0.25 group py-0"
+          className="group p-0"
           aria-label={dictionary('ariaLabel')}
           variant="outline"
         >
