@@ -2,6 +2,7 @@
 
 import { Button } from '@session/ui/ui/button';
 import { LoginButton } from '@telegram-auth/react';
+import { SignInAuthorizationParams } from 'next-auth/react';
 import { forwardRef } from 'react';
 import { TelegramIcon } from '../icons/TelegramIcon';
 import { signIn, signOut, useSession } from '../lib/client';
@@ -12,7 +13,6 @@ type TelegramAuthButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 export const TelegramAuthButton = forwardRef<HTMLButtonElement, TelegramAuthButtonProps>(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ locale, ...props }, ref) => {
     const { data, status } = useSession();
 
@@ -22,8 +22,8 @@ export const TelegramAuthButton = forwardRef<HTMLButtonElement, TelegramAuthButt
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleAuth = (data: any) => {
-      if (!isConnected) {
-        signIn('telegram', {}, data);
+      if (!isConnected && data) {
+        signIn('telegram', {}, data as SignInAuthorizationParams);
       } else {
         signOut();
       }

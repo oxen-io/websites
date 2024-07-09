@@ -32,6 +32,12 @@ interface TelegramIdExport {
   status: string;
 }
 
+interface OperatorAddressExport {
+  address: string;
+  destination: string;
+  share: string;
+}
+
 const importDiscordIds = (discordExport: Array<DiscordIdExport>) => {
   const db = openDatabase();
 
@@ -60,6 +66,39 @@ const importTelegramIds = (telegramExport: Array<TelegramIdExport>) => {
   });
 
   transaction(telegramExport);
+
+  db.close();
+};
+
+const parseCSV = (csv: string) => {
+  const lines = csv.split('\n');
+  const headers = lines[0].split(',');
+
+  return lines.slice(1).map((line) => {
+    const values = line.split(',');
+    return headers.reduce((acc, header, index) => {
+      acc[header] = values[index];
+      return acc;
+    }, {});
+  });
+};
+
+const importOperatorIds = (operatorExport: Array<OperatorAddressExport>) => {
+  const filtered = operatorExport.filter((row, index, self) => {
+    return index === self.findIndex((t) => t.destination === row.destination);
+  });
+
+  const db = openDatabase();
+
+  const insert = db.prepare(`INSERT INTO ${TABLE.OPERATOR} (${OPERATOR_TABLE.ID}) VALUES (?)`);
+
+  const transaction = db.transaction((operatorExport: Array<OperatorAddressExport>) => {
+    for (const { destination } of operatorExport) {
+      insert.run(destination);
+    }
+  });
+
+  transaction(filtered);
 
   db.close();
 };
@@ -323,7 +362,7 @@ export async function transferTestTokens({
   const locale = await getLocale();
 
   let result: FaucetResult = new FaucetResult({});
-  let db: undefined | BetterSql3.Database;
+  let db: BetterSql3.Database | undefined;
 
   try {
     if (!isAddress(walletAddress)) {
@@ -525,6 +564,7 @@ export async function transferTestTokens({
       db.close();
     }
 
+    // eslint-disable-next-line no-unsafe-finally -- this is the only return so its fine
     return {
       hash: result.hash,
       error: result.error,
