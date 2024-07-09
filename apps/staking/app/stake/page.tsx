@@ -1,10 +1,18 @@
 import { URL } from '@/lib/constants';
+import { siteMetadata } from '@/lib/metadata';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { ModuleGridInfoContent } from '@session/ui/components/ModuleGrid';
 import { Button } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import ActionModule from './ActionModule';
+
+export async function generateMetadata() {
+  return siteMetadata({
+    title: 'Stake Now',
+    description: 'Browse open Session Nodes to stake to.',
+  });
+}
 
 export default function Page() {
   const dictionary = useTranslations('modules.openNodes');

@@ -1,10 +1,10 @@
 import { NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID } from '@/lib/env';
 import { getLocalizationData } from '@/lib/locale-server';
-import { siteMetadata as metadata, wagmiMetadata } from '@/lib/metadata';
 import { Toaster } from '@session/ui/components/ui/sonner';
 import { AtypDisplay, AtypText, MonumentExtended } from '@session/ui/fonts';
 
 import { DevSheet } from '@/components/DevSheet';
+import { siteMetadata, wagmiMetadata } from '@/lib/metadata';
 import FeatureFlagProvider from '@/providers/feature-flag-provider';
 import LocalizationProvider from '@/providers/localization-provider';
 import '@session/ui/styles';
@@ -22,6 +22,10 @@ const wagmiConfig = createWagmiConfig({
   projectId: NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
   metadata: wagmiMetadata,
 });
+
+export async function generateMetadata() {
+  return siteMetadata({});
+}
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { locale, direction, messages } = await getLocalizationData();
@@ -57,5 +61,3 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     </html>
   );
 }
-
-export { metadata };
