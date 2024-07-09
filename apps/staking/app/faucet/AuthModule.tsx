@@ -89,6 +89,7 @@ export const AuthModule = () => {
       discordId: '',
       telegramId: '',
     },
+    reValidateMode: 'onChange',
   });
 
   const successMessage = (hash: Address) => (
