@@ -29,7 +29,7 @@ export const DiscordAuthButton = forwardRef<HTMLButtonElement, DiscordAuthButton
 
     return (
       <Button
-        className="text-session-black hover:text-session-black justify-center gap-2 border-transparent bg-[#5865F2] px-2 uppercase hover:bg-[#4853A4] hover:brightness-125"
+        className="text-session-black hover:text-session-black w-full justify-center gap-2 border-transparent bg-[#5865F2] px-2 uppercase hover:bg-[#4853A4] hover:brightness-125"
         data-testid={ButtonDataTestId.DISCORD_AUTH}
         rounded="md"
         size="lg"

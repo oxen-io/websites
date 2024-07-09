@@ -1,24 +1,22 @@
 'use client';
 
-import { NodeContributorList, getTotalStakedAmount } from '@/components/NodeCard';
+import { NodeContributorList } from '@/components/NodeCard';
 import { PubKey } from '@/components/PubKey';
 import { formatPercentage } from '@/lib/locale-client';
-import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
-import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { SENT_SYMBOL } from '@session/contracts';
 import type { GetOpenNodesResponse, OpenNode } from '@session/sent-staking-js/client';
-import { generateOpenNodes } from '@session/sent-staking-js/test';
 import { Loading } from '@session/ui/components/loading';
 import { Button } from '@session/ui/ui/button';
 import { formatNumber } from '@session/util/maths';
-import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ActionModuleDivider, ActionModuleRow } from '../../ActionModule';
 
 export default function NodeStaking({ nodeId }: { nodeId: string }) {
-  const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [nodes, setNodes] = useState<Array<OpenNode>>([]);
+  /*   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);
   const showNoNodes = useFeatureFlag(FEATURE_FLAG.MOCK_NO_OPEN_NODES);
 
   const { address } = useWallet();
@@ -30,18 +28,26 @@ export default function NodeStaking({ nodeId }: { nodeId: string }) {
   const { data, isLoading } = useSessionStakingQuery({
     query: 'getOpenNodes',
     args: undefined,
-  });
+  }); */
 
   const node = useMemo(() => {
-    if (showMockNodes) {
+    /* if (showMockNodes) {
       return generateOpenNodes({ userAddress: address })[0];
     } else if (showNoNodes) {
       return {} as OpenNode;
-    }
-    return data?.nodes.find((node) => node.pubKey === nodeId);
-  }, [data, nodeId, showMockNodes, showNoNodes]);
+    } */
+    return nodes?.find((node) => node.service_node_pubkey === nodeId);
+  }, [nodes]);
 
-  return isLoading ? (
+  useEffect(() => {
+    fetch('/api/sent/nodes/open')
+      .then((res) => res.json())
+      .then((data) => setNodes(data.nodes))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  return loading ? (
     <Loading />
   ) : node ? (
     <NodeStakingForm node={node} />
@@ -51,16 +57,18 @@ export default function NodeStaking({ nodeId }: { nodeId: string }) {
 }
 
 export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][number] }) {
-  const [value, setValue] = useState<number>(node.minContribution);
   const dictionary = useTranslations('actionModules.node');
   const generalDictionary = useTranslations('general');
   const sessionNodeDictionary = useTranslations('sessionNodes.general');
   const sessionNodeStakingDictionary = useTranslations('sessionNodes.staking');
 
   const formattedTotalStakedAmount = useMemo(() => {
-    if (!node.contributors || node.contributors.length === 0) return '0';
-    return formatNumber(getTotalStakedAmount(node.contributors));
-  }, [node.contributors]);
+    if (!node.contributions || node.contributions.length === 0) return '0';
+    const totalStaked =
+      node.contributions.reduce((acc, contributor) => acc + contributor.amount, 0) /
+      Math.pow(10, 9);
+    return formatNumber(totalStaked);
+  }, [node.contributions]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -69,7 +77,7 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
         tooltip={dictionary('contributorsTooltip')}
       >
         <span className="flex flex-row flex-wrap items-center gap-2 align-middle">
-          <NodeContributorList contributors={node.contributors} forceExpand showEmptySlots />
+          <NodeContributorList contributors={node.contributions} forceExpand showEmptySlots />
         </span>
       </ActionModuleRow>
       <ActionModuleDivider />
@@ -84,21 +92,24 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
         label={sessionNodeDictionary('publicKeyShort')}
         tooltip={sessionNodeDictionary('publicKeyDescription')}
       >
-        <PubKey pubKey={node.pubKey} force="collapse" alwaysShowCopyButton />
+        <PubKey pubKey={node.service_node_pubkey} force="collapse" alwaysShowCopyButton />
       </ActionModuleRow>
       <ActionModuleDivider />
       <ActionModuleRow
         label={sessionNodeDictionary('operatorAddress')}
         tooltip={sessionNodeDictionary('operatorAddressTooltip')}
       >
-        <PubKey pubKey={node.operatorAddress} force="collapse" alwaysShowCopyButton />
+        {node.contributions[0]?.address ? (
+          <PubKey pubKey={node.contributions[0]?.address} force="collapse" alwaysShowCopyButton />
+        ) : null}
       </ActionModuleRow>
       <ActionModuleDivider />
       <ActionModuleRow
         label={sessionNodeDictionary('operatorFee')}
         tooltip={sessionNodeDictionary('operatorFeeDescription')}
       >
-        {formatPercentage(node.operatorFee)}
+        {/** TODO: replace this */}
+        {formatPercentage(node.fee / 10000)}
       </ActionModuleRow>
       <ActionModuleDivider />
       {/* <SessionTokenInput

@@ -10,6 +10,7 @@ import { Input } from '@session/ui/ui/input';
 import { useTranslations } from 'next-intl';
 import ActionModule, { ActionModuleDivider } from '../stake/ActionModule';
 
+import { WalletAddTokenWithLocales } from '@/components/WalletAddTokenWithLocales';
 import { FAUCET, FAUCET_ERROR } from '@/lib/constants';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -89,6 +90,7 @@ export const AuthModule = () => {
       discordId: '',
       telegramId: '',
     },
+    reValidateMode: 'onChange',
   });
 
   const successMessage = (hash: Address) => (
@@ -130,7 +132,16 @@ export const AuthModule = () => {
         if (error) {
           if (faucetError) {
             setFaucetError(faucetError);
-            form.setError('root', { message: error });
+            if (
+              !(
+                faucetError === FAUCET_ERROR.FAUCET_OUT_OF_TOKENS ||
+                faucetError === FAUCET_ERROR.INCORRECT_CHAIN ||
+                faucetError === FAUCET_ERROR.INVALID_ADDRESS ||
+                faucetError === FAUCET_ERROR.INSUFFICIENT_ETH
+              )
+            ) {
+              form.setError('root', { message: error });
+            }
             return reject(error);
           }
           form.setError('root', { message: error });
@@ -199,10 +210,10 @@ export const AuthModule = () => {
   }, [walletStatus, chain, address, form]);
 
   return (
-    <ActionModule className="gap-4 p-10">
+    <ActionModule className="gap-4 p-2 lg:p-10">
       {formState !== FORM_STATE.LANDING && formState !== FORM_STATE.SUCCESS ? (
         <span
-          className="text-session-text absolute left-6 top-6 inline-flex w-min gap-1 text-sm hover:cursor-pointer hover:underline hover:brightness-125"
+          className="text-session-text absolute left-6 top-4 inline-flex w-min gap-1 text-sm hover:cursor-pointer hover:underline hover:brightness-125 md:top-6"
           onClick={() => setFormState(FORM_STATE.LANDING)}
         >
           <ArrowDownIcon className="fill-session-text mt-0.5 h-3 w-3 rotate-90" />
@@ -326,7 +337,7 @@ export const AuthModule = () => {
         <>
           <span className="text-center">- {generalDictionary('or')} -</span>
           <WalletModalButtonWithLocales rounded="md" size="lg" className="uppercase" hideBalance />
-          <span className="inline-flex w-full gap-2 uppercase [&>*]:flex-grow">
+          <span className="inline-flex w-full flex-col gap-2 uppercase xl:flex-row [&>*]:flex-grow">
             {!isConnected || (isConnected && discordId) ? <DiscordAuthButton /> : null}
             {!isConnected || (isConnected && telegramId) ? <TelegramAuthButton /> : null}
           </span>
@@ -370,6 +381,13 @@ export const AuthModule = () => {
             gasAmount: ethAmount,
           })}
         </p>
+      ) : null}
+
+      {formState === FORM_STATE.SUCCESS ? (
+        <>
+          <p>{dictionary('watchSENTInfo')}</p>
+          <WalletAddTokenWithLocales rounded="md" size="md" variant="outline" />
+        </>
       ) : null}
     </ActionModule>
   );

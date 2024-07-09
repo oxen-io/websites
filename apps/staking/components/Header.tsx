@@ -1,6 +1,6 @@
 'use client';
 
-import type { LocaleKey } from '@/lib/locale-util';
+import { EXTERNAL_ROUTES, ROUTES } from '@/lib/constants';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { HamburgerIcon } from '@session/ui/icons/HamburgerIcon';
 import { cn } from '@session/ui/lib/utils';
@@ -18,16 +18,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { WalletModalButtonWithLocales } from './WalletModalButtonWithLocales';
 import { WalletNetworkDropdownWithLocales } from './WalletNetworkDropdownWithLocales';
-
-type LinkItem = {
-  href: string;
-  dictionaryKey: keyof Omit<LocaleKey['navigation'], 'hamburgerDropdown'>;
-};
-
-const links: LinkItem[] = [
-  { dictionaryKey: 'stake', href: '/stake' },
-  { dictionaryKey: 'myStakes', href: '/mystakes' },
-] as const;
 
 type NavLinkProps = {
   href: string;
@@ -55,20 +45,20 @@ export default function Header() {
   const dictionary = useTranslations('navigation');
   const pathname = usePathname();
   return (
-    <nav className="flex flex-wrap items-center justify-between p-6">
-      <div className="flex flex-row gap-10">
+    <nav className="flex items-center justify-between p-6">
+      <div className={cn('flex flex-row gap-10 pr-4')}>
         <Link href="/">
           <Image src="/images/logo.png" alt="Session Token Logo" width={150} height={150} />
         </Link>
-        <div className="hidden flex-row gap-10 md:flex">
-          {links.map(({ dictionaryKey, href }) => (
+        <div className="hidden flex-row gap-10 lg:flex">
+          {ROUTES.map(({ dictionaryKey, href }) => (
             <NavLink key={href} href={href} label={dictionary(dictionaryKey)} pathname={pathname} />
           ))}
         </div>
       </div>
-      <div className="flex flex-row justify-end gap-2">
+      <div className="flex flex-row items-center justify-end gap-2">
         <WalletModalButtonWithLocales />
-        {isConnected ? <WalletNetworkDropdownWithLocales className="hidden md:flex" /> : null}
+        {isConnected ? <WalletNetworkDropdownWithLocales className="hidden lg:flex" /> : null}
         <DropdownHamburgerMenu />
       </div>
     </nav>
@@ -92,7 +82,7 @@ function DropdownHamburgerMenu() {
       <DropdownMenuTrigger asChild>
         <Button
           data-testid={ButtonDataTestId.Dropdown_Hamburger_Menu}
-          className="group px-1 py-0"
+          className="group p-0"
           aria-label={dictionary('ariaLabel')}
           variant="outline"
         >
@@ -100,35 +90,23 @@ function DropdownHamburgerMenu() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-max">
-        <DropdownMenuItem
-          onClick={() => console.log('lang')}
-          aria-label={dictionary('ariaLanguage')}
-        >
-          {dictionary('language')}
-        </DropdownMenuItem>
-        {links.map(({ dictionaryKey, href }) => (
+        {ROUTES.map(({ dictionaryKey, href }) => (
           <DropdownMenuItemNavLink
             key={href}
             href={href}
             label={navDictionary(dictionaryKey)}
             pathname={pathname}
-            className="block md:hidden"
+            className="block lg:hidden"
           />
         ))}
-        <DropdownMenuItemNavLink
-          href="/support"
-          ariaLabel={dictionary('ariaSupport')}
-          pathname={pathname}
-        >
-          {dictionary('support')}
-        </DropdownMenuItemNavLink>
-        <DropdownMenuItemNavLink
-          href="/faucet"
-          ariaLabel={dictionary('ariaFaucet')}
-          pathname={pathname}
-        >
-          {dictionary('faucet')}
-        </DropdownMenuItemNavLink>
+        {EXTERNAL_ROUTES.map(({ dictionaryKey, href }) => (
+          <DropdownMenuItemNavLink
+            key={href}
+            href={href}
+            label={navDictionary(dictionaryKey)}
+            pathname={pathname}
+          />
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

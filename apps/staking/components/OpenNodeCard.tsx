@@ -4,6 +4,7 @@ import { formatPercentage } from '@/lib/locale-client';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { SENT_SYMBOL } from '@session/contracts';
 import type { OpenNode } from '@session/sent-staking-js/client';
+import { generateMinAndMaxContribution } from '@session/sent-staking-js/test';
 import { TextSeparator } from '@session/ui/components/Separator';
 import { StatusIndicator } from '@session/ui/components/StatusIndicator';
 import { cn } from '@session/ui/lib/utils';
@@ -40,17 +41,15 @@ const OpenNodeCard = forwardRef<
   const stakingNodeDictionary = useTranslations('sessionNodes.staking');
   const titleFormat = useTranslations('modules.title');
 
-  const { pubKey, operatorFee, minContribution, maxContribution } = node;
+  const { service_node_pubkey: pubKey, fee } = node;
 
-  const formattedMinContributon = useMemo(() => {
-    if (!minContribution) return '0';
-    return formatNumber(minContribution, 2);
-  }, [minContribution]);
+  const [formattedMinContributon, formattedMaxContribution] = useMemo(() => {
+    const { minContribution, maxContribution } = generateMinAndMaxContribution({
+      contributors: node.contributions,
+    });
 
-  const formattedMaxContributon = useMemo(() => {
-    if (!maxContribution) return '0';
-    return formatNumber(maxContribution, 2);
-  }, [maxContribution]);
+    return [formatNumber(minContribution, 2), formatNumber(maxContribution, 2)];
+  }, [node.contributions]);
 
   return (
     <NodeCard
@@ -86,7 +85,7 @@ const OpenNodeCard = forwardRef<
           <NodeItem className="hidden md:block">
             <NodeItemLabel>{titleFormat('format', { title: dictionary('max') })}</NodeItemLabel>
             <NodeItemValue>
-              {formattedMaxContributon} {SENT_SYMBOL}
+              {formattedMaxContribution} {SENT_SYMBOL}
             </NodeItemValue>
           </NodeItem>
           <NodeItemSeparator />
@@ -94,11 +93,12 @@ const OpenNodeCard = forwardRef<
             <NodeItemLabel>
               {titleFormat('format', { title: generalNodeDictionary('operatorFeeShort') })}
             </NodeItemLabel>
-            <NodeItemValue>{formatPercentage(operatorFee)}</NodeItemValue>
+            {/** TODO: replace this */}
+            <NodeItemValue>{formatPercentage(fee / 10000)}</NodeItemValue>
           </NodeItem>
         </NodeCardText>
       </div>
-      <Link href={`/stake/node/${node.pubKey}`} className="w-full sm:w-auto">
+      <Link href={`/stake/node/${pubKey}`} className="w-full sm:w-auto">
         <Button
           variant="outline"
           size="md"

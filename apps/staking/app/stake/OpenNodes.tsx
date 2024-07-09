@@ -3,10 +3,7 @@
 import { OpenNodeCard } from '@/components/OpenNodeCard';
 import { URL } from '@/lib/constants';
 import { externalLink } from '@/lib/locale-defaults';
-import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
-import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { OpenNode } from '@session/sent-staking-js/client';
-import { generateOpenNodes } from '@session/sent-staking-js/test';
 import {
   ModuleGridContent,
   ModuleGridHeader,
@@ -14,9 +11,8 @@ import {
   ModuleGridTitle,
 } from '@session/ui/components/ModuleGrid';
 import { Loading } from '@session/ui/components/loading';
-import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function OpenNodesModule() {
   const dictionary = useTranslations('modules.openNodes');
@@ -31,7 +27,9 @@ export default function OpenNodesModule() {
 }
 
 function OpenNodes() {
-  const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [nodes, setNodes] = useState<Array<OpenNode>>([]);
+  /*  const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);
   const showNoNodes = useFeatureFlag(FEATURE_FLAG.MOCK_NO_OPEN_NODES);
 
   if (showMockNodes && showNoNodes) {
@@ -44,6 +42,9 @@ function OpenNodes() {
     args: undefined,
   });
 
+  console.log(data);
+  console.log('no', showNoNodes);
+
   const nodes = useMemo(() => {
     if (showMockNodes) {
       return generateOpenNodes({ userAddress: address });
@@ -51,14 +52,22 @@ function OpenNodes() {
       return [] as Array<OpenNode>;
     }
     return data?.nodes as Array<OpenNode>;
-  }, [data, showMockNodes, showNoNodes]);
+  }, [data?.nodes, showMockNodes, showNoNodes, address]); */
+
+  useEffect(() => {
+    fetch('/api/sent/nodes/open')
+      .then((res) => res.json())
+      .then((data) => setNodes(data.nodes))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <ModuleGridContent className="h-full md:overflow-y-auto">
-      {isLoading ? (
+      {loading ? (
         <Loading />
       ) : nodes && nodes.length > 0 ? (
-        nodes.map((node) => <OpenNodeCard key={node.pubKey} node={node} />)
+        nodes.map((node) => <OpenNodeCard key={node.service_node_pubkey} node={node} />)
       ) : (
         <NoNodes />
       )}

@@ -12,6 +12,8 @@ const getSENTStakingApiUrl = () => {
     url += '/';
   }
 
+  console.log('SENT Staking API URL:', url);
+
   return url;
 };
 
@@ -26,6 +28,15 @@ const nextConfig = {
   webpack: (config) => {
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
     return config;
+  },
+  redirects: async () => {
+    return [
+      {
+        source: '/support',
+        destination: 'https://discord.com/invite/J5BTQdCfXN',
+        permanent: false,
+      },
+    ];
   },
   rewrites: async () => {
     return [

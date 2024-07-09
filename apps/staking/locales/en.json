@@ -15,6 +15,7 @@
     "stake": "Stake Now",
     "myStakes": "My Stakes",
     "docs": "Docs",
+    "tokenSite": "Session Token",
     "support": "Support",
     "faucet": "Faucet",
     "hamburgerDropdown": {
@@ -25,7 +26,8 @@
       "ariaSupport": "Go to support page",
       "faucet": "Faucet",
       "ariaFaucet": "Go to faucet page"
-    }
+    },
+    "managedBy": "/ Managed by the Session Network"
   },
   "wallet": {
     "modalButton": {
@@ -59,7 +61,7 @@
     "homeButton": "Return Home"
   },
   "home": {
-    "title": "Stake <text-semibold>{tokenSymbol}</text-semibold>",
+    "title": "Stake <text-semibold>{tokenSymbol}</text-semibold>.",
     "titleDescription": "Secure the Network.",
     "buttons": {
       "primary": "Stake Now",
@@ -129,6 +131,8 @@
       "transactionHash": "Transaction Hash: {hash}",
       "transactionHashDescription": "Transaction hash of the faucet transaction.",
       "haveSomeMore": "Alright then, you can have some more",
+      "watchSENTInfo": "You may need to add {tokenSymbol} to your wallet to make it show up, click the button below to add it.",
+      "watchSENTButtonText": "Add {tokenSymbol} to wallet",
       "copyTransactionHash": "Copy Transaction Hash",
       "copyTransactionHashSuccessToast": "Copied Transaction Hash to clipboard!"
     }

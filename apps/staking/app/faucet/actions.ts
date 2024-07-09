@@ -19,6 +19,8 @@ import path from 'path';
 import { formatEther, isAddress as isAddressViem, type Address } from 'viem';
 import { FaucetFormSchema } from './AuthModule';
 
+// TODO: move these to a database util file
+/* 
 interface DiscordIdExport {
   id: number;
   name: string;
@@ -125,7 +127,7 @@ const importOperatorIds = (operatorExport: Array<OperatorAddressExport>) => {
       db.close();
     }
   }
-};
+}; */
 
 enum TABLE {
   TRANSACTIONS = 'transactions',
@@ -218,7 +220,7 @@ const faucetTokenDrip = BigInt(FAUCET.DRIP * Math.pow(10, SENT_DECIMALS));
 
 const minTargetEthBalance = BigInt(FAUCET.MIN_ETH_BALANCE * Math.pow(10, ETH_DECIMALS));
 
-const hoursBetweenTransactions = parseInt(process.env.FAUCET_HOURS_BETWEEN_USES ?? 0);
+const hoursBetweenTransactions = parseInt(process.env.FAUCET_HOURS_BETWEEN_USES ?? '0');
 
 const isAddress = (address?: string): address is Address => {
   return !!address && isAddressViem(address, { strict: false });
@@ -465,7 +467,7 @@ export async function transferTestTokens({
       if (
         !idIsInTable({
           db,
-          source: TRANSACTIONS_TABLE.OPERATOR,
+          source: TABLE.OPERATOR,
           id: walletAddress,
         })
       ) {
@@ -479,7 +481,7 @@ export async function transferTestTokens({
         );
       }
 
-      if (hasRecentTransaction({ db, source: TRANSACTIONS_TABLE.OPERATOR, id: walletAddress })) {
+      if (hasRecentTransaction({ db, source: TABLE.OPERATOR, id: walletAddress })) {
         throw new FaucetError(FAUCET_ERROR.ALREADY_USED, dictionary('alreadyUsed'));
       }
 
@@ -492,7 +494,7 @@ export async function transferTestTokens({
       if (
         !idIsInTable({
           db,
-          source: TRANSACTIONS_TABLE.DISCORD,
+          source: TABLE.DISCORD,
           id: discordId,
         })
       ) {
@@ -507,7 +509,7 @@ export async function transferTestTokens({
         );
       }
 
-      if (hasRecentTransaction({ db, source: TRANSACTIONS_TABLE.DISCORD, id: discordId })) {
+      if (hasRecentTransaction({ db, source: TABLE.DISCORD, id: discordId })) {
         throw new FaucetError(
           FAUCET_ERROR.ALREADY_USED_SERVICE,
           dictionary('alreadyUsedService', {
@@ -523,7 +525,7 @@ export async function transferTestTokens({
       if (
         !idIsInTable({
           db,
-          source: TRANSACTIONS_TABLE.TELEGRAM,
+          source: TABLE.TELEGRAM,
           id: telegramId,
         })
       ) {
@@ -538,7 +540,7 @@ export async function transferTestTokens({
         );
       }
 
-      if (hasRecentTransaction({ db, source: TRANSACTIONS_TABLE.TELEGRAM, id: telegramId })) {
+      if (hasRecentTransaction({ db, source: TABLE.TELEGRAM, id: telegramId })) {
         throw new FaucetError(
           FAUCET_ERROR.ALREADY_USED_SERVICE,
           dictionary('alreadyUsedService', {
