@@ -15,6 +15,7 @@
     "stake": "Stake Now",
     "myStakes": "My Stakes",
     "docs": "Docs",
+    "tokenSite": "Session Token",
     "support": "Support",
     "faucet": "Faucet",
     "hamburgerDropdown": {
@@ -25,7 +26,8 @@
       "ariaSupport": "Go to support page",
       "faucet": "Faucet",
       "ariaFaucet": "Go to faucet page"
-    }
+    },
+    "managedBy": "/ Managed by the Session Network"
   },
   "wallet": {
     "modalButton": {

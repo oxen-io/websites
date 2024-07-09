@@ -1,9 +1,8 @@
 import type { Config } from 'tailwindcss';
 
 export default {
-  mode: 'jit',
   darkMode: ['class'],
-  content: ['./**/*.{ts,tsx}'],
+  content: { relative: true, files: ['./**/*.{ts,tsx}'] },
   prefix: '',
   theme: {
     container: {
