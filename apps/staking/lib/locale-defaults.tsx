@@ -1,9 +1,10 @@
 import { CHAIN, SENT_SYMBOL, chains } from '@session/contracts';
+import { Social } from '@session/ui/components/SocialLinkList';
 import { cn } from '@session/ui/lib/utils';
 import { RichTranslationValues } from 'next-intl';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { FAUCET, NETWORK, TICKER, URL } from './constants';
+import { FAUCET, NETWORK, SOCIALS, TICKER, URL } from './constants';
 
 export const internalLink = (href: string, prefetch?: boolean) => {
   return (children: ReactNode) => (
@@ -52,9 +53,12 @@ export const defaultTranslationElements = {
   'text-bold': text('font-bold'),
   'text-extrabold': text('font-extrabold'),
   'text-black': text('font-black'),
-  'discord-server-link': defaultExternalLink(URL.DISCORD_INVITE, "Session Token's Discord server"),
+  'discord-server-link': defaultExternalLink(
+    SOCIALS[Social.Discord].link,
+    "Session Token's Discord server"
+  ),
   'contact-support-link': defaultExternalLink(
-    URL.DISCORD_INVITE,
+    SOCIALS[Social.Discord].link,
     'contact the Session team via Discord.'
   ),
   'incentive-program-link': defaultExternalLink(

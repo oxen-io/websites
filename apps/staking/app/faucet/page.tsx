@@ -33,6 +33,7 @@ export default function FaucetPage() {
               ),
             })}
           </p>
+          <p>{dictionary('notEligible')}</p>
           <h2 className="text-lg font-semibold">{dictionary('walletRequirementTitle')}</h2>
           <p>{dictionary.rich('walletRequirementDescription')}</p>
         </div>

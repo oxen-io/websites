@@ -61,7 +61,8 @@
     "homeButton": "Return Home"
   },
   "home": {
-    "title": "Stake <text-semibold>{tokenSymbol}</text-semibold> Earn Rewards",
+    "title": "Stake <text-semibold>{tokenSymbol}</text-semibold>.",
+    "titleDescription": "Secure the Network.",
     "buttons": {
       "primary": "Stake Now",
       "secondary": "How to Run a Session Node"
@@ -72,12 +73,12 @@
     "information": {
       "title": "Getting test {tokenSymbol}",
       "communityTitle": "Session Token Community Members",
-      "communityDescription": "If you were part of the Session Token Community <session-token-community-snapshot-link></session-token-community-snapshot-link> taken on {snapshotDate}, you are eligible to receive test {tokenSymbol}. Connect to {connectionOptions}, and then connect your wallet or enter your wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
+      "communityDescription": "If you were part of the Token Community <session-token-community-snapshot-link></session-token-community-snapshot-link>  taken on {snapshotDate}, you are eligible to receive test {tokenSymbol}. Connect to {connectionOptions}, and then connect your wallet or enter your wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
       "oxenTitle": "Oxen Service Nodes",
       "oxenDescription": "If you registered for the <oxen-program-link></oxen-program-link> by {oxenRegistrationDate}, you are also eligible. Connect the wallet that you registered for the program with, or enter the wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
       "walletRequirementTitle": "Wallet Requirements:",
-      "walletRequirementDescription": "You need to have a minimum of {minimumFaucetGasAmount} test {gasTokenSymbol} on the {testNetworkChain} network to be able to receive test {tokenSymbol}. Add some to your wallet using the <recommended-gas-faucet-link></recommended-gas-faucet-link>.",
-      "notEligible": "Not eligible? {testnetName} and its Incentive Program is currently closed to the public, however we will be inviting new users to join our testnet in the future. Join {discordServerLink} to stay in the loop about opportunities to join the <incentive-program-link></incentive-program-link>. "
+      "walletRequirementDescription": "You need to have a minimum of {minimumFaucetGasAmount} test {gasTokenSymbol} on the {testNetworkChain} network to be able to receive test {tokenSymbol}. Add some to your wallet using the <recommended-gas-faucet-link></recommended-gas-faucet-link>. Each eligible wallet can use this faucet to make a one-time claim for 240 {tokenSymbol}. Please note that faucet usage limits may be subject to change.",
+      "notEligible": "Not eligible? {testnetName} and its Incentive Program are currently closed to the public, however we will be inviting new users to join our testnet in the future."
     },
 
     "addTokenInfo": "Make {tokenSymbol} visible in your wallet by manually importing the token.",
@@ -150,8 +151,10 @@
       "description": "Nodes that are open for staking. <link>Learn more</link>",
       "noNodesP1": "There are currently no Open Session Nodes available to stake to.",
       "noNodesP2": "Check out the <link>docs</link> to learn about setting up and registering your own Session Node.",
-      "landingP1": "Click on an Open Session Node to stake SENT and earn rewards.",
-      "landingP2": "Want to run your own Session Node? <link>Find out how</link>.",
+      "landingP1": "Click on an Open Session Node to stake SENT and earn rewards for securing the network.",
+      "landingP2Mobile": "Want to run your own Session Node? Find out how.",
+      "landingP2Desktop1": "Want to run your own Session Node?",
+      "landingP2Desktop2": "Find out how.",
       "learnMoreButtonText": "Learn More",
       "learnMoreButtonAria": "Navigate to the Session Node documentation page."
     },

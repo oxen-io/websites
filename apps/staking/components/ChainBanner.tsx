@@ -26,7 +26,7 @@ export default function ChainBanner() {
     <Banner>
       <span>
         {dictionary.rich('unsupportedChain', {
-          change: (chunks) => (
+          link: (chunks) => (
             <a
               role="button"
               data-testid={SpecialDataTestId.Unsupported_Chain_Link}
