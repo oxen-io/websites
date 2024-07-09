@@ -10,7 +10,7 @@ export default function FaucetPage() {
   const dictionary = useTranslations('faucet.information');
   return (
     <NextAuthProvider>
-      <div className="lg:-mt-header-displacement max-w-screen-3xl mx-auto flex w-screen flex-col items-center justify-around gap-16 px-4 py-16 align-middle lg:grid lg:h-dvh lg:grid-cols-2 lg:p-32 lg:py-0">
+      <div className="lg:-mt-header-displacement max-w-screen-3xl mx-auto flex w-screen flex-col-reverse items-center justify-around gap-16 px-4 py-16 align-middle lg:grid lg:h-dvh lg:grid-cols-2 lg:p-32 lg:py-0">
         <div className="flex flex-col gap-4 text-start lg:max-h-[500px]">
           <h1 className="text-5xl font-semibold">{dictionary('title')}</h1>
           <h2 className="text-lg font-semibold">{dictionary('communityTitle')}</h2>
