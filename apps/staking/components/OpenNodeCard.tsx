@@ -93,6 +93,7 @@ const OpenNodeCard = forwardRef<
             <NodeItemLabel>
               {titleFormat('format', { title: generalNodeDictionary('operatorFeeShort') })}
             </NodeItemLabel>
+            {/** TODO: replace this */}
             <NodeItemValue>{formatPercentage(fee / 10000)}</NodeItemValue>
           </NodeItem>
         </NodeCardText>

@@ -58,7 +58,8 @@ function OpenNodes() {
     fetch('/api/sent/nodes/open')
       .then((res) => res.json())
       .then((data) => setNodes(data.nodes))
-      .then(() => setLoading(false));
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
   return (

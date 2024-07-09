@@ -43,7 +43,8 @@ export default function NodeStaking({ nodeId }: { nodeId: string }) {
     fetch('/api/sent/nodes/open')
       .then((res) => res.json())
       .then((data) => setNodes(data.nodes))
-      .then(() => setLoading(false));
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
   return loading ? (
@@ -107,6 +108,7 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
         label={sessionNodeDictionary('operatorFee')}
         tooltip={sessionNodeDictionary('operatorFeeDescription')}
       >
+        {/** TODO: replace this */}
         {formatPercentage(node.fee / 10000)}
       </ActionModuleRow>
       <ActionModuleDivider />

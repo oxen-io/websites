@@ -318,7 +318,8 @@ export const generateMinAndMaxContribution = ({
     return { minContribution: 0, maxContribution: 0 };
   }
 
-  const remainingStake = 240 - totalStaked;
+  // NOTE: 120 is current stake requirement
+  const remainingStake = 120 - totalStaked;
 
   return {
     minContribution: Math.max(0, remainingStake / remainingSlots),
