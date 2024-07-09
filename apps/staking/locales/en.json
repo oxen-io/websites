@@ -80,7 +80,7 @@
 
     "addTokenInfo": "Make {tokenSymbol} visible in your wallet by manually importing the token.",
     "form": {
-      "back": "back",
+      "back": "Back",
       "inputPlaceholder": "Wallet address",
       "inputAria": "Enter your wallet address to receive test {tokenSymbol} from the faucet.",
       "connectWalletButtonText": "Connect Wallet",
