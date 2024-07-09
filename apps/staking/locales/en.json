@@ -162,7 +162,7 @@
       "title": "My Stakes",
       "showHiddenText": "Show Hidden",
       "noWalletP1": "You currently have no wallet connected.",
-      "noWalletP2": "Click the <link>Connect</link> button to view your staked Session node.",
+      "noWalletP2": "Click the Connect button to view your staked Session node.",
       "noNodesP1": "You have no staked Session Nodes.",
       "noNodesP2": "Click the <link>Stake Now</link> button to stake to an open node or register a new Session node.",
       "stakeNowButtonText": "Stake Now",
