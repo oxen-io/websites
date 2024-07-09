@@ -173,10 +173,10 @@ export const AuthModule = () => {
   };
 
   const ethAmount = useMemo(() => {
-    if (ethBalance) {
+    if (typeof ethBalance === 'bigint') {
       return parseFloat(formatEther(ethBalance));
     }
-    return 0;
+    return null;
   }, [ethBalance]);
 
   useEffect(() => {
