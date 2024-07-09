@@ -146,6 +146,8 @@ export const AuthModule = () => {
           }
           form.setError('root', { message: error });
           return reject(error);
+        } else {
+          setFormState(FORM_STATE.SUCCESS);
         }
       })
     );
