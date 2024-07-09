@@ -176,7 +176,7 @@ export const AuthModule = () => {
     if (ethBalance) {
       return parseFloat(formatEther(ethBalance));
     }
-    return null;
+    return 0;
   }, [ethBalance]);
 
   useEffect(() => {
