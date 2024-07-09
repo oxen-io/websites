@@ -1,18 +1,34 @@
 import { getEnvironmentTaggedDomain } from '@session/util/env';
 import type { WagmiMetadata } from '@session/wallet/lib/wagmi';
-import type { Metadata } from 'next';
 
-// TODO - Fill out all require site metadata fields
-export const siteMetadata: Metadata = {
-  title: 'Session Staking',
-  description: 'Session Staking',
+const SITE_TITLE = 'Session Staking Portal';
+const SITE_DESCRIPTION = 'Stake and get rewarded for securing the Session Network.';
+const SITE_IMAGE = '/images/link_preview.png';
+const SITE_ICON = '/images/icon.png';
+
+export const siteMetadata = (props: { title?: string; description?: string; image?: string }) => {
+  const { title, description = SITE_DESCRIPTION, image = SITE_IMAGE } = props;
+  return {
+    metadataBase: new URL('https://stake.getsession.org'),
+    title: `${title ? `${title} | ` : ''}${SITE_TITLE}`,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [
+        {
+          url: image,
+        },
+      ],
+    },
+  };
 };
 
 const url = `https://${getEnvironmentTaggedDomain('stake')}.getsession.org`;
 
 export const wagmiMetadata: WagmiMetadata = {
-  name: 'Session Staking',
-  description: 'Session Staking',
+  name: SITE_TITLE,
+  description: SITE_DESCRIPTION,
   url,
-  icons: [`${url}/images/icon.png`],
+  icons: [`${url}${SITE_ICON}`],
 };

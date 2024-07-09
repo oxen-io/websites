@@ -1,3 +1,4 @@
+import { siteMetadata } from '@/lib/metadata';
 import { ModuleGrid } from '@session/ui/components/ModuleGrid';
 import BalanceModule from './modules/BalanceModule';
 import ClaimTokensModule from './modules/ClaimTokensModule';
@@ -6,6 +7,13 @@ import PriceModule from './modules/PriceModule';
 import StakedNodesModule from './modules/StakedNodesModule';
 import TotalRewardsModule from './modules/TotalRewardsModule';
 import UnclaimedTokensModule from './modules/UnclaimedTokensModule';
+
+export async function generateMetadata() {
+  return siteMetadata({
+    title: 'My Stakes',
+    description: 'View your Session stakes and claim rewards.',
+  });
+}
 
 export default function Page() {
   return (
