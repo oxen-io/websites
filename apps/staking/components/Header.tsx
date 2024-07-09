@@ -57,9 +57,7 @@ export default function Header() {
         </div>
       </div>
       <div className="flex flex-row justify-end gap-2">
-        <WalletModalButtonWithLocales
-          className={cn('max-w-28 text-xs', 'sm:max-w-none', 'md:text-sm')}
-        />
+        <WalletModalButtonWithLocales />
         {isConnected ? <WalletNetworkDropdownWithLocales className="hidden md:flex" /> : null}
         <DropdownHamburgerMenu />
       </div>
