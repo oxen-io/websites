@@ -2,7 +2,6 @@
 
 import { NodeContributorList, getTotalStakedAmount } from '@/components/NodeCard';
 import { PubKey } from '@/components/PubKey';
-import { SessionTokenInput } from '@/components/SessionTokenInput';
 import { formatPercentage } from '@/lib/locale-client';
 import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
@@ -54,6 +53,7 @@ export default function NodeStaking({ nodeId }: { nodeId: string }) {
 export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][number] }) {
   const [value, setValue] = useState<number>(node.minContribution);
   const dictionary = useTranslations('actionModules.node');
+  const generalDictionary = useTranslations('general');
   const sessionNodeDictionary = useTranslations('sessionNodes.general');
   const sessionNodeStakingDictionary = useTranslations('sessionNodes.staking');
 
@@ -101,19 +101,17 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
         {formatPercentage(node.operatorFee)}
       </ActionModuleRow>
       <ActionModuleDivider />
-      <SessionTokenInput
+      {/* <SessionTokenInput
         type="number"
         value={value}
         onChange={(e) => setValue(parseFloat(e.target.value))}
         min={node.minContribution}
         max={node.maxContribution}
         className="rounded-xl py-12 text-right text-3xl font-medium"
-      />
-      <span className="inline-flex w-full items-center justify-end gap-2 align-middle text-xl font-medium">
-        <span className="text-session-green">Max</span>
-      </span>
-      <Button data-testid={ButtonDataTestId.Stake_Submit}>
-        {dictionary('button.submit', { amount: value })}
+      /> */}
+      <Button data-testid={ButtonDataTestId.Stake_Submit} disabled rounded="lg" size="lg">
+        {/* {dictionary('button.submit', { amount: value })} */}
+        {generalDictionary('comingSoon')}
       </Button>
     </div>
   );
