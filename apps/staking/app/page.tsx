@@ -10,7 +10,7 @@ import Link from 'next/link';
 export default function LandingPage() {
   const dictionary = useTranslations('home');
   return (
-    <div className={cn('mx-auto flex flex-col items-center justify-center')}>
+    <div className={cn('mx-auto flex flex-col items-center justify-center overflow-hidden')}>
       <div
         className={cn(
           'max-w-screen-3xl flex h-dvh w-screen flex-col-reverse items-center justify-around py-16 align-middle',

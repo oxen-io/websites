@@ -66,11 +66,10 @@ type LinkItem = {
 export const ROUTES: LinkItem[] = [
   { dictionaryKey: 'stake', href: '/stake' },
   { dictionaryKey: 'myStakes', href: '/mystakes' },
+  { dictionaryKey: 'faucet', href: '/faucet' },
 ] as const;
 
-export const FOOTER_LINKS: LinkItem[] = [
-  ...ROUTES,
-  { dictionaryKey: 'faucet', href: '/faucet' },
+export const EXTERNAL_ROUTES: LinkItem[] = [
   { dictionaryKey: 'tokenSite', href: 'https://token.getsession.org', linkType: 'external' },
   { dictionaryKey: 'support', href: '/support', linkType: 'external' },
   { dictionaryKey: 'docs', href: 'https://docs.getsession.org', linkType: 'external' },
