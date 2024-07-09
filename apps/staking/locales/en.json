@@ -61,8 +61,8 @@
     "homeButton": "Return Home"
   },
   "home": {
-    "title": "Stake <text-semibold>{tokenSymbol}</text-semibold>.",
-    "titleDescription": "Secure the Network.",
+    "title": "Stake <text-semibold>{tokenSymbol}</text-semibold>",
+    "titleDescription": "Secure the Network",
     "buttons": {
       "primary": "Stake Now",
       "secondary": "How to Run a Session Node"
