@@ -34,7 +34,7 @@ export const SOCIALS = {
 } satisfies Partial<Record<Social, SocialLink>>;
 
 export enum FAUCET {
-  MIN_ETH_BALANCE = 0.01,
+  MIN_ETH_BALANCE = 0.001,
   DRIP = 240,
 }
 
