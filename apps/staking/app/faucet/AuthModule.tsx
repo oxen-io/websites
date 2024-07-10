@@ -220,7 +220,7 @@ export const AuthModule = () => {
   }, [walletStatus, chain, address, form]);
 
   return (
-    <ActionModule className="gap-4 p-2 lg:p-10">
+    <ActionModule className="p-2 lg:p-10" contentClassName="gap-3">
       {formState !== FORM_STATE.LANDING && formState !== FORM_STATE.SUCCESS ? (
         <span
           className="text-session-text absolute left-6 top-4 inline-flex w-min gap-1 text-sm hover:cursor-pointer hover:underline hover:brightness-125 md:top-6"

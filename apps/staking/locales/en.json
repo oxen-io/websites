@@ -4,7 +4,9 @@
     "loading": "Loading...",
     "or": "or",
     "and": "and",
-    "unknownError": "An unknown error occurred."
+    "unknownError": "An unknown error occurred.",
+    "viewOnExplorer": "View on Explorer",
+    "viewOnExplorerShort": "View"
   },
   "clipboard": {
     "copyToClipboard": "Copy to Clipboard",
@@ -229,7 +231,6 @@
     },
     "node": {
       "title": "Stake to a Node",
-      "viewOnExplorer": "View on Explorer",
       "contributors": "Shared Contributors",
       "contributorsTooltip": "The contributors currently staking to this node.",
       "button": {

@@ -33,7 +33,7 @@ export function FaucetTransactions({
 }: {
   transactionHistory: Array<TransactionHistory>;
 }) {
-  const dictionary = useTranslations('actionModules.node');
+  const dictionary = useTranslations('general');
 
   const transactions = useMemo(() => {
     const rows: Array<TransactionRow> = [];
@@ -61,43 +61,46 @@ export function FaucetTransactions({
   }, [transactionHistory]);
 
   return (
-    <Table>
-      <TableCaption>A list of your faucet transactions.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead>When</TableHead>
-          <TableHead>Hash</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-          <TableHead></TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {transactions.map(({ date, hash, amount, token }) => (
-          <TableRow key={hash}>
-            <TableCell className="font-medium">
-              {formatLocalizedRelativeTimeToNowClient(date, { addSuffix: true })}
-            </TableCell>
-            <TableCell>
-              <PubKey pubKey={hash} force="collapse" alwaysShowCopyButton />
-            </TableCell>
-            <TableCell className="text-right">
-              {formatBigIntTokenValue(
-                BigInt(amount),
-                token === SENT_SYMBOL ? SENT_DECIMALS : ETH_DECIMALS
-              )}
-              {` ${token}`}
-            </TableCell>
-            <TableCell>
-              <Link href={`/explorer/${hash}`} target="_blank">
-                <span className="text-session-green fill-session-green inline-flex items-center gap-1 align-middle">
-                  {dictionary('viewOnExplorer')}
-                  <LinkOutIcon className="h-4 w-4" />
-                </span>
-              </Link>
-            </TableCell>
+    <div className="border-session-text overflow-hidden rounded-xl border">
+      <Table className="bg-transparent">
+        <TableCaption className="pb-3">A list of your faucet transactions.</TableCaption>
+        <TableHeader>
+          <TableRow className="border-b-transparent">
+            <TableHead className="hidden md:table-cell">When</TableHead>
+            <TableHead className="hidden md:table-cell">Hash</TableHead>
+            <TableHead>Amount</TableHead>
+            <TableHead></TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {transactions.map(({ date, hash, amount, token }) => (
+            <TableRow key={hash}>
+              <TableCell className="hidden font-medium md:table-cell">
+                {formatLocalizedRelativeTimeToNowClient(date, { addSuffix: true })}
+              </TableCell>
+              <TableCell className="hidden md:table-cell">
+                <PubKey pubKey={hash} force="collapse" alwaysShowCopyButton />
+              </TableCell>
+              <TableCell>
+                {formatBigIntTokenValue(
+                  BigInt(amount),
+                  token === SENT_SYMBOL ? SENT_DECIMALS : ETH_DECIMALS
+                )}
+                {` ${token}`}
+              </TableCell>
+              <TableCell className="text-right">
+                <Link href={`/explorer/tx/${hash}`} target="_blank">
+                  <span className="text-session-green fill-session-green inline-flex w-max items-center gap-1 align-middle">
+                    <span className="hidden 2xl:flex">{dictionary('viewOnExplorer')}</span>
+                    <span className="flex 2xl:hidden">{dictionary('viewOnExplorerShort')}</span>
+                    <LinkOutIcon className="h-4 w-4" />
+                  </span>
+                </Link>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

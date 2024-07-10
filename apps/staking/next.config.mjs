@@ -32,8 +32,8 @@ const nextConfig = {
   redirects: async () => {
     return [
       {
-        source: '/explorer/:contract*',
-        destination: 'https://sepolia.arbiscan.io/address/:contract*',
+        source: '/explorer/:path*',
+        destination: 'https://sepolia.arbiscan.io/:path*',
         permanent: false,
       },
       {

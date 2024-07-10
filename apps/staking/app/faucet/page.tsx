@@ -10,8 +10,8 @@ export default function FaucetPage() {
   const dictionary = useTranslations('faucet.information');
   return (
     <NextAuthProvider>
-      <div className="lg:-mt-header-displacement max-w-screen-3xl mx-auto flex w-screen flex-col-reverse items-center justify-around gap-16 px-4 py-16 align-middle lg:grid lg:h-dvh lg:grid-cols-2 lg:p-32 lg:py-0">
-        <div className="flex flex-col gap-4 text-start lg:max-h-[500px]">
+      <div className="lg:-mt-header-displacement max-w-screen-3xl mx-auto flex w-screen flex-col-reverse items-center justify-around gap-16 px-4 py-16 align-middle xl:grid xl:h-dvh xl:grid-cols-2 xl:p-32 xl:py-0">
+        <div className="flex h-max flex-col gap-4 text-start">
           <h1 className="text-5xl font-semibold">{dictionary('title')}</h1>
           <h2 className="text-lg font-semibold">{dictionary('communityTitle')}</h2>
           <p>
@@ -37,7 +37,7 @@ export default function FaucetPage() {
           <h2 className="text-lg font-semibold">{dictionary('walletRequirementTitle')}</h2>
           <p>{dictionary.rich('walletRequirementDescription')}</p>
         </div>
-        <div className="h-full lg:max-h-[500px]">
+        <div className="h-max min-h-[400px]">
           <AuthModule />
         </div>
       </div>
