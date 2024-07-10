@@ -77,7 +77,7 @@
       "oxenTitle": "Oxen Service Nodes",
       "oxenDescription": "If you registered for the <oxen-program-link></oxen-program-link> by {oxenRegistrationDate}, you are also eligible. Connect the wallet that you registered for the program with, or enter the wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
       "walletRequirementTitle": "Wallet Requirements:",
-      "walletRequirementDescription": "You need to have a minimum of {minimumFaucetGasAmount} test {gasTokenSymbol} on the {testNetworkChain} network to be able to receive test {tokenSymbol}. Add some to your wallet using the <recommended-gas-faucet-link></recommended-gas-faucet-link>. Each eligible wallet can use this faucet to make a one-time claim for 240 {tokenSymbol}. Please note that faucet usage limits may be subject to change.",
+      "walletRequirementDescription": "You will need test {gasTokenSymbol} on the {testNetworkChain} network to use as <gas-info-link>gas</gas-info-link> for all test {tokenSymbol} transactions. If you don't have any, this faucet will top up your {testNetworkChain} test {gasTokenSymbol} balance to up to {minimumFaucetGasAmount} test {gasTokenSymbol}. You can also get test {gasTokenSymbol} from an <gas-faucet-link>{testNetworkChain} faucet</gas-faucet-link>. Each eligible wallet can use this faucet to make a one-time claim for {faucetDrip} {tokenSymbol}. Please note that faucet usage limits may be subject to change.",
       "notEligible": "Not eligible? {testnetName} and its Incentive Program are currently closed to the public, however we will be inviting new users to join our testnet in the future."
     },
 

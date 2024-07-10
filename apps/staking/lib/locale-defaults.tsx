@@ -65,11 +65,8 @@ export const defaultTranslationElements = {
     URL.INCENTIVE_PROGRAM,
     'Session Testnet Incentive Program'
   ),
-  'recommended-gas-faucet-link': defaultExternalLink(
-    URL.ARB_SEP_FAUCET,
-    `QuickNode ${chains[CHAIN.TESTNET].name} Faucet`,
-    'text-session-green'
-  ),
+  'gas-faucet-link': externalLink(URL.ARB_SEP_FAUCET, 'text-session-green'),
+  'gas-info-link': externalLink(URL.GAS_INFO, 'text-session-green'),
   'oxen-program-link': defaultExternalLink(
     URL.OXEN_SERVICE_NODE_BONUS_PROGRAM,
     'Oxen Service Node Bonus program',
@@ -91,6 +88,7 @@ export const defaultTranslationVariables = {
   mainNetworkChain: chains[CHAIN.MAINNET].name,
   testNetworkChain: chains[CHAIN.TESTNET].name,
   minimumFaucetGasAmount: FAUCET.MIN_ETH_BALANCE,
+  faucetDrip: FAUCET.DRIP,
   oxenProgram: 'Oxen Service Node Bonus program',
 } satisfies RichTranslationValues;
 

@@ -10,180 +10,21 @@ import {
   isChain,
 } from '@session/contracts';
 import { SENTAbi } from '@session/contracts/abis';
-import { isProduction } from '@session/util/env';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { createPublicWalletClient, createServerWallet } from '@session/wallet/lib/server-wallet';
-import Database, * as BetterSql3 from 'better-sqlite3-multiple-ciphers';
+import * as BetterSql3 from 'better-sqlite3-multiple-ciphers';
 import { getLocale, getTranslations } from 'next-intl/server';
-import path from 'path';
 import { formatEther, isAddress as isAddressViem, type Address } from 'viem';
 import { FaucetFormSchema } from './AuthModule';
-
-// TODO: move these to a database util file
-/* 
-interface DiscordIdExport {
-  id: number;
-  name: string;
-  roles: Array<string>;
-  joined_at: string;
-}
-
-interface TelegramIdExport {
-  id: number;
-  username: string | null;
-  status: string;
-}
-
-interface OperatorAddressExport {
-  address: string;
-  destination: string;
-  share: string;
-}
-
-const importDiscordIds = (discordExport: Array<DiscordIdExport>) => {
-  let db: BetterSql3.Database | undefined;
-
-  try {
-    const db = openDatabase();
-
-    const insert = db.prepare(`INSERT INTO ${TABLE.DISCORD} (${DISCORD_TABLE.ID}) VALUES (?)`);
-
-    const transaction = db.transaction((discordExport: Array<DiscordIdExport>) => {
-      for (const { id } of discordExport) {
-        insert.run(BigInt(id).toString());
-      }
-    });
-
-    transaction(discordExport);
-  } catch (error) {
-    console.error('Failed to import Discord IDs', error);
-  } finally {
-    if (db) {
-      db.close();
-    }
-  }
-};
-
-const importTelegramIds = (telegramExport: Array<TelegramIdExport>) => {
-  let db: BetterSql3.Database | undefined;
-
-  try {
-    const db = openDatabase();
-
-    const insert = db.prepare(`INSERT INTO ${TABLE.TELEGRAM} (${TELEGRAM_TABLE.ID}) VALUES (?)`);
-
-    const transaction = db.transaction((telegramExport: Array<TelegramIdExport>) => {
-      for (const { id } of telegramExport) {
-        insert.run(BigInt(id).toString());
-      }
-    });
-
-    transaction(telegramExport);
-  } catch (error) {
-    console.error('Failed to import Telegram IDs', error);
-  } finally {
-    if (db) {
-      db.close();
-    }
-  }
-};
-
-const parseCSV = (csv: string) => {
-  const lines = csv.split('\n');
-  const headers = lines[0].split(',');
-
-  return lines.slice(1).map((line) => {
-    const values = line.split(',');
-    return headers.reduce((acc, header, index) => {
-      acc[header] = values[index];
-      return acc;
-    }, {});
-  });
-};
-
-const importOperatorIds = (operatorExport: Array<OperatorAddressExport>) => {
-  const filtered = operatorExport.filter((row, index, self) => {
-    return index === self.findIndex((t) => t.destination === row.destination);
-  });
-
-  let db: BetterSql3.Database | undefined;
-
-  try {
-    const db = openDatabase();
-
-    const insert = db.prepare(`INSERT INTO ${TABLE.OPERATOR} (${OPERATOR_TABLE.ID}) VALUES (?)`);
-
-    const transaction = db.transaction((operatorExport: Array<OperatorAddressExport>) => {
-      for (const { destination } of operatorExport) {
-        insert.run(destination);
-      }
-    });
-
-    transaction(filtered);
-  } catch (error) {
-    console.error('Failed to import Operator IDs', error);
-  } finally {
-    if (db) {
-      db.close();
-    }
-  }
-}; */
-
-enum TABLE {
-  TRANSACTIONS = 'transactions',
-  OPERATOR = 'operator',
-  DISCORD = 'discord',
-  TELEGRAM = 'telegram',
-  FAUCET = 'faucet',
-}
-
-enum FAUCET_TABLE {
-  OPERATOR_LAST_UPDATE = 'operator_last_update',
-}
-
-enum TRANSACTIONS_TABLE {
-  HASH = 'hash',
-  TARGET = 'target',
-  AMOUNT = 'amount',
-  TIMESTAMP = 'timestamp',
-  DISCORD = 'discord',
-  TELEGRAM = 'telegram',
-  OPERATOR = 'operator',
-}
-
-enum OPERATOR_TABLE {
-  ID = 'id',
-}
-
-enum DISCORD_TABLE {
-  ID = 'id',
-}
-
-enum TELEGRAM_TABLE {
-  ID = 'id',
-}
-
-interface OperatorRow {
-  id: string;
-}
-
-interface DiscordRow {
-  id: string;
-}
-
-interface TelegramRow {
-  id: string;
-}
-
-interface TransactionsRow {
-  hash: string;
-  to: string;
-  amount: number;
-  timestamp: number;
-  discord?: string;
-  telegram?: string;
-  operator?: string;
-}
+import {
+  TABLE,
+  TransactionHistory,
+  getTransactionHistory,
+  hasRecentTransaction,
+  idIsInTable,
+  openDatabase,
+  setupDatababse,
+} from './utils';
 
 class FaucetError extends Error {
   faucetError: FAUCET_ERROR;
@@ -196,21 +37,37 @@ class FaucetError extends Error {
 
 class FaucetResult {
   hash?: Address;
+  tokenAmount?: string;
+  ethTopupHash?: Address;
+  ethTopupAmount?: string;
   error?: string;
   faucetError?: FAUCET_ERROR;
+  history?: Array<TransactionHistory>;
 
   constructor({
     hash,
+    tokenAmount,
+    ethTopupHash,
+    ethTopupAmount,
     error,
     faucetError,
+    history,
   }: {
     hash?: Address;
+    tokenAmount?: string;
+    ethTopupHash?: Address;
+    ethTopupAmount?: string;
     error?: string;
     faucetError?: FAUCET_ERROR;
+    history?: Array<TransactionHistory>;
   }) {
     this.hash = hash;
+    this.tokenAmount = tokenAmount;
+    this.ethTopupHash = ethTopupHash;
+    this.ethTopupAmount = ethTopupAmount;
     this.error = error;
     this.faucetError = faucetError;
+    this.history = history;
   }
 }
 
@@ -272,117 +129,10 @@ export async function getSessionTokenBalance({
   return balance;
 }
 
-const openDatabase = (fileMustExist = true): BetterSql3.Database => {
-  const dbSecretKey = process.env.FAUCET_DB_SECRET_KEY;
-  if (!dbSecretKey) {
-    throw new Error('Faucet database secret key is required');
-  }
-
-  const dbOptions: BetterSql3.Options = {
-    nativeBinding: path.join(
-      './',
-      'node_modules',
-      'better-sqlite3-multiple-ciphers',
-      'build',
-      'Release',
-      'better_sqlite3.node'
-    ),
-    fileMustExist,
-  };
-
-  if (!isProduction()) {
-    dbOptions.verbose = console.log;
-  }
-
-  const db = new Database('db/faucet.sqlite', dbOptions);
-
-  // db.pragma('journal_mode = WAL');
-
-  db.pragma(`cipher='sqlcipher'`);
-  db.pragma(`legacy=4`);
-  db.pragma(`key = '${dbSecretKey}'`);
-
-  return db;
-};
-
-const setupDatababse = () => {
-  const db = openDatabase(false);
-  const dbSecretKey = process.env.FAUCET_DB_SECRET_KEY;
-  if (!dbSecretKey) {
-    throw new Error('Faucet database secret key is required');
-  }
-
-  db.pragma(`rekey='${dbSecretKey}'`);
-
-  db.prepare(
-    `CREATE TABLE IF NOT EXISTS ${TABLE.FAUCET} (
-    ${FAUCET_TABLE.OPERATOR_LAST_UPDATE} INTEGER
-  )`
-  ).run();
-
-  db.prepare(
-    `CREATE TABLE IF NOT EXISTS ${TABLE.OPERATOR} (
-      ${OPERATOR_TABLE.ID} TEXT PRIMARY KEY
-    )`
-  ).run();
-
-  db.prepare(
-    `CREATE TABLE IF NOT EXISTS ${TABLE.DISCORD} (
-      ${DISCORD_TABLE.ID} TEXT PRIMARY KEY
-    )`
-  ).run();
-
-  db.prepare(
-    `CREATE TABLE IF NOT EXISTS ${TABLE.TELEGRAM} (
-      ${TELEGRAM_TABLE.ID} TEXT PRIMARY KEY
-    )`
-  ).run();
-
-  db.prepare(
-    `CREATE TABLE IF NOT EXISTS ${TABLE.TRANSACTIONS} (
-      ${TRANSACTIONS_TABLE.HASH} TEXT NOT NULL PRIMARY KEY,
-      ${TRANSACTIONS_TABLE.TARGET} TEXT NOT NULL,
-      ${TRANSACTIONS_TABLE.AMOUNT} TEXT NOT NULL,
-      ${TRANSACTIONS_TABLE.TIMESTAMP} INTEGER NOT NULL,
-      ${TRANSACTIONS_TABLE.DISCORD} TEXT,
-      ${TRANSACTIONS_TABLE.TELEGRAM} TEXT,
-      ${TRANSACTIONS_TABLE.OPERATOR} TEXT
-    );`
-  ).run();
-
-  db.prepare(
-    `CREATE INDEX IF NOT EXISTS discord_index ON ${TABLE.TRANSACTIONS} (${TRANSACTIONS_TABLE.DISCORD}, ${TRANSACTIONS_TABLE.TIMESTAMP}) WHERE ${TRANSACTIONS_TABLE.DISCORD} IS NOT NULL;`
-  ).run();
-
-  db.prepare(
-    `CREATE INDEX IF NOT EXISTS telegram_index ON ${TABLE.TRANSACTIONS} (${TRANSACTIONS_TABLE.TELEGRAM}, ${TRANSACTIONS_TABLE.TIMESTAMP}) WHERE ${TRANSACTIONS_TABLE.TELEGRAM} IS NOT NULL;`
-  ).run();
-
-  db.prepare(
-    `CREATE INDEX IF NOT EXISTS operator_index ON ${TABLE.TRANSACTIONS} (${TRANSACTIONS_TABLE.OPERATOR}, ${TRANSACTIONS_TABLE.TIMESTAMP}) WHERE ${TRANSACTIONS_TABLE.OPERATOR} IS NOT NULL;`
-  ).run();
-
-  db.close();
-};
-
 setupDatababse();
 
-type CountType<F extends string> = Record<`count(${F})`, number>;
-
-/**
- * Checks if the given row has a count value greater than zero for the specified countField.
- * @param row The row object containing the count value.
- * @param countField The field name for the count value.
- *
- * @returns A boolean indicating whether the count value exists and is greater than zero.
- */
-const hasCount = <F extends string>(row: CountType<F>, countField: F) => {
-  const count = row[`count(${countField})`];
-  return count && count > 0;
-};
-
 export async function transferTestTokens({
-  walletAddress,
+  walletAddress: targetAddress,
   discordId,
   telegramId,
 }: FaucetFormSchema) {
@@ -393,7 +143,7 @@ export async function transferTestTokens({
   let db: BetterSql3.Database | undefined;
 
   try {
-    if (!isAddress(walletAddress)) {
+    if (!isAddress(targetAddress)) {
       throw new FaucetError(
         FAUCET_ERROR.INVALID_ADDRESS,
         dictionary('invalidAddress', { example: '0x...' })
@@ -410,28 +160,16 @@ export async function transferTestTokens({
 
     const { faucetAddress, faucetWallet } = await connectFaucetWallet();
 
-    const [targetEthBalance, faucetEthBalance, faucetSENTBalance] = await Promise.all([
-      getEthBalance({ address: walletAddress, chain }),
+    const [targetEthBalance, faucetEthBalance, faucetTokenBalance] = await Promise.all([
+      getEthBalance({ address: targetAddress, chain }),
       getEthBalance({ address: faucetAddress, chain }),
       getSessionTokenBalance({ address: faucetAddress, chain }),
     ]);
 
     /**
-     * If the target wallet has less than the minimum required ETH balance, the transaction will fail.
+     * If the faucet wallet has less than the required token balance, the transaction will fail.
      */
-    if (targetEthBalance < minTargetEthBalance) {
-      throw new FaucetError(
-        FAUCET_ERROR.INSUFFICIENT_ETH,
-        dictionary('insufficientEthTextOnly', {
-          gasAmount: formatEther(targetEthBalance),
-        })
-      );
-    }
-
-    /**
-     * If the faucet wallet has less than the required SENT balance, the transaction will fail.
-     */
-    if (faucetSENTBalance < faucetTokenDrip) {
+    if (faucetTokenBalance < faucetTokenDrip) {
       throw new FaucetError(
         FAUCET_ERROR.FAUCET_OUT_OF_TOKENS,
         dictionary('faucetOutOfTokensTextOnly')
@@ -448,11 +186,11 @@ export async function transferTestTokens({
     }
 
     /**
-     * If the faucet wallet has less than the warning SENT balance, a warning will be logged.
+     * If the faucet wallet has less than the warning token balance, a warning will be logged.
      */
-    if (faucetSENTBalance < faucetTokenWarning) {
+    if (faucetTokenBalance < faucetTokenWarning) {
       console.warn(
-        `Faucet wallet ${SENT_SYMBOL} balance (${formatSENT(faucetSENTBalance)} ${SENT_SYMBOL}) is below the warning threshold (${formatSENT(faucetTokenWarning)})`
+        `Faucet wallet ${SENT_SYMBOL} balance (${formatSENT(faucetTokenBalance)} ${SENT_SYMBOL}) is below the warning threshold (${formatSENT(faucetTokenWarning)})`
       );
     }
 
@@ -468,7 +206,7 @@ export async function transferTestTokens({
         !idIsInTable({
           db,
           source: TABLE.OPERATOR,
-          id: walletAddress,
+          id: targetAddress,
         })
       ) {
         throw new FaucetError(
@@ -481,7 +219,14 @@ export async function transferTestTokens({
         );
       }
 
-      if (hasRecentTransaction({ db, source: TABLE.OPERATOR, id: walletAddress })) {
+      if (
+        hasRecentTransaction({
+          db,
+          source: TABLE.OPERATOR,
+          id: targetAddress,
+          hoursBetweenTransactions,
+        })
+      ) {
         throw new FaucetError(FAUCET_ERROR.ALREADY_USED, dictionary('alreadyUsed'));
       }
 
@@ -509,7 +254,9 @@ export async function transferTestTokens({
         );
       }
 
-      if (hasRecentTransaction({ db, source: TABLE.DISCORD, id: discordId })) {
+      if (
+        hasRecentTransaction({ db, source: TABLE.DISCORD, id: discordId, hoursBetweenTransactions })
+      ) {
         throw new FaucetError(
           FAUCET_ERROR.ALREADY_USED_SERVICE,
           dictionary('alreadyUsedService', {
@@ -540,7 +287,14 @@ export async function transferTestTokens({
         );
       }
 
-      if (hasRecentTransaction({ db, source: TABLE.TELEGRAM, id: telegramId })) {
+      if (
+        hasRecentTransaction({
+          db,
+          source: TABLE.TELEGRAM,
+          id: telegramId,
+          hoursBetweenTransactions,
+        })
+      ) {
         throw new FaucetError(
           FAUCET_ERROR.ALREADY_USED_SERVICE,
           dictionary('alreadyUsedService', {
@@ -550,34 +304,61 @@ export async function transferTestTokens({
       }
     }
 
-    const hash = await faucetWallet.writeContract({
+    // TODO: extract the simulate -> write logic into a separate reusable library
+    const sessionTokenTxHash = await faucetWallet.writeContract({
       address: addresses.SENT[chain],
       abi: SENTAbi,
       functionName: 'transfer',
-      args: [walletAddress, faucetTokenDrip],
+      args: [targetAddress, faucetTokenDrip],
     });
+
+    /**
+     * If the target wallet has less than the minimum target ETH balance, the wallet will be topped up with test ETH.
+     */
+    let ethTxHash: Address | undefined;
+    const ethTopupValue = minTargetEthBalance - targetEthBalance;
+    if (ethTopupValue > 0) {
+      const request = await faucetWallet.prepareTransactionRequest({
+        to: targetAddress,
+        value: ethTopupValue,
+      });
+
+      const serializedTransaction = await faucetWallet.signTransaction(request);
+      ethTxHash = await faucetWallet.sendRawTransaction({ serializedTransaction });
+    }
 
     const timestamp = Date.now();
     const writeTransactionResult = db
       .prepare(
-        `INSERT INTO ${TABLE.TRANSACTIONS} (hash, target, amount, timestamp, discord, telegram, operator) VALUES (?, ?, ?, ?, ?, ?, ?)`
+        `INSERT INTO ${TABLE.TRANSACTIONS} (hash, target, amount, timestamp, discord, telegram, operator, ethhash, ethamount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .run(
-        hash,
-        walletAddress,
+        sessionTokenTxHash,
+        targetAddress,
         faucetTokenDrip.toString(),
         timestamp,
         discordId,
         telegramId,
-        usedOperatorAddress ? walletAddress : undefined
+        usedOperatorAddress ? targetAddress : undefined,
+        ethTxHash ?? null,
+        ethTopupValue.toString()
       );
 
     if (writeTransactionResult.changes !== 1) {
       console.warn('Failed to write transaction to database');
     }
 
-    result = new FaucetResult({ hash });
+    const transactionHistory = getTransactionHistory({ db, address: targetAddress });
+
+    result = new FaucetResult({
+      hash: sessionTokenTxHash,
+      tokenAmount: faucetTokenDrip.toString(),
+      ethTopupHash: ethTxHash,
+      ethTopupAmount: ethTopupValue.toString(),
+      history: transactionHistory,
+    });
   } catch (error) {
+    console.error(error);
     if (error instanceof FaucetError) {
       result = new FaucetResult({ error: error.message, faucetError: error.faucetError });
     } else if (error instanceof Error) {
@@ -593,8 +374,12 @@ export async function transferTestTokens({
     // eslint-disable-next-line no-unsafe-finally -- this is the only return so its fine
     return {
       hash: result.hash,
+      tokenAmount: result.tokenAmount,
+      ethTopupHash: result.ethTopupHash,
+      ethTopupAmount: result.ethTopupAmount,
       error: result.error,
       faucetError: result.faucetError,
+      history: result.history,
     };
   }
 }
@@ -617,107 +402,3 @@ async function connectFaucetWallet() {
   }
   return { faucetAddress, faucetWallet };
 }
-
-type IdTableParams = {
-  db: BetterSql3.Database;
-  source: TABLE.DISCORD | TABLE.TELEGRAM | TABLE.OPERATOR;
-  id: string;
-};
-
-/**
- * Checks if the given ID exists in the specified table of the database.
- *
- * @param db The database instance.
- * @param source The name of the table to search in.
- * @param id The ID to check for existence.
- * @returns A boolean indicating whether the ID exists in the table.
- */
-function idIsInTable({ db, source, id }: IdTableParams) {
-  const field = 'id';
-  const row = db
-    .prepare<string>(`SELECT count(${field}) FROM ${source} WHERE ${field} = ?`)
-    .get(id) as CountType<typeof field>;
-
-  return hasCount(row, field);
-}
-
-/**
- * Checks if a recent transaction exists for the given id in the specified source.
- *
- * @param db The database connection.
- * @param source The name of the source.
- * @param id The id to check for recent transactions.
- * @returns A boolean indicating whether a recent transaction exists.
- */
-function hasRecentTransaction({ db, source, id }: IdTableParams) {
-  const lastTransactionCutoff = hoursBetweenTransactions
-    ? Date.now() - hoursBetweenTransactions * 60 * 60 * 1000
-    : 0;
-
-  const row = db
-    .prepare<
-      [IdTableParams['id'], TransactionsRow['timestamp']]
-    >(`SELECT count(${source}) FROM ${TABLE.TRANSACTIONS} WHERE ${source} = ? AND timestamp > ?`)
-    .get(id, lastTransactionCutoff) as CountType<typeof source>;
-
-  return hasCount(row, source);
-}
-/* 
-interface NodeOperatorScoreResponse {
-  global_score: number;
-  total_snapshots: number;
-  wallets: {
-    address: {
-      percent: number;
-      score: number;
-      snapshots: number;
-    };
-  };
-}
-
-function didOperatorTableUpdateRecently(db: BetterSql3.Database) {
-  const minutesBetweenOperatorTableUpdates =
-    process.env.FAUCET_MINUTES_BETWEEN_OPERATOR_TABLE_UPDATES;
-
-  const operatorTableTimestampCutoff = minutesBetweenOperatorTableUpdates
-    ? Date.now() - parseInt(minutesBetweenOperatorTableUpdates) * 60 * 1000
-    : 0;
-
-  if (!operatorTableTimestampCutoff) return false;
-
-  const lastUpdate = db
-    .prepare(`SELECT ${FAUCET_TABLE.OPERATOR_LAST_UPDATE} FROM ${TABLE.FAUCET}`)
-    .get() as { [FAUCET_TABLE.OPERATOR_LAST_UPDATE]: number };
-
-  console.log('lastUpdate', lastUpdate);
-
-  if (!lastUpdate || !lastUpdate[FAUCET_TABLE.OPERATOR_LAST_UPDATE]) {
-    return false;
-  }
-
-  return lastUpdate[FAUCET_TABLE.OPERATOR_LAST_UPDATE] > operatorTableTimestampCutoff;
-}
-
-async function updateNodeOperatorTable({ db }: { db: BetterSql3.Database }) {
-  const nodeOperatorRes = await fetch('/oxen-swap');
-
-  if (!nodeOperatorRes.ok) {
-    console.error('Failed to fetch node operator data');
-    return;
-  }
-
-  const { wallets } = (await nodeOperatorRes.json()) as NodeOperatorScoreResponse;
-
-  const walletAddresses = Object.keys(wallets);
-
-  const insert = db.prepare(`INSERT INTO ${TABLE.OPERATOR} (${OPERATOR_TABLE.ID}) VALUES (?)`);
-
-  const transaction = db.transaction((walletAddresses: Array<string>) => {
-    for (const address of walletAddresses) {
-      insert.run(address);
-    }
-  });
-
-  transaction(walletAddresses);
-}
- */
