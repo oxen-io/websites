@@ -183,9 +183,8 @@ export const AuthModule = () => {
     if (address && ethAmount !== null && ethAmount < FAUCET.MIN_ETH_BALANCE) {
       form.setError('root', {
         type: 'deps',
-        message: dictionary('error.insufficientEth', {
-          minimumGasAmount: FAUCET.MIN_ETH_BALANCE,
-          gasAmount: ethAmount,
+        message: dictionary('error.insufficientEthTextOnly', {
+          gasAmount: ethAmount ?? 0,
         }),
       });
     }
@@ -379,7 +378,7 @@ export const AuthModule = () => {
       faucetError === FAUCET_ERROR.INSUFFICIENT_ETH ? (
         <p className="text-destructive text-base">
           {dictionary.rich('error.insufficientEth', {
-            gasAmount: ethAmount,
+            gasAmount: ethAmount ?? 0,
           })}
         </p>
       ) : null}
