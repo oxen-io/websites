@@ -127,14 +127,14 @@ export const AuthModule = () => {
         }
 
         const { hash, error, faucetError, history } = res;
+
+        if (history && history.length) {
+          setTransactionHistory(history);
+        }
+
         if (hash) {
           setTransactionHash(hash);
           setFormState(FORM_STATE.SUCCESS);
-
-          if (history && history.length) {
-            setTransactionHistory(history);
-          }
-
           return resolve(hash);
         }
 
@@ -356,7 +356,7 @@ export const AuthModule = () => {
         </>
       ) : null}
 
-      {formState === FORM_STATE.SUCCESS && transactionHistory && transactionHistory.length > 0 ? (
+      {transactionHistory && transactionHistory.length > 0 ? (
         <FaucetTransactions transactionHistory={transactionHistory} />
       ) : null}
 

@@ -28,10 +28,13 @@ import {
 
 class FaucetError extends Error {
   faucetError: FAUCET_ERROR;
-  constructor(faucetError: FAUCET_ERROR, message: string) {
+  history?: Array<TransactionHistory>;
+
+  constructor(faucetError: FAUCET_ERROR, message: string, history?: Array<TransactionHistory>) {
     super(message);
     this.name = 'FaucetError';
     this.faucetError = faucetError;
+    this.history = history;
   }
 }
 
@@ -227,7 +230,12 @@ export async function transferTestTokens({
           hoursBetweenTransactions,
         })
       ) {
-        throw new FaucetError(FAUCET_ERROR.ALREADY_USED, dictionary('alreadyUsed'));
+        const transactionHistory = getTransactionHistory({ db, address: targetAddress });
+        throw new FaucetError(
+          FAUCET_ERROR.ALREADY_USED,
+          dictionary('alreadyUsed'),
+          transactionHistory
+        );
       }
 
       usedOperatorAddress = true;
@@ -360,7 +368,11 @@ export async function transferTestTokens({
   } catch (error) {
     console.error(error);
     if (error instanceof FaucetError) {
-      result = new FaucetResult({ error: error.message, faucetError: error.faucetError });
+      result = new FaucetResult({
+        error: error.message,
+        faucetError: error.faucetError,
+        history: error.history,
+      });
     } else if (error instanceof Error) {
       result = new FaucetResult({ error: error.message });
     } else {
