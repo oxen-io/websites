@@ -142,7 +142,7 @@ export function useWalletChain() {
   return { chain, switchChain };
 }
 
-export function useAddSessionTokenToWallet() {
+export function useAddSessionTokenToWallet(tokenIcon: string) {
   const [isPending, setIsPending] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -176,7 +176,7 @@ export function useAddSessionTokenToWallet() {
           // The number of decimals in the token.
           decimals: SENT_DECIMALS,
           // A string URL of the token logo.
-          image: '/images/icon.png',
+          image: tokenIcon,
         },
       });
 

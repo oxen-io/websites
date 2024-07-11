@@ -3,12 +3,16 @@
 import { CHAIN } from '@session/contracts/chains';
 import { Social, SocialLink } from '@session/ui/components/SocialLinkList';
 import { LocaleKey } from './locale-util';
+import { getEnvironmentTaggedDomain } from '@session/util/env';
 
 /** TODO - Change this to MAINNET when we launch mainnet */
 export const preferredChain = CHAIN.TESTNET as const;
 
+export const BASE_URL = `https://${getEnvironmentTaggedDomain('stake')}.getsession.org`;
+
 export enum URL {
   ARB_SEP_FAUCET = 'https://faucet.quicknode.com/arbitrum/sepolia',
+  GAS_INFO = 'https://ethereum.org/en/developers/docs/gas',
   SESSION_NODE_DOCS = 'https://docs.getsession.org/session-nodes',
   INCENTIVE_PROGRAM = 'https://token.getsession.org/testnet-incentive-program',
   LEARN_MORE_DAILY_REWARDS = 'https://docs.getsession.org/staking-reward-pool#network-reward-rate',
@@ -33,14 +37,14 @@ export const SOCIALS = {
 } satisfies Partial<Record<Social, SocialLink>>;
 
 export enum FAUCET {
-  MIN_ETH_BALANCE = 0.01,
+  MIN_ETH_BALANCE = 0.001,
   DRIP = 240,
 }
 
 export enum FAUCET_ERROR {
   INVALID_ADDRESS = 'invalidAddress',
   INCORRECT_CHAIN = 'incorrectChain',
-  INSUFFICIENT_ETH = 'insufficientEth',
+  // INSUFFICIENT_ETH = 'insufficientEth',
   FAUCET_OUT_OF_TOKENS = 'faucetOutOfTokens',
   INVALID_SERVICE = 'invalidService',
   INVALID_OXEN_ADDRESS = 'invalidOxenAddress',

@@ -4,7 +4,9 @@
     "loading": "Loading...",
     "or": "or",
     "and": "and",
-    "unknownError": "An unknown error occurred."
+    "unknownError": "An unknown error occurred.",
+    "viewOnExplorer": "View on Explorer",
+    "viewOnExplorerShort": "View"
   },
   "clipboard": {
     "copyToClipboard": "Copy to Clipboard",
@@ -41,13 +43,14 @@
       "address": "Address",
       "fallbackName": "No name"
     },
-    "addTokenButton": {
-      "addToken": "Add {tokenSymbol} to Wallet",
-      "ariaAddToken": "Add {tokenSymbol} to your wallet watch list",
+    "watchTokenButton": {
+      "importText": "Import Token",
+      "ariaImport": "Import {tokenSymbol} information to your wallet watch list",
       "changeNetwork": "Change Network",
       "ariaChangeNetwork": "Switch to a supported network",
       "pending": "Pending",
-      "ariaPending": "Adding {tokenSymbol} to your wallet watch list"
+      "ariaPending": "Adding {tokenSymbol} to your wallet watch list",
+      "failError": "Your wallet does not support importing tokens"
     },
     "networkDropdown": {
       "invalid": "Invalid network",
@@ -77,11 +80,15 @@
       "oxenTitle": "Oxen Service Nodes",
       "oxenDescription": "If you registered for the <oxen-program-link></oxen-program-link> by {oxenRegistrationDate}, you are also eligible. Connect the wallet that you registered for the program with, or enter the wallet address manually. If your eligibility is confirmed, test {tokenSymbol} will be sent to this address.",
       "walletRequirementTitle": "Wallet Requirements:",
-      "walletRequirementDescription": "You need to have a minimum of {minimumFaucetGasAmount} test {gasTokenSymbol} on the {testNetworkChain} network to be able to receive test {tokenSymbol}. Add some to your wallet using the <recommended-gas-faucet-link></recommended-gas-faucet-link>. Each eligible wallet can use this faucet to make a one-time claim for 240 {tokenSymbol}. Please note that faucet usage limits may be subject to change.",
+      "walletRequirementDescription": "You will need test {gasTokenSymbol} on the {testNetworkChain} network to use as <gas-info-link>gas</gas-info-link> for all test {tokenSymbol} transactions. If you don't have any, this faucet will top up your {testNetworkChain} test {gasTokenSymbol} balance to up to {minimumFaucetGasAmount} test {gasTokenSymbol}. You can also get test {gasTokenSymbol} from an <gas-faucet-link>{testNetworkChain} faucet</gas-faucet-link>. Each eligible wallet can use this faucet to make a one-time claim for {faucetDrip} {tokenSymbol}. Please note that faucet usage limits may be subject to change.",
       "notEligible": "Not eligible? {testnetName} and its Incentive Program are currently closed to the public, however we will be inviting new users to join our testnet in the future."
     },
-
-    "addTokenInfo": "Make {tokenSymbol} visible in your wallet by manually importing the token.",
+    "transactions": {
+      "tableCaption": "A list of your faucet transactions.",
+      "when": "When",
+      "hash": "Hash",
+      "amount": "Amount"
+    },
     "form": {
       "back": "Back",
       "inputPlaceholder": "Wallet address",
@@ -131,8 +138,7 @@
       "transactionHash": "Transaction Hash: {hash}",
       "transactionHashDescription": "Transaction hash of the faucet transaction.",
       "haveSomeMore": "Alright then, you can have some more",
-      "watchSENTInfo": "You may need to add {tokenSymbol} to your wallet to make it show up, click the button below to add it.",
-      "watchSENTButtonText": "Add {tokenSymbol} to wallet",
+      "watchSENTInfo": "You may need to manually add {tokenSymbol} to your wallet’s token list to make it show up, click the button below to add it.",
       "copyTransactionHash": "Copy Transaction Hash",
       "copyTransactionHashSuccessToast": "Copied Transaction Hash to clipboard!"
     }
@@ -229,7 +235,6 @@
     },
     "node": {
       "title": "Stake to a Node",
-      "viewOnExplorer": "View on Explorer",
       "contributors": "Shared Contributors",
       "contributorsTooltip": "The contributors currently staking to this node.",
       "button": {

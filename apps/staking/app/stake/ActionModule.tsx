@@ -16,6 +16,7 @@ type ActionModuleProps = {
   headerAction?: React.ReactNode;
   background?: keyof typeof actionModuleBackground;
   className?: string;
+  contentClassName?: string;
 };
 
 export default function ActionModule({
@@ -24,6 +25,7 @@ export default function ActionModule({
   background,
   children,
   className,
+  contentClassName,
 }: ActionModuleProps) {
   return (
     <ModuleGrid
@@ -38,7 +40,7 @@ export default function ActionModule({
           {headerAction}
         </ModuleGridHeader>
       ) : null}
-      <ModuleGridContent className="p-8">{children}</ModuleGridContent>
+      <ModuleGridContent className={cn('p-8', contentClassName)}>{children}</ModuleGridContent>
     </ModuleGrid>
   );
 }

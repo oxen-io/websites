@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl';
 import ActionModule, { ActionModuleDivider } from '../stake/ActionModule';
 
 import { WalletAddTokenWithLocales } from '@/components/WalletAddTokenWithLocales';
-import { FAUCET, FAUCET_ERROR } from '@/lib/constants';
+import { BASE_URL, FAUCET_ERROR } from '@/lib/constants';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CHAIN } from '@session/contracts';
@@ -29,11 +29,13 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
 import { collapseString } from '@session/util/string';
 import { WALLET_STATUS, useWallet, useWalletChain } from '@session/wallet/hooks/wallet-hooks';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Address, formatEther, isAddress } from 'viem';
+import { Address, isAddress } from 'viem';
 import { z } from 'zod';
+import { FaucetTransactions } from './FaucetTransactions';
 import { transferTestTokens } from './actions';
+import { TransactionHistory } from './utils';
 
 enum FORM_STATE {
   LANDING,
@@ -72,7 +74,8 @@ export const AuthModule = () => {
   const [faucetError, setFaucetError] = useState<FAUCET_ERROR | null>(null);
   const { data, status: authStatus } = useSession();
   const [transactionHash, setTransactionHash] = useState<Address | null>(null);
-  const { address, disconnect, status: walletStatus, ethBalance } = useWallet();
+  const [transactionHistory, setTransactionHistory] = useState<TransactionHistory[]>([]);
+  const { address, disconnect, status: walletStatus } = useWallet();
   const { chain, switchChain } = useWalletChain();
 
   const FormSchema = getFaucetFormSchema();
@@ -123,7 +126,12 @@ export const AuthModule = () => {
           return reject(dictionary('submit.transactionError'));
         }
 
-        const { hash, error, faucetError } = res;
+        const { hash, error, faucetError, history } = res;
+
+        if (history && history.length) {
+          setTransactionHistory(history);
+        }
+
         if (hash) {
           setTransactionHash(hash);
           setFormState(FORM_STATE.SUCCESS);
@@ -137,8 +145,9 @@ export const AuthModule = () => {
               !(
                 faucetError === FAUCET_ERROR.FAUCET_OUT_OF_TOKENS ||
                 faucetError === FAUCET_ERROR.INCORRECT_CHAIN ||
-                faucetError === FAUCET_ERROR.INVALID_ADDRESS ||
-                faucetError === FAUCET_ERROR.INSUFFICIENT_ETH
+                // NOTE: The eth requirement is removed for now, keep this here in case we need it again in the future
+                // faucetError === FAUCET_ERROR.INSUFFICIENT_ETH ||
+                faucetError === FAUCET_ERROR.INVALID_ADDRESS
               )
             ) {
               form.setError('root', { message: error });
@@ -172,7 +181,8 @@ export const AuthModule = () => {
     }
   };
 
-  const ethAmount = useMemo(() => {
+  // NOTE: The eth requirement is removed for now, keep this here in case we need it again in the future
+  /* const ethAmount = useMemo(() => {
     if (typeof ethBalance === 'bigint') {
       return parseFloat(formatEther(ethBalance));
     }
@@ -188,7 +198,7 @@ export const AuthModule = () => {
         }),
       });
     }
-  }, [address, ethAmount, form]);
+  }, [address, ethAmount, form]); */
 
   useEffect(() => {
     if (walletStatus === WALLET_STATUS.CONNECTED && address) {
@@ -210,7 +220,7 @@ export const AuthModule = () => {
   }, [walletStatus, chain, address, form]);
 
   return (
-    <ActionModule className="gap-4 p-2 lg:p-10">
+    <ActionModule className="p-2 lg:p-10" contentClassName="gap-3">
       {formState !== FORM_STATE.LANDING && formState !== FORM_STATE.SUCCESS ? (
         <span
           className="text-session-text absolute left-6 top-4 inline-flex w-min gap-1 text-sm hover:cursor-pointer hover:underline hover:brightness-125 md:top-6"
@@ -240,7 +250,9 @@ export const AuthModule = () => {
                     {address ? (
                       <Button
                         type="reset"
-                        variant="destructive"
+                        variant="destructive-outline"
+                        rounded="md"
+                        className="uppercase"
                         onClick={disconnectWallet}
                         data-testid={ButtonDataTestId.Faucet_Disconnect}
                         aria-label={dictionary('disconnectWalletButtonAria')}
@@ -344,6 +356,10 @@ export const AuthModule = () => {
         </>
       ) : null}
 
+      {transactionHistory.length ? (
+        <FaucetTransactions transactionHistory={transactionHistory} />
+      ) : null}
+
       <ActionModuleDivider />
 
       {formState === FORM_STATE.LANDING ? (
@@ -351,10 +367,12 @@ export const AuthModule = () => {
           data-testid={ButtonDataTestId.Faucet_Continue}
           rounded="md"
           size="lg"
+          variant="outline"
+          className="uppercase"
           disabled={
-            !form.formState.isDirty ||
-            !form.formState.isValid ||
-            (ethAmount !== null && ethAmount < FAUCET.MIN_ETH_BALANCE)
+            // NOTE: The eth requirement is removed for now, keep this here in case we need it again in the future
+            // (ethAmount !== null && ethAmount < FAUCET.MIN_ETH_BALANCE) ||
+            !form.formState.isDirty || !form.formState.isValid
           }
           onClick={() => setFormState(FORM_STATE.CONFIRM)}
         >
@@ -374,19 +392,20 @@ export const AuthModule = () => {
         <p className="text-destructive text-base">{dictionary('error.invalidAddress')}</p>
       ) : null}
 
-      {(ethAmount !== null && ethAmount < FAUCET.MIN_ETH_BALANCE) ||
+      {/** NOTE: The eth requirement is removed for now, keep this here in case we need it again in the future */}
+      {/* {(ethAmount !== null && ethAmount < FAUCET.MIN_ETH_BALANCE) ||
       faucetError === FAUCET_ERROR.INSUFFICIENT_ETH ? (
         <p className="text-destructive text-base">
           {dictionary.rich('error.insufficientEth', {
             gasAmount: ethAmount ?? 0,
           })}
         </p>
-      ) : null}
+      ) : null} */}
 
-      {formState === FORM_STATE.SUCCESS ? (
+      {transactionHistory.length > 0 ? (
         <>
           <p>{dictionary('watchSENTInfo')}</p>
-          <WalletAddTokenWithLocales rounded="md" size="md" variant="outline" />
+          <WalletAddTokenWithLocales rounded="md" size="md" variant="outline" tokenIcon={`${BASE_URL}/images/token_logo.svg`} />
         </>
       ) : null}
     </ActionModule>

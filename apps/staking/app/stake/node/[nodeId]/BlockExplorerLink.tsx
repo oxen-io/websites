@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from 'react';
 export const BlockExplorerLink = ({ nodeId }: { nodeId: string }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [nodes, setNodes] = useState<Array<OpenNode>>([]);
-  const dictionary = useTranslations('actionModules.node');
+  const dictionary = useTranslations('general');
 
   useEffect(() => {
     fetch('/api/sent/nodes/open')
@@ -32,7 +32,7 @@ export const BlockExplorerLink = ({ nodeId }: { nodeId: string }) => {
   return loading ? (
     <LoadingText />
   ) : node?.contract ? (
-    <Link href={`/explorer/${node?.contract}`} target="_blank">
+    <Link href={`/explorer/address/${node?.contract}`} target="_blank">
       <span className="text-session-green fill-session-green inline-flex items-center gap-1 align-middle">
         {dictionary('viewOnExplorer')}
         <LinkOutIcon className="h-4 w-4" />
