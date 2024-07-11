@@ -356,7 +356,7 @@ export const AuthModule = () => {
         </>
       ) : null}
 
-      {transactionHistory && transactionHistory.length > 0 ? (
+      {transactionHistory.length ? (
         <FaucetTransactions transactionHistory={transactionHistory} />
       ) : null}
 
@@ -402,7 +402,7 @@ export const AuthModule = () => {
         </p>
       ) : null} */}
 
-      {formState === FORM_STATE.SUCCESS || transactionHistory.length > 0 ? (
+      {transactionHistory.length > 0 ? (
         <>
           <p>{dictionary('watchSENTInfo')}</p>
           <WalletAddTokenWithLocales rounded="md" size="md" variant="outline" tokenIcon={`${BASE_URL}/images/token_logo.svg`} />
