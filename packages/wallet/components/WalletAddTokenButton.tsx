@@ -6,6 +6,7 @@ import { useAddSessionTokenToWallet, useWalletChain } from '../hooks/wallet-hook
 import { ButtonDataTestId } from '../testing/data-test-ids';
 
 export type WalletAddTokenButtonProps = ButtonVariantProps & {
+  tokenIcon: string;
   labels: {
     addToken: string;
     changeNetwork: string;
@@ -19,7 +20,7 @@ export type WalletAddTokenButtonProps = ButtonVariantProps & {
 };
 
 export default function WalletAddTokenButton(props: WalletAddTokenButtonProps) {
-  const { addToken, error, isPending } = useAddSessionTokenToWallet();
+  const { addToken, error, isPending } = useAddSessionTokenToWallet(props.tokenIcon);
   const { chain } = useWalletChain();
   const { open } = useWeb3Modal();
 

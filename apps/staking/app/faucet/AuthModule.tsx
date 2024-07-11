@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl';
 import ActionModule, { ActionModuleDivider } from '../stake/ActionModule';
 
 import { WalletAddTokenWithLocales } from '@/components/WalletAddTokenWithLocales';
-import { FAUCET_ERROR } from '@/lib/constants';
+import { BASE_URL, FAUCET_ERROR } from '@/lib/constants';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CHAIN } from '@session/contracts';
@@ -402,10 +402,10 @@ export const AuthModule = () => {
         </p>
       ) : null} */}
 
-      {formState === FORM_STATE.SUCCESS ? (
+      {formState === FORM_STATE.SUCCESS || transactionHistory.length > 0 ? (
         <>
           <p>{dictionary('watchSENTInfo')}</p>
-          <WalletAddTokenWithLocales rounded="md" size="md" variant="outline" />
+          <WalletAddTokenWithLocales rounded="md" size="md" variant="outline" tokenIcon={`${BASE_URL}/images/token_logo.svg`} />
         </>
       ) : null}
     </ActionModule>

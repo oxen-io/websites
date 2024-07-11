@@ -34,7 +34,7 @@ export const BlockExplorerLink = ({ nodeId }: { nodeId: string }) => {
   ) : node?.contract ? (
     <Link href={`/explorer/address/${node?.contract}`} target="_blank">
       <span className="text-session-green fill-session-green inline-flex items-center gap-1 align-middle">
-        {dictionary('viewOnExplorerShort')}
+        {dictionary('viewOnExplorer')}
         <LinkOutIcon className="h-4 w-4" />
       </span>
     </Link>

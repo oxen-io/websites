@@ -1,7 +1,6 @@
-import { getEnvironmentTaggedDomain } from '@session/util/env';
 import type { WagmiMetadata } from '@session/wallet/lib/wagmi';
+import { BASE_URL } from '@/lib/constants';
 
-const BASE_URL = `https://${getEnvironmentTaggedDomain('stake')}.getsession.org`;
 const SITE_TITLE = 'Session Staking Portal';
 const SITE_DESCRIPTION = 'Stake and get rewarded for securing the Session Network.';
 const SITE_IMAGE = `${BASE_URL}/images/link_preview.png`;

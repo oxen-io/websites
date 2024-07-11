@@ -3,9 +3,12 @@
 import { CHAIN } from '@session/contracts/chains';
 import { Social, SocialLink } from '@session/ui/components/SocialLinkList';
 import { LocaleKey } from './locale-util';
+import { getEnvironmentTaggedDomain } from '@session/util/env';
 
 /** TODO - Change this to MAINNET when we launch mainnet */
 export const preferredChain = CHAIN.TESTNET as const;
+
+export const BASE_URL = `https://${getEnvironmentTaggedDomain('stake')}.getsession.org`;
 
 export enum URL {
   ARB_SEP_FAUCET = 'https://faucet.quicknode.com/arbitrum/sepolia',
