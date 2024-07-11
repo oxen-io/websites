@@ -82,7 +82,12 @@
       "walletRequirementDescription": "You will need test {gasTokenSymbol} on the {testNetworkChain} network to use as <gas-info-link>gas</gas-info-link> for all test {tokenSymbol} transactions. If you don't have any, this faucet will top up your {testNetworkChain} test {gasTokenSymbol} balance to up to {minimumFaucetGasAmount} test {gasTokenSymbol}. You can also get test {gasTokenSymbol} from an <gas-faucet-link>{testNetworkChain} faucet</gas-faucet-link>. Each eligible wallet can use this faucet to make a one-time claim for {faucetDrip} {tokenSymbol}. Please note that faucet usage limits may be subject to change.",
       "notEligible": "Not eligible? {testnetName} and its Incentive Program are currently closed to the public, however we will be inviting new users to join our testnet in the future."
     },
-
+    "transactions": {
+      "tableCaption": "A list of your faucet transactions.",
+      "when": "When",
+      "hash": "Hash",
+      "amount": "Amount"
+    },
     "addTokenInfo": "Make {tokenSymbol} visible in your wallet by manually importing the token.",
     "form": {
       "back": "Back",

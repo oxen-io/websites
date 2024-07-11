@@ -34,6 +34,7 @@ export function FaucetTransactions({
   transactionHistory: Array<TransactionHistory>;
 }) {
   const dictionary = useTranslations('general');
+  const transactionsDictionary = useTranslations('faucet.transactions');
 
   const transactions = useMemo(() => {
     const rows: Array<TransactionRow> = [];
@@ -63,12 +64,12 @@ export function FaucetTransactions({
   return (
     <div className="border-session-text overflow-hidden rounded-xl border">
       <Table className="bg-transparent">
-        <TableCaption className="pb-3">A list of your faucet transactions.</TableCaption>
+        <TableCaption className="pb-3">{transactionsDictionary('tableCaption')}</TableCaption>
         <TableHeader>
           <TableRow className="border-b-transparent">
-            <TableHead className="hidden md:table-cell">When</TableHead>
-            <TableHead className="hidden md:table-cell">Hash</TableHead>
-            <TableHead>Amount</TableHead>
+            <TableHead className="hidden md:table-cell">{transactionsDictionary('when')}</TableHead>
+            <TableHead className="hidden md:table-cell">{transactionsDictionary('hash')}</TableHead>
+            <TableHead>{transactionsDictionary('amount')}</TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
