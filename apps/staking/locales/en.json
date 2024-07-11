@@ -43,13 +43,14 @@
       "address": "Address",
       "fallbackName": "No name"
     },
-    "addTokenButton": {
-      "addToken": "Add {tokenSymbol} to Wallet",
-      "ariaAddToken": "Add {tokenSymbol} to your wallet watch list",
+    "watchTokenButton": {
+      "importText": "Import Token",
+      "ariaImport": "Import {tokenSymbol} information to your wallet watch list",
       "changeNetwork": "Change Network",
       "ariaChangeNetwork": "Switch to a supported network",
       "pending": "Pending",
-      "ariaPending": "Adding {tokenSymbol} to your wallet watch list"
+      "ariaPending": "Adding {tokenSymbol} to your wallet watch list",
+      "failError": "Your wallet does not support importing tokens"
     },
     "networkDropdown": {
       "invalid": "Invalid network",
@@ -88,7 +89,6 @@
       "hash": "Hash",
       "amount": "Amount"
     },
-    "addTokenInfo": "Make {tokenSymbol} visible in your wallet by manually importing the token.",
     "form": {
       "back": "Back",
       "inputPlaceholder": "Wallet address",
@@ -138,8 +138,7 @@
       "transactionHash": "Transaction Hash: {hash}",
       "transactionHashDescription": "Transaction hash of the faucet transaction.",
       "haveSomeMore": "Alright then, you can have some more",
-      "watchSENTInfo": "You may need to add {tokenSymbol} to your wallet to make it show up, click the button below to add it.",
-      "watchSENTButtonText": "Add {tokenSymbol} to wallet",
+      "watchSENTInfo": "You may need to manually add {tokenSymbol} to your wallet’s token list to make it show up, click the button below to add it.",
       "copyTransactionHash": "Copy Transaction Hash",
       "copyTransactionHashSuccessToast": "Copied Transaction Hash to clipboard!"
     }
