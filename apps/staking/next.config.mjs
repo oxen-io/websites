@@ -8,8 +8,8 @@ const getSENTStakingApiUrl = () => {
     throw new Error('NEXT_PUBLIC_SENT_STAKING_API_URL is not set');
   }
 
-  if (!url.endsWith('/')) {
-    url += '/';
+  if (url.endsWith('/')) {
+    url = url.substring(0, url.length - 1);
   }
 
   console.log('SENT Staking API URL:', url);
@@ -39,6 +39,16 @@ const nextConfig = {
       {
         source: '/support',
         destination: 'https://discord.com/invite/J5BTQdCfXN',
+        permanent: false,
+      },
+      {
+        source: '/nodes',
+        destination: '/stake',
+        permanent: false,
+      },
+      {
+        source: '/register/:node',
+        destination: '/stake/:node/register',
         permanent: false,
       },
     ];
