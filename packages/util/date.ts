@@ -30,3 +30,12 @@ export function getUnixTimestampNowSeconds() {
 export function getUnixTimestampSecondsFromDate(date: Date) {
   return Math.floor(date.getTime() / 1000);
 }
+
+/**
+ * Returns the {@link Date} object for a unix timestamp in seconds.
+ * @param timestamp A unix timestamp in seconds
+ * @return The {@link Date} object for the timestamp
+ */
+export function getDateFromUnixTimestampSeconds(timestamp: number) {
+  return new Date(timestamp * 1000);
+}
