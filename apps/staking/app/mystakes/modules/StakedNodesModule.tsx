@@ -5,7 +5,6 @@ import { GenericStakedNode, StakedNode, StakedNodeCard } from '@/components/Stak
 import { WalletModalButtonWithLocales } from '@/components/WalletModalButtonWithLocales';
 import { internalLink } from '@/lib/locale-defaults';
 import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
-import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import type { ServiceNode } from '@session/sent-staking-js/client';
 import { generateMockNodeData } from '@session/sent-staking-js/test';
@@ -21,6 +20,8 @@ import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useMemo } from 'react';
+import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
+import { getStakedNodes } from '@/lib/queries/getStakedNodes';
 
 function StakedNodesWithAddress({ address }: { address: string }) {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_STAKED_NODES);
@@ -30,25 +31,24 @@ function StakedNodesWithAddress({ address }: { address: string }) {
     console.error('Cannot show mock nodes and no nodes at the same time');
   }
 
-  const { data, isLoading } = useSessionStakingQuery({
-    query: 'getNodesForEthWallet',
-    args: { address },
+  const { data, isLoading } = useStakingBackendQueryWithParams(getStakedNodes, {
+    address,
   });
 
   const nodes = useMemo(() => {
     if (showMockNodes) {
       return generateMockNodeData({ userAddress: address }).nodes;
     } else if (showNoNodes) {
-      return [] as Array<ServiceNode>;
+      return [];
     }
-    return data?.nodes as Array<ServiceNode>;
+    return data?.nodes ?? [];
   }, [data, showMockNodes, showNoNodes]);
 
   return (
     <ModuleGridContent className="h-full md:overflow-y-auto">
       {isLoading ? (
         <Loading />
-      ) : nodes && nodes.length > 0 ? (
+      ) : nodes.length ? (
         nodes.map((node) => (
           <StakedNodeCard
             key={node.service_node_pubkey}

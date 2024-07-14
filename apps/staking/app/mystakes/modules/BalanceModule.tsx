@@ -2,7 +2,6 @@
 
 import { ModuleDynamicQueryText } from '@/components/ModuleDynamic';
 import { getTotalStakedAmountForAddress } from '@/components/NodeCard';
-import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
 import { SENT_SYMBOL } from '@session/contracts';
 import type { ServiceNode } from '@session/sent-staking-js/client';
 import { Module, ModuleTitle } from '@session/ui/components/Module';
@@ -11,6 +10,11 @@ import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { Address } from 'viem';
+import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
+import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
+import { getStakedNodes } from '@/lib/queries/getStakedNodes';
+import { generateMockNodeData } from '@session/sent-staking-js/test';
+import type { QUERY_STATUS } from '@/lib/query';
 
 const getTotalStakedAmount = ({
   nodes,
@@ -26,16 +30,36 @@ const getTotalStakedAmount = ({
 };
 
 function useTotalStakedAmount() {
+  const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_STAKED_NODES);
+  const showNoNodes = useFeatureFlag(FEATURE_FLAG.MOCK_NO_STAKED_NODES);
+
+  if (showMockNodes && showNoNodes) {
+    console.error('Cannot show mock nodes and no nodes at the same time');
+  }
+
   const { address } = useWallet();
-  const { data, status, refetch } = useSessionStakingQuery({
-    query: 'getNodesForEthWallet',
-    args: { address: address! },
-  });
+
+  const { data, refetch, status } = useStakingBackendQueryWithParams(
+    getStakedNodes,
+    {
+      address: address!,
+    },
+    Boolean(address)
+  );
+
+  const nodes = useMemo(() => {
+    if (!address || showNoNodes) {
+      return [];
+    } else if (showMockNodes) {
+      return generateMockNodeData({ userAddress: address }).nodes;
+    }
+    return data?.nodes ?? [];
+  }, [data, showMockNodes, showNoNodes]);
 
   const totalStakedAmount = useMemo(() => {
-    if (!address || !data) return null;
-    return getTotalStakedAmount({ nodes: data?.nodes ?? [], address: address! });
-  }, [data, address]);
+    if (!address || !nodes.length) return null;
+    return getTotalStakedAmount({ nodes, address });
+  }, [nodes.length, address]);
 
   return { totalStakedAmount, status, refetch };
 }
@@ -57,13 +81,13 @@ export default function BalanceModule() {
     <Module size="lg" variant="hero">
       <ModuleTitle>{titleFormat('format', { title })}</ModuleTitle>
       <ModuleDynamicQueryText
-        status={status}
+        status={status as QUERY_STATUS}
         fallback={0}
         errorToast={{
           messages: {
             error: toastDictionary('error', { module: title }),
             refetching: toastDictionary('refetching'),
-            success: toastDictionary('refetchSuccess'),
+            success: toastDictionary('refetchSuccess', { module: title }),
           },
           refetch,
         }}
