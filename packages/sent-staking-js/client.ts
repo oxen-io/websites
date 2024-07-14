@@ -99,7 +99,7 @@ interface StoreRegistrationResponse {
 }
 
 /** /registrations */
-interface Registration {
+export interface Registration {
   type: 'solo' | 'contract';
   operator: string;
   contract?: string;
@@ -110,7 +110,7 @@ interface Registration {
   timestamp: number;
 }
 
-interface LoadRegistrationsResponse {
+export interface LoadRegistrationsResponse {
   registrations: Registration[];
 }
 
@@ -132,64 +132,101 @@ interface ValidateRegistrationResponse {
 /** Client types */
 type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
-type RequestBody = Record<string, unknown>;
-
-export interface SSBRequestOptions {
-  url: string;
+export interface RequestOptions {
+  endpoint: string;
   method: HTTPMethod;
-  body?: RequestBody;
+  body?: BodyInit;
 }
 
-export interface SSBResponse<T> {
-  body: T;
+export interface StakingBackendResponse<T> {
+  data: T;
   status: number;
   statusText: string;
 }
 
-export type SSBRequest = <T>(options: SSBRequestOptions) => Promise<SSBResponse<T>>;
+export type Logger = {
+  debug: (data: any) => void;
+  time: (data: any) => void;
+  timeEnd: (data: any) => void;
+};
 
 export interface SSBClientConfig {
   baseUrl: string;
-  request: SSBRequest;
+  logger?: Logger;
+  debug?: boolean;
 }
 
 /**
  * Client for interacting with the Session Staking Backend API.
  */
 export class SessionStakingClient {
-  private baseUrl: string;
-  private request: SSBRequest;
+  private readonly baseUrl: string;
+  private readonly debug?: boolean;
+  private readonly logger: Logger = console;
 
   constructor(config: SSBClientConfig) {
-    const { baseUrl, request } = config;
+    const { baseUrl, debug, logger } = config;
+    this.debug = debug;
+
+    if (this.debug) {
+      this.logger.debug('Initializing session staking backend client');
+    }
+
+    if (logger) {
+      this.logger = logger;
+    }
+
     this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
 
-    if (!this.baseUrl || typeof this.baseUrl !== 'string') {
-      throw new Error('baseUrl is required and must be a string');
+    if (!this.baseUrl) {
+      throw new Error('baseUrl is required');
     }
+  }
 
-    if (!request || typeof request !== 'function') {
-      throw new Error('request is required and must be a function');
+  private async request<T>({
+    endpoint,
+    method,
+    body,
+  }: RequestOptions): Promise<StakingBackendResponse<T>> {
+    const url = `${this.baseUrl}${endpoint}`;
+
+    try {
+      if (this.debug) {
+        this.logger.time(url);
+        if (body) this.logger.debug(body);
+      }
+      const res = await fetch(url, {
+        method,
+        body,
+      });
+
+      if (!res.ok) {
+        throw new Error(`Staking Backend request failed (${res.status}): ${res.statusText}`);
+      }
+
+      const data = await res.json();
+
+      return { data, status: res.status, statusText: res.statusText };
+    } finally {
+      if (this.debug) this.logger.timeEnd(url);
     }
-
-    this.request = request;
   }
 
   /**
    * Retrieves general network information.
    * @returns Network information.
    */
-  public async getNetworkInfo(): Promise<SSBResponse<NetworkInfoResponse>> {
-    const options: SSBRequestOptions = {
-      url: `${this.baseUrl}/info`,
+  public async getNetworkInfo(): Promise<StakingBackendResponse<NetworkInfoResponse>> {
+    const options: RequestOptions = {
+      endpoint: `/info`,
       method: 'GET',
     };
     return this.request<NetworkInfoResponse>(options);
   }
 
-  public async getOpenNodes(): Promise<SSBResponse<GetOpenNodesResponse>> {
-    const options: SSBRequestOptions = {
-      url: `${this.baseUrl}/nodes/open`,
+  public async getOpenNodes(): Promise<StakingBackendResponse<GetOpenNodesResponse>> {
+    const options: RequestOptions = {
+      endpoint: `/nodes/open`,
       method: 'GET',
     };
     return this.request<GetOpenNodesResponse>(options);
@@ -199,16 +236,14 @@ export class SessionStakingClient {
    * Retrieves service nodes associated with the given Ethereum wallet address.
    * @param address Ethereum wallet address.
    * @returns Service nodes.
-   *
-   * @deprecated The response is stubbed with mock data.
    */
   public async getNodesForEthWallet({
     address,
   }: {
     address: string;
-  }): Promise<SSBResponse<GetNodesForWalletResponse>> {
-    const options: SSBRequestOptions = {
-      url: `${this.baseUrl}/nodes/${address}`,
+  }): Promise<StakingBackendResponse<GetNodesForWalletResponse>> {
+    const options: RequestOptions = {
+      endpoint: `/nodes/${address}`,
       method: 'GET',
     };
     return this.request<GetNodesForWalletResponse>(options);
@@ -225,7 +260,8 @@ export class SessionStakingClient {
     address,
   }: {
     address: string;
-  }): Promise<SSBResponse<GetNodesForWalletResponse>> => this.getNodesForEthWallet({ address });
+  }): Promise<StakingBackendResponse<GetNodesForWalletResponse>> =>
+    this.getNodesForEthWallet({ address });
 
   /**
    * Stores or replaces the registration details for a service node.
@@ -238,10 +274,10 @@ export class SessionStakingClient {
     queryParams,
   }: {
     snPubkey: string;
-    queryParams: RequestBody;
-  }): Promise<SSBResponse<StoreRegistrationResponse>> {
-    const options: SSBRequestOptions = {
-      url: `${this.baseUrl}/store/${snPubkey}`,
+    queryParams: BodyInit;
+  }): Promise<StakingBackendResponse<StoreRegistrationResponse>> {
+    const options: RequestOptions = {
+      endpoint: `/store/${snPubkey}`,
       method: 'GET',
       body: queryParams,
     };
@@ -257,9 +293,9 @@ export class SessionStakingClient {
     snPubkey,
   }: {
     snPubkey: string;
-  }): Promise<SSBResponse<LoadRegistrationsResponse>> {
-    const options: SSBRequestOptions = {
-      url: `${this.baseUrl}/registrations/${snPubkey}`,
+  }): Promise<StakingBackendResponse<LoadRegistrationsResponse>> {
+    const options: RequestOptions = {
+      endpoint: `/registrations/${snPubkey}`,
       method: 'GET',
     };
     return this.request<LoadRegistrationsResponse>(options);
@@ -274,9 +310,9 @@ export class SessionStakingClient {
     operator,
   }: {
     operator: string;
-  }): Promise<SSBResponse<LoadRegistrationsResponse>> {
-    const options: SSBRequestOptions = {
-      url: `${this.baseUrl}/registrations/${operator}`,
+  }): Promise<StakingBackendResponse<LoadRegistrationsResponse>> {
+    const options: RequestOptions = {
+      endpoint: `/registrations/${operator}`,
       method: 'GET',
     };
     return this.request<LoadRegistrationsResponse>(options);
@@ -290,10 +326,10 @@ export class SessionStakingClient {
   public async validateRegistration({
     queryParams,
   }: {
-    queryParams: RequestBody;
-  }): Promise<SSBResponse<ValidateRegistrationResponse>> {
-    const options: SSBRequestOptions = {
-      url: `${this.baseUrl}/validate`,
+    queryParams: BodyInit;
+  }): Promise<StakingBackendResponse<ValidateRegistrationResponse>> {
+    const options: RequestOptions = {
+      endpoint: `/validate`,
       method: 'GET',
       body: queryParams,
     };
