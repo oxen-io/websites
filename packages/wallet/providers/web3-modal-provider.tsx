@@ -1,15 +1,14 @@
 'use client';
 
-import { ReactNode, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { State, WagmiProvider as WagmiProviderCore } from 'wagmi';
-import { WagmiMetadata, createWagmiConfig } from '../lib/wagmi';
+import { type State, WagmiProvider as WagmiProviderCore } from 'wagmi';
+import { createWagmiConfig, type WagmiMetadata } from '../lib/wagmi';
 
 import { addresses } from '@session/contracts';
 import { mainnet, testnet } from '@session/contracts/chains';
-import { isProduction } from '@session/util/env';
 import { createWeb3Modal } from '@web3modal/wagmi/react';
 
 /**
@@ -55,7 +54,7 @@ export const initWeb3Modal = ({
       [testnet.id]: '/images/arbitrum.svg',
     },
     projectId,
-    enableAnalytics: !isProduction(),
+    enableAnalytics: false,
     enableOnramp: true,
     featuredWalletIds: [
       Wallet.MetaMask,
@@ -75,17 +74,19 @@ export const initWeb3Modal = ({
 
 const queryClient = new QueryClient();
 
+export type Web3ModalProviderProps = {
+  children: ReactNode;
+  initialState?: State;
+  projectId: string;
+  wagmiMetadata: WagmiMetadata;
+};
+
 export function Web3ModalProvider({
   children,
   initialState,
   projectId,
   wagmiMetadata,
-}: {
-  children: ReactNode;
-  initialState?: State;
-  projectId: string;
-  wagmiMetadata: WagmiMetadata;
-}) {
+}: Web3ModalProviderProps) {
   const [wagmiConfig] = useState(
     initWeb3Modal({
       projectId,
