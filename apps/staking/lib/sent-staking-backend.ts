@@ -6,6 +6,7 @@ export type StakingBackendQuery = (
 
 export type StakingBackendQueryWithParams = (
   stakingBackendClient: SessionStakingClient,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TODO: resolve proper type
   params: any
 ) => Promise<StakingBackendResponse<unknown>>;
 

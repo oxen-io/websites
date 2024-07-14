@@ -145,8 +145,11 @@ export interface StakingBackendResponse<T> {
 }
 
 export type Logger = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TODO: resolve proper type
   debug: (data: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TODO: resolve proper type
   time: (data: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TODO: resolve proper type
   timeEnd: (data: any) => void;
 };
 
