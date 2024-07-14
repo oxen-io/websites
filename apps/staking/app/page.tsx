@@ -40,7 +40,7 @@ export default function LandingPage() {
           </div>
           <div className="flex flex-row flex-wrap items-center justify-center gap-4 lg:flex-nowrap lg:justify-start">
             <Link href="/stake" prefetch className="lg:hidden">
-              <Button size="sm" data-testid={ButtonDataTestId.Home_Run_Node} className="uppercase">
+              <Button size="sm" data-testid={ButtonDataTestId.Home_Primary} className="uppercase">
                 {dictionary('buttons.primary')}
               </Button>
             </Link>
@@ -48,14 +48,14 @@ export default function LandingPage() {
               <Button
                 size="sm"
                 variant="outline"
-                data-testid={ButtonDataTestId.Home_Run_Node}
+                data-testid={ButtonDataTestId.Home_Secondary}
                 className="uppercase"
               >
                 {dictionary('buttons.secondary')}
               </Button>
             </Link>
             <Link href="/stake" prefetch className="hidden lg:inline">
-              <Button size="lg" data-testid={ButtonDataTestId.Home_Run_Node} className="uppercase">
+              <Button size="lg" data-testid={ButtonDataTestId.Home_Primary} className="uppercase">
                 {dictionary('buttons.primary')}
               </Button>
             </Link>
@@ -63,7 +63,7 @@ export default function LandingPage() {
               <Button
                 size="lg"
                 variant="outline"
-                data-testid={ButtonDataTestId.Home_Run_Node}
+                data-testid={ButtonDataTestId.Home_Secondary}
                 className="uppercase"
               >
                 {dictionary('buttons.secondary')}

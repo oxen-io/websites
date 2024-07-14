@@ -1,4 +1,5 @@
 'use client';
+
 import {
   ModuleGrid,
   ModuleGridContent,
@@ -8,12 +9,13 @@ import {
 import { QuestionIcon } from '@session/ui/icons/QuestionIcon';
 import { cn } from '@session/ui/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
-import { HTMLAttributes, forwardRef } from 'react';
+import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { Skeleton } from '@session/ui/ui/skeleton';
 
 type ActionModuleProps = {
   title?: string;
-  children?: React.ReactNode;
-  headerAction?: React.ReactNode;
+  children?: ReactNode;
+  headerAction?: ReactNode;
   background?: keyof typeof actionModuleBackground;
   className?: string;
   contentClassName?: string;
@@ -34,13 +36,15 @@ export default function ActionModule({
       className={cn('h-full w-full', className)}
       style={background ? actionModuleBackground[background] : undefined}
     >
-      {title ? (
-        <ModuleGridHeader>
-          <ModuleGridTitle>{title}</ModuleGridTitle>
-          {headerAction}
-        </ModuleGridHeader>
-      ) : null}
-      <ModuleGridContent className={cn('p-8', contentClassName)}>{children}</ModuleGridContent>
+      <ModuleGridHeader keepDesktopHeaderOnMobile>
+        {title ? (
+          <>
+            <ModuleGridTitle>{title}</ModuleGridTitle>
+            {headerAction}
+          </>
+        ) : null}
+      </ModuleGridHeader>
+      <ModuleGridContent className={cn("overflow-y-auto p-8", contentClassName)}>{children}</ModuleGridContent>
     </ModuleGrid>
   );
 }
@@ -55,15 +59,17 @@ export const actionModuleBackground = {
   },
   2: {
     background: 'url(/images/action-module-background-2.png)',
-    backgroundPositionX: '35%',
+    backgroundPositionX: '0%',
     backgroundPositionY: 'bottom',
     backgroundSize: '150%',
+    backgroundRepeat: 'no-repeat',
   },
   3: {
     background: 'url(/images/action-module-background-3.png)',
-    backgroundPositionX: '35%',
+    backgroundPositionX: '0%',
     backgroundPositionY: 'bottom',
     backgroundSize: '150%',
+    backgroundRepeat: 'no-repeat',
   },
 };
 
@@ -88,7 +94,7 @@ export const ActionModuleRow = ({
 }: {
   label: string;
   tooltip: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) => (
   <div className="flex flex-row flex-wrap items-center justify-between">
     <span className="inline-flex items-center gap-2 text-nowrap align-middle">
@@ -96,6 +102,13 @@ export const ActionModuleRow = ({
       <ActionModuleTooltip>{tooltip}</ActionModuleTooltip>
     </span>
     <div>{children}</div>
+  </div>
+);
+
+export const ActionModuleRowSkeleton = () => (
+  <div className="flex flex-row flex-wrap items-center justify-between">
+    <Skeleton className="h-5 w-full max-w-32" />
+    <Skeleton className="h-5 w-full max-w-48" />
   </div>
 );
 

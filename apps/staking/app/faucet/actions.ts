@@ -2,14 +2,15 @@
 
 import { COMMUNITY_DATE, FAUCET, FAUCET_ERROR, TICKER } from '@/lib/constants';
 import {
-  CHAIN,
-  SENT_DECIMALS,
-  SENT_SYMBOL,
   addresses,
+  CHAIN,
   formatSENT,
   isChain,
+  SENT_DECIMALS,
+  SENT_SYMBOL,
 } from '@session/contracts';
 import { SENTAbi } from '@session/contracts/abis';
+import { isProduction } from '@/lib/env';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { createPublicWalletClient, createServerWallet } from '@session/wallet/lib/server-wallet';
 import * as BetterSql3 from 'better-sqlite3-multiple-ciphers';

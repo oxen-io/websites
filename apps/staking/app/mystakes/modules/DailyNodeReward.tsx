@@ -20,6 +20,7 @@ export default function DailyNodeReward() {
 
   return (
     <Module>
+      fix: tmp
       <ModuleTooltip>
         {dictionary.rich('description', { link: externalLink(URL.LEARN_MORE_DAILY_REWARDS) })}
       </ModuleTooltip>
@@ -31,7 +32,7 @@ export default function DailyNodeReward() {
           messages: {
             error: toastDictionary('error', { module: title }),
             refetching: toastDictionary('refetching'),
-            success: toastDictionary('refetchSuccess'),
+            success: toastDictionary('refetchSuccess', { module: title }),
           },
           refetch,
         }}
