@@ -5,49 +5,24 @@ import { PubKey } from '@/components/PubKey';
 import { formatPercentage } from '@/lib/locale-client';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { SENT_SYMBOL } from '@session/contracts';
-import type { GetOpenNodesResponse, OpenNode } from '@session/sent-staking-js/client';
+import type { GetOpenNodesResponse } from '@session/sent-staking-js/client';
 import { Loading } from '@session/ui/components/loading';
-import { Button } from '@session/ui/ui/button';
+import { Button, ButtonSkeleton } from '@session/ui/ui/button';
 import { formatNumber } from '@session/util/maths';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
-import { ActionModuleDivider, ActionModuleRow } from '../../ActionModule';
+import { useMemo } from 'react';
+import { ActionModuleDivider, ActionModuleRow, ActionModuleRowSkeleton } from '../ActionModule';
+import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-client';
+import { getOpenNodes } from '@/lib/queries/getOpenNodes';
 
 export default function NodeStaking({ nodeId }: { nodeId: string }) {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [nodes, setNodes] = useState<Array<OpenNode>>([]);
-  /*   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);
-  const showNoNodes = useFeatureFlag(FEATURE_FLAG.MOCK_NO_OPEN_NODES);
-
-  const { address } = useWallet();
-
-  if (showMockNodes && showNoNodes) {
-    console.error('Cannot show mock nodes and no nodes at the same time');
-  }
-
-  const { data, isLoading } = useSessionStakingQuery({
-    query: 'getOpenNodes',
-    args: undefined,
-  }); */
+  const { data, isLoading } = useStakingBackendSuspenseQuery(getOpenNodes);
 
   const node = useMemo(() => {
-    /* if (showMockNodes) {
-      return generateOpenNodes({ userAddress: address })[0];
-    } else if (showNoNodes) {
-      return {} as OpenNode;
-    } */
-    return nodes?.find((node) => node.service_node_pubkey === nodeId);
-  }, [nodes]);
+    return data?.nodes?.find((node) => node.service_node_pubkey === nodeId);
+  }, [data]);
 
-  useEffect(() => {
-    fetch('/api/sent/nodes/open')
-      .then((res) => res.json())
-      .then((data) => setNodes(data.nodes))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
-
-  return loading ? (
+  return isLoading ? (
     <Loading />
   ) : node ? (
     <NodeStakingForm node={node} />
@@ -124,6 +99,26 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
         {/* {dictionary('button.submit', { amount: value })} */}
         {generalDictionary('comingSoon')}
       </Button>
+    </div>
+  );
+}
+
+export function NodeStakingFormSkeleton() {
+  return (
+    <div className="flex flex-col gap-4">
+      <ActionModuleRowSkeleton />
+      <ActionModuleDivider />
+      <ActionModuleRowSkeleton />
+      <ActionModuleDivider />
+      <ActionModuleRowSkeleton />
+      <ActionModuleDivider />
+      <ActionModuleRowSkeleton />
+      <ActionModuleDivider />
+      <ActionModuleRowSkeleton />
+      <ActionModuleDivider />
+      <ActionModuleRowSkeleton />
+      <ActionModuleDivider />
+      <ButtonSkeleton rounded="lg" size="lg" />
     </div>
   );
 }
