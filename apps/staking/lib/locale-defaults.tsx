@@ -1,4 +1,4 @@
-import { CHAIN, SENT_SYMBOL, chains } from '@session/contracts';
+import { CHAIN, chains, SENT_SYMBOL } from '@session/contracts';
 import { Social } from '@session/ui/components/SocialLinkList';
 import { cn } from '@session/ui/lib/utils';
 import { RichTranslationValues } from 'next-intl';
@@ -90,6 +90,7 @@ export const defaultTranslationVariables = {
   minimumFaucetGasAmount: FAUCET.MIN_ETH_BALANCE,
   faucetDrip: FAUCET.DRIP,
   oxenProgram: 'Oxen Service Node Bonus program',
+  notFoundContentType: 'page',
 } satisfies RichTranslationValues;
 
 export const defaultTranslationValues: RichTranslationValues = {
