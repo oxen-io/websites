@@ -23,8 +23,12 @@ const nextConfig = {
     '@session/ui',
     '@session/wallet',
     '@session/contracts',
+    '@session/util',
     'better-sqlite3-multiple-ciphers',
   ],
+  experimental: {
+    serverComponentsExternalPackages: ['pino', 'pino-pretty'],
+  },
   webpack: (config) => {
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
     return config;
@@ -56,8 +60,8 @@ const nextConfig = {
   rewrites: async () => {
     return [
       {
-        source: '/api/sent/:path*',
-        destination: `${getSENTStakingApiUrl()}:path*`,
+        source: '/api/ssb/:path*',
+        destination: `${getSENTStakingApiUrl()}/:path*`,
       },
     ];
   },
