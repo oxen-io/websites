@@ -25,14 +25,14 @@ export const BlockExplorerLink = ({ nodeId }: { nodeId: string }) => {
 };
 
 export const BlockExplorerLinkText = () => {
-  const dictionary = useTranslations('actionModules.node');
+  const generalDictionary = useTranslations('general');
   return (
     <span className="text-session-green fill-session-green inline-flex items-center gap-1 align-middle">
       <span className="hidden sm:inline-flex xl:hidden 2xl:inline-flex">
-        {dictionary('viewOnExplorer')}
+        {generalDictionary('viewOnExplorer')}
       </span>
       <span className="inline-flex sm:hidden xl:inline-flex 2xl:hidden">
-        {dictionary('viewOnExplorerShort')}
+        {generalDictionary('viewOnExplorerShort')}
       </span>
       <LinkOutIcon className="h-4 w-4" />
     </span>
