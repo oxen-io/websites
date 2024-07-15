@@ -382,7 +382,7 @@ export const generateNodeRegistration = ({
     pubkey_bls: generateNodePubKey(),
     sig_bls: generateNodePubKey(),
     sig_ed25519: generateNodePubKey(),
-    timestamp: Date.now() - Math.random() * 10000,
+    timestamp: (Date.now() - Math.random() * Math.pow(Math.random() * 10, 10)) / 1000,
     type,
     operator: userAddress,
   };
