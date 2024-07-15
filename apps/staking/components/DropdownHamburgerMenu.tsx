@@ -44,17 +44,11 @@ export function DropdownHamburgerMenu() {
             key={href}
             href={href}
             label={navDictionary(dictionaryKey)}
-            pathname={pathname}
             className="block lg:hidden"
           />
         ))}
         {EXTERNAL_ROUTES.map(({ dictionaryKey, href }) => (
-          <DropdownMenuItemNavLink
-            key={href}
-            href={href}
-            label={navDictionary(dictionaryKey)}
-            pathname={pathname}
-          />
+          <DropdownMenuItemNavLink key={href} href={href} label={navDictionary(dictionaryKey)} />
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
