@@ -56,7 +56,8 @@
       "invalid": "Invalid network",
       "ariaMainnet": "Switch to {mainnetName}",
       "ariaTestnet": "Switch to {testnetName}",
-      "ariaDropdown": "Open network dropdown"
+      "ariaDropdown": "Open network dropdown",
+      "errorNotSupported": "It looks like your wallet doesn't support the Arbitrum Sepolia test network. Try connecting with a different wallet."
     }
   },
   "notFound": {

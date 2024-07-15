@@ -7,14 +7,21 @@ import { Banner } from '@session/ui/components/Banner';
 import { useWallet, useWalletChain } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
+import { SwitchChainErrorType } from 'viem';
+import { toast } from '@session/ui/lib/sonner';
 
 export default function ChainBanner() {
   const { isConnected } = useWallet();
   const { chain, switchChain } = useWalletChain();
   const dictionary = useTranslations('chainBanner');
+  const generalDictionary = useTranslations('wallet.networkDropdown');
 
-  const handleClick = () => {
-    switchChain(preferredChain);
+  const handleError = (error: SwitchChainErrorType) => {
+    toast.error(generalDictionary('errorNotSupported'));
+  };
+
+  const handleClick = async () => {
+    await switchChain(preferredChain, handleError);
   };
 
   const isUnsupportedChain = useMemo(
@@ -48,9 +55,14 @@ function MainnetNotLiveBanner() {
   const { isConnected } = useWallet();
   const { chain, switchChain } = useWalletChain();
   const dictionary = useTranslations('chainBanner');
+  const generalDictionary = useTranslations('wallet.networkDropdown');
+
+  const handleError = (error: SwitchChainErrorType) => {
+    toast.error(generalDictionary('errorNotSupported'));
+  };
 
   const handleClick = () => {
-    switchChain(CHAIN.TESTNET);
+    switchChain(CHAIN.TESTNET, handleError);
   };
 
   const isMainnet = useMemo(() => isConnected && chain === CHAIN.MAINNET, [chain, isConnected]);
