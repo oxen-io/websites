@@ -56,8 +56,8 @@ const nextConfig = {
   rewrites: async () => {
     return [
       {
-        source: '/api/sent/:path*',
-        destination: `${getSENTStakingApiUrl()}:path*`,
+        source: '/api/ssb/:path*',
+        destination: `${getSENTStakingApiUrl()}/:path*`,
       },
     ];
   },
