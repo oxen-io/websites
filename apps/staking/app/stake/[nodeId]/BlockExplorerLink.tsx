@@ -18,7 +18,7 @@ export const BlockExplorerLink = ({ nodeId }: { nodeId: string }) => {
   return isLoading ? (
     <Loading />
   ) : node ? (
-    <Link href={`/explorer/${node.contract}`} target="_blank">
+    <Link href={`/explorer/address/${node.contract}`} target="_blank">
       <BlockExplorerLinkText />
     </Link>
   ) : null;
