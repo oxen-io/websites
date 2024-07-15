@@ -14,11 +14,15 @@ import { useMemo } from 'react';
 import { ActionModuleDivider, ActionModuleRow, ActionModuleRowSkeleton } from '../ActionModule';
 import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-client';
 import { getOpenNodes } from '@/lib/queries/getOpenNodes';
+import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
+import { generateOpenNodes } from '@session/sent-staking-js/test';
 
 export default function NodeStaking({ nodeId }: { nodeId: string }) {
+  const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);
   const { data, isLoading } = useStakingBackendSuspenseQuery(getOpenNodes);
 
   const node = useMemo(() => {
+    if (showMockNodes) return generateOpenNodes()[0];
     return data?.nodes?.find((node) => node.service_node_pubkey === nodeId);
   }, [data]);
 

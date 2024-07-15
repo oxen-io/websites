@@ -19,6 +19,7 @@ import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import { getDateFromUnixTimestampSeconds } from '@session/util/date';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
 import { notFound } from 'next/navigation';
+import { generatePendingNodes } from '@session/sent-staking-js/test';
 
 export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showMockRegistration = useFeatureFlag(FEATURE_FLAG.MOCK_REGISTRATION);
@@ -42,8 +43,7 @@ export default function NodeRegistration({ nodeId }: { nodeId: string }) {
       showThreeMockNodes ||
       showManyMockNodes
     ) {
-      // TODO: Create mock pending nodes generator
-      return {} as LoadRegistrationsResponse['registrations'][number];
+      return generatePendingNodes({ userAddress: address!, numberOfNodes: 1 })[0];
     }
     return data?.registrations?.find((node) => node.pubkey_ed25519 === nodeId);
   }, [
