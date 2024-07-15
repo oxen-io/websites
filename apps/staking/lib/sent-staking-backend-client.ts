@@ -10,7 +10,6 @@ import {
 import { isProduction } from '@/lib/env';
 import { useMemo } from 'react';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
-import { logger } from '@/lib/logger';
 
 let client: SessionStakingClient | undefined;
 
@@ -22,7 +21,6 @@ function getStakingBackendBrowserClient() {
   client = createSessionStakingClient({
     baseUrl: '/api/ssb',
     debug: !isProduction,
-    logger,
   });
 
   return client;
