@@ -16,6 +16,7 @@ export default function ChainBanner() {
   const dictionary = useTranslations('chainBanner');
   const generalDictionary = useTranslations('wallet.networkDropdown');
 
+  // TODO - handle specific errors
   const handleError = (error: SwitchChainErrorType) => {
     toast.error(generalDictionary('errorNotSupported'));
   };
@@ -57,6 +58,7 @@ function MainnetNotLiveBanner() {
   const dictionary = useTranslations('chainBanner');
   const generalDictionary = useTranslations('wallet.networkDropdown');
 
+  // TODO - handle specific errors
   const handleError = (error: SwitchChainErrorType) => {
     toast.error(generalDictionary('errorNotSupported'));
   };

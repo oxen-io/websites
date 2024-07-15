@@ -11,6 +11,7 @@ export function WalletNetworkDropdownWithLocales({ className }: { className?: st
   const { isConnected } = useWallet();
   const dictionary = useTranslations('wallet.networkDropdown');
 
+  // TODO - handle specific errors
   const handleError = (error: SwitchChainErrorType) => {
     toast.error(dictionary('errorNotSupported'));
   };
