@@ -7,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@session/ui/ui/dropdown-menu';
-import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@session/ui/ui/button';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
@@ -23,7 +22,6 @@ function DropdownMenuItemNavLink({ label, children, ...props }: NavLinkProps) {
 }
 
 export function DropdownHamburgerMenu() {
-  const pathname = usePathname();
   const dictionary = useTranslations('navigation.hamburgerDropdown');
   const navDictionary = useTranslations('navigation');
   return (
