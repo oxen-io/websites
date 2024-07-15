@@ -1,6 +1,6 @@
+import type { ReactNode } from 'react';
 import ScreenContainer from '@/components/ScreenContainer';
 import { ModuleGrid } from '@session/ui/components/ModuleGrid';
-import type { ReactNode } from 'react';
 import OpenNodesModule from '@/app/stake/OpenNodesModule';
 import PendingNodesModule from '@/app/stake/PendingNodesModule';
 

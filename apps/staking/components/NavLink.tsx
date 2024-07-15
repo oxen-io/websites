@@ -13,6 +13,17 @@ export type NavLinkProps = {
   className?: string;
 };
 
+/**
+ * Returns true of a href is to an external link
+ * @param href the link
+ */
+function isExternalLink(href: string): boolean {
+  if (href.startsWith('http://')) {
+    throw new Error(`http links are forbidden, use https. Link: ${href}`);
+  }
+  return href.startsWith('https://');
+}
+
 export function NavLink({ href, label, children, ariaLabel }: NavLinkProps) {
   const pathname = usePathname();
   return (
@@ -20,6 +31,12 @@ export function NavLink({ href, label, children, ariaLabel }: NavLinkProps) {
       href={href}
       className={cn('hover:text-session-green', pathname.startsWith(href) && 'text-session-green')}
       aria-label={ariaLabel}
+      {...(isExternalLink(href)
+        ? {
+            target: '_blank',
+            referrerPolicy: 'no-referrer',
+          }
+        : {})}
     >
       {children ?? label}
     </Link>
