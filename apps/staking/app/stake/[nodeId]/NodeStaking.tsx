@@ -24,7 +24,7 @@ export default function NodeStaking({ nodeId }: { nodeId: string }) {
   const node = useMemo(() => {
     if (showMockNodes) return generateOpenNodes()[0];
     return data?.nodes?.find((node) => node.service_node_pubkey === nodeId);
-  }, [data]);
+  }, [data, showMockNodes]);
 
   return isLoading ? (
     <Loading />

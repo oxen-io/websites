@@ -382,6 +382,7 @@ export const generateNodeRegistration = ({
     pubkey_bls: generateNodePubKey(),
     sig_bls: generateNodePubKey(),
     sig_ed25519: generateNodePubKey(),
+    // Generates a random time in the near past
     timestamp: (Date.now() - Math.random() * Math.pow(Math.random() * 10, 10)) / 1000,
     type,
     operator: userAddress,
