@@ -1,11 +1,40 @@
 import { Footer } from '@/components/Footer';
-import { URL } from '@/lib/constants';
+import { LANDING_BUTTON_URL } from '@/lib/constants';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { cn } from '@session/ui/lib/utils';
 import { Button } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
+
+const PrimaryButton = ({ size, className }: { size: 'sm' | 'lg'; className?: string }) => {
+  const dictionary = useTranslations('home');
+
+  return (
+    <Link href={LANDING_BUTTON_URL.PRIMARY} prefetch className={className}>
+      <Button size={size} data-testid={ButtonDataTestId.Home_Primary} className="uppercase">
+        {dictionary('buttons.primary')}
+      </Button>
+    </Link>
+  );
+};
+
+const SecondaryButton = ({ size, className }: { size: 'sm' | 'lg'; className?: string }) => {
+  const dictionary = useTranslations('home');
+
+  return (
+    <Link href={LANDING_BUTTON_URL.SECONDARY} target="_blank" prefetch className={className}>
+      <Button
+        size={size}
+        data-testid={ButtonDataTestId.Home_Secondary}
+        variant="outline"
+        className="uppercase"
+      >
+        {dictionary('buttons.secondary')}
+      </Button>
+    </Link>
+  );
+};
 
 export default function LandingPage() {
   const dictionary = useTranslations('home');
@@ -26,52 +55,28 @@ export default function LandingPage() {
             'lg:mt-0'
           )}
         >
-          <div className={'flex flex-col items-center justify-start lg:items-start'}>
-            <h1 className="whitespace-nowrap text-center text-5xl font-medium md:text-7xl lg:text-start 2xl:text-8xl">
+          <div
+            className={'flex flex-col items-center justify-start backdrop-blur-sm lg:items-start'}
+          >
+            <h1 className="3xl:text-8xl whitespace-nowrap text-center text-5xl font-medium md:text-7xl lg:text-start">
               {dictionary.rich('title')}
             </h1>
             <h2
               className={cn(
-                'whitespace-nowrap text-center text-3xl font-medium md:text-4xl lg:text-start xl:text-7xl 2xl:text-8xl'
+                '3xl:text-8xl whitespace-nowrap text-center text-3xl font-medium md:text-4xl lg:text-start xl:text-7xl'
               )}
             >
               {dictionary('titleDescription')}
             </h2>
           </div>
           <div className="flex flex-row flex-wrap items-center justify-center gap-4 lg:flex-nowrap lg:justify-start">
-            <Link href="/stake" prefetch className="lg:hidden">
-              <Button size="sm" data-testid={ButtonDataTestId.Home_Primary} className="uppercase">
-                {dictionary('buttons.primary')}
-              </Button>
-            </Link>
-            <Link href={URL.SESSION_NODE_DOCS} target="_blank" className="lg:hidden">
-              <Button
-                size="sm"
-                variant="outline"
-                data-testid={ButtonDataTestId.Home_Secondary}
-                className="uppercase"
-              >
-                {dictionary('buttons.secondary')}
-              </Button>
-            </Link>
-            <Link href="/stake" prefetch className="hidden lg:inline">
-              <Button size="lg" data-testid={ButtonDataTestId.Home_Primary} className="uppercase">
-                {dictionary('buttons.primary')}
-              </Button>
-            </Link>
-            <Link href={URL.SESSION_NODE_DOCS} target="_blank" className="hidden lg:inline">
-              <Button
-                size="lg"
-                variant="outline"
-                data-testid={ButtonDataTestId.Home_Secondary}
-                className="uppercase"
-              >
-                {dictionary('buttons.secondary')}
-              </Button>
-            </Link>
+            <SecondaryButton size="sm" className="lg:hidden" />
+            <PrimaryButton size="sm" className="lg:hidden" />
+            <PrimaryButton size="lg" className="hidden lg:inline" />
+            <SecondaryButton size="lg" className="hidden lg:inline" />
           </div>
         </div>
-        <div className="flex max-w-[50vh] items-center justify-center overflow-hidden align-middle lg:max-w-full">
+        <div className="-z-10 flex max-w-[50vh] items-center justify-center overflow-hidden align-middle lg:max-w-full">
           <Image
             src="/images/cube.png"
             alt={dictionary('heroImageAlt')}
