@@ -22,6 +22,7 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { getStakedNodes } from '@/lib/queries/getStakedNodes';
+import { getDateFromUnixTimestampSeconds } from '@session/util/date';
 
 function StakedNodesWithAddress({ address }: { address: string }) {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_STAKED_NODES);
@@ -122,10 +123,10 @@ const parseSessionNodeData = (node: ServiceNode): GenericStakedNode => {
     state: node.state,
     contributors: node.contributors,
     lastRewardHeight: 0,
-    lastUptime: new Date(Date.now() - msToBlockHeight(node.last_uptime_proof)),
+    lastUptime: getDateFromUnixTimestampSeconds(node.last_uptime_proof),
     pubKey: node.service_node_pubkey,
     balance: node.total_contributed,
-    operatorFee: node.portions_for_operator,
+    operatorFee: node.operator_fee,
     operator_address: node.operator_address,
     ...(node.awaiting_liquidation ? { awaitingLiquidation: true } : {}),
     ...(node.decomm_blocks_remaining
