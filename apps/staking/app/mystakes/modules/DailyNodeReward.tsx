@@ -31,7 +31,7 @@ export default function DailyNodeReward() {
           messages: {
             error: toastDictionary('error', { module: title }),
             refetching: toastDictionary('refetching'),
-            success: toastDictionary('refetchSuccess'),
+            success: toastDictionary('refetchSuccess', { module: title }),
           },
           refetch,
         }}

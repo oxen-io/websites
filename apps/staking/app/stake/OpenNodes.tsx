@@ -3,74 +3,54 @@
 import { OpenNodeCard } from '@/components/OpenNodeCard';
 import { URL } from '@/lib/constants';
 import { externalLink } from '@/lib/locale-defaults';
-import { OpenNode } from '@session/sent-staking-js/client';
-import {
-  ModuleGridContent,
-  ModuleGridHeader,
-  ModuleGridInfoContent,
-  ModuleGridTitle,
-} from '@session/ui/components/ModuleGrid';
+import { ModuleGridContent, ModuleGridInfoContent } from '@session/ui/components/ModuleGrid';
 import { Loading } from '@session/ui/components/loading';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
+import { useMemo } from 'react';
+import { generateOpenNodes } from '@session/sent-staking-js/test';
+import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-client';
+import { getOpenNodes } from '@/lib/queries/getOpenNodes';
+import { InfoNodeCardSkeleton } from '@/components/InfoNodeCard';
 
-export default function OpenNodesModule() {
-  const dictionary = useTranslations('modules.openNodes');
-  return (
-    <>
-      <ModuleGridHeader>
-        <ModuleGridTitle>{dictionary('title')}</ModuleGridTitle>
-      </ModuleGridHeader>
-      <OpenNodes />
-    </>
-  );
-}
-
-function OpenNodes() {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [nodes, setNodes] = useState<Array<OpenNode>>([]);
-  /*  const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);
+export default function OpenNodes() {
+  const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);
   const showNoNodes = useFeatureFlag(FEATURE_FLAG.MOCK_NO_OPEN_NODES);
 
   if (showMockNodes && showNoNodes) {
     console.error('Cannot show mock nodes and no nodes at the same time');
   }
 
-  const { address } = useWallet();
-  const { data, isLoading } = useSessionStakingQuery({
-    query: 'getOpenNodes',
-    args: undefined,
-  });
-
-  console.log(data);
-  console.log('no', showNoNodes);
+  const { data, isLoading } = useStakingBackendSuspenseQuery(getOpenNodes);
 
   const nodes = useMemo(() => {
     if (showMockNodes) {
-      return generateOpenNodes({ userAddress: address });
+      return generateOpenNodes();
     } else if (showNoNodes) {
-      return [] as Array<OpenNode>;
+      return [];
     }
-    return data?.nodes as Array<OpenNode>;
-  }, [data?.nodes, showMockNodes, showNoNodes, address]); */
-
-  useEffect(() => {
-    fetch('/api/sent/nodes/open')
-      .then((res) => res.json())
-      .then((data) => setNodes(data.nodes))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+    return data?.nodes ?? [];
+  }, [data?.nodes, showMockNodes, showNoNodes]);
 
   return (
     <ModuleGridContent className="h-full md:overflow-y-auto">
-      {loading ? (
+      {isLoading ? (
         <Loading />
-      ) : nodes && nodes.length > 0 ? (
+      ) : nodes.length ? (
         nodes.map((node) => <OpenNodeCard key={node.service_node_pubkey} node={node} />)
       ) : (
         <NoNodes />
       )}
+    </ModuleGridContent>
+  );
+}
+
+export function OpenNodesSkeleton() {
+  return (
+    <ModuleGridContent className="h-full md:overflow-y-auto">
+      <InfoNodeCardSkeleton />
+      <InfoNodeCardSkeleton />
+      <InfoNodeCardSkeleton />
     </ModuleGridContent>
   );
 }

@@ -78,3 +78,15 @@ export const EXTERNAL_ROUTES: LinkItem[] = [
   { dictionaryKey: 'support', href: '/support', linkType: 'external' },
   { dictionaryKey: 'docs', href: 'https://docs.getsession.org', linkType: 'external' },
 ] as const;
+
+export enum QUERY {
+  /** 60 seconds */
+  STALE_TIME_DEFAULT = 60 * 1000,
+  /** 1 second */
+  STALE_TIME_DEFAULT_DEV = 1000,
+}
+
+export enum SESSION_NODE {
+  /** 240 SENT  */
+  FULL_STAKE_AMOUNT = '240000000000',
+}

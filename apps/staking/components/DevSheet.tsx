@@ -64,7 +64,10 @@ function PageSpecificFeatureFlags() {
   const pathname = usePathname();
   const featureFlags = useFeatureFlags();
 
-  const pageFlags = pageFeatureFlags[pathname];
+  const pageFlags = pathname
+    .split('/')
+    .flatMap((slug) => pageFeatureFlags[slug])
+    .filter((flag) => flag !== undefined) as Array<FEATURE_FLAG>;
 
   if (!pageFlags || pageFlags.length === 0) return null;
 

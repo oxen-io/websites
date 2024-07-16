@@ -56,7 +56,8 @@
       "invalid": "Invalid network",
       "ariaMainnet": "Switch to {mainnetName}",
       "ariaTestnet": "Switch to {testnetName}",
-      "ariaDropdown": "Open network dropdown"
+      "ariaDropdown": "Open network dropdown",
+      "errorNotSupported": "It looks like your wallet doesn't support the Arbitrum Sepolia test network. Try connecting with a different wallet."
     }
   },
   "notFound": {
@@ -83,6 +84,7 @@
       "walletRequirementDescription": "You will need test {gasTokenSymbol} on the {testNetworkChain} network to use as <gas-info-link>gas</gas-info-link> for all test {tokenSymbol} transactions. If you don't have any, this faucet will top up your {testNetworkChain} test {gasTokenSymbol} balance to up to {minimumFaucetGasAmount} test {gasTokenSymbol}. You can also get test {gasTokenSymbol} from an <gas-faucet-link>{testNetworkChain} faucet</gas-faucet-link>. Each eligible wallet can use this faucet to make a one-time claim for {faucetDrip} {tokenSymbol}. Please note that faucet usage limits may be subject to change.",
       "notEligible": "Not eligible? {testnetName} and its Incentive Program are currently closed to the public, however we will be inviting new users to join our testnet in the future."
     },
+    "addTokenInfo": "Make {tokenSymbol} visible in your wallet by manually importing the token.",
     "transactions": {
       "tableCaption": "A list of your faucet transactions.",
       "when": "When",
@@ -164,6 +166,9 @@
       "learnMoreButtonText": "Learn More",
       "learnMoreButtonAria": "Navigate to the Session Node documentation page."
     },
+    "pendingNodes": {
+      "title": "Pending Session Nodes"
+    },
     "stakedNodes": {
       "title": "My Stakes",
       "showHiddenText": "Show Hidden",
@@ -230,8 +235,21 @@
     }
   },
   "actionModules": {
+    "shared": {
+      "stakeAmount": "Stake Amount",
+      "stakeAmountDescription": "Amount of {tokenSymbol} to stake to the Session node."
+    },
     "register": {
-      "description": "Please start the registration process from your client or select from the list of open Session Node."
+      "title": "Register a New Node",
+      "preparedAtTimestamp": "Registration Prepared",
+      "preparedAtTimestampDescription": "When the node was prepared for registration",
+      "button": {
+        "submit": "Register and Stake {amount} {tokenSymbol}"
+      },
+      "description": "Please start the registration process from your client or select from the list of open Session Node.",
+      "notFound": {
+        "foundOpenNode": "It looks like this node is already registered an open for staking:"
+      }
     },
     "node": {
       "title": "Stake to a Node",
@@ -254,7 +272,13 @@
       "viewButton": {
         "text": "View",
         "ariaLabel": "View the node details in the side panel"
-      },
+      }
+    },
+    "pending": {
+      "type": "Type",
+      "typeDescription": "The node type",
+      "solo": "Single Contributor Node",
+      "multi": "Multi Contributor Node",
       "registerButton": {
         "text": "Register",
         "ariaLabel": "View the node registration details in the side panel"

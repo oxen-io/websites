@@ -10,24 +10,24 @@
     --session-text: #dbdbdb;
     --session-white: #ffffff;
     --session-gradient-outline: linear-gradient(
-      135deg,
-      rgba(165, 218, 205, 1) 0%,
-      rgba(119, 161, 151, 1) 100%
+            135deg,
+            rgba(165, 218, 205, 1) 0%,
+            rgba(119, 161, 151, 1) 100%
     );
     --session-gradient-green: linear-gradient(
-      170deg,
-      rgba(0, 251, 172, 1) 0%,
-      rgba(0, 253, 187, 1) 100%
+            170deg,
+            rgba(0, 251, 172, 1) 0%,
+            rgba(0, 253, 187, 1) 100%
     );
     --session-gradient-gray: linear-gradient(
-      170deg,
-      rgba(77, 77, 77, 1) 0%,
-      rgba(69, 69, 69, 1) 100%
+            170deg,
+            rgba(77, 77, 77, 1) 0%,
+            rgba(69, 69, 69, 1) 100%
     );
     --session-gradient-white: linear-gradient(
-      163deg,
-      rgba(215, 222, 218, 1) 0%,
-      rgba(188, 200, 193, 1) 100%
+            163deg,
+            rgba(215, 222, 218, 1) 0%,
+            rgba(188, 200, 193, 1) 100%
     );
     --session-green-dark: #00b35f;
     --session-disabled: #939393;
@@ -45,9 +45,9 @@
     --text-static: #dbdbdb;
     --text-gradient: linear-gradient(135deg, #ffffff -38.86%, #97a99e 133.98%);
     --text-gradient-darker: linear-gradient(
-      90.71deg,
-      rgba(160, 197, 181, 0.8) -0.79%,
-      rgba(174, 208, 216, 0.8) 98.84%
+            90.71deg,
+            rgba(160, 197, 181, 0.8) -0.79%,
+            rgba(174, 208, 216, 0.8) 98.84%
     );
 
     --session-module-outline-gradient: linear-gradient(135deg, #7fb1ae 0%, #2a4337 100%);
@@ -62,7 +62,7 @@
     --primary-foreground: 240 5.9% 10%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
+    --muted: 240 3.7% 20%;
     --muted-foreground: 240 5% 64.9%;
     --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
@@ -70,7 +70,7 @@
     --destructive-foreground: 0 85.7% 97.3%;
     --warning: 32.39 96% 67%;
     --warning-foreground: 0 0% 98%;
-    --info: 0.56 100%	48%;
+    --info: 0.56 100% 48%;
     --info-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
@@ -79,7 +79,7 @@
     --radius: 0.5rem;
 
     --header-height: 2.5rem;
-    --header-vertical-padding: 1.5rem;
+    --header-vertical-padding: 2rem;
     --header-displacement: calc(var(--header-height) + var(--header-vertical-padding) * 2);
     --screen-without-header: calc(100vh - var(--header-displacement));
   }

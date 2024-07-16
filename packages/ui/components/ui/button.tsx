@@ -1,8 +1,9 @@
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { forwardRef } from 'react';
+import { type ButtonHTMLAttributes, forwardRef } from 'react';
 import { BaseDataTestId, TestingProps } from '../../data-test-ids';
 import { cn } from '../../lib/utils';
+import { Skeleton } from './skeleton';
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center whitespace-nowrap rounded-full font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
@@ -45,7 +46,7 @@ const buttonVariants = cva(
 export type ButtonVariantProps = VariantProps<typeof buttonVariants>;
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends ButtonHTMLAttributes<HTMLButtonElement>,
     ButtonVariantProps,
     TestingProps<BaseDataTestId.Button> {
   asChild?: boolean;
@@ -66,4 +67,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = 'Button';
 
-export { Button, buttonVariants };
+type ButtonSkeletonProps = ButtonVariantProps & { className?: string };
+
+const ButtonSkeleton = ({ className, variant, size, rounded }: ButtonSkeletonProps) => {
+  return (
+    <Skeleton className={cn(buttonVariants({ className, variant, size, rounded }), 'grayscale')} />
+  );
+};
+
+export { Button, ButtonSkeleton, buttonVariants };

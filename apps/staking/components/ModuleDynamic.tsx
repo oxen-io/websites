@@ -1,11 +1,11 @@
 'use client';
 
-import { QUERY_STATUS } from '@/providers/sent-staking-provider';
 import { CONTRACT_READ_STATUS } from '@session/contracts/hooks/contract-hooks';
 import { ModuleText } from '@session/ui/components/Module';
 import { LoadingText } from '@session/ui/components/loading-text';
-import { forwardRef, useId, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, type HTMLAttributes, type ReactNode, useId } from 'react';
 import { toastErrorRefetch, type ToastErrorRefetchProps } from './Toast';
+import { QUERY_STATUS } from '@/lib/query';
 
 type GenericQueryProps = {
   fallback: ReactNode;

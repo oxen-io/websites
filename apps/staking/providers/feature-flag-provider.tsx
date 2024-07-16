@@ -100,6 +100,12 @@ export enum FEATURE_FLAG {
   MOCK_NO_STAKED_NODES = 'mockNoStakedNodes',
   MOCK_OPEN_NODES = 'mockOpenNodes',
   MOCK_NO_OPEN_NODES = 'mockNoOpenNodes',
+  MOCK_PENDING_NODES_ONE = 'mockPendingNodesOne',
+  MOCK_PENDING_NODES_TWO = 'mockPendingNodesTwo',
+  MOCK_PENDING_NODES_THREE = 'mockPendingNodesThree',
+  MOCK_PENDING_NODES_MANY = 'mockPendingNodesMany',
+  MOCK_NO_PENDING_NODES = 'mockNoPendingNodes',
+  MOCK_REGISTRATION = 'mockRegistration',
 }
 
 export const FEATURE_FLAG_DESCRIPTION = {
@@ -107,11 +113,26 @@ export const FEATURE_FLAG_DESCRIPTION = {
   [FEATURE_FLAG.MOCK_NO_STAKED_NODES]: 'Replace staked nodes with no data',
   [FEATURE_FLAG.MOCK_OPEN_NODES]: 'Replace open nodes with mock data',
   [FEATURE_FLAG.MOCK_NO_OPEN_NODES]: 'Replace open nodes with no data',
+  [FEATURE_FLAG.MOCK_PENDING_NODES_ONE]: 'Replace pending nodes with 1 node with mock data',
+  [FEATURE_FLAG.MOCK_PENDING_NODES_TWO]: 'Replace pending nodes with 2 node with mock data',
+  [FEATURE_FLAG.MOCK_PENDING_NODES_THREE]: 'Replace pending nodes with 3 node with mock data',
+  [FEATURE_FLAG.MOCK_PENDING_NODES_MANY]: 'Replace pending nodes with many node with mock data',
+  [FEATURE_FLAG.MOCK_NO_PENDING_NODES]: 'Replace pending nodes with no data',
+  [FEATURE_FLAG.MOCK_REGISTRATION]: 'Use a mock node for the registration form',
 };
 
 export const validFeatureFlags = Object.values(FEATURE_FLAG);
 
 export const pageFeatureFlags: Record<string, Array<FEATURE_FLAG>> = {
-  '/mystakes': [FEATURE_FLAG.MOCK_STAKED_NODES, FEATURE_FLAG.MOCK_NO_STAKED_NODES],
-  '/stake': [FEATURE_FLAG.MOCK_OPEN_NODES, FEATURE_FLAG.MOCK_NO_OPEN_NODES],
+  mystakes: [FEATURE_FLAG.MOCK_STAKED_NODES, FEATURE_FLAG.MOCK_NO_STAKED_NODES],
+  stake: [
+    FEATURE_FLAG.MOCK_OPEN_NODES,
+    FEATURE_FLAG.MOCK_NO_OPEN_NODES,
+    FEATURE_FLAG.MOCK_PENDING_NODES_ONE,
+    FEATURE_FLAG.MOCK_PENDING_NODES_TWO,
+    FEATURE_FLAG.MOCK_PENDING_NODES_THREE,
+    FEATURE_FLAG.MOCK_PENDING_NODES_MANY,
+    FEATURE_FLAG.MOCK_NO_PENDING_NODES,
+  ],
+  register: [FEATURE_FLAG.MOCK_REGISTRATION],
 };

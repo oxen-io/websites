@@ -1,8 +1,9 @@
 import {
-  NODE_STATE,
-  OpenNode,
   type Contributor,
   type GetNodesForWalletResponse,
+  NODE_STATE,
+  OpenNode,
+  type Registration,
   type ServiceNode,
 } from './client';
 
@@ -326,7 +327,7 @@ export const generateMinAndMaxContribution = ({
     maxContribution: remainingStake,
   };
 };
-/* 
+
 const generateOpenNode = ({
   userAddress,
   maxContributors,
@@ -334,21 +335,25 @@ const generateOpenNode = ({
   userAddress?: string;
   maxContributors: number;
 }): OpenNode => {
-  const contributors = generateContributors(maxContributors, userAddress);
-  const { minContribution, maxContribution } = generateMinAndMaxContribution({ contributors });
+  const contributions = generateContributors(maxContributors, userAddress);
 
   return {
     service_node_pubkey: generateNodePubKey(),
-    fee: Math.random(),
+    service_node_signature: generateNodePubKey(),
+    contract: generateNodePubKey(),
+    bls_pubkey: generateNodePubKey(),
+    fee: Math.random() * 1000,
+    finalized: false,
+    cancelled: false,
+    total_contributions: 0,
     contributions,
-    operatorAddress: generateWalletAddress(),
   };
-}; */
+};
 
-export const generateOpenNodes =
-  (/* { userAddress }: { userAddress?: string } */): Array<OpenNode> => {
-    return [
-      /* generateOpenNode({ maxContributors: 1 }),
+export const generateOpenNodes = (args?: { userAddress?: string }): Array<OpenNode> => {
+  const userAddress = args?.userAddress;
+  return [
+    generateOpenNode({ maxContributors: 1 }),
     generateOpenNode({ maxContributors: 9 }),
     generateOpenNode({ userAddress, maxContributors: 5 }),
     generateOpenNode({ userAddress, maxContributors: 1 }),
@@ -360,6 +365,38 @@ export const generateOpenNodes =
     generateOpenNode({ maxContributors: 5 }),
     generateOpenNode({ userAddress, maxContributors: 5 }),
     generateOpenNode({ userAddress, maxContributors: 10 }),
-    generateOpenNode({ userAddress, maxContributors: 10 }), */
-    ];
+    generateOpenNode({ userAddress, maxContributors: 10 }),
+  ];
+};
+
+export const generateNodeRegistration = ({
+  userAddress,
+  type,
+}: {
+  userAddress: string;
+  type: Registration['type'];
+}): Registration => {
+  return {
+    contract: generateNodePubKey(),
+    pubkey_ed25519: generateNodePubKey(),
+    pubkey_bls: generateNodePubKey(),
+    sig_bls: generateNodePubKey(),
+    sig_ed25519: generateNodePubKey(),
+    // Generates a random time in the near past
+    timestamp: (Date.now() - Math.random() * Math.pow(Math.random() * 10, 10)) / 1000,
+    type,
+    operator: userAddress,
   };
+};
+
+export const generatePendingNodes = ({
+  userAddress,
+  numberOfNodes,
+}: {
+  userAddress: string;
+  numberOfNodes: number;
+}): Array<Registration> => {
+  return Array.from({
+    length: numberOfNodes,
+  }).map(() => generateNodeRegistration({ userAddress, type: 'solo' }));
+};
