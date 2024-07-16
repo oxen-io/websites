@@ -3,6 +3,7 @@
 import {
   FEATURE_FLAG,
   FEATURE_FLAG_DESCRIPTION,
+  globalFeatureFlags,
   pageFeatureFlags,
   useFeatureFlags,
   useSetFeatureFlag,
@@ -21,6 +22,7 @@ import { useEffect, useState } from 'react';
 
 export function DevSheet() {
   const [isOpen, setIsOpen] = useState(false);
+  const featureFlags = useFeatureFlags();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -53,6 +55,9 @@ export function DevSheet() {
           </SheetDescription>
           <SheetTitle>Global Feature Flags</SheetTitle>
           🧑‍🔬
+          {globalFeatureFlags.map((flag) => (
+            <FeatureFlagToggle flag={flag} key={flag} initialState={featureFlags[flag]} />
+          ))}
           <PageSpecificFeatureFlags />
         </SheetHeader>
       </SheetContent>

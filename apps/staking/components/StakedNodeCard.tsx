@@ -13,14 +13,14 @@ import { formatNumber } from '@session/util/maths';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { useTranslations } from 'next-intl';
-import { ReactNode, forwardRef, useId, useMemo, useState, type HTMLAttributes } from 'react';
+import { forwardRef, type HTMLAttributes, ReactNode, useId, useMemo, useState } from 'react';
 import {
   Contributor,
+  getTotalStakedAmountForAddress,
   NodeCard,
   NodeCardText,
   NodeCardTitle,
   NodeContributorList,
-  getTotalStakedAmountForAddress,
 } from './NodeCard';
 import { PubKey } from './PubKey';
 
