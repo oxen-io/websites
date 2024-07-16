@@ -5,310 +5,310 @@
  */
 export const TokenVestingNoStakingAbi = [
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "beneficiary_",
-        "type": "address"
+        internalType: 'address',
+        name: 'beneficiary_',
+        type: 'address',
       },
       {
-        "internalType": "address",
-        "name": "revoker_",
-        "type": "address"
+        internalType: 'address',
+        name: 'revoker_',
+        type: 'address',
       },
       {
-        "internalType": "uint256",
-        "name": "cliff_",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'cliff_',
+        type: 'uint256',
       },
       {
-        "internalType": "uint256",
-        "name": "end_",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'end_',
+        type: 'uint256',
       },
       {
-        "internalType": "bool",
-        "name": "transferableBeneficiary_",
-        "type": "bool"
-      }
+        internalType: 'bool',
+        name: 'transferableBeneficiary_',
+        type: 'bool',
+      },
     ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    stateMutability: 'nonpayable',
+    type: 'constructor',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "target",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'target',
+        type: 'address',
+      },
     ],
-    "name": "AddressEmptyCode",
-    "type": "error"
+    name: 'AddressEmptyCode',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
     ],
-    "name": "AddressInsufficientBalance",
-    "type": "error"
+    name: 'AddressInsufficientBalance',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "FailedInnerCall",
-    "type": "error"
+    inputs: [],
+    name: 'FailedInnerCall',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
     ],
-    "name": "SafeERC20FailedOperation",
-    "type": "error"
+    name: 'SafeERC20FailedOperation',
+    type: 'error',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "oldBeneficiary",
-        "type": "address"
+        indexed: false,
+        internalType: 'address',
+        name: 'oldBeneficiary',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "newBeneficiary",
-        "type": "address"
-      }
+        indexed: false,
+        internalType: 'address',
+        name: 'newBeneficiary',
+        type: 'address',
+      },
     ],
-    "name": "BeneficiaryTransferred",
-    "type": "event"
+    name: 'BeneficiaryTransferred',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "oldRevoker",
-        "type": "address"
+        indexed: false,
+        internalType: 'address',
+        name: 'oldRevoker',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "newRevoker",
-        "type": "address"
-      }
+        indexed: false,
+        internalType: 'address',
+        name: 'newRevoker',
+        type: 'address',
+      },
     ],
-    "name": "RevokerTransferred",
-    "type": "event"
+    name: 'RevokerTransferred',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "contract IERC20",
-        "name": "token",
-        "type": "address"
+        indexed: true,
+        internalType: 'contract IERC20',
+        name: 'token',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "refund",
-        "type": "uint256"
-      }
+        indexed: false,
+        internalType: 'uint256',
+        name: 'refund',
+        type: 'uint256',
+      },
     ],
-    "name": "TokenVestingRevoked",
-    "type": "event"
+    name: 'TokenVestingRevoked',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "contract IERC20",
-        "name": "token",
-        "type": "address"
+        indexed: true,
+        internalType: 'contract IERC20',
+        name: 'token',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
     ],
-    "name": "TokensReleased",
-    "type": "event"
+    name: 'TokensReleased',
+    type: 'event',
   },
   {
-    "inputs": [],
-    "name": "CLIFF_DENOMINATOR",
-    "outputs": [
+    inputs: [],
+    name: 'CLIFF_DENOMINATOR',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "cliff",
-    "outputs": [
+    inputs: [],
+    name: 'cliff',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "end",
-    "outputs": [
+    inputs: [],
+    name: 'end',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "getBeneficiary",
-    "outputs": [
+    inputs: [],
+    name: 'getBeneficiary',
+    outputs: [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "getRevoker",
-    "outputs": [
+    inputs: [],
+    name: 'getRevoker',
+    outputs: [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "contract IERC20",
-        "name": "token",
-        "type": "address"
-      }
+        internalType: 'contract IERC20',
+        name: 'token',
+        type: 'address',
+      },
     ],
-    "name": "release",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'release',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "contract IERC20",
-        "name": "",
-        "type": "address"
-      }
+        internalType: 'contract IERC20',
+        name: '',
+        type: 'address',
+      },
     ],
-    "name": "released",
-    "outputs": [
+    name: 'released',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "contract IERC20",
-        "name": "token",
-        "type": "address"
-      }
+        internalType: 'contract IERC20',
+        name: 'token',
+        type: 'address',
+      },
     ],
-    "name": "revoke",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'revoke',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "revoked",
-    "outputs": [
+    inputs: [],
+    name: 'revoked',
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "beneficiary_",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'beneficiary_',
+        type: 'address',
+      },
     ],
-    "name": "transferBeneficiary",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'transferBeneficiary',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "revoker_",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'revoker_',
+        type: 'address',
+      },
     ],
-    "name": "transferRevoker",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'transferRevoker',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "transferableBeneficiary",
-    "outputs": [
+    inputs: [],
+    name: 'transferableBeneficiary',
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
-  }
+    stateMutability: 'view',
+    type: 'function',
+  },
 ] as const;

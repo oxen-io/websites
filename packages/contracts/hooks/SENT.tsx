@@ -8,6 +8,7 @@ import {
   ContractReadQueryFetchOptions,
   ReadContractQuery,
   useContractReadQuery,
+  useContractWriteQuery,
 } from './contract-hooks';
 
 export type SENTBalanceQuery = ReadContractQuery & {
@@ -48,4 +49,25 @@ export function useSENTBalanceQuery(
     getBalance,
     ...rest,
   };
+}
+
+export function useProxyApproval({
+  contractAddress,
+  tokenAmount,
+}: {
+  contractAddress: Address;
+  tokenAmount: bigint;
+}) {
+  const { writeContract, writeStatus } = useContractWriteQuery({
+    contract: 'SENT',
+    functionName: 'approve',
+  });
+
+  const approve = () => {
+    writeContract({
+      args: [contractAddress, tokenAmount],
+    });
+  };
+
+  return { approve, writeStatus };
 }

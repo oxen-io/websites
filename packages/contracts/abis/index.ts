@@ -14,29 +14,32 @@ import { TokenVestingNoStakingAbi } from './TokenVestingNoStaking';
 import { TokenVestingStakingAbi } from './TokenVestingStaking';
 
 export const Contracts = {
-RewardRatePool: RewardRatePoolAbi,
-SENT: SENTAbi,
-ServiceNodeContribution: ServiceNodeContributionAbi,
-ServiceNodeContributionFactory: ServiceNodeContributionFactoryAbi,
-ServiceNodeRewards: ServiceNodeRewardsAbi,
-BN256G1: BN256G1Abi,
-BN256G2: BN256G2Abi,
-Pairing: PairingAbi,
-Shared: SharedAbi,
-TokenConverter: TokenConverterAbi,
-TokenVestingNoStaking: TokenVestingNoStakingAbi,
-TokenVestingStaking: TokenVestingStakingAbi
-} as const;export type ContractWithAbiName = keyof typeof Contracts;export type ContractAbis = typeof Contracts;export {
-RewardRatePoolAbi,
-SENTAbi,
-ServiceNodeContributionAbi,
-ServiceNodeContributionFactoryAbi,
-ServiceNodeRewardsAbi,
-BN256G1Abi,
-BN256G2Abi,
-PairingAbi,
-SharedAbi,
-TokenConverterAbi,
-TokenVestingNoStakingAbi,
-TokenVestingStakingAbi,
+  RewardRatePool: RewardRatePoolAbi,
+  SENT: SENTAbi,
+  ServiceNodeContribution: ServiceNodeContributionAbi,
+  ServiceNodeContributionFactory: ServiceNodeContributionFactoryAbi,
+  ServiceNodeRewards: ServiceNodeRewardsAbi,
+  BN256G1: BN256G1Abi,
+  BN256G2: BN256G2Abi,
+  Pairing: PairingAbi,
+  Shared: SharedAbi,
+  TokenConverter: TokenConverterAbi,
+  TokenVestingNoStaking: TokenVestingNoStakingAbi,
+  TokenVestingStaking: TokenVestingStakingAbi,
+} as const;
+export type ContractWithAbiName = keyof typeof Contracts;
+export type ContractAbis = typeof Contracts;
+export {
+  RewardRatePoolAbi,
+  SENTAbi,
+  ServiceNodeContributionAbi,
+  ServiceNodeContributionFactoryAbi,
+  ServiceNodeRewardsAbi,
+  BN256G1Abi,
+  BN256G2Abi,
+  PairingAbi,
+  SharedAbi,
+  TokenConverterAbi,
+  TokenVestingNoStakingAbi,
+  TokenVestingStakingAbi,
 };

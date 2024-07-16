@@ -5,1640 +5,1868 @@
  */
 export const ServiceNodeRewardsAbi = [
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "target",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'target',
+        type: 'address',
+      },
     ],
-    "name": "AddressEmptyCode",
-    "type": "error"
+    name: 'AddressEmptyCode',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
     ],
-    "name": "AddressInsufficientBalance",
-    "type": "error"
+    name: 'AddressInsufficientBalance',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "ArrayLengthMismatch",
-    "type": "error"
+    inputs: [],
+    name: 'ArrayLengthMismatch',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
-      }
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
+      },
     ],
-    "name": "BLSPubkeyAlreadyExists",
-    "type": "error"
+    name: 'BLSPubkeyAlreadyExists',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
       },
       {
-        "components": [
+        components: [
           {
-            "internalType": "uint256",
-            "name": "X",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "Y",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
+          },
         ],
-        "internalType": "struct BN256G1.G1Point",
-        "name": "pubkey",
-        "type": "tuple"
-      }
+        internalType: 'struct BN256G1.G1Point',
+        name: 'pubkey',
+        type: 'tuple',
+      },
     ],
-    "name": "BLSPubkeyDoesNotMatch",
-    "type": "error"
+    name: 'BLSPubkeyDoesNotMatch',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
       },
       {
-        "internalType": "address",
-        "name": "contributor",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'contributor',
+        type: 'address',
+      },
     ],
-    "name": "CallerNotContributor",
-    "type": "error"
+    name: 'CallerNotContributor',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "ContractAlreadyStarted",
-    "type": "error"
+    inputs: [],
+    name: 'ContractAlreadyStarted',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "ContractNotStarted",
-    "type": "error"
+    inputs: [],
+    name: 'ContractNotStarted',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "required",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'required',
+        type: 'uint256',
       },
       {
-        "internalType": "uint256",
-        "name": "provided",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'provided',
+        type: 'uint256',
+      },
     ],
-    "name": "ContributionTotalMismatch",
-    "type": "error"
+    name: 'ContributionTotalMismatch',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "DeleteSentinelNodeNotAllowed",
-    "type": "error"
+    inputs: [],
+    name: 'DeleteSentinelNodeNotAllowed',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
       },
       {
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
+      },
     ],
-    "name": "EarlierLeaveRequestMade",
-    "type": "error"
+    name: 'EarlierLeaveRequestMade',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "EnforcedPause",
-    "type": "error"
+    inputs: [],
+    name: 'EnforcedPause',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "ExpectedPause",
-    "type": "error"
+    inputs: [],
+    name: 'ExpectedPause',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "FailedInnerCall",
-    "type": "error"
+    inputs: [],
+    name: 'FailedInnerCall',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "operator",
-        "type": "address"
+        internalType: 'address',
+        name: 'operator',
+        type: 'address',
       },
       {
-        "internalType": "address",
-        "name": "contributor",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'contributor',
+        type: 'address',
+      },
     ],
-    "name": "FirstContributorMismatch",
-    "type": "error"
+    name: 'FirstContributorMismatch',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "numSigners",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'numSigners',
+        type: 'uint256',
       },
       {
-        "internalType": "uint256",
-        "name": "requiredSigners",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'requiredSigners',
+        type: 'uint256',
+      },
     ],
-    "name": "InsufficientBLSSignatures",
-    "type": "error"
+    name: 'InsufficientBLSSignatures',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "InvalidBLSProofOfPossession",
-    "type": "error"
+    inputs: [],
+    name: 'InvalidBLSProofOfPossession',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "InvalidBLSSignature",
-    "type": "error"
+    inputs: [],
+    name: 'InvalidBLSSignature',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "InvalidInitialization",
-    "type": "error"
+    inputs: [],
+    name: 'InvalidInitialization',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
       },
       {
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'timestamp',
+        type: 'uint256',
       },
       {
-        "internalType": "uint256",
-        "name": "currenttime",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'currenttime',
+        type: 'uint256',
+      },
     ],
-    "name": "LeaveRequestTooEarly",
-    "type": "error"
+    name: 'LeaveRequestTooEarly',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "MaxContributorsExceeded",
-    "type": "error"
+    inputs: [],
+    name: 'MaxContributorsExceeded',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "NotInitializing",
-    "type": "error"
+    inputs: [],
+    name: 'NotInitializing',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "NullRecipient",
-    "type": "error"
+    inputs: [],
+    name: 'NullRecipient',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
     ],
-    "name": "OwnableInvalidOwner",
-    "type": "error"
+    name: 'OwnableInvalidOwner',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
     ],
-    "name": "OwnableUnauthorizedAccount",
-    "type": "error"
+    name: 'OwnableUnauthorizedAccount',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "expectedRecipient",
-        "type": "address"
+        internalType: 'address',
+        name: 'expectedRecipient',
+        type: 'address',
       },
       {
-        "internalType": "address",
-        "name": "providedRecipient",
-        "type": "address"
+        internalType: 'address',
+        name: 'providedRecipient',
+        type: 'address',
       },
       {
-        "internalType": "uint256",
-        "name": "serviceNodeID",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'serviceNodeID',
+        type: 'uint256',
+      },
     ],
-    "name": "RecipientAddressDoesNotMatch",
-    "type": "error"
+    name: 'RecipientAddressDoesNotMatch',
+    type: 'error',
   },
   {
-    "inputs": [],
-    "name": "RecipientRewardsTooLow",
-    "type": "error"
+    inputs: [],
+    name: 'RecipientRewardsTooLow',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
     ],
-    "name": "SafeERC20FailedOperation",
-    "type": "error"
+    name: 'SafeERC20FailedOperation',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
-      }
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
+      },
     ],
-    "name": "ServiceNodeDoesntExist",
-    "type": "error"
+    name: 'ServiceNodeDoesntExist',
+    type: 'error',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
       },
       {
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'timestamp',
+        type: 'uint256',
       },
       {
-        "internalType": "uint256",
-        "name": "currenttime",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'currenttime',
+        type: 'uint256',
+      },
     ],
-    "name": "SignatureExpired",
-    "type": "error"
+    name: 'SignatureExpired',
+    type: 'error',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newMax",
-        "type": "uint256"
-      }
-    ],
-    "name": "BLSNonSignerThresholdMaxUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint64",
-        "name": "version",
-        "type": "uint64"
-      }
-    ],
-    "name": "Initialized",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
       },
       {
-        "components": [
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
+      },
+    ],
+    name: 'SmallContributorLeaveTooEarly',
+    type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'newMax',
+        type: 'uint256',
+      },
+    ],
+    name: 'BLSNonSignerThresholdMaxUpdated',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'version',
+        type: 'uint64',
+      },
+    ],
+    name: 'Initialized',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
+      },
+      {
+        components: [
           {
-            "internalType": "uint256",
-            "name": "X",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "Y",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
+          },
         ],
-        "indexed": false,
-        "internalType": "struct BN256G1.G1Point",
-        "name": "pubkey",
-        "type": "tuple"
-      }
+        indexed: false,
+        internalType: 'struct BN256G1.G1Point',
+        name: 'pubkey',
+        type: 'tuple',
+      },
     ],
-    "name": "NewSeededServiceNode",
-    "type": "event"
+    name: 'NewSeededServiceNode',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
+        indexed: true,
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
       },
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
+        indexed: false,
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
       },
       {
-        "components": [
+        components: [
           {
-            "internalType": "uint256",
-            "name": "X",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "Y",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
+          },
         ],
-        "indexed": false,
-        "internalType": "struct BN256G1.G1Point",
-        "name": "pubkey",
-        "type": "tuple"
+        indexed: false,
+        internalType: 'struct BN256G1.G1Point',
+        name: 'pubkey',
+        type: 'tuple',
       },
       {
-        "components": [
+        components: [
           {
-            "internalType": "uint256",
-            "name": "serviceNodePubkey",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'serviceNodePubkey',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "serviceNodeSignature1",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'serviceNodeSignature1',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "serviceNodeSignature2",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'serviceNodeSignature2',
+            type: 'uint256',
           },
           {
-            "internalType": "uint16",
-            "name": "fee",
-            "type": "uint16"
-          }
+            internalType: 'uint16',
+            name: 'fee',
+            type: 'uint16',
+          },
         ],
-        "indexed": false,
-        "internalType": "struct IServiceNodeRewards.ServiceNodeParams",
-        "name": "serviceNode",
-        "type": "tuple"
+        indexed: false,
+        internalType: 'struct IServiceNodeRewards.ServiceNodeParams',
+        name: 'serviceNode',
+        type: 'tuple',
       },
       {
-        "components": [
+        components: [
           {
-            "internalType": "address",
-            "name": "addr",
-            "type": "address"
+            internalType: 'address',
+            name: 'addr',
+            type: 'address',
           },
           {
-            "internalType": "uint256",
-            "name": "stakedAmount",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'stakedAmount',
+            type: 'uint256',
+          },
         ],
-        "indexed": false,
-        "internalType": "struct IServiceNodeRewards.Contributor[]",
-        "name": "contributors",
-        "type": "tuple[]"
-      }
+        indexed: false,
+        internalType: 'struct IServiceNodeRewards.Contributor[]',
+        name: 'contributors',
+        type: 'tuple[]',
+      },
     ],
-    "name": "NewServiceNode",
-    "type": "event"
+    name: 'NewServiceNode',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
+        indexed: true,
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
     ],
-    "name": "OwnershipTransferStarted",
-    "type": "event"
+    name: 'OwnershipTransferStarted',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
+        indexed: true,
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
     ],
-    "name": "OwnershipTransferred",
-    "type": "event"
+    name: 'OwnershipTransferred',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
+        indexed: false,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
     ],
-    "name": "Paused",
-    "type": "event"
+    name: 'Paused',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "recipientAddress",
-        "type": "address"
+        indexed: true,
+        internalType: 'address',
+        name: 'recipientAddress',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "previousBalance",
-        "type": "uint256"
-      }
+        indexed: false,
+        internalType: 'uint256',
+        name: 'previousBalance',
+        type: 'uint256',
+      },
     ],
-    "name": "RewardsBalanceUpdated",
-    "type": "event"
+    name: 'RewardsBalanceUpdated',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "recipientAddress",
-        "type": "address"
+        indexed: true,
+        internalType: 'address',
+        name: 'recipientAddress',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
     ],
-    "name": "RewardsClaimed",
-    "type": "event"
+    name: 'RewardsClaimed',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
+        indexed: true,
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
       },
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
+        indexed: false,
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
       },
       {
-        "components": [
+        components: [
           {
-            "internalType": "uint256",
-            "name": "X",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "Y",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
+          },
         ],
-        "indexed": false,
-        "internalType": "struct BN256G1.G1Point",
-        "name": "pubkey",
-        "type": "tuple"
-      }
+        indexed: false,
+        internalType: 'struct BN256G1.G1Point',
+        name: 'pubkey',
+        type: 'tuple',
+      },
     ],
-    "name": "ServiceNodeLiquidated",
-    "type": "event"
+    name: 'ServiceNodeLiquidated',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
+        indexed: true,
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
       },
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
+        indexed: false,
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "returnedAmount",
-        "type": "uint256"
+        indexed: false,
+        internalType: 'uint256',
+        name: 'returnedAmount',
+        type: 'uint256',
       },
       {
-        "components": [
+        components: [
           {
-            "internalType": "uint256",
-            "name": "X",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "Y",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
+          },
         ],
-        "indexed": false,
-        "internalType": "struct BN256G1.G1Point",
-        "name": "pubkey",
-        "type": "tuple"
-      }
+        indexed: false,
+        internalType: 'struct BN256G1.G1Point',
+        name: 'pubkey',
+        type: 'tuple',
+      },
     ],
-    "name": "ServiceNodeRemoval",
-    "type": "event"
+    name: 'ServiceNodeRemoval',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
+        indexed: true,
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
       },
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
+        indexed: false,
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
       },
       {
-        "components": [
+        components: [
           {
-            "internalType": "uint256",
-            "name": "X",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "Y",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
+          },
         ],
-        "indexed": false,
-        "internalType": "struct BN256G1.G1Point",
-        "name": "pubkey",
-        "type": "tuple"
-      }
+        indexed: false,
+        internalType: 'struct BN256G1.G1Point',
+        name: 'pubkey',
+        type: 'tuple',
+      },
     ],
-    "name": "ServiceNodeRemovalRequest",
-    "type": "event"
+    name: 'ServiceNodeRemovalRequest',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newExpiry",
-        "type": "uint256"
-      }
+        indexed: false,
+        internalType: 'uint256',
+        name: 'newExpiry',
+        type: 'uint256',
+      },
     ],
-    "name": "SignatureExpiryUpdated",
-    "type": "event"
+    name: 'SignatureExpiryUpdated',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newRequirement",
-        "type": "uint256"
-      }
+        indexed: false,
+        internalType: 'uint256',
+        name: 'newRequirement',
+        type: 'uint256',
+      },
     ],
-    "name": "StakingRequirementUpdated",
-    "type": "event"
+    name: 'StakingRequirementUpdated',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
+        indexed: false,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
     ],
-    "name": "Unpaused",
-    "type": "event"
+    name: 'Unpaused',
+    type: 'event',
   },
   {
-    "inputs": [],
-    "name": "LIST_SENTINEL",
-    "outputs": [
+    inputs: [],
+    name: 'LIST_SENTINEL',
+    outputs: [
       {
-        "internalType": "uint64",
-        "name": "",
-        "type": "uint64"
-      }
+        internalType: 'uint64',
+        name: '',
+        type: 'uint64',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "MAX_SERVICE_NODE_REMOVAL_WAIT_TIME",
-    "outputs": [
+    inputs: [],
+    name: 'MAX_PERMITTED_PUBKEY_AGGREGATIONS_LOWER_BOUND',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "_aggregatePubkey",
-    "outputs": [
+    inputs: [],
+    name: 'MAX_SERVICE_NODE_REMOVAL_WAIT_TIME',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "X",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'SMALL_CONTRIBUTOR_DIVISOR',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'SMALL_CONTRIBUTOR_LEAVE_DELAY',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: '_aggregatePubkey',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'X',
+        type: 'uint256',
       },
       {
-        "internalType": "uint256",
-        "name": "Y",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'Y',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "acceptOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
+    inputs: [],
+    name: '_lastHeightPubkeyWasAggregated',
+    outputs: [
       {
-        "components": [
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: '_numPubkeyAggregationsForHeight',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'acceptOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
           {
-            "internalType": "uint256",
-            "name": "X",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "Y",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
+          },
         ],
-        "internalType": "struct BN256G1.G1Point",
-        "name": "blsPubkey",
-        "type": "tuple"
+        internalType: 'struct BN256G1.G1Point',
+        name: 'blsPubkey',
+        type: 'tuple',
       },
       {
-        "components": [
+        components: [
           {
-            "internalType": "uint256",
-            "name": "sigs0",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'sigs0',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "sigs1",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'sigs1',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "sigs2",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'sigs2',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "sigs3",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'sigs3',
+            type: 'uint256',
+          },
         ],
-        "internalType": "struct IServiceNodeRewards.BLSSignatureParams",
-        "name": "blsSignature",
-        "type": "tuple"
+        internalType: 'struct IServiceNodeRewards.BLSSignatureParams',
+        name: 'blsSignature',
+        type: 'tuple',
       },
       {
-        "components": [
+        components: [
           {
-            "internalType": "uint256",
-            "name": "serviceNodePubkey",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'serviceNodePubkey',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "serviceNodeSignature1",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'serviceNodeSignature1',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "serviceNodeSignature2",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'serviceNodeSignature2',
+            type: 'uint256',
           },
           {
-            "internalType": "uint16",
-            "name": "fee",
-            "type": "uint16"
-          }
+            internalType: 'uint16',
+            name: 'fee',
+            type: 'uint16',
+          },
         ],
-        "internalType": "struct IServiceNodeRewards.ServiceNodeParams",
-        "name": "serviceNodeParams",
-        "type": "tuple"
+        internalType: 'struct IServiceNodeRewards.ServiceNodeParams',
+        name: 'serviceNodeParams',
+        type: 'tuple',
       },
       {
-        "components": [
+        components: [
           {
-            "internalType": "address",
-            "name": "addr",
-            "type": "address"
+            internalType: 'address',
+            name: 'addr',
+            type: 'address',
           },
           {
-            "internalType": "uint256",
-            "name": "stakedAmount",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'stakedAmount',
+            type: 'uint256',
+          },
         ],
-        "internalType": "struct IServiceNodeRewards.Contributor[]",
-        "name": "contributors",
-        "type": "tuple[]"
-      }
+        internalType: 'struct IServiceNodeRewards.Contributor[]',
+        name: 'contributors',
+        type: 'tuple[]',
+      },
     ],
-    "name": "addBLSPublicKey",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'addBLSPublicKey',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "aggregatePubkey",
-    "outputs": [
+    inputs: [
       {
-        "components": [
+        components: [
           {
-            "internalType": "uint256",
-            "name": "X",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "Y",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
+          },
         ],
-        "internalType": "struct BN256G1.G1Point",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "blsNonSignerThreshold",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "blsNonSignerThresholdMax",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "claimRewards",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "designatedToken",
-    "outputs": [
-      {
-        "internalType": "contract IERC20",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "foundationPool",
-    "outputs": [
-      {
-        "internalType": "contract IERC20",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token_",
-        "type": "address"
+        internalType: 'struct BN256G1.G1Point',
+        name: 'blsPubkey',
+        type: 'tuple',
       },
       {
-        "internalType": "address",
-        "name": "foundationPool_",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "stakingRequirement_",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "maxContributors_",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "liquidatorRewardRatio_",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "poolShareOfLiquidationRatio_",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "recipientRatio_",
-        "type": "uint256"
-      }
-    ],
-    "name": "initialize",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
-      }
-    ],
-    "name": "initiateRemoveBLSPublicKey",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "isStarted",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
+        components: [
           {
-            "internalType": "uint256",
-            "name": "X",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'sigs0',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "Y",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'sigs1',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'sigs2',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'sigs3',
+            type: 'uint256',
+          },
         ],
-        "internalType": "struct BN256G1.G1Point",
-        "name": "blsPubkey",
-        "type": "tuple"
+        internalType: 'struct IServiceNodeRewards.BLSSignatureParams',
+        name: 'blsSignature',
+        type: 'tuple',
       },
       {
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      },
-      {
-        "components": [
+        components: [
           {
-            "internalType": "uint256",
-            "name": "sigs0",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'serviceNodePubkey',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "sigs1",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'serviceNodeSignature1',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "sigs2",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'serviceNodeSignature2',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "sigs3",
-            "type": "uint256"
-          }
+            internalType: 'uint16',
+            name: 'fee',
+            type: 'uint16',
+          },
         ],
-        "internalType": "struct IServiceNodeRewards.BLSSignatureParams",
-        "name": "blsSignature",
-        "type": "tuple"
+        internalType: 'struct IServiceNodeRewards.ServiceNodeParams',
+        name: 'serviceNodeParams',
+        type: 'tuple',
       },
       {
-        "internalType": "uint64[]",
-        "name": "ids",
-        "type": "uint64[]"
-      }
-    ],
-    "name": "liquidateBLSPublicKeyWithSignature",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "liquidateTag",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "liquidatorRewardRatio",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "maxContributors",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "nextServiceNodeID",
-    "outputs": [
-      {
-        "internalType": "uint64",
-        "name": "",
-        "type": "uint64"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "pause",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "paused",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "pendingOwner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "poolShareOfLiquidationRatio",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "proofOfPossessionTag",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "recipientRatio",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "recipients",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "rewards",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "claimed",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "removalTag",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
-      }
-    ],
-    "name": "removeBLSPublicKeyAfterWaitTime",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
+        components: [
           {
-            "internalType": "uint256",
-            "name": "X",
-            "type": "uint256"
+            internalType: 'address',
+            name: 'addr',
+            type: 'address',
           },
           {
-            "internalType": "uint256",
-            "name": "Y",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'stakedAmount',
+            type: 'uint256',
+          },
         ],
-        "internalType": "struct BN256G1.G1Point",
-        "name": "blsPubkey",
-        "type": "tuple"
+        internalType: 'struct IServiceNodeRewards.Contributor[]',
+        name: 'contributors',
+        type: 'tuple[]',
       },
       {
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'deadline',
+        type: 'uint256',
       },
       {
-        "components": [
+        internalType: 'uint8',
+        name: 'v',
+        type: 'uint8',
+      },
+      {
+        internalType: 'bytes32',
+        name: 'r',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'bytes32',
+        name: 's',
+        type: 'bytes32',
+      },
+    ],
+    name: 'addBLSPublicKeyWithPermit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'aggregatePubkey',
+    outputs: [
+      {
+        components: [
           {
-            "internalType": "uint256",
-            "name": "sigs0",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "sigs1",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
           },
-          {
-            "internalType": "uint256",
-            "name": "sigs2",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "sigs3",
-            "type": "uint256"
-          }
         ],
-        "internalType": "struct IServiceNodeRewards.BLSSignatureParams",
-        "name": "blsSignature",
-        "type": "tuple"
+        internalType: 'struct BN256G1.G1Point',
+        name: '',
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'blsNonSignerThreshold',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'blsNonSignerThresholdMax',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'claimRewards',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'designatedToken',
+    outputs: [
+      {
+        internalType: 'contract IERC20',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'foundationPool',
+    outputs: [
+      {
+        internalType: 'contract IERC20',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'hashToG2Tag',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'token_',
+        type: 'address',
       },
       {
-        "internalType": "uint64[]",
-        "name": "ids",
-        "type": "uint64[]"
-      }
-    ],
-    "name": "removeBLSPublicKeyWithSignature",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "rewardTag",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "pkX",
-        "type": "uint256[]"
+        internalType: 'address',
+        name: 'foundationPool_',
+        type: 'address',
       },
       {
-        "internalType": "uint256[]",
-        "name": "pkY",
-        "type": "uint256[]"
+        internalType: 'uint256',
+        name: 'stakingRequirement_',
+        type: 'uint256',
       },
       {
-        "internalType": "uint256[]",
-        "name": "amounts",
-        "type": "uint256[]"
-      }
+        internalType: 'uint256',
+        name: 'maxContributors_',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'liquidatorRewardRatio_',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'poolShareOfLiquidationRatio_',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'recipientRatio_',
+        type: 'uint256',
+      },
     ],
-    "name": "seedPublicKeyList",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'initialize',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "bytes",
-        "name": "blsPublicKey",
-        "type": "bytes"
-      }
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
+      },
     ],
-    "name": "serviceNodeIDs",
-    "outputs": [
-      {
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
+    name: 'initiateRemoveBLSPublicKey',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [],
+    name: 'isStarted',
+    outputs: [
       {
-        "internalType": "uint64",
-        "name": "serviceNodeID",
-        "type": "uint64"
-      }
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
     ],
-    "name": "serviceNodes",
-    "outputs": [
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
       {
-        "components": [
+        components: [
           {
-            "internalType": "uint64",
-            "name": "next",
-            "type": "uint64"
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
           },
           {
-            "internalType": "uint64",
-            "name": "prev",
-            "type": "uint64"
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct BN256G1.G1Point',
+        name: 'blsPubkey',
+        type: 'tuple',
+      },
+      {
+        internalType: 'uint256',
+        name: 'timestamp',
+        type: 'uint256',
+      },
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'sigs0',
+            type: 'uint256',
           },
           {
-            "internalType": "address",
-            "name": "operator",
-            "type": "address"
+            internalType: 'uint256',
+            name: 'sigs1',
+            type: 'uint256',
           },
           {
-            "components": [
+            internalType: 'uint256',
+            name: 'sigs2',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'sigs3',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct IServiceNodeRewards.BLSSignatureParams',
+        name: 'blsSignature',
+        type: 'tuple',
+      },
+      {
+        internalType: 'uint64[]',
+        name: 'ids',
+        type: 'uint64[]',
+      },
+    ],
+    name: 'liquidateBLSPublicKeyWithSignature',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'liquidateTag',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'liquidatorRewardRatio',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'maxContributors',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'maxPermittedPubkeyAggregations',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'result',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'nextServiceNodeID',
+    outputs: [
+      {
+        internalType: 'uint64',
+        name: '',
+        type: 'uint64',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'owner',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'pause',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'paused',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'pendingOwner',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'poolShareOfLiquidationRatio',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'proofOfPossessionTag',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'recipientRatio',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'recipients',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'rewards',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'claimed',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'removalTag',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
+      },
+    ],
+    name: 'removeBLSPublicKeyAfterWaitTime',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct BN256G1.G1Point',
+        name: 'blsPubkey',
+        type: 'tuple',
+      },
+      {
+        internalType: 'uint256',
+        name: 'timestamp',
+        type: 'uint256',
+      },
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'sigs0',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'sigs1',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'sigs2',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'sigs3',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct IServiceNodeRewards.BLSSignatureParams',
+        name: 'blsSignature',
+        type: 'tuple',
+      },
+      {
+        internalType: 'uint64[]',
+        name: 'ids',
+        type: 'uint64[]',
+      },
+    ],
+    name: 'removeBLSPublicKeyWithSignature',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'rewardTag',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256[]',
+        name: 'pkX',
+        type: 'uint256[]',
+      },
+      {
+        internalType: 'uint256[]',
+        name: 'pkY',
+        type: 'uint256[]',
+      },
+      {
+        internalType: 'uint256[]',
+        name: 'amounts',
+        type: 'uint256[]',
+      },
+    ],
+    name: 'seedPublicKeyList',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes',
+        name: 'blsPublicKey',
+        type: 'bytes',
+      },
+    ],
+    name: 'serviceNodeIDs',
+    outputs: [
+      {
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint64',
+        name: 'serviceNodeID',
+        type: 'uint64',
+      },
+    ],
+    name: 'serviceNodes',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint64',
+            name: 'next',
+            type: 'uint64',
+          },
+          {
+            internalType: 'uint64',
+            name: 'prev',
+            type: 'uint64',
+          },
+          {
+            internalType: 'address',
+            name: 'operator',
+            type: 'address',
+          },
+          {
+            components: [
               {
-                "internalType": "uint256",
-                "name": "X",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'X',
+                type: 'uint256',
               },
               {
-                "internalType": "uint256",
-                "name": "Y",
-                "type": "uint256"
-              }
+                internalType: 'uint256',
+                name: 'Y',
+                type: 'uint256',
+              },
             ],
-            "internalType": "struct BN256G1.G1Point",
-            "name": "pubkey",
-            "type": "tuple"
+            internalType: 'struct BN256G1.G1Point',
+            name: 'pubkey',
+            type: 'tuple',
           },
           {
-            "internalType": "uint256",
-            "name": "leaveRequestTimestamp",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'addedTimestamp',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "deposit",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'leaveRequestTimestamp',
+            type: 'uint256',
           },
           {
-            "components": [
+            internalType: 'uint256',
+            name: 'deposit',
+            type: 'uint256',
+          },
+          {
+            components: [
               {
-                "internalType": "address",
-                "name": "addr",
-                "type": "address"
+                internalType: 'address',
+                name: 'addr',
+                type: 'address',
               },
               {
-                "internalType": "uint256",
-                "name": "stakedAmount",
-                "type": "uint256"
-              }
+                internalType: 'uint256',
+                name: 'stakedAmount',
+                type: 'uint256',
+              },
             ],
-            "internalType": "struct IServiceNodeRewards.Contributor[]",
-            "name": "contributors",
-            "type": "tuple[]"
-          }
+            internalType: 'struct IServiceNodeRewards.Contributor[]',
+            name: 'contributors',
+            type: 'tuple[]',
+          },
         ],
-        "internalType": "struct IServiceNodeRewards.ServiceNode",
-        "name": "",
-        "type": "tuple"
-      }
+        internalType: 'struct IServiceNodeRewards.ServiceNode',
+        name: '',
+        type: 'tuple',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "serviceNodesLength",
-    "outputs": [
+    inputs: [],
+    name: 'serviceNodesLength',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "count",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'count',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "newMax",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'newMax',
+        type: 'uint256',
+      },
     ],
-    "name": "setBLSNonSignerThresholdMax",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'setBLSNonSignerThresholdMax',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "newExpiry",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'newExpiry',
+        type: 'uint256',
+      },
     ],
-    "name": "setSignatureExpiry",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'setSignatureExpiry',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "newRequirement",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'newRequirement',
+        type: 'uint256',
+      },
     ],
-    "name": "setStakingRequirement",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'setStakingRequirement',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "signatureExpiry",
-    "outputs": [
+    inputs: [],
+    name: 'signatureExpiry',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "stakingRequirement",
-    "outputs": [
+    inputs: [],
+    name: 'stakingRequirement',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "start",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    inputs: [],
+    name: 'start',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "totalNodes",
-    "outputs": [
+    inputs: [],
+    name: 'totalNodes',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
     ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'transferOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "unpause",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    inputs: [],
+    name: 'unpause',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "recipientAddress",
-        "type": "address"
+        internalType: 'address',
+        name: 'recipientAddress',
+        type: 'address',
       },
       {
-        "internalType": "uint256",
-        "name": "recipientRewards",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'recipientRewards',
+        type: 'uint256',
       },
       {
-        "components": [
+        components: [
           {
-            "internalType": "uint256",
-            "name": "sigs0",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'sigs0',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "sigs1",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'sigs1',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "sigs2",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'sigs2',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "sigs3",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'sigs3',
+            type: 'uint256',
+          },
         ],
-        "internalType": "struct IServiceNodeRewards.BLSSignatureParams",
-        "name": "blsSignature",
-        "type": "tuple"
+        internalType: 'struct IServiceNodeRewards.BLSSignatureParams',
+        name: 'blsSignature',
+        type: 'tuple',
       },
       {
-        "internalType": "uint64[]",
-        "name": "ids",
-        "type": "uint64[]"
-      }
+        internalType: 'uint64[]',
+        name: 'ids',
+        type: 'uint64[]',
+      },
     ],
-    "name": "updateRewardsBalance",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'updateRewardsBalance',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "updateServiceNodesLength",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
+    inputs: [],
+    name: 'updateServiceNodesLength',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
 ] as const;
