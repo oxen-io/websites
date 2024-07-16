@@ -12,7 +12,7 @@ const PendingNodeCard = forwardRef<
 >(({ className, node, ...props }, ref) => {
   const dictionary = useTranslations('nodeCard.pending');
   const titleFormat = useTranslations('modules.title');
-
+  console.log(node);
   const { pubkey_ed25519: pubKey, type: nodeType } = node;
 
   return (

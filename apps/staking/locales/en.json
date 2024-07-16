@@ -68,8 +68,8 @@
     "title": "Stake <text-semibold>{tokenSymbol}</text-semibold>",
     "titleDescription": "Secure the Network",
     "buttons": {
-      "primary": "Stake Now",
-      "secondary": "How to Run a Session Node"
+      "primary": "Participate in Incentivised Testnet",
+      "secondary": "Join Bug Bounty"
     },
     "heroImageAlt": "Glass cube with green highlights"
   },
@@ -249,6 +249,38 @@
       "description": "Please start the registration process from your client or select from the list of open Session Node.",
       "notFound": {
         "foundOpenNode": "It looks like this node is already registered an open for staking:"
+      },
+      "stage": {
+        "approve": {
+          "idle": "Approve node staking transaction",
+          "pending": "Waiting for user wallet approval for staking",
+          "success": "Stake Approved",
+          "error": "Something went wrong approving the stake"
+        },
+        "simulate": {
+          "idle": "Validate registration parameters",
+          "pending": "Validating Session Node registration parameters",
+          "success": "Session Node registration parameters validated",
+          "error": "Registration parameters invalid"
+        },
+        "write": {
+          "idle": "Register Session node on Arbitrum",
+          "pending": "Registering Session Node on Arbitrum",
+          "success": "Session Node Registered on Arbitrum",
+          "error": "Something went wrong registering the Session Node on Arbitrum"
+        },
+        "transaction": {
+          "idle": "Wait for registration transaction to confirm on Arbitrum",
+          "pending": "Registering Session Node on Arbitrum",
+          "success": "Session Node Registered on Arbitrum",
+          "error": "Something went wrong registering the Session Node on Arbitrum"
+        },
+        "done": {
+          "idle": "Session Node Registered",
+          "pending": "Session Node Registered",
+          "success": "Session Node Registered",
+          "error": "Something went wrong registering the Session Node"
+        }
       }
     },
     "node": {
