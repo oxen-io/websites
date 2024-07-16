@@ -31,8 +31,8 @@ export interface LockedContribution {
 
 export interface Contributor {
   address: string;
-  amount: number;
-  reserved: number;
+  amount: bigint;
+  reserved: bigint;
   locked_contributions: LockedContribution[];
 }
 
@@ -63,6 +63,7 @@ export interface ServiceNode {
   num_contributions: number;
   decomm_blocks_remaining?: number;
   decomm_blocks?: number;
+  operator_fee: number;
   /** TODO - Add this to the backend api */
   awaiting_liquidation?: boolean;
   //can_restake?: boolean;
