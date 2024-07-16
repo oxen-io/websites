@@ -4,11 +4,13 @@ import { cn } from '@session/ui/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { forwardRef, useMemo, type HTMLAttributes } from 'react';
+import { forwardRef, type HTMLAttributes, useMemo } from 'react';
+import { bigIntToNumber } from '@session/util/maths';
+import { SENT_DECIMALS } from '@session/contracts';
 
 export interface Contributor {
   address: string;
-  amount: number;
+  amount: bigint;
 }
 
 export const outerNodeCardVariants = cva(
@@ -135,16 +137,14 @@ const ContributorIcon = ({
   </Tooltip>
 );
 
-export const getTotalStakedAmount = (contributors: Contributor[]): number => {
-  return contributors.reduce((acc, { amount }) => acc + amount, 0);
-};
-
 export const getTotalStakedAmountForAddress = (
   contributors: Contributor[],
   address: string
 ): number => {
   return contributors.reduce((acc, { amount, address: contributorAddress }) => {
-    return contributorAddress === address ? acc + amount : acc;
+    return `0x${contributorAddress}`.toUpperCase() === address.toUpperCase()
+      ? acc + bigIntToNumber(amount, SENT_DECIMALS)
+      : acc;
   }, 0);
 };
 
@@ -160,9 +160,9 @@ const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorList
 
     const [mainContributor, ...otherContributors] = useMemo(() => {
       const userContributor = contributors.find(({ address }) => address === userAddress);
-      const otherContributors = contributors
-        .filter(({ address }) => address !== userAddress)
-        .sort((a, b) => b.amount - a.amount);
+      const otherContributors = contributors.filter(({ address }) => address !== userAddress);
+      // TODO - add contributor list sorting
+      //.sort((a, b) => b.amount - a.amount);
 
       return userContributor ? [userContributor, ...otherContributors] : otherContributors;
     }, [contributors]);
