@@ -11,7 +11,9 @@ export enum ButtonDataTestId {
   Faucet_Disconnect = 'button:faucet-disconnect',
   Dropdown_Hamburger_Menu = 'button:dropdown-hamburger-menu',
   Stake_Submit = 'button:stake-submit',
+  Register_Submit = 'button:register-submit',
   Learn_More_Open_Nodes = 'button:learn-more-open-nodes',
+  Agree_TOS = 'button:agree-tos',
 }
 
 export enum SpecialDataTestId {
