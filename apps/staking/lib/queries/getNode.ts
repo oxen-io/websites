@@ -3,7 +3,6 @@ import { NODE_STATE } from '@session/sent-staking-js/client';
 
 // TODO: refactor this to use a generic explorer client
 export async function getNode({ address }: { address: string }) {
-  const url = '/api/explorer';
   const data = {
     jsonrpc: '2.0',
     id: '0',
@@ -15,7 +14,7 @@ export async function getNode({ address }: { address: string }) {
   };
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch('/api/explorer', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

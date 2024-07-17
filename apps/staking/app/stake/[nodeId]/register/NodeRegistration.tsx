@@ -156,6 +156,7 @@ function QueryStatusInformation({
   );
 }
 
+// TODO - Add ability to set the stake amount when we build multi-contributor support
 function RegisterButton({
   blsPubKey,
   blsSignature,
@@ -192,7 +193,7 @@ function RegisterButton({
       >
         {dictionary('button.submit', { amount: stakeAmountString })}
       </Button>
-      {!(stage === REGISTER_STAGE.APPROVE && subStage === 'idle') ? (
+      {stage !== REGISTER_STAGE.APPROVE || subStage !== 'idle' ? (
         <QueryStatusInformation stage={stage} subStage={subStage} />
       ) : null}
     </>

@@ -1,6 +1,6 @@
 'use client';
 
-import { type Address, type ContractFunctionArgs } from 'viem';
+import { type Address, type ContractFunctionArgs, type SimulateContractErrorType } from 'viem';
 import type { ReadContractData } from 'wagmi/query';
 import { ServiceNodeRewardsAbi } from '../abis';
 import {
@@ -13,6 +13,7 @@ import {
 import { useSimulateContract } from 'wagmi';
 import { useEffect, useMemo, useState } from 'react';
 import { addresses } from '../constants';
+import type { WriteContractErrorType } from 'wagmi/actions';
 
 export type ClaimRewardsQuery = WriteContractQuery & {
   /** Claim rewards */
@@ -184,6 +185,18 @@ const encodeED25519Signature = (hex: string) => {
   return { sigs0, sigs1 };
 };
 
+export type ContractWriteStatus = 'idle' | 'pending' | 'error' | 'success';
+export type ContractWriteUtilStatus = 'pending' | 'error' | 'success';
+
+export type UseAddBLSPubKeyReturn = {
+  addBLSPubKey: () => void;
+  simulateStatus: ContractWriteUtilStatus;
+  writeStatus: ContractWriteStatus;
+  simulateError: SimulateContractErrorType | Error | null;
+  writeError: WriteContractErrorType | Error | null;
+  transactionStatus: ContractWriteUtilStatus;
+};
+
 export function useAddBLSPubKey({
   blsPubKey,
   blsSignature,
@@ -194,9 +207,14 @@ export function useAddBLSPubKey({
   blsSignature: string;
   nodePubKey: string;
   userSignature: string;
-}) {
+}): UseAddBLSPubKeyReturn {
   const [simulateEnabled, setSimulateEnabled] = useState<boolean>(false);
-  const { writeContract, writeStatus, transactionStatus } = useContractWriteQuery({
+  const {
+    writeContract,
+    writeStatus,
+    transactionStatus,
+    error: writeError,
+  } = useContractWriteQuery({
     contract: 'ServiceNodeRewards',
     functionName: 'addBLSPublicKey',
   });
@@ -221,7 +239,7 @@ export function useAddBLSPubKey({
     data,
     status: simulateStatus,
     refetch,
-    error,
+    error: simulateError,
   } = useSimulateContract({
     abi: ServiceNodeRewardsAbi,
     address: addresses.ServiceNodeRewards.testnet,
@@ -229,10 +247,6 @@ export function useAddBLSPubKey({
     query: { enabled: simulateEnabled },
     args: contractArgs,
   });
-
-  if (simulateStatus === 'error') {
-    console.error(error);
-  }
 
   const addBLSPubKey = () => {
     setSimulateEnabled(true);
@@ -242,10 +256,16 @@ export function useAddBLSPubKey({
   useEffect(() => {
     if (simulateStatus === 'success' && data?.request) {
       writeContract(data.request);
-      console.log('approve success');
       addBLSPubKey();
     }
   }, [simulateStatus, data?.request]);
 
-  return { addBLSPubKey, simulateStatus, writeStatus, transactionStatus };
+  return {
+    addBLSPubKey,
+    simulateStatus,
+    writeStatus,
+    simulateError,
+    writeError,
+    transactionStatus,
+  };
 }
