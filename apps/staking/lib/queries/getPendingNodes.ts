@@ -10,6 +10,8 @@ export async function getPendingNodes(
   ]);
 
   if (registrationsResponse.data.registrations.length && stakedNodesResponse.data.nodes.length) {
+    console.log('reg', registrationsResponse);
+    console.log('stake', stakedNodesResponse);
     const stakedNodeIds = stakedNodesResponse.data.nodes.map((node) => node.pubkey_ed25519);
     const pendingRegistrations = registrationsResponse.data.registrations.filter(
       (registration) => !stakedNodeIds.includes(registration.pubkey_ed25519)
