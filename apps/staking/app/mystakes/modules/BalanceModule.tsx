@@ -44,7 +44,7 @@ function useTotalStakedAmount() {
     {
       address: address!,
     },
-    Boolean(address)
+    { enabled: Boolean(address) }
   );
 
   const nodes = useMemo(() => {
