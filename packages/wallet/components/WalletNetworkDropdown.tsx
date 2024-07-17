@@ -29,7 +29,7 @@ export type WalletNetworkButtonProps = ButtonVariantProps & {
   };
 };
 
-export default function WalletNetworkDropdown(props: WalletNetworkButtonProps) {
+export default function WalletNetworkDropdown({ handleError, ...props }: WalletNetworkButtonProps) {
   const { chain, switchChain } = useWalletChain();
 
   const handleValueChange = async (selectedChain: string) => {
@@ -41,7 +41,7 @@ export default function WalletNetworkDropdown(props: WalletNetworkButtonProps) {
       return;
     }
 
-    await switchChain(selectedChain, props.handleError);
+    await switchChain(selectedChain, handleError);
   };
 
   return <NetworkDropdown {...props} handleValueChange={handleValueChange} chain={chain} />;
@@ -58,7 +58,7 @@ export function NetworkDropdown({
   handleValueChange,
   chain,
   ...props
-}: NetworkButtonProps) {
+}: Omit<NetworkButtonProps, 'handleError'>) {
   const label = useMemo(() => {
     if (chain === null) {
       return labels.invalid;
