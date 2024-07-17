@@ -37,7 +37,7 @@ export default function NotFound() {
     <ActionModule background={1} title={registerDictionary('title')}>
       {registerDictionary('notFound.description')}
       <br />
-      {runningData ? (
+      {runningData && 'state' in runningData && runningData.state ? (
         <>
           <span className="mb-4 text-lg font-medium">
             {registerDictionary('notFound.foundRunningNode')}
