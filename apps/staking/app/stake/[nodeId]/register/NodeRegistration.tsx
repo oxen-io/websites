@@ -77,7 +77,7 @@ function getStatusFromSubStage(
     case 'success':
       return 'green';
     case 'pending':
-      return 'blue';
+      return 'pending';
     default:
     case 'idle':
       return 'grey';
@@ -89,7 +89,7 @@ const stageDictionaryMap: Record<REGISTER_STAGE, string> = {
   [REGISTER_STAGE.SIMULATE]: 'simulate',
   [REGISTER_STAGE.WRITE]: 'write',
   [REGISTER_STAGE.TRANSACTION]: 'transaction',
-  [REGISTER_STAGE.DONE]: 'done',
+  [REGISTER_STAGE.JOIN]: 'join',
 } as const;
 
 function getDictionaryKeyFromStageAndSubStage<
@@ -104,7 +104,7 @@ function getDictionaryKeyFromStageAndSubStage<
   stage: Stage;
   subStage: SubStage;
 }) {
-  return `${stageDictionaryMap[stage]}.${stage === currentStage ? subStage : stage < currentStage ? 'success' : 'idle'}`;
+  return `${stageDictionaryMap[stage]}.${stage > currentStage || subStage === 'idle' ? 'pending' : subStage}`;
 }
 
 function StageRow({
@@ -140,21 +140,40 @@ function StageRow({
 }
 
 function QueryStatusInformation({
+  nodeId,
   stage,
   subStage,
 }: {
+  nodeId: string;
   stage: REGISTER_STAGE;
   subStage: ContractWriteStatus;
 }) {
   const dictionary = useTranslations('actionModules.register');
+
+  const { data: runningNode } = useQuery({
+    queryKey: ['getNode', nodeId],
+    queryFn: () => getNode({ address: nodeId }),
+    enabled: stage === REGISTER_STAGE.JOIN,
+    // Allows for ~5 minutes of waiting
+    retry: 50,
+    // Retries every 30/n seconds or 5 seconds, whichever is longer
+    retryDelay: (attempt) => Math.max((30 * 1000) / attempt, 5 * 1000),
+  });
+
+  const nodeRunning = Boolean(runningNode && 'state' in runningNode && runningNode.state);
+
   return (
     <div className="flex w-full flex-col gap-8">
       <StageRow stage={REGISTER_STAGE.APPROVE} currentStage={stage} subStage={subStage} />
       <StageRow stage={REGISTER_STAGE.SIMULATE} currentStage={stage} subStage={subStage} />
       <StageRow stage={REGISTER_STAGE.WRITE} currentStage={stage} subStage={subStage} />
       <StageRow stage={REGISTER_STAGE.TRANSACTION} currentStage={stage} subStage={subStage} />
-      <StageRow stage={REGISTER_STAGE.DONE} currentStage={stage} subStage={subStage} />
-      {stage === REGISTER_STAGE.DONE ? (
+      <StageRow
+        stage={REGISTER_STAGE.JOIN}
+        currentStage={stage}
+        subStage={nodeRunning ? 'success' : subStage}
+      />
+      {nodeRunning ? (
         <span>
           {dictionary.rich('goToMyStakes', {
             link: () => (
@@ -207,7 +226,7 @@ function RegisterButton({
         {dictionary('button.submit', { amount: stakeAmountString })}
       </Button>
       {stage !== REGISTER_STAGE.APPROVE || subStage !== 'idle' ? (
-        <QueryStatusInformation stage={stage} subStage={subStage} />
+        <QueryStatusInformation nodeId={blsPubKey} stage={stage} subStage={subStage} />
       ) : null}
     </>
   );
@@ -227,12 +246,15 @@ export function NodeRegistrationForm({
   const stakeAmountString = formatBigIntTokenValue(stakeAmount, SENT_DECIMALS);
   const preparationDate = getDateFromUnixTimestampSeconds(node.timestamp);
 
-  const { data: runningNode } = useQuery({
+  const { data: runningNode, isLoading } = useQuery({
     queryKey: ['getNode', node.pubkey_ed25519],
     queryFn: () => getNode({ address: node.pubkey_ed25519 }),
   });
 
-  const nodeAlreadyRunning = Boolean(runningNode && 'state' in runningNode && runningNode.state);
+  const nodeAlreadyRunning = useMemo(
+    () => Boolean(runningNode && 'state' in runningNode && runningNode.state),
+    [isLoading]
+  );
 
   return (
     <div className="flex flex-col gap-4">

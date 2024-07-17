@@ -8,6 +8,8 @@ import { useEffect, useMemo } from 'react';
 import { toast } from '@session/ui/lib/sonner';
 import { collapseString } from '@session/util/string';
 import type { SimulateContractErrorType, WriteContractErrorType } from 'viem';
+import { isProduction } from '@/lib/env';
+import { useTranslations } from 'next-intl';
 
 export type ContractWriteStatus = 'idle' | 'pending' | 'error' | 'success';
 export type ContractWriteUtilStatus = 'pending' | 'error' | 'success';
@@ -17,7 +19,7 @@ export enum REGISTER_STAGE {
   SIMULATE,
   WRITE,
   TRANSACTION,
-  DONE,
+  JOIN,
 }
 
 const useRegisterStage = ({
@@ -38,7 +40,7 @@ const useRegisterStage = ({
       addBLSWriteStatus === 'success' &&
       addBLSTransactionStatus === 'success'
     ) {
-      return REGISTER_STAGE.DONE;
+      return REGISTER_STAGE.JOIN;
     }
 
     if (
@@ -108,6 +110,7 @@ export default function useRegisterNode({
   nodePubKey: string;
   userSignature: string;
 }) {
+  const dictionary = useTranslations('actionModules.register.stage');
   const {
     approve,
     writeStatus: approveWriteStatus,
@@ -150,25 +153,38 @@ export default function useRegisterNode({
     }
   }, [approveWriteStatus]);
 
-  const handleError = (
-    error: Error | SimulateContractErrorType | WriteContractErrorType | null
-  ) => {
-    if (error) {
-      console.error(error);
-      if (error.message) {
-        toast.error(
-          collapseString(error.message, TOAST.ERROR_COLLAPSE_LENGTH, TOAST.ERROR_COLLAPSE_LENGTH)
-        );
-      }
+  const handleError = (error: Error | SimulateContractErrorType | WriteContractErrorType) => {
+    console.error(error);
+    if (error.message && !isProduction) {
+      toast.error(
+        collapseString(error.message, TOAST.ERROR_COLLAPSE_LENGTH, TOAST.ERROR_COLLAPSE_LENGTH)
+      );
     }
   };
 
   /**
    * NOTE: All of these useEffects are required to inform the user of errors via the toaster
    */
-  useEffect(() => handleError(simulateError), [simulateError]);
-  useEffect(() => handleError(approveWriteError), [approveWriteError]);
-  useEffect(() => handleError(writeError), [writeError]);
+  useEffect(() => {
+    if (simulateError) {
+      handleError(simulateError);
+      toast.error(dictionary('simulate.errorTooltip'));
+    }
+  }, [simulateError]);
+
+  useEffect(() => {
+    if (approveWriteError) {
+      handleError(approveWriteError);
+      toast.error(dictionary('approve.errorTooltip'));
+    }
+  }, [approveWriteError]);
+
+  useEffect(() => {
+    if (writeError) {
+      handleError(writeError);
+      toast.error(dictionary('write.errorTooltip'));
+    }
+  }, [writeError]);
 
   return {
     registerAndStake,

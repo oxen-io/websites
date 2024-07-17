@@ -253,37 +253,37 @@
         "foundOpenNode": "It looks like this node is already registered and open for staking:",
         "foundRunningNode": "It looks like this node is already registered and running:"
       },
-      "goToMyStakes": "Your Session Node has been registered and will appear on <link></link> soon",
+      "goToMyStakes": "The Session Node has been successfully registered and joined the network. It will appear on <link></link> soon",
       "stage": {
         "approve": {
-          "idle": "Approve Session Node Stake",
-          "pending": "Waiting for user wallet approval for staking",
-          "success": "Stake Approved",
-          "error": "Something went wrong approving the stake"
+          "pending": "Requesting wallet permission to stake {tokenSymbol}",
+          "success": "Requesting wallet permission to stake {tokenSymbol}",
+          "error": "Requesting wallet permission to stake {tokenSymbol}",
+          "errorTooltip": "Wallet permission was not granted"
         },
         "simulate": {
-          "idle": "Validate Registration Parameters",
-          "pending": "Validating Registration Parameters",
-          "success": "Session Node Registration Parameters Validated",
-          "error": "Registration Parameters Invalid"
+          "pending": "Validating Session node registration parameters",
+          "success": "Validating Session node registration parameters",
+          "error": "Validating Session node registration parameters",
+          "errorTooltip": "Registration was malformed, please regenerate the registration"
         },
         "write": {
-          "idle": "Approve Session Node Registration",
-          "pending": "Waiting for user wallet approval for registration",
-          "success": "Registration Approved",
-          "error": "Something went wrong approving the registration"
+          "pending": "Requesting Session node registration stake from wallet",
+          "success": "Requesting Session node registration stake from wallet",
+          "error": "Requesting Session node registration stake from wallet",
+          "errorTooltip": "Session node registration stake was not approved"
         },
         "transaction": {
-          "idle": "Register Session Node on Arbitrum",
-          "pending": "Registering Session Node on Arbitrum",
-          "success": "Session Node Registered on Arbitrum",
-          "error": "Something went wrong registering the Session Node on Arbitrum"
+          "pending": "Submitting Session node registration to Arbitrum",
+          "success": "Submitting Session node registration to Arbitrum",
+          "error": "Submitting Session node registration to Arbitrum",
+          "errorTooltip": "Session node registration was not sent to Arbitrum"
         },
-        "done": {
-          "idle": "Add Session Node to the network",
-          "pending": "Adding Session Node to the network",
-          "success": "Session Node Added to the network",
-          "error": "Something went wrong adding the Session Node"
+        "join": {
+          "pending": "Waiting for Session node to join the network",
+          "success": "Waiting for Session node to join the network",
+          "error": "Waiting for Session node to join the network",
+          "error_tooltip": "Session node was not able to join the network"
         }
       }
     },

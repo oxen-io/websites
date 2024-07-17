@@ -22,7 +22,12 @@ export default function Page() {
         <ModuleGridInfoContent className="w-full xl:w-3/4">
           <p>{dictionary('landingP1')}</p>
           <p>{dictionary('landingP2')}</p>
-          <Link href={URL.SESSION_NODE_SOLO_SETUP_DOCS} prefetch>
+          <Link
+            href={URL.SESSION_NODE_SOLO_SETUP_DOCS}
+            prefetch
+            target="_blank"
+            referrerPolicy="no-referrer"
+          >
             <Button
               aria-label={dictionary('learnMoreButtonAria')}
               data-testid={ButtonDataTestId.Learn_More_Open_Nodes}
