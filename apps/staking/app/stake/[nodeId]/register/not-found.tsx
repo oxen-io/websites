@@ -19,13 +19,9 @@ export default function NotFound() {
   const nodeId = pathname.split('/').at(-2);
 
   const { data: openData } = useStakingBackendSuspenseQuery(getOpenNodes);
-  const { data: runningData } = useQuery({
+  const { data: runningNode } = useQuery({
     queryKey: ['getNode', nodeId],
-    queryFn: async () => {
-      const res = await getNode({ address: nodeId! });
-      console.log(res);
-      return res;
-    },
+    queryFn: () => getNode({ address: nodeId! }),
     enabled: Boolean(nodeId),
   });
 
@@ -33,16 +29,19 @@ export default function NotFound() {
     return openData?.nodes?.find((node) => node.service_node_pubkey === nodeId);
   }, [openData]);
 
+  const nodeAlreadyRunning = runningNode && 'state' in runningNode && runningNode.state;
+
   return (
     <ActionModule background={1} title={registerDictionary('title')}>
       {registerDictionary('notFound.description')}
       <br />
-      {runningData && 'state' in runningData && runningData.state ? (
+      {nodeAlreadyRunning ? (
         <>
           <span className="mb-4 text-lg font-medium">
             {registerDictionary('notFound.foundRunningNode')}
           </span>
-          <StakedNodeCard node={runningData as StakedNode} />
+          <StakedNodeCard node={runningNode as StakedNode} />
+          <br />
         </>
       ) : null}
       {openNode ? (

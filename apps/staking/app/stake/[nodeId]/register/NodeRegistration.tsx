@@ -23,6 +23,9 @@ import { generatePendingNodes } from '@session/sent-staking-js/test';
 import useRegisterNode, { type ContractWriteStatus, REGISTER_STAGE } from '@/hooks/registerNode';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import type { VariantProps } from 'class-variance-authority';
+import { useQuery } from '@tanstack/react-query';
+import { getNode } from '@/lib/queries/getNode';
+import { type StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
 
 export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showMockRegistration = useFeatureFlag(FEATURE_FLAG.MOCK_REGISTRATION);
@@ -160,6 +163,7 @@ function RegisterButton({
   userSignature,
   stakeAmount,
   stakeAmountString,
+  disabled,
 }: {
   blsPubKey: string;
   blsSignature: string;
@@ -167,6 +171,7 @@ function RegisterButton({
   userSignature: string;
   stakeAmount: bigint;
   stakeAmountString: string;
+  disabled?: boolean;
 }) {
   const dictionary = useTranslations('actionModules.register');
   const { registerAndStake, stage, subStage } = useRegisterNode({
@@ -183,6 +188,7 @@ function RegisterButton({
         rounded="lg"
         size="lg"
         onClick={registerAndStake}
+        disabled={disabled}
       >
         {dictionary('button.submit', { amount: stakeAmountString })}
       </Button>
@@ -207,8 +213,24 @@ export function NodeRegistrationForm({
   const stakeAmountString = formatBigIntTokenValue(stakeAmount, SENT_DECIMALS);
   const preparationDate = getDateFromUnixTimestampSeconds(node.timestamp);
 
+  const { data: runningNode } = useQuery({
+    queryKey: ['getNode', node.pubkey_ed25519],
+    queryFn: () => getNode({ address: node.pubkey_ed25519 }),
+  });
+
+  const nodeAlreadyRunning = Boolean(runningNode && 'state' in runningNode && runningNode.state);
+
   return (
     <div className="flex flex-col gap-4">
+      {nodeAlreadyRunning ? (
+        <>
+          <span className="mb-4 text-lg font-medium">
+            {dictionary('notFound.foundRunningNode')}
+          </span>
+          <StakedNodeCard node={runningNode as StakedNode} />
+          <br />
+        </>
+      ) : null}
       <ActionModuleRow
         label={sessionNodeDictionary('publicKeyShort')}
         tooltip={sessionNodeDictionary('publicKeyDescription')}
@@ -258,6 +280,7 @@ export function NodeRegistrationForm({
         userSignature={node.sig_ed25519}
         stakeAmount={stakeAmount}
         stakeAmountString={stakeAmountString}
+        disabled={nodeAlreadyRunning}
       />
     </div>
   );
