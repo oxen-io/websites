@@ -21,12 +21,8 @@ export default function Page() {
       <div className="flex h-full w-full flex-col pt-10 text-lg xl:py-40">
         <ModuleGridInfoContent className="w-full xl:w-3/4">
           <p>{dictionary('landingP1')}</p>
-          <p className="lg:hidden">{dictionary('landingP2Mobile')}</p>
-          <div>
-            <p className="hidden lg:block">{dictionary('landingP2Desktop1')}</p>
-            <p className="hidden lg:block">{dictionary('landingP2Desktop2')}</p>
-          </div>
-          <Link href={URL.SESSION_NODE_DOCS} prefetch>
+          <p>{dictionary('landingP2')}</p>
+          <Link href={URL.SESSION_NODE_SOLO_SETUP_DOCS} prefetch>
             <Button
               aria-label={dictionary('learnMoreButtonAria')}
               data-testid={ButtonDataTestId.Learn_More_Open_Nodes}

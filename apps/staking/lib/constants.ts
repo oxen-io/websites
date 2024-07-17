@@ -23,6 +23,7 @@ export enum URL {
   INCENTIVE_PROGRAM_TOS = 'https://token.getsession.org/incentive-program-terms',
   BUG_BOUNTY_PROGRAM = 'https://token.getsession.org/bug-bounty-program',
   BUG_BOUNTY_TOS = 'https://token.getsession.org/bug-bounty-terms',
+  SESSION_NODE_SOLO_SETUP_DOCS = 'https://docs.getsession.org/class-is-in-session/session-stagenet-single-contributor-node-setup',
 }
 
 export const LANDING_BUTTON_URL = {
@@ -94,6 +95,12 @@ export enum QUERY {
   STALE_TIME_DEFAULT = 60 * 1000,
   /** 1 second */
   STALE_TIME_DEFAULT_DEV = 1000,
+  /** 1 second */
+  STALE_TIME_REGISTRATIONS_PAGE = 1000,
+  /** 1 second */
+  STALE_TIME_REGISTRATIONS_LIST_DEV = 1000,
+  /** 60 seconds */
+  STALE_TIME_REGISTRATIONS_LIST = 60 * 1000,
 }
 
 export enum SESSION_NODE {

@@ -7,31 +7,50 @@ import { useMemo } from 'react';
 import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-client';
 import { NodeStakingForm } from '@/app/stake/[nodeId]/NodeStaking';
 import { usePathname } from 'next/navigation';
+import { type StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
+import { getNode } from '@/lib/queries/getNode';
+import { useQuery } from '@tanstack/react-query';
 
 export default function NotFound() {
-  const dictionary = useTranslations('notFound');
   const registerDictionary = useTranslations('actionModules.register');
 
   const pathname = usePathname();
 
   const nodeId = pathname.split('/').at(-2);
 
-  const { data, isLoading } = useStakingBackendSuspenseQuery(getOpenNodes);
+  const { data: openData } = useStakingBackendSuspenseQuery(getOpenNodes);
+  const { data: runningData } = useQuery({
+    queryKey: ['getNode', nodeId],
+    queryFn: async () => {
+      const res = await getNode({ address: nodeId! });
+      console.log(res);
+      return res;
+    },
+    enabled: Boolean(nodeId),
+  });
 
-  const node = useMemo(() => {
-    return data?.nodes?.find((node) => node.service_node_pubkey === nodeId);
-  }, [data]);
+  const openNode = useMemo(() => {
+    return openData?.nodes?.find((node) => node.service_node_pubkey === nodeId);
+  }, [openData]);
 
   return (
     <ActionModule background={1} title={registerDictionary('title')}>
-      {dictionary('description', { notFoundContentType: 'prepared registration' })}
+      {registerDictionary('notFound.description')}
       <br />
-      {node ? (
+      {runningData ? (
+        <>
+          <span className="mb-4 text-lg font-medium">
+            {registerDictionary('notFound.foundRunningNode')}
+          </span>
+          <StakedNodeCard node={runningData as StakedNode} />
+        </>
+      ) : null}
+      {openNode ? (
         <>
           <span className="mb-4 text-lg font-medium">
             {registerDictionary('notFound.foundOpenNode')}
           </span>
-          <NodeStakingForm node={node} />
+          <NodeStakingForm node={openNode} />
         </>
       ) : null}
     </ActionModule>

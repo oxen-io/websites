@@ -13,7 +13,7 @@ import type { LoadRegistrationsResponse } from '@session/sent-staking-js/client'
 import { getPendingNodes } from '@/lib/queries/getPendingNodes';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
-import { SESSION_NODE } from '@/lib/constants';
+import { QUERY, SESSION_NODE } from '@/lib/constants';
 import { formatBigIntTokenValue } from '@session/util/maths';
 import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import { getDateFromUnixTimestampSeconds } from '@session/util/date';
@@ -35,7 +35,10 @@ export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const { data, isLoading } = useStakingBackendQueryWithParams(
     getPendingNodes,
     { address: address! },
-    isConnected
+    {
+      enabled: isConnected,
+      staleTime: QUERY.STALE_TIME_REGISTRATIONS_PAGE,
+    }
   );
 
   const node = useMemo(() => {

@@ -159,10 +159,10 @@
       "description": "Nodes that are open for staking. <link>Learn more</link>",
       "noNodesP1": "There are currently no Open Session Nodes available to stake to.",
       "noNodesP2": "Check out the <link>docs</link> to learn about setting up and registering your own Session Node.",
-      "landingP1": "Click on an Open Session Node to stake SENT and earn rewards for securing the network.",
-      "landingP2Mobile": "Want to run your own Session Node? Find out how.",
-      "landingP2Desktop1": "Want to run your own Session Node?",
-      "landingP2Desktop2": "Find out how.",
+      "landingP1": "Once Multi-Contributor Nodes are enabled on the Session Testnet, you'll be able to choose an Open Session Node to stake test {tokenSymbol} to. ",
+      "landingP2": "Testnet participants can currently run and stake to their own Single Contributor Nodes.",
+      "landingP1Mainnet": "Click on an Open Session Node to stake {tokenSymbol} and earn rewards for securing the network.",
+      "landingP2Mainnet": "Want to run your own Session Node?",
       "learnMoreButtonText": "Learn More",
       "learnMoreButtonAria": "Navigate to the Session Node documentation page."
     },
@@ -248,7 +248,9 @@
       },
       "description": "Please start the registration process from your client or select from the list of open Session Node.",
       "notFound": {
-        "foundOpenNode": "It looks like this node is already registered an open for staking:"
+        "description": "The registration you are looking for could not be found.",
+        "foundOpenNode": "It looks like this node is already registered and open for staking:",
+        "foundRunningNode": "It looks like this node is already registered and running:"
       },
       "stage": {
         "approve": {

@@ -1,5 +1,24 @@
 import { SessionStakingClient } from '@session/sent-staking-js/client';
 
-export function getPendingNodes(client: SessionStakingClient, { address }: { address: string }) {
-  return client.getOperatorRegistrations({ operator: address });
+export async function getPendingNodes(
+  client: SessionStakingClient,
+  { address }: { address: string }
+) {
+  const [registrationsResponse, stakedNodesResponse] = await Promise.all([
+    client.getOperatorRegistrations({ operator: address }),
+    client.getNodesForEthWallet({ address }),
+  ]);
+
+  if (registrationsResponse.data.registrations.length && stakedNodesResponse.data.nodes.length) {
+    const stakedNodeIds = stakedNodesResponse.data.nodes.map((node) => node.pubkey_ed25519);
+    const pendingRegistrations = registrationsResponse.data.registrations.filter(
+      (registration) => !stakedNodeIds.includes(registration.pubkey_ed25519)
+    );
+    return {
+      ...registrationsResponse,
+      data: { ...registrationsResponse.data, registrations: pendingRegistrations },
+    };
+  } else {
+    return registrationsResponse;
+  }
 }

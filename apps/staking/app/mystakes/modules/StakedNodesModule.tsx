@@ -118,7 +118,7 @@ const msToBlockHeight = (height: number) => {
   return Math.floor((currentBlockHeight + height) / blocksPerMs);
 };
 
-const parseSessionNodeData = (node: ServiceNode): GenericStakedNode => {
+export const parseSessionNodeData = (node: ServiceNode): GenericStakedNode => {
   return {
     state: node.state,
     contributors: node.contributors,
