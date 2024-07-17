@@ -27,6 +27,7 @@ import { getNode } from '@/lib/queries/getNode';
 import { type StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
 import Link from 'next/link';
 import { Tooltip } from '@session/ui/ui/tooltip';
+import { areHexesEqual } from '@session/util/string';
 
 export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showMockRegistration = useFeatureFlag(FEATURE_FLAG.MOCK_REGISTRATION);
@@ -55,7 +56,7 @@ export default function NodeRegistration({ nodeId }: { nodeId: string }) {
     ) {
       return generatePendingNodes({ userAddress: address!, numberOfNodes: 1 })[0];
     }
-    return data?.registrations?.find((node) => node.pubkey_ed25519 === nodeId);
+    return data?.registrations?.find((node) => areHexesEqual(node.pubkey_ed25519, nodeId));
   }, [
     data?.registrations,
     showMockRegistration,

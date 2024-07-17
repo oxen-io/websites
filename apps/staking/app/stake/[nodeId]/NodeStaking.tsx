@@ -16,6 +16,7 @@ import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-clien
 import { getOpenNodes } from '@/lib/queries/getOpenNodes';
 import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import { generateOpenNodes } from '@session/sent-staking-js/test';
+import { areHexesEqual } from '@session/util/string';
 
 export default function NodeStaking({ nodeId }: { nodeId: string }) {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);
@@ -23,7 +24,7 @@ export default function NodeStaking({ nodeId }: { nodeId: string }) {
 
   const node = useMemo(() => {
     if (showMockNodes) return generateOpenNodes()[0];
-    return data?.nodes?.find((node) => node.service_node_pubkey === nodeId);
+    return data?.nodes?.find((node) => areHexesEqual(node.service_node_pubkey, nodeId));
   }, [data, showMockNodes]);
 
   return isLoading ? (

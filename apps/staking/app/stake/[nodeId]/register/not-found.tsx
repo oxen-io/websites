@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation';
 import { type StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
 import { getNode } from '@/lib/queries/getNode';
 import { useQuery } from '@tanstack/react-query';
+import { areHexesEqual } from '@session/util/string';
 
 export default function NotFound() {
   const registerDictionary = useTranslations('actionModules.register');
@@ -26,7 +27,7 @@ export default function NotFound() {
   });
 
   const openNode = useMemo(() => {
-    return openData?.nodes?.find((node) => node.service_node_pubkey === nodeId);
+    return openData?.nodes?.find((node) => areHexesEqual(node.service_node_pubkey, nodeId));
   }, [openData]);
 
   const nodeAlreadyRunning = runningNode && 'state' in runningNode && runningNode.state;

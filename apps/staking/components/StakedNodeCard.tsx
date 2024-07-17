@@ -23,6 +23,7 @@ import {
   NodeContributorList,
 } from './NodeCard';
 import { PubKey } from './PubKey';
+import { areHexesEqual } from '@session/util/string';
 
 export const NODE_STATE_VALUES = Object.values(NODE_STATE);
 
@@ -124,7 +125,7 @@ const isAwaitingLiquidation = (node: StakedNode): boolean =>
  * @returns `true` if the node is operated by the specified operator, `false` otherwise.
  */
 const isNodeOperator = (node: StakedNode, operatorAddress: string): boolean =>
-  node.operator_address === operatorAddress;
+  areHexesEqual(node.operator_address, operatorAddress);
 
 /**
  * Checks if a given contributor address is a contributor of a session node.
@@ -134,7 +135,7 @@ const isNodeOperator = (node: StakedNode, operatorAddress: string): boolean =>
  * @returns `true` if the contributor address is a contributor of the session node, `false` otherwise.
  */
 const isNodeContributor = (node: StakedNode, contributorAddress: string): boolean =>
-  node.contributors.some(({ address }) => address === contributorAddress);
+  node.contributors.some(({ address }) => areHexesEqual(address, contributorAddress));
 
 function getNodeStatus(state: NODE_STATE): VariantProps<typeof statusVariants>['status'] {
   switch (state) {

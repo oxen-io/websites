@@ -8,6 +8,7 @@ import { forwardRef, type HTMLAttributes, useMemo } from 'react';
 import { bigIntToNumber } from '@session/util/maths';
 import { formatSENT, SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import { useTranslations } from 'next-intl';
+import { areHexesEqual } from '@session/util/string';
 
 export interface Contributor {
   address: string;
@@ -145,7 +146,7 @@ export const getTotalStakedAmountForAddress = (
   address: string
 ): number => {
   return contributors.reduce((acc, { amount, address: contributorAddress }) => {
-    return `0x${contributorAddress}`.toUpperCase() === address.toUpperCase()
+    return areHexesEqual(contributorAddress, address)
       ? acc + bigIntToNumber(amount, SENT_DECIMALS)
       : acc;
   }, 0);
@@ -162,8 +163,12 @@ const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorList
     const { address: userAddress } = useWallet();
 
     const [mainContributor, ...otherContributors] = useMemo(() => {
-      const userContributor = contributors.find(({ address }) => address === userAddress);
-      const otherContributors = contributors.filter(({ address }) => address !== userAddress);
+      const userContributor = contributors.find(({ address }) =>
+        areHexesEqual(address, userAddress)
+      );
+      const otherContributors = contributors.filter(
+        ({ address }) => !areHexesEqual(address, userAddress)
+      );
       // TODO - add contributor list sorting
       //.sort((a, b) => b.amount - a.amount);
 
@@ -188,7 +193,7 @@ const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorList
         <ContributorIcon
           className="-mr-1"
           contributor={mainContributor}
-          isUser={`0x${mainContributor?.address}`.toUpperCase() === userAddress?.toUpperCase()}
+          isUser={areHexesEqual(mainContributor?.address, userAddress)}
         />
         <div
           className={cn(
