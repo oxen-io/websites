@@ -373,7 +373,9 @@ const StakedNodeCard = forwardRef<
         </CollapsableContent>
       ) : null}
       <CollapsableContent className="font-medium opacity-75" size="xs">
-        {dictionary('lastUptime', { time: formatLocalizedRelativeTimeToNowClient(lastUptime) })}
+        {dictionary('lastUptime', {
+          time: formatLocalizedRelativeTimeToNowClient(lastUptime, { addSuffix: true }),
+        })}
       </CollapsableContent>
       {/** NOTE - ensure any changes here still work with the pubkey component */}
       <NodeCardText className="flex w-full flex-row flex-wrap gap-1 peer-checked:mt-1 peer-checked:[&>span>span>button]:opacity-100 peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">
