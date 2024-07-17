@@ -2,10 +2,12 @@
 
 import { addresses } from '@session/contracts';
 import { useProxyApproval } from '@session/contracts/hooks/SENT';
-import { SESSION_NODE } from '@/lib/constants';
+import { SESSION_NODE, TOAST } from '@/lib/constants';
 import { useAddBLSPubKey } from '@session/contracts/hooks/ServiceNodeRewards';
 import { useEffect, useMemo } from 'react';
 import { toast } from '@session/ui/lib/sonner';
+import { collapseString } from '@session/util/string';
+import type { SimulateContractErrorType, WriteContractErrorType } from 'viem';
 
 export type ContractWriteStatus = 'idle' | 'pending' | 'error' | 'success';
 export type ContractWriteUtilStatus = 'pending' | 'error' | 'success';
@@ -148,26 +150,25 @@ export default function useRegisterNode({
     }
   }, [approveWriteStatus]);
 
+  const handleError = (
+    error: Error | SimulateContractErrorType | WriteContractErrorType | null
+  ) => {
+    if (error) {
+      console.error(error);
+      if (error.message) {
+        toast.error(
+          collapseString(error.message, TOAST.ERROR_COLLAPSE_LENGTH, TOAST.ERROR_COLLAPSE_LENGTH)
+        );
+      }
+    }
+  };
+
   /**
    * NOTE: All of these useEffects are required to inform the user of errors via the toaster
    */
-  useEffect(() => {
-    if (simulateError) {
-      toast.error(simulateError.message);
-    }
-  }, [simulateError]);
-
-  useEffect(() => {
-    if (approveWriteError) {
-      toast.error(approveWriteError.message);
-    }
-  }, [approveWriteError]);
-
-  useEffect(() => {
-    if (writeError) {
-      toast.error(writeError.message);
-    }
-  }, [writeError]);
+  useEffect(() => handleError(simulateError), [simulateError]);
+  useEffect(() => handleError(approveWriteError), [approveWriteError]);
+  useEffect(() => handleError(writeError), [writeError]);
 
   return {
     registerAndStake,

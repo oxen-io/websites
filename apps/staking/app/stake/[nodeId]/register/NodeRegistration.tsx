@@ -17,7 +17,6 @@ import { QUERY, SESSION_NODE } from '@/lib/constants';
 import { formatBigIntTokenValue } from '@session/util/maths';
 import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import { getDateFromUnixTimestampSeconds } from '@session/util/date';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
 import { notFound } from 'next/navigation';
 import { generatePendingNodes } from '@session/sent-staking-js/test';
 import useRegisterNode, { type ContractWriteStatus, REGISTER_STAGE } from '@/hooks/registerNode';
@@ -26,6 +25,8 @@ import type { VariantProps } from 'class-variance-authority';
 import { useQuery } from '@tanstack/react-query';
 import { getNode } from '@/lib/queries/getNode';
 import { type StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
+import Link from 'next/link';
+import { Tooltip } from '@session/ui/ui/tooltip';
 
 export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showMockRegistration = useFeatureFlag(FEATURE_FLAG.MOCK_REGISTRATION);
@@ -145,6 +146,7 @@ function QueryStatusInformation({
   stage: REGISTER_STAGE;
   subStage: ContractWriteStatus;
 }) {
+  const dictionary = useTranslations('actionModules.register');
   return (
     <div className="flex w-full flex-col gap-8">
       <StageRow stage={REGISTER_STAGE.APPROVE} currentStage={stage} subStage={subStage} />
@@ -152,6 +154,17 @@ function QueryStatusInformation({
       <StageRow stage={REGISTER_STAGE.WRITE} currentStage={stage} subStage={subStage} />
       <StageRow stage={REGISTER_STAGE.TRANSACTION} currentStage={stage} subStage={subStage} />
       <StageRow stage={REGISTER_STAGE.DONE} currentStage={stage} subStage={subStage} />
+      {stage === REGISTER_STAGE.DONE ? (
+        <span>
+          {dictionary.rich('goToMyStakes', {
+            link: () => (
+              <Link href="/mystakes" prefetch>
+                My Stakes
+              </Link>
+            ),
+          })}
+        </span>
+      ) : null}
     </div>
   );
 }
@@ -250,18 +263,15 @@ export function NodeRegistrationForm({
         label={dictionary('preparedAtTimestamp')}
         tooltip={dictionary('preparedAtTimestampDescription')}
       >
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="cursor-pointer">
-              {formatLocalizedRelativeTimeToNowClient(preparationDate, { addSuffix: true })}
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            {formatDate(preparationDate, {
-              dateStyle: 'full',
-              timeStyle: 'full',
-            })}
-          </TooltipContent>
+        <Tooltip
+          tooltipContent={formatDate(preparationDate, {
+            dateStyle: 'full',
+            timeStyle: 'full',
+          })}
+        >
+          <div className="cursor-pointer">
+            {formatLocalizedRelativeTimeToNowClient(preparationDate, { addSuffix: true })}
+          </div>
         </Tooltip>
       </ActionModuleRow>
       <ActionModuleDivider />

@@ -6,7 +6,8 @@
     "and": "and",
     "unknownError": "An unknown error occurred.",
     "viewOnExplorer": "View on Explorer",
-    "viewOnExplorerShort": "View"
+    "viewOnExplorerShort": "View",
+    "you": "You"
   },
   "clipboard": {
     "copyToClipboard": "Copy to Clipboard",
@@ -252,36 +253,37 @@
         "foundOpenNode": "It looks like this node is already registered and open for staking:",
         "foundRunningNode": "It looks like this node is already registered and running:"
       },
+      "goToMyStakes": "Your Session Node has been registered and will appear on <link></link> soon",
       "stage": {
         "approve": {
-          "idle": "Approve node staking transaction",
+          "idle": "Approve Session Node Stake",
           "pending": "Waiting for user wallet approval for staking",
           "success": "Stake Approved",
           "error": "Something went wrong approving the stake"
         },
         "simulate": {
-          "idle": "Validate registration parameters",
-          "pending": "Validating Session Node registration parameters",
-          "success": "Session Node registration parameters validated",
-          "error": "Registration parameters invalid"
+          "idle": "Validate Registration Parameters",
+          "pending": "Validating Registration Parameters",
+          "success": "Session Node Registration Parameters Validated",
+          "error": "Registration Parameters Invalid"
         },
         "write": {
-          "idle": "Register Session node on Arbitrum",
-          "pending": "Registering Session Node on Arbitrum",
-          "success": "Session Node Registered on Arbitrum",
-          "error": "Something went wrong registering the Session Node on Arbitrum"
+          "idle": "Approve Session Node Registration",
+          "pending": "Waiting for user wallet approval for registration",
+          "success": "Registration Approved",
+          "error": "Something went wrong approving the registration"
         },
         "transaction": {
-          "idle": "Wait for registration transaction to confirm on Arbitrum",
+          "idle": "Register Session Node on Arbitrum",
           "pending": "Registering Session Node on Arbitrum",
           "success": "Session Node Registered on Arbitrum",
           "error": "Something went wrong registering the Session Node on Arbitrum"
         },
         "done": {
-          "idle": "Session Node Registered",
-          "pending": "Session Node Registered",
-          "success": "Session Node Registered",
-          "error": "Something went wrong registering the Session Node"
+          "idle": "Add Session Node to the network",
+          "pending": "Adding Session Node to the network",
+          "success": "Session Node Added to the network",
+          "error": "Something went wrong adding the Session Node"
         }
       }
     },

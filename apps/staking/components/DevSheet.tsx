@@ -16,7 +16,7 @@ import {
   SheetTitle,
 } from '@session/ui/ui/sheet';
 import { Switch } from '@session/ui/ui/switch';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
+import { Tooltip } from '@session/ui/ui/tooltip';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -100,11 +100,8 @@ function FeatureFlagToggle({ flag, initialState }: { flag: FEATURE_FLAG; initial
         }}
         className="h-4 w-8 [&>span]:h-4 [&>span]:w-4 [&>span]:data-[state=checked]:translate-x-4"
       />
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <span className="cursor-pointer">{FEATURE_FLAG_DESCRIPTION[flag]}</span>
-        </TooltipTrigger>
-        <TooltipContent>{flag}</TooltipContent>
+      <Tooltip tooltipContent={flag}>
+        <span className="cursor-pointer">{FEATURE_FLAG_DESCRIPTION[flag]}</span>
       </Tooltip>
     </span>
   );

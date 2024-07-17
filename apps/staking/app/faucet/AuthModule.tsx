@@ -26,9 +26,9 @@ import {
   FormMessage,
   FormSubmitButton,
 } from '@session/ui/ui/form';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
+import { Tooltip } from '@session/ui/ui/tooltip';
 import { collapseString } from '@session/util/string';
-import { WALLET_STATUS, useWallet, useWalletChain } from '@session/wallet/hooks/wallet-hooks';
+import { useWallet, useWalletChain, WALLET_STATUS } from '@session/wallet/hooks/wallet-hooks';
 import { ReactNode, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Address, isAddress } from 'viem';
@@ -45,11 +45,8 @@ enum FORM_STATE {
 }
 
 const FaucetTextTooltip = ({ children, tooltip }: { children: ReactNode; tooltip: ReactNode }) => (
-  <Tooltip>
-    <TooltipTrigger asChild>
-      <span className="underline">{children}</span>
-    </TooltipTrigger>
-    <TooltipContent>{tooltip}</TooltipContent>
+  <Tooltip tooltipContent={tooltip}>
+    <span className="underline">{children}</span>
   </Tooltip>
 );
 
@@ -405,7 +402,12 @@ export const AuthModule = () => {
       {transactionHistory.length > 0 ? (
         <>
           <p>{dictionary('watchSENTInfo')}</p>
-          <WalletAddTokenWithLocales rounded="md" size="md" variant="outline" tokenIcon={`${BASE_URL}/images/token_logo.svg`} />
+          <WalletAddTokenWithLocales
+            rounded="md"
+            size="md"
+            variant="outline"
+            tokenIcon={`${BASE_URL}/images/token_logo.svg`}
+          />
         </>
       ) : null}
     </ActionModule>

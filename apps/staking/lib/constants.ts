@@ -107,3 +107,7 @@ export enum SESSION_NODE {
   /** 120 SENT  */
   FULL_STAKE_AMOUNT = '120000000000',
 }
+
+export enum TOAST {
+  ERROR_COLLAPSE_LENGTH = 128,
+}

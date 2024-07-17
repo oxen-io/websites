@@ -3,7 +3,7 @@ import { forwardRef, type HTMLAttributes } from 'react';
 import { QuestionIcon } from '../icons/QuestionIcon';
 import { cn } from '../lib/utils';
 import { Loading } from './loading';
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
+import { Tooltip } from './ui/tooltip';
 
 export const outerModuleVariants = cva(
   'rounded-3xl transition-all ease-in-out bg-module-outline bg-blend-lighten shadow-md p-px',
@@ -164,11 +164,13 @@ const moduleContentVariants = cva(
     },
   }
 );
+
 export interface ModuleContentProps
   extends HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof moduleContentVariants> {
   loading?: boolean;
 }
+
 const ModuleContent = forwardRef<HTMLDivElement, ModuleContentProps>(
   ({ className, variant, loading, children, ...props }, ref) => {
     return (
@@ -181,17 +183,10 @@ const ModuleContent = forwardRef<HTMLDivElement, ModuleContentProps>(
 
 const ModuleTooltip = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div
-          ref={ref}
-          className={cn('absolute right-5 top-4 cursor-pointer', className)}
-          {...props}
-        >
-          <QuestionIcon className="fill-session-text h-4 w-4" />
-        </div>
-      </TooltipTrigger>
-      <TooltipContent>{children}</TooltipContent>
+    <Tooltip ref={ref} tooltipContent={children}>
+      <div className={cn('absolute right-5 top-4 cursor-pointer', className)} {...props}>
+        <QuestionIcon className="fill-session-text h-4 w-4" />
+      </div>
     </Tooltip>
   )
 );

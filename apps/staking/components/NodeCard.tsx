@@ -1,12 +1,13 @@
 import { Loading } from '@session/ui/components/loading';
 import { HumanIcon } from '@session/ui/icons/HumanIcon';
 import { cn } from '@session/ui/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
+import { Tooltip } from '@session/ui/ui/tooltip';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { forwardRef, type HTMLAttributes, useMemo } from 'react';
 import { bigIntToNumber } from '@session/util/maths';
-import { SENT_DECIMALS } from '@session/contracts';
+import { formatSENT, SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
+import { useTranslations } from 'next-intl';
 
 export interface Contributor {
   address: string;
@@ -119,23 +120,25 @@ const ContributorIcon = ({
   className?: string;
   contributor?: Contributor;
   isUser?: boolean;
-}) => (
-  <Tooltip>
-    <TooltipTrigger asChild>
+}) => {
+  const dictionary = useTranslations('general');
+  return (
+    <Tooltip
+      tooltipContent={
+        <p>
+          {contributor
+            ? `${isUser ? dictionary('you') : contributor.address} | ${formatSENT(contributor.amount)} ${SENT_SYMBOL}`
+            : 'Empty contributor slot'}
+        </p>
+      }
+    >
       <HumanIcon
         className={cn('fill-text-primary h-4 w-4 cursor-pointer', className)}
         full={Boolean(contributor)}
       />
-    </TooltipTrigger>
-    <TooltipContent>
-      <p>
-        {contributor
-          ? `${isUser ? 'You' : ''} ${contributor.address} | ${contributor.amount}`
-          : 'Empty contributor slot'}
-      </p>
-    </TooltipContent>
-  </Tooltip>
-);
+    </Tooltip>
+  );
+};
 
 export const getTotalStakedAmountForAddress = (
   contributors: Contributor[],
@@ -185,7 +188,7 @@ const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorList
         <ContributorIcon
           className="-mr-1"
           contributor={mainContributor}
-          isUser={mainContributor?.address === userAddress}
+          isUser={`0x${mainContributor?.address}`.toUpperCase() === userAddress?.toUpperCase()}
         />
         <div
           className={cn(
