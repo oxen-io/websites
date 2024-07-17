@@ -49,12 +49,6 @@
         "^lint"
       ]
     },
-    "lint-staged": {
-      "dependsOn": [
-        "^lint-staged"
-      ],
-      "cache": false
-    },
     "test": {}
   }
 }

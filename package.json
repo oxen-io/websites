@@ -8,12 +8,10 @@
     "dev": "pnpm turbo dev",
     "check-types": "pnpm turbo check-types",
     "lint": "pnpm turbo lint",
-    "lint-staged": "pnpm turbo lint-staged",
     "test": "pnpm turbo test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "engines": "./scripts/engines.sh",
     "clean:nm": "./scripts/clean-node-modules.sh",
-    "lintstaged-rules": "./scripts/lintstaged-rules.sh",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -25,6 +23,7 @@
     "@types/eslint": "^8.56.5",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.12",
+    "cross-env": "^7.0.3",
     "eslint": "8.57.0",
     "husky": "^9.0.11",
     "jest": "^29.7.0",
@@ -33,7 +32,6 @@
     "prettier": "3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.1",
     "ts-jest": "^29.1.5",
-    "cross-env": "^7.0.3",
     "ts-node": "^10.9.2",
     "turbo": "2.0.5",
     "typescript": "5.4.5"
