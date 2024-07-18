@@ -8,6 +8,7 @@ beforeEach(() => {
   mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {});
 });
 
+// #endregion
 // #region - getEnvironment
 
 describe('getEnvironment', () => {
@@ -37,6 +38,7 @@ describe('getEnvironment', () => {
   });
 });
 
+// #endregion
 // #region - isProduction
 
 describe('isProduction', () => {
@@ -55,6 +57,7 @@ describe('isProduction', () => {
   });
 });
 
+// #endregion
 // #region - getEnvironmentTaggedDomain
 
 describe('getEnvironmentTaggedDomain', () => {
@@ -88,3 +91,5 @@ describe('getEnvironmentTaggedDomain', () => {
     expect(mockConsoleLog).toHaveBeenCalled();
   });
 });
+
+// #endregion

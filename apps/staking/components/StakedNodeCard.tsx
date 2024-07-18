@@ -73,6 +73,8 @@ export type StakedNode =
   | DecommissionedStakedNode
   | DeregisteredStakedNode
   | UnlockedStakedNode;
+
+// #endregion
 // #region - Assertions
 /** Type assertions */
 const isRunning = (node: StakedNode): node is RunningStakedNode =>
@@ -154,6 +156,7 @@ function getNodeStatus(state: NODE_STATE): VariantProps<typeof statusVariants>['
   }
 }
 
+// #endregion
 // #region - Components
 
 type ToggleCardExpansionButtonProps = HTMLAttributes<HTMLLabelElement> & {
@@ -414,5 +417,7 @@ const StakedNodeCard = forwardRef<
   );
 });
 StakedNodeCard.displayName = 'StakedNodeCard';
+
+// #endregion
 
 export { StakedNodeCard };

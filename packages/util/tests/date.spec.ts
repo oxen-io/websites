@@ -3,6 +3,7 @@ import {
   getUnixTimestampNowSeconds,
   getUnixTimestampSecondsFromDate,
   isValidUnixTimestampSeconds,
+  timeBetweenEvents,
 } from '../date';
 
 // #region - isValidUnixTimestampSeconds
@@ -24,6 +25,7 @@ describe('isValidUnixTimestampSeconds', () => {
   });
 });
 
+// #endregion
 // #region - getUnixTimestampNowSeconds
 
 describe('getUnixTimestampNowSeconds', () => {
@@ -40,6 +42,7 @@ describe('getUnixTimestampNowSeconds', () => {
   });
 });
 
+// #endregion
 // #region - getUnixTimestampSecondsFromDate
 
 describe('getUnixTimestampSecondsFromDate', () => {
@@ -64,6 +67,7 @@ describe('getUnixTimestampSecondsFromDate', () => {
   });
 });
 
+// #endregion
 // #region - getDateFromUnixTimestampSeconds
 
 describe('getDateFromUnixTimestampSeconds', () => {

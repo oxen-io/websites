@@ -32,6 +32,7 @@ describe('isEthereumWindowProvider', () => {
   });
 });
 
+// #endregion
 // #region - getEthereumWindowProvider
 
 describe('getEthereumWindowProvider', () => {
@@ -111,3 +112,5 @@ describe('getEthereumWindowProvider', () => {
     expect(mockConsoleError).not.toHaveBeenCalled();
   });
 });
+
+// #endregion
