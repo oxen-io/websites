@@ -1,3 +1,1 @@
-import { X } from 'lucide-react';
-
-export const XIcon = X;
+export { X as XIcon } from 'lucide-react';
