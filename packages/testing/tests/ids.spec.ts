@@ -1,6 +1,5 @@
 import { genericCreateDataTestId, genericIsDataTestId } from '../ids';
 
-// #endregion
 // #region - genericCreateDataTestId
 
 describe('genericCreateDataTestId', () => {

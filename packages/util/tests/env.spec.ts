@@ -8,7 +8,6 @@ beforeEach(() => {
   mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {});
 });
 
-// #endregion
 // #region - getEnvironment
 
 describe('getEnvironment', () => {
