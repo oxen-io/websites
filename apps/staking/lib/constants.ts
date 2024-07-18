@@ -106,6 +106,7 @@ export enum QUERY {
 export enum SESSION_NODE {
   /** 120 SENT  */
   FULL_STAKE_AMOUNT = '120000000000',
+  BLOCK_VELOCITY = 0.000016667,
 }
 
 export enum TOAST {
