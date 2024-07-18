@@ -340,6 +340,8 @@ const StakedNodeCard = forwardRef<
     return formatNumber(getTotalStakedAmountForAddress(contributors, address));
   }, [contributors]);
 
+  const isSoloNode = contributors.length === 1;
+
   return (
     <NodeCard
       ref={ref}
@@ -400,12 +402,14 @@ const StakedNodeCard = forwardRef<
         </RowLabel>
         {formattedTotalStakedAmount} {SENT_SYMBOL}
       </CollapsableContent>
-      <CollapsableContent>
-        <RowLabel>
-          {titleFormat('format', { title: generalNodeDictionary('operatorFee') })}
-        </RowLabel>
-        {formatPercentage(operatorFee)}
-      </CollapsableContent>
+      {!isSoloNode ? (
+        <CollapsableContent>
+          <RowLabel>
+            {titleFormat('format', { title: generalNodeDictionary('operatorFee') })}
+          </RowLabel>
+          {formatPercentage(operatorFee)}
+        </CollapsableContent>
+      ) : null}
     </NodeCard>
   );
 });
