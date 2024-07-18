@@ -20,8 +20,7 @@ export const collapseString = (str: string, leadingChars = 6, trailingChars = 4)
  * @returns If the two hexes are logically equal.
  */
 export const areHexesEqual = (str1?: string, str2?: string): boolean => {
-  if (!str1 || !str2 || str1.length < 3 || str1.length !== str2.length) return false;
-  if (str1 === str2) return true;
+  if (!str1 || !str2 || str1.length < 3) return false;
 
   let hex1 = str1.toUpperCase();
   let hex2 = str2.toUpperCase();
