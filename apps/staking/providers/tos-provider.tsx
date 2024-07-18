@@ -23,7 +23,7 @@ function loadAcceptedTOSFromStorage() {
 
   const storedTOS = localStorage.getItem(localStorageTOSKey);
 
-  return storedTOS ? Boolean(storedTOS) : false;
+  return !!storedTOS;
 }
 
 const Context = createContext<TOSContext | undefined>(undefined);

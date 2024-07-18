@@ -129,7 +129,7 @@ const ContributorIcon = ({
         <p>
           {contributor
             ? `${isUser ? dictionary('you') : contributor.address} | ${formatSENT(contributor.amount)} ${SENT_SYMBOL}`
-            : 'Empty contributor slot'}
+            : dictionary('emptySlot')}
         </p>
       }
     >

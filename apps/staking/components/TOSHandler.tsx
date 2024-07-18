@@ -37,20 +37,22 @@ const FormSchema = z.object({
     .refine((value) => value),
 });
 
+type FormSchemaType = z.infer<typeof FormSchema>;
+
 export function TOSHandler() {
   const pathname = usePathname();
   const clearAcceptTOSFlag = useFeatureFlag(FEATURE_FLAG.CLEAR_ACCEPT_TOS);
   const accepted = useTOS();
   const { acceptTOS } = useSetTOS();
 
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const form = useForm<FormSchemaType>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       accept: false,
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  function onSubmit(data: FormSchemaType) {
     if (!data.accept) {
       toast.error(
         <span>
