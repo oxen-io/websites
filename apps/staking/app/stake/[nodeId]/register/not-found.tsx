@@ -28,7 +28,7 @@ export default function NotFound() {
 
   const openNode = useMemo(() => {
     return openData?.nodes?.find((node) => areHexesEqual(node.service_node_pubkey, nodeId));
-  }, [openData]);
+  }, [openData, nodeId]);
 
   const nodeAlreadyRunning = runningNode && 'state' in runningNode && runningNode.state;
 
