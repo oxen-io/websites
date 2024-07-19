@@ -154,7 +154,7 @@ function QueryStatusInformation({
   const dictionary = useTranslations('actionModules.register');
 
   const { data: nodeRunning } = useQuery({
-    queryKey: ['getNode', nodeId, 'checking-registration'],
+    queryKey: ['getNode', nodeId, 'checkRegistration'],
     queryFn: async () => {
       if (!isProduction) {
         console.log('Checking if the node has joined the network');
