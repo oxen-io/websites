@@ -64,6 +64,7 @@ export default function NodeRegistration({ nodeId }: { nodeId: string }) {
     showTwoMockNodes,
     showThreeMockNodes,
     showManyMockNodes,
+    nodeId,
   ]);
 
   return isLoading ? <Loading /> : node ? <NodeRegistrationForm node={node} /> : notFound();
