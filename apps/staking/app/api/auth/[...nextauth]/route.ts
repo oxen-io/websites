@@ -1,6 +1,7 @@
 import { createAuthHandler } from '@session/auth/api';
 import { DiscordProvider, handleDiscordSession } from '@session/auth/providers/discord';
-import { TelegramProvider, handleTelegramSession } from '@session/auth/providers/telegram';
+import { handleTelegramSession, TelegramProvider } from '@session/auth/providers/telegram';
+import { NextAuthJWT, NextAuthSession } from '@session/auth/types';
 
 const discordClientId = process.env.DISCORD_CLIENT_ID;
 const discordClientSecret = process.env.DISCORD_CLIENT_SECRET;
@@ -23,7 +24,7 @@ export const { GET, POST } = createAuthHandler({
     TelegramProvider({ botToken: telegramBotToken }),
   ],
   callbacks: {
-    async session({ session, token }) {
+    async session({ session, token }: { session: NextAuthSession; token: NextAuthJWT }) {
       handleDiscordSession({ session, token });
       handleTelegramSession({ session, token });
       return session;

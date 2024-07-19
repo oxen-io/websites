@@ -8,9 +8,9 @@ import {
 } from '@session/ui/components/ModuleGrid';
 import { QuestionIcon } from '@session/ui/icons/QuestionIcon';
 import { cn } from '@session/ui/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { Skeleton } from '@session/ui/ui/skeleton';
+import { Tooltip } from '@session/ui/ui/tooltip';
 
 type ActionModuleProps = {
   title?: string;
@@ -44,7 +44,9 @@ export default function ActionModule({
           </>
         ) : null}
       </ModuleGridHeader>
-      <ModuleGridContent className={cn("overflow-y-auto p-8", contentClassName)}>{children}</ModuleGridContent>
+      <ModuleGridContent className={cn('overflow-y-auto p-8', contentClassName)}>
+        {children}
+      </ModuleGridContent>
     </ModuleGrid>
   );
 }
@@ -75,13 +77,10 @@ export const actionModuleBackground = {
 
 export const ActionModuleTooltip = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div ref={ref} className={cn('cursor-pointer', className)} {...props}>
-          <QuestionIcon className="fill-session-text h-4 w-4" />
-        </div>
-      </TooltipTrigger>
-      <TooltipContent>{children}</TooltipContent>
+    <Tooltip ref={ref} tooltipContent={children}>
+      <div className={cn('cursor-pointer', className)} {...props}>
+        <QuestionIcon className="fill-session-text h-4 w-4" />
+      </div>
     </Tooltip>
   )
 );

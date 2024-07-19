@@ -1,10 +1,10 @@
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { CopyToClipboardButton } from '@session/ui/components/CopyToClipboardButton';
 import { cn } from '@session/ui/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
+import { Tooltip } from '@session/ui/ui/tooltip';
 import { collapseString } from '@session/util/string';
 import { useTranslations } from 'next-intl';
-import { HTMLAttributes, forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
+import { forwardRef, HTMLAttributes, useCallback, useEffect, useMemo, useState } from 'react';
 
 type PubKeyType = HTMLAttributes<HTMLDivElement> & {
   pubKey: string;
@@ -57,21 +57,16 @@ export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
   return (
     <span ref={ref} className={cn('group flex select-all items-center', className)} {...rest}>
       {!isExpanded ? (
-        <Tooltip>
-          <TooltipTrigger asChild disabled={expandOnHover}>
-            <span
-              className={cn(
-                'select-all break-all',
-                force !== 'collapse' && expandOnHover && 'group-hover:hidden',
-                force !== 'collapse' && expandOnHover && isExpanded ? 'hidden' : 'block'
-              )}
-            >
-              {collapsedPubKey}
-            </span>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{pubKey}</p>
-          </TooltipContent>
+        <Tooltip tooltipContent={<p>{pubKey}</p>} triggerProps={{ disabled: expandOnHover }}>
+          <span
+            className={cn(
+              'select-all break-all',
+              force !== 'collapse' && expandOnHover && 'group-hover:hidden',
+              force !== 'collapse' && expandOnHover && isExpanded ? 'hidden' : 'block'
+            )}
+          >
+            {collapsedPubKey}
+          </span>
         </Tooltip>
       ) : null}
       <div

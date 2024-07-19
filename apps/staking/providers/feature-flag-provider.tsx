@@ -106,6 +106,7 @@ export enum FEATURE_FLAG {
   MOCK_PENDING_NODES_MANY = 'mockPendingNodesMany',
   MOCK_NO_PENDING_NODES = 'mockNoPendingNodes',
   MOCK_REGISTRATION = 'mockRegistration',
+  CLEAR_ACCEPT_TOS = 'clearAcceptTOS',
 }
 
 export const FEATURE_FLAG_DESCRIPTION = {
@@ -119,6 +120,7 @@ export const FEATURE_FLAG_DESCRIPTION = {
   [FEATURE_FLAG.MOCK_PENDING_NODES_MANY]: 'Replace pending nodes with many node with mock data',
   [FEATURE_FLAG.MOCK_NO_PENDING_NODES]: 'Replace pending nodes with no data',
   [FEATURE_FLAG.MOCK_REGISTRATION]: 'Use a mock node for the registration form',
+  [FEATURE_FLAG.CLEAR_ACCEPT_TOS]: 'Clear the accepted terms and conditions',
 };
 
 export const validFeatureFlags = Object.values(FEATURE_FLAG);
@@ -136,3 +138,5 @@ export const pageFeatureFlags: Record<string, Array<FEATURE_FLAG>> = {
   ],
   register: [FEATURE_FLAG.MOCK_REGISTRATION],
 };
+
+export const globalFeatureFlags = [FEATURE_FLAG.CLEAR_ACCEPT_TOS];

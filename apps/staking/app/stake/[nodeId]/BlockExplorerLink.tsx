@@ -7,13 +7,14 @@ import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-clien
 import { getOpenNodes } from '@/lib/queries/getOpenNodes';
 import { useMemo } from 'react';
 import { Loading } from '@session/ui/components/loading';
+import { areHexesEqual } from '@session/util/string';
 
 export const BlockExplorerLink = ({ nodeId }: { nodeId: string }) => {
   const { data, isLoading } = useStakingBackendSuspenseQuery(getOpenNodes);
 
   const node = useMemo(() => {
-    return data?.nodes?.find((node) => node.service_node_pubkey === nodeId);
-  }, [data]);
+    return data?.nodes?.find((node) => areHexesEqual(node.service_node_pubkey, nodeId));
+  }, [data, nodeId]);
 
   return isLoading ? (
     <Loading />

@@ -13,16 +13,17 @@ import { formatNumber } from '@session/util/maths';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { useTranslations } from 'next-intl';
-import { ReactNode, forwardRef, useId, useMemo, useState, type HTMLAttributes } from 'react';
+import { forwardRef, type HTMLAttributes, ReactNode, useId, useMemo, useState } from 'react';
 import {
   Contributor,
+  getTotalStakedAmountForAddress,
   NodeCard,
   NodeCardText,
   NodeCardTitle,
   NodeContributorList,
-  getTotalStakedAmountForAddress,
 } from './NodeCard';
 import { PubKey } from './PubKey';
+import { areHexesEqual } from '@session/util/string';
 
 export const NODE_STATE_VALUES = Object.values(NODE_STATE);
 
@@ -124,7 +125,7 @@ const isAwaitingLiquidation = (node: StakedNode): boolean =>
  * @returns `true` if the node is operated by the specified operator, `false` otherwise.
  */
 const isNodeOperator = (node: StakedNode, operatorAddress: string): boolean =>
-  node.operator_address === operatorAddress;
+  areHexesEqual(node.operator_address, operatorAddress);
 
 /**
  * Checks if a given contributor address is a contributor of a session node.
@@ -134,7 +135,7 @@ const isNodeOperator = (node: StakedNode, operatorAddress: string): boolean =>
  * @returns `true` if the contributor address is a contributor of the session node, `false` otherwise.
  */
 const isNodeContributor = (node: StakedNode, contributorAddress: string): boolean =>
-  node.contributors.some(({ address }) => address === contributorAddress);
+  node.contributors.some(({ address }) => areHexesEqual(address, contributorAddress));
 
 function getNodeStatus(state: NODE_STATE): VariantProps<typeof statusVariants>['status'] {
   switch (state) {
@@ -373,7 +374,9 @@ const StakedNodeCard = forwardRef<
         </CollapsableContent>
       ) : null}
       <CollapsableContent className="font-medium opacity-75" size="xs">
-        {dictionary('lastUptime', { time: formatLocalizedRelativeTimeToNowClient(lastUptime) })}
+        {dictionary('lastUptime', {
+          time: formatLocalizedRelativeTimeToNowClient(lastUptime, { addSuffix: true }),
+        })}
       </CollapsableContent>
       {/** NOTE - ensure any changes here still work with the pubkey component */}
       <NodeCardText className="flex w-full flex-row flex-wrap gap-1 peer-checked:mt-1 peer-checked:[&>span>span>button]:opacity-100 peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">

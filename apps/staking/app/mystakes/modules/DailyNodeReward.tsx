@@ -36,7 +36,7 @@ export default function DailyNodeReward() {
           refetch,
         }}
       >
-        {data}
+        ~{data}
       </ModuleDynamicContractReadText>
     </Module>
   );

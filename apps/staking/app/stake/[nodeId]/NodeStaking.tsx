@@ -4,11 +4,11 @@ import { NodeContributorList } from '@/components/NodeCard';
 import { PubKey } from '@/components/PubKey';
 import { formatPercentage } from '@/lib/locale-client';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
-import { SENT_SYMBOL } from '@session/contracts';
+import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import type { GetOpenNodesResponse } from '@session/sent-staking-js/client';
 import { Loading } from '@session/ui/components/loading';
 import { Button, ButtonSkeleton } from '@session/ui/ui/button';
-import { formatNumber } from '@session/util/maths';
+import { bigIntToNumber, formatNumber } from '@session/util/maths';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { ActionModuleDivider, ActionModuleRow, ActionModuleRowSkeleton } from '../ActionModule';
@@ -16,6 +16,7 @@ import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-clien
 import { getOpenNodes } from '@/lib/queries/getOpenNodes';
 import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import { generateOpenNodes } from '@session/sent-staking-js/test';
+import { areHexesEqual } from '@session/util/string';
 
 export default function NodeStaking({ nodeId }: { nodeId: string }) {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);
@@ -23,7 +24,7 @@ export default function NodeStaking({ nodeId }: { nodeId: string }) {
 
   const node = useMemo(() => {
     if (showMockNodes) return generateOpenNodes()[0];
-    return data?.nodes?.find((node) => node.service_node_pubkey === nodeId);
+    return data?.nodes?.find((node) => areHexesEqual(node.service_node_pubkey, nodeId));
   }, [data, showMockNodes]);
 
   return isLoading ? (
@@ -43,9 +44,10 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
 
   const formattedTotalStakedAmount = useMemo(() => {
     if (!node.contributions || node.contributions.length === 0) return '0';
-    const totalStaked =
-      node.contributions.reduce((acc, contributor) => acc + contributor.amount, 0) /
-      Math.pow(10, 9);
+    const totalStaked = node.contributions.reduce(
+      (acc, contributor) => acc + bigIntToNumber(contributor.amount, SENT_DECIMALS),
+      0
+    );
     return formatNumber(totalStaked);
   }, [node.contributions]);
 

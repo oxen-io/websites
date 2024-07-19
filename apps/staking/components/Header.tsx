@@ -11,7 +11,7 @@ import { getTranslations } from 'next-intl/server';
 export default async function Header() {
   const dictionary = await getTranslations('navigation');
   return (
-    <nav className="flex items-center justify-between p-6">
+    <nav className="z-30 flex items-center justify-between p-6">
       <div className={cn('flex flex-row gap-10 pr-4')}>
         <Link href="/">
           <Image src="/images/logo.png" alt="Session Token Logo" width={144} height={50} />

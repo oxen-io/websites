@@ -1,4 +1,5 @@
 import {
+  getDateFromUnixTimestampSeconds,
   getUnixTimestampNowSeconds,
   getUnixTimestampSecondsFromDate,
   isValidUnixTimestampSeconds,
@@ -60,5 +61,29 @@ describe('getUnixTimestampSecondsFromDate', () => {
   test('should return the correct Unix timestamp for a date in the future', () => {
     const date = new Date('2050-12-31T23:59:59Z'); // December 31, 2050 23:59:59 UTC
     expect(getUnixTimestampSecondsFromDate(date)).toBe(2556143999);
+  });
+});
+
+// #region - getDateFromUnixTimestampSeconds
+
+describe('getDateFromUnixTimestampSeconds', () => {
+  test('should return the correct Date from Unix timestamp', () => {
+    const date = new Date('2022-01-01T00:00:00Z'); // January 1, 2022 00:00:00 UTC
+    expect(getDateFromUnixTimestampSeconds(1640995200).toISOString()).toBe(date.toISOString());
+  });
+
+  test('should return the correct Date from Unix timestamp for a different timestamp', () => {
+    const date = new Date('2023-06-15T12:34:56Z'); // June 15, 2023 12:34:56 UTC
+    expect(getDateFromUnixTimestampSeconds(1686832496).toISOString()).toBe(date.toISOString());
+  });
+
+  test('should return the correct Date from Unix timestamp for a timestamp in the past', () => {
+    const date = new Date('2000-05-10T08:15:30Z'); // May 10, 2000 08:15:30 UTC
+    expect(getDateFromUnixTimestampSeconds(957946530).toISOString()).toBe(date.toISOString());
+  });
+
+  test('should return the correct Date from Unix timestamp for a timestamp in the future', () => {
+    const date = new Date('2050-12-31T23:59:59Z'); // December 31, 2050 23:59:59 UTC
+    expect(getDateFromUnixTimestampSeconds(2556143999).toISOString()).toBe(date.toISOString());
   });
 });

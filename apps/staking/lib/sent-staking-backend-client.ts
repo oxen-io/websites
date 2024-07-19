@@ -4,6 +4,7 @@ import { createSessionStakingClient, SessionStakingClient } from '@session/sent-
 import {
   getStakingBackendQueryArgs,
   getStakingBackendQueryWithParamsArgs,
+  type QueryOptions,
   StakingBackendQuery,
   StakingBackendQueryWithParams,
 } from '@/lib/sent-staking-backend';
@@ -41,15 +42,18 @@ export function useStakingBackendSuspenseQuery<Q extends StakingBackendQuery>(qu
   });
 }
 
-export function useStakingBackendQuery<Q extends StakingBackendQuery>(query: Q, enabled = true) {
+export function useStakingBackendQuery<Q extends StakingBackendQuery>(
+  query: Q,
+  queryOptions?: QueryOptions
+) {
   const stakingBackendClient = useStakingBackendBrowserClient();
   return useQuery<Awaited<ReturnType<Q>>['data']>({
     ...getStakingBackendQueryArgs(query),
+    ...queryOptions,
     queryFn: async () => {
       const res = await query(stakingBackendClient);
       return res.data;
     },
-    enabled,
   });
 }
 
@@ -70,15 +74,15 @@ export function useStakingBackendSuspenseQueryWithParams<Q extends StakingBacken
 export function useStakingBackendQueryWithParams<Q extends StakingBackendQueryWithParams>(
   query: Q,
   params: Parameters<Q>[1],
-  enabled = true
+  queryOptions?: QueryOptions
 ) {
   const stakingBackendClient = useStakingBackendBrowserClient();
   return useQuery<Awaited<ReturnType<Q>>['data']>({
     ...getStakingBackendQueryWithParamsArgs(query, params),
+    ...queryOptions,
     queryFn: async () => {
       const res = await query(stakingBackendClient, params);
       return res.data;
     },
-    enabled,
   });
 }

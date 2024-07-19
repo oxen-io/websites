@@ -9,6 +9,7 @@ import {
 } from '@session/wallet/providers/web3-modal-provider';
 import QueryProvider from '@/providers/query-provider';
 import { ReactNode } from 'react';
+import TOSProvider from '@/providers/tos-provider';
 
 type GlobalProviderParams = Omit<Web3ModalProviderProps, 'projectId'> &
   Pick<LocalizationProviderProps, 'locale' | 'messages'> & {
@@ -32,7 +33,7 @@ export async function GlobalProvider({
               wagmiMetadata={wagmiMetadata}
               projectId={NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID}
             >
-              {children}
+              <TOSProvider>{children}</TOSProvider>
             </Web3ModalProvider>
           </WalletButtonProvider>
         </LocalizationProvider>

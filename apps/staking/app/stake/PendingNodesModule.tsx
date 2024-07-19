@@ -15,6 +15,8 @@ import { PendingNodeCard } from '@/components/PendingNodeCard';
 import { useTranslations } from 'next-intl';
 import { cn } from '@session/ui/lib/utils';
 import { generatePendingNodes } from '@session/sent-staking-js/test';
+import { QUERY } from '@/lib/constants';
+import { isProduction } from '@/lib/env';
 
 export default function PendingNodesModule() {
   const showOneMockNode = useFeatureFlag(FEATURE_FLAG.MOCK_PENDING_NODES_ONE);
@@ -45,7 +47,12 @@ export default function PendingNodesModule() {
   const { data, isLoading } = useStakingBackendQueryWithParams(
     getPendingNodes,
     { address: address! },
-    isConnected
+    {
+      enabled: isConnected,
+      staleTime: isProduction
+        ? QUERY.STALE_TIME_REGISTRATIONS_LIST
+        : QUERY.STALE_TIME_REGISTRATIONS_LIST_DEV,
+    }
   );
 
   const nodes = useMemo(() => {
@@ -74,6 +81,9 @@ export default function PendingNodesModule() {
     showManyMockNodes,
   ]);
 
+  /** NOTE: The parent div needs to be rendered while loading in case nodes are returned, this
+   *  allows the height transition to work.
+   *  Once we know there are no nodes (loading is done and there are no nodes) it can be null */
   return isLoading || nodes.length ? (
     <div
       className={cn(

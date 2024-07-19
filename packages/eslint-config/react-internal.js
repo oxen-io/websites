@@ -8,7 +8,7 @@ const project = resolve(process.cwd(), 'tsconfig.json');
  * that utilize React.
  */
 
-/** @type {import("eslint").Linter.Config} */
+/** @type {import('eslint').Linter.Config} */
 module.exports = {
   parser: '@typescript-eslint/parser',
   extends: [
@@ -37,6 +37,7 @@ module.exports = {
     '.*.js',
     'node_modules/',
     'dist/',
+    'coverage/',
   ],
   overrides: [
     // Force ESLint to detect .tsx files

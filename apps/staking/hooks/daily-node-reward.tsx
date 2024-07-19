@@ -2,12 +2,10 @@
 
 import { useRewardRateQuery } from '@session/contracts/hooks/RewardRatePool';
 import { useTotalNodesQuery } from '@session/contracts/hooks/ServiceNodeRewards';
-import {
-  CONTRACT_READ_STATUS,
-  mergeContractReadStatuses,
-} from '@session/contracts/hooks/contract-hooks';
-import { getUnixTimestampNowSeconds } from '@session/util/date';
+import { CONTRACT_READ_STATUS, mergeContractReadStatuses } from '@session/contracts/hooks/contract-hooks';
 import { useMemo } from 'react';
+import { formatBigIntTokenValue } from '@session/util/maths';
+import { SENT_DECIMALS } from '@session/contracts';
 
 /**
  * Calculate the daily node reward of a node on the network based on the total number of nodes and the last block reward rate.
@@ -28,7 +26,7 @@ import { useMemo } from 'react';
  * @returns The daily node reward.
  */
 function calculateDailyNodeReward(totalNodes: bigint, rewardRate: bigint) {
-  return (Number(rewardRate) / Number(totalNodes)) * 720;
+  return (Number(formatBigIntTokenValue(rewardRate, SENT_DECIMALS)) / Number(totalNodes)) * 720;
 }
 
 export default function useDailyNodeReward() {
@@ -43,7 +41,7 @@ export default function useDailyNodeReward() {
     status: rewardRateStatus,
     error: errorRewardRateQuery,
     refetch: refetchRewardRate,
-  } = useRewardRateQuery({ startEnabled: true, args: [BigInt(getUnixTimestampNowSeconds())] });
+  } = useRewardRateQuery({ startEnabled: true, args: [] });
 
   const dailyNodeReward = useMemo(() => {
     if (
