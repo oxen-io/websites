@@ -3,6 +3,7 @@ import {
   getUnixTimestampNowSeconds,
   getUnixTimestampSecondsFromDate,
   isValidUnixTimestampSeconds,
+  timeBetweenEvents,
 } from '../date';
 
 // #region - isValidUnixTimestampSeconds
@@ -24,6 +25,7 @@ describe('isValidUnixTimestampSeconds', () => {
   });
 });
 
+// #endregion
 // #region - getUnixTimestampNowSeconds
 
 describe('getUnixTimestampNowSeconds', () => {
@@ -40,6 +42,7 @@ describe('getUnixTimestampNowSeconds', () => {
   });
 });
 
+// #endregion
 // #region - getUnixTimestampSecondsFromDate
 
 describe('getUnixTimestampSecondsFromDate', () => {
@@ -64,6 +67,7 @@ describe('getUnixTimestampSecondsFromDate', () => {
   });
 });
 
+// #endregion
 // #region - getDateFromUnixTimestampSeconds
 
 describe('getDateFromUnixTimestampSeconds', () => {
@@ -87,3 +91,36 @@ describe('getDateFromUnixTimestampSeconds', () => {
     expect(getDateFromUnixTimestampSeconds(2556143999).toISOString()).toBe(date.toISOString());
   });
 });
+
+// #endregion
+// #region - timeBetweenEvents
+
+describe('timeBetweenEvents', () => {
+  test('should return the correct TimeBetween timestamp', () => {
+    expect(timeBetweenEvents(1, 2, 1)).toBe(1);
+    expect(timeBetweenEvents(1, 100, 10)).toBe(10);
+    expect(timeBetweenEvents(1, 50, 10)).toBe(5);
+    expect(timeBetweenEvents(0, 2, 1)).toBe(2);
+  });
+
+  test('should return the correct TimeBetween timestamp regardless of order', () => {
+    expect(timeBetweenEvents(2, 1, 1)).toBe(1);
+    expect(timeBetweenEvents(100, 1, 10)).toBe(10);
+    expect(timeBetweenEvents(50, 1, 10)).toBe(5);
+    expect(timeBetweenEvents(2, 0, 1)).toBe(2);
+  });
+
+  test('should return 0 TimeBetween timestamp when velocity is more than twice the distance', () => {
+    expect(timeBetweenEvents(50, 55, 20)).toBe(0);
+    expect(timeBetweenEvents(15, 15, 1)).toBe(0);
+    expect(timeBetweenEvents(15, 15, 11)).toBe(0);
+  });
+
+  test('should return the correct TimeBetween timestamp for negative velocity', () => {
+    expect(timeBetweenEvents(1, 2, -1)).toBe(-1);
+    expect(timeBetweenEvents(1, 100, -10)).toBe(-10);
+    expect(timeBetweenEvents(0, 2, -1)).toBe(-2);
+  });
+});
+
+// #endregion

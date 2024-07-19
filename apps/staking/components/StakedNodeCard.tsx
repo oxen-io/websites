@@ -73,6 +73,8 @@ export type StakedNode =
   | DecommissionedStakedNode
   | DeregisteredStakedNode
   | UnlockedStakedNode;
+
+// #endregion
 // #region - Assertions
 /** Type assertions */
 const isRunning = (node: StakedNode): node is RunningStakedNode =>
@@ -154,6 +156,7 @@ function getNodeStatus(state: NODE_STATE): VariantProps<typeof statusVariants>['
   }
 }
 
+// #endregion
 // #region - Components
 
 type ToggleCardExpansionButtonProps = HTMLAttributes<HTMLLabelElement> & {
@@ -340,6 +343,8 @@ const StakedNodeCard = forwardRef<
     return formatNumber(getTotalStakedAmountForAddress(contributors, address));
   }, [contributors]);
 
+  const isSoloNode = contributors.length === 1;
+
   return (
     <NodeCard
       ref={ref}
@@ -400,15 +405,19 @@ const StakedNodeCard = forwardRef<
         </RowLabel>
         {formattedTotalStakedAmount} {SENT_SYMBOL}
       </CollapsableContent>
-      <CollapsableContent>
-        <RowLabel>
-          {titleFormat('format', { title: generalNodeDictionary('operatorFee') })}
-        </RowLabel>
-        {formatPercentage(operatorFee)}
-      </CollapsableContent>
+      {!isSoloNode ? (
+        <CollapsableContent>
+          <RowLabel>
+            {titleFormat('format', { title: generalNodeDictionary('operatorFee') })}
+          </RowLabel>
+          {formatPercentage(operatorFee)}
+        </CollapsableContent>
+      ) : null}
     </NodeCard>
   );
 });
 StakedNodeCard.displayName = 'StakedNodeCard';
+
+// #endregion
 
 export { StakedNodeCard };

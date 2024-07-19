@@ -22,7 +22,8 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { getStakedNodes } from '@/lib/queries/getStakedNodes';
-import { getDateFromUnixTimestampSeconds } from '@session/util/date';
+import { getDateFromUnixTimestampSeconds, timeBetweenEvents } from '@session/util/date';
+import { SESSION_NODE } from '@/lib/constants';
 
 function StakedNodesWithAddress({ address }: { address: string }) {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_STAKED_NODES);
@@ -53,7 +54,7 @@ function StakedNodesWithAddress({ address }: { address: string }) {
         nodes.map((node) => (
           <StakedNodeCard
             key={node.service_node_pubkey}
-            node={parseSessionNodeData(node) as StakedNode}
+            node={parseSessionNodeData(node, data?.network?.height) as StakedNode}
           />
         ))
       ) : (
@@ -110,15 +111,10 @@ function NoNodes() {
   );
 }
 
-// TODO - replace these with real values
-const currentBlockHeight = 1000;
-const blocksPerMs = 0.00001;
-
-const msToBlockHeight = (height: number) => {
-  return Math.floor((currentBlockHeight + height) / blocksPerMs);
-};
-
-export const parseSessionNodeData = (node: ServiceNode): GenericStakedNode => {
+export const parseSessionNodeData = (
+  node: ServiceNode,
+  currentBlock: number = 0
+): GenericStakedNode => {
   return {
     state: node.state,
     contributors: node.contributors,
@@ -131,12 +127,26 @@ export const parseSessionNodeData = (node: ServiceNode): GenericStakedNode => {
     ...(node.awaiting_liquidation ? { awaitingLiquidation: true } : {}),
     ...(node.decomm_blocks_remaining
       ? {
-          deregistrationDate: new Date(Date.now() + msToBlockHeight(node.decomm_blocks_remaining)),
+          deregistrationDate: new Date(
+            Date.now() +
+              timeBetweenEvents(
+                node.decomm_blocks_remaining,
+                currentBlock,
+                SESSION_NODE.BLOCK_VELOCITY
+              )
+          ),
         }
       : {}),
     ...(node.requested_unlock_height
       ? {
-          unlockDate: new Date(Date.now() + msToBlockHeight(node.requested_unlock_height)),
+          unlockDate: new Date(
+            Date.now() +
+              timeBetweenEvents(
+                node.requested_unlock_height,
+                currentBlock,
+                SESSION_NODE.BLOCK_VELOCITY
+              )
+          ),
         }
       : {}),
   };

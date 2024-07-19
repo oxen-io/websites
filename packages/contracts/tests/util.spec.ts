@@ -20,6 +20,7 @@ describe('formatSENT', () => {
   });
 });
 
+// #endregion
 // #region - parseSENT
 
 describe('parseSENT', () => {
@@ -39,3 +40,5 @@ describe('parseSENT', () => {
     expect(parseSENT('0.000000001')).toBe(BigInt(1));
   });
 });
+
+// #endregion

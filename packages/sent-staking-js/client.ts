@@ -38,6 +38,9 @@ export interface Contributor {
 
 export interface GetNodesForWalletResponse {
   nodes: ServiceNode[];
+  network: {
+    height: number;
+  };
 }
 
 export interface ServiceNode {

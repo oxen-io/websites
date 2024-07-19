@@ -30,9 +30,11 @@ export async function getNode({ address }: { address: string }) {
 
     const node = res.result.service_node_states[0];
 
+    const currentBlock = res.result.height;
+
     return node
       ? {
-          ...parseSessionNodeData(node),
+          ...parseSessionNodeData(node, currentBlock),
           state: NODE_STATE.RUNNING,
         }
       : {};

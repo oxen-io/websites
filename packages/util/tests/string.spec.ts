@@ -32,6 +32,7 @@ describe('collapseString', () => {
   });
 });
 
+// #endregion
 // #region - hexesAreEqual
 
 describe('hexesAreEqual', () => {
@@ -69,3 +70,5 @@ describe('hexesAreEqual', () => {
     expect(areHexesEqual(undefined, undefined)).toBe(false);
   });
 });
+
+// #endregion
