@@ -28,6 +28,7 @@ import { type StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
 import Link from 'next/link';
 import { Tooltip } from '@session/ui/ui/tooltip';
 import { areHexesEqual } from '@session/util/string';
+import { isProduction } from '@/lib/env';
 
 export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showMockRegistration = useFeatureFlag(FEATURE_FLAG.MOCK_REGISTRATION);
@@ -152,17 +153,25 @@ function QueryStatusInformation({
 }) {
   const dictionary = useTranslations('actionModules.register');
 
-  const { data: runningNode } = useQuery({
-    queryKey: ['getNode', nodeId],
-    queryFn: () => getNode({ address: nodeId }),
-    enabled: stage === REGISTER_STAGE.JOIN,
+  const { data: nodeRunning } = useQuery({
+    queryKey: ['getNode', nodeId, 'checking-registration'],
+    queryFn: async () => {
+      if (!isProduction) {
+        console.log('Checking if the node has joined the network');
+      }
+
+      const node = await getNode({ address: nodeId });
+
+      if (node && 'state' in node && node.state) {
+        return true;
+      }
+      throw new Error('Node has not joined the network yet');
+    },
     // Allows for ~5 minutes of waiting
     retry: 50,
     // Retries every 30/n seconds or 5 seconds, whichever is longer
-    retryDelay: (attempt) => Math.max((30 * 1000) / attempt, 5 * 1000),
+    retryDelay: (attempt) => (isProduction ? Math.max((30 * 1000) / attempt, 5 * 1000) : 5000),
   });
-
-  const nodeRunning = Boolean(runningNode && 'state' in runningNode && runningNode.state);
 
   return (
     <div className="flex w-full flex-col gap-8">
