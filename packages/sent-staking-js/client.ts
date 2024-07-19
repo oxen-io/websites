@@ -1,15 +1,18 @@
+type NetworkInfo = {
+  block_height: number;
+  block_timestamp: number;
+  block_top_hash: string;
+  hard_fork: number;
+  max_stakers: number;
+  min_operator_stake: number;
+  nettype: string;
+  staking_requirement: number;
+  version: string;
+};
+
 /** /info */
 interface NetworkInfoResponse {
-  network: {
-    nettype: string;
-    hard_fork: number;
-    height: number;
-    top_block_hash: string;
-    version: string;
-    staking_requirement: number;
-    min_operator_stake: number;
-    max_stakers: number;
-  };
+  network: NetworkInfo;
   t: number;
 }
 
@@ -38,9 +41,7 @@ export interface Contributor {
 
 export interface GetNodesForWalletResponse {
   nodes: ServiceNode[];
-  network: {
-    height: number;
-  };
+  network: NetworkInfo;
 }
 
 export interface ServiceNode {

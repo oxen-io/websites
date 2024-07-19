@@ -106,8 +106,10 @@ export enum QUERY {
 export enum SESSION_NODE {
   /** 120 SENT  */
   FULL_STAKE_AMOUNT = '120000000000',
-  /** Average blocks per millisecond (~2 blocks per minute) */
-  BLOCK_VELOCITY = 0.000016667,
+  /** Average blocks per millisecond (~2 minutes per block) */
+  MS_PER_BLOCK = 2 * 60 * 1000,
+  /** Average millisecond per block (~2 minutes per block) */
+  BLOCK_VELOCITY = 2 / 60 / 4 / 1000,
 }
 
 export enum TOAST {

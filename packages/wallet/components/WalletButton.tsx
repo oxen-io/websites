@@ -28,7 +28,7 @@ export function WalletButton({
 }: WalletButtonProps) {
   const name = useMemo(
     () => collapseString(arbName ?? ensName ?? address ?? fallbackName, 6, 4),
-    [ensName, arbName, address]
+    [ensName, arbName, address, fallbackName]
   );
 
   return (

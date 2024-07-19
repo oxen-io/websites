@@ -22,7 +22,11 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { getStakedNodes } from '@/lib/queries/getStakedNodes';
-import { getDateFromUnixTimestampSeconds, timeBetweenEvents } from '@session/util/date';
+import {
+  getDateFromUnixTimestampSeconds,
+  getUnixTimestampNowSeconds,
+  timeBetweenEvents,
+} from '@session/util/date';
 import { SESSION_NODE } from '@/lib/constants';
 
 function StakedNodesWithAddress({ address }: { address: string }) {
@@ -54,7 +58,13 @@ function StakedNodesWithAddress({ address }: { address: string }) {
         nodes.map((node) => (
           <StakedNodeCard
             key={node.service_node_pubkey}
-            node={parseSessionNodeData(node, data?.network?.height) as StakedNode}
+            node={
+              parseSessionNodeData(
+                node,
+                data?.network?.block_height,
+                data?.network?.block_timestamp
+              ) as StakedNode
+            }
           />
         ))
       ) : (
@@ -113,7 +123,8 @@ function NoNodes() {
 
 export const parseSessionNodeData = (
   node: ServiceNode,
-  currentBlock: number = 0
+  currentBlock: number = 0,
+  networkTime: number = getUnixTimestampNowSeconds()
 ): GenericStakedNode => {
   return {
     state: node.state,
@@ -128,19 +139,14 @@ export const parseSessionNodeData = (
     ...(node.decomm_blocks_remaining
       ? {
           deregistrationDate: new Date(
-            Date.now() +
-              timeBetweenEvents(
-                node.decomm_blocks_remaining,
-                currentBlock,
-                SESSION_NODE.BLOCK_VELOCITY
-              )
+            networkTime * 1000 + node.decomm_blocks_remaining * SESSION_NODE.MS_PER_BLOCK
           ),
         }
       : {}),
     ...(node.requested_unlock_height
       ? {
           unlockDate: new Date(
-            Date.now() +
+            networkTime * 1000 +
               timeBetweenEvents(
                 node.requested_unlock_height,
                 currentBlock,

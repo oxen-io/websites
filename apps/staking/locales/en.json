@@ -10,6 +10,9 @@
     "you": "You",
     "emptySlot": "EmptyContributorSlot"
   },
+  "maths": {
+    "outOf": "{count}/{max}"
+  },
   "clipboard": {
     "copyToClipboard": "Copy to Clipboard",
     "copyToClipboardSuccessToast": "Copied to clipboard!"

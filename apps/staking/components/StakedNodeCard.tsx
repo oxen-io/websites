@@ -105,7 +105,9 @@ const isUnlocked = (node: StakedNode): node is UnlockedStakedNode =>
 const isBeingDeregistered = (
   node: StakedNode
 ): node is DecommissionedStakedNode & { deregistrationDate: Date } =>
-  'deregistrationDate' in node && node.deregistrationDate !== undefined;
+  node.state === NODE_STATE.DECOMMISSIONED &&
+  'deregistrationDate' in node &&
+  node.deregistrationDate !== undefined;
 
 const isBeingUnlocked = (
   node: StakedNode
@@ -341,7 +343,7 @@ const StakedNodeCard = forwardRef<
   const formattedTotalStakedAmount = useMemo(() => {
     if (!contributors || contributors.length === 0 || !address) return '0';
     return formatNumber(getTotalStakedAmountForAddress(contributors, address));
-  }, [contributors]);
+  }, [contributors, address]);
 
   const isSoloNode = contributors.length === 1;
 

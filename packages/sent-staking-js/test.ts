@@ -328,6 +328,7 @@ export const generateMinAndMaxContribution = ({
   };
 };
 
+// TODO - Rework node generation logic
 const generateOpenNode = ({
   userAddress,
   maxContributors,

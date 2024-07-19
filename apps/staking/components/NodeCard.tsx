@@ -162,6 +162,8 @@ const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorList
   ({ className, contributors, showEmptySlots, forceExpand, ...props }, ref) => {
     const { address: userAddress } = useWallet();
 
+    const dictionary = useTranslations('maths');
+
     const [mainContributor, ...otherContributors] = useMemo(() => {
       const userContributor = contributors.find(({ address }) =>
         areHexesEqual(address, userAddress)
@@ -223,8 +225,9 @@ const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorList
               'letter mt-0.5 block text-lg tracking-widest transition-all duration-300 ease-in-out'
             )}
           >
-            {contributors.length}
-            {showEmptySlots ? '/10' : null}
+            {showEmptySlots
+              ? dictionary('outOf', { count: contributors.length, max: 10 })
+              : contributors.length}
           </span>
         </div>
       </>

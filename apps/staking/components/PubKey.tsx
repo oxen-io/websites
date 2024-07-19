@@ -6,10 +6,12 @@ import { collapseString } from '@session/util/string';
 import { useTranslations } from 'next-intl';
 import { forwardRef, HTMLAttributes, useCallback, useEffect, useMemo, useState } from 'react';
 
+type CollapseStringsParams = Parameters<typeof collapseString>;
+
 type PubKeyType = HTMLAttributes<HTMLDivElement> & {
   pubKey: string;
-  leadingChars?: number;
-  trailingChars?: number;
+  leadingChars?: CollapseStringsParams[1];
+  trailingChars?: CollapseStringsParams[2];
   expandOnHover?: boolean;
   alwaysShowCopyButton?: boolean;
   force?: 'expand' | 'collapse';
@@ -27,7 +29,7 @@ export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
     ...rest
   } = props;
   const dictionary = useTranslations('clipboard');
-  const [isExpanded, setIsExpanded] = useState(force === 'expand' ?? false);
+  const [isExpanded, setIsExpanded] = useState(force === 'expand');
   const collapsedPubKey = useMemo(
     () => (pubKey ? collapseString(pubKey, leadingChars ?? 6, trailingChars ?? 6) : ''),
     [pubKey]
