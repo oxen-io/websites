@@ -188,7 +188,7 @@ function QueryStatusInformation({
         <span>
           {dictionary.rich('goToMyStakes', {
             link: () => (
-              <Link href="/mystakes" prefetch>
+              <Link href="/mystakes" prefetch className="text-session-green">
                 My Stakes
               </Link>
             ),
@@ -237,7 +237,7 @@ function RegisterButton({
         {dictionary('button.submit', { amount: stakeAmountString })}
       </Button>
       {stage !== REGISTER_STAGE.APPROVE || subStage !== 'idle' ? (
-        <QueryStatusInformation nodeId={blsPubKey} stage={stage} subStage={subStage} />
+        <QueryStatusInformation nodeId={nodePubKey} stage={stage} subStage={subStage} />
       ) : null}
     </>
   );
