@@ -40,5 +40,6 @@ export async function getNode({ address }: { address: string }) {
       : {};
   } catch (error) {
     console.error('Error fetching service nodes:', error);
+    return {};
   }
 }
