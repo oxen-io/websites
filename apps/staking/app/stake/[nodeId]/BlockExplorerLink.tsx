@@ -14,7 +14,7 @@ export const BlockExplorerLink = ({ nodeId }: { nodeId: string }) => {
 
   const node = useMemo(() => {
     return data?.nodes?.find((node) => areHexesEqual(node.service_node_pubkey, nodeId));
-  }, [data]);
+  }, [data, nodeId]);
 
   return isLoading ? (
     <Loading />

@@ -254,7 +254,7 @@ export function NodeRegistrationForm({
 
   const nodeAlreadyRunning = useMemo(
     () => Boolean(runningNode && 'state' in runningNode && runningNode.state),
-    [isLoading]
+    [isLoading, runningNode]
   );
 
   return (
