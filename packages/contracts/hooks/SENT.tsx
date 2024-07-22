@@ -152,6 +152,7 @@ export function useProxyApproval({
       }
       return;
     }
+    
     writeContract({
       args: [contractAddress, tokenAmount],
     });
@@ -165,6 +166,7 @@ export function useProxyApproval({
     if (!hasEnoughAllowance) {
       return writeStatus;
     }
+
     if (readStatus === CONTRACT_READ_STATUS.PENDING) {
       return 'idle';
     } else {
