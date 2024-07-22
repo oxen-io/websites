@@ -110,6 +110,12 @@ importers:
       next-intl:
         specifier: ^3.14.1
         version: 3.14.1(next@14.2.3(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+      pino:
+        specifier: ^9.2.0
+        version: 9.2.0
+      pino-pretty:
+        specifier: ^11.2.1
+        version: 11.2.1
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -263,6 +269,18 @@ importers:
       eslint-config-turbo:
         specifier: ^2.0.5
         version: 2.0.5(eslint@8.57.0)
+
+  packages/logger:
+    devDependencies:
+      '@session/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@session/testing':
+        specifier: workspace:*
+        version: link:../testing
+      '@session/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
 
   packages/sent-staking-js:
     devDependencies:
