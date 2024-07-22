@@ -11,24 +11,27 @@
     "generate": "tsx ./scripts/generate-abis.ts",
     "generate:debug": "tsx ./scripts/generate-abis.ts --debug",
     "format": "prettier --write .",
+    "check-types": "tsc --noEmit",
     "lint": "eslint .",
     "lint-staged": "lint-staged",
     "tsc": "pnpm generate",
-    "postinstall": "pnpm generate"
+    "test": "jest"
   },
   "dependencies": {
     "@session/util": "workspace:*",
     "@tanstack/react-query": "^5.32.1",
-    "viem": "2.13.7",
+    "viem": "2.17.3",
     "wagmi": "2.9.10"
   },
   "devDependencies": {
     "@session/eslint-config": "workspace:*",
     "@session/typescript-config": "workspace:*",
+    "@session/testing": "workspace:*",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "react": "^18.2.0",
-    "tsx": "^4.10.5"
+    "tsx": "^4.10.5",
+    "yarn": "^1.22.22"
   },
   "engines": {
     "node": ">=22",

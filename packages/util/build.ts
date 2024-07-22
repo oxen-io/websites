@@ -1,5 +1,9 @@
 import { execSync } from 'child_process';
 
+/**
+ * Retrieves build information including version and commit hash.
+ * @returns An object containing the build information.
+ */
 export function getBuildInfo() {
   // eslint-disable-next-line @typescript-eslint/no-var-requires -- Used to get package.json in the scope of where this is run
   const pkg = require('./package.json');

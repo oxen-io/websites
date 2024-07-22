@@ -8,15 +8,15 @@
     "./providers/*": "./providers/*.tsx"
   },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "check-types": "tsc --noEmit",
     "lint": "eslint .",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "test": "jest"
   },
   "devDependencies": {
     "@session/eslint-config": "workspace:*",
     "@session/typescript-config": "workspace:*",
+    "@session/testing": "workspace:*",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "react": "^18.2.0"
@@ -27,7 +27,7 @@
     "@session/ui": "workspace:*",
     "@tanstack/react-query": "^5.32.1",
     "@web3modal/wagmi": "^4.1.11",
-    "viem": "2.13.7",
+    "viem": "2.17.3",
     "wagmi": "2.9.10"
   },
   "engines": {

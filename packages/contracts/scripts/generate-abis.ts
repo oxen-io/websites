@@ -76,6 +76,7 @@ async function downloadRepository({
     // Clone the repository
     execSync(`git clone ${url} ${destinationPath}`);
     logger.info('Repository downloaded successfully!');
+    execSync(`cd ${destinationPath} && git switch integration`);
   } catch (error) {
     logger.error('Error downloading repository:', error);
   }
@@ -87,8 +88,7 @@ async function downloadRepository({
  * @returns A promise that resolves when the contracts are generated.
  */
 async function generateContracts({ destinationPath }: { destinationPath: string }) {
-  // We use yarn here as its for the downloaded contracts
-  execSync(`cd ${destinationPath} && yarn install && yarn build`, {
+  execSync(`cd ${destinationPath} && pnpm yarn install && pnpm yarn build`, {
     stdio: debug ? 'inherit' : 'pipe',
   });
 }
@@ -194,9 +194,14 @@ async function index() {
 
   let cachedHash = '';
   try {
-    cachedHash = await fs.readFile(`./.cache/${repoName}.hash`, 'utf8');
+    await fs.access('.cache');
+    try {
+      cachedHash = await fs.readFile(`./.cache/${repoName}.hash`, 'utf8');
+    } catch (error) {
+      logger.error('Error reading cached hash:', error);
+    }
   } catch (error) {
-    logger.error('Error reading cached hash:', error);
+    logger.debug('.cache directory not found. Skipping cache check');
   }
 
   // Download the repository
@@ -206,12 +211,16 @@ async function index() {
   logger.debug('Commit hash:', commitHash);
   await fs.writeFile(`${destinationPath}.hash`, commitHash);
 
-  if (commitHash === cachedHash) {
-    logger.info('No changes detected. Skipping ABI generation.');
-    return;
-  } else {
-    // write the hash to the cache
-    await fs.writeFile(`./.cache/${repoName}.hash`, commitHash);
+  // Check if ./abis directory exists and contains files
+  const files = await fs.readdir(outputDir);
+  if (files.length) {
+    if (files.length && commitHash === cachedHash) {
+      logger.info('No changes detected. Skipping ABI generation.');
+      return;
+    } else {
+      // write the hash to the cache
+      await fs.writeFile(`./.cache/${repoName}.hash`, commitHash);
+    }
   }
 
   // Generate contracts

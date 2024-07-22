@@ -157,9 +157,22 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = 'FormMessage';
 
+const FormErrorMessage = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>((props, ref) => {
+  const { errors } = useFormState();
+  return errors.root ? (
+    <FormMessage ref={ref} {...props}>
+      {errors.root.message}
+    </FormMessage>
+  ) : null;
+});
+FormErrorMessage.displayName = 'FormErrorMessage';
+
 const FormSubmitButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, children, ...props }, ref) => {
-    const { isSubmitting, errors, isDirty } = useFormState();
+    const { isSubmitting, isDirty } = useFormState();
     return (
       <>
         <Button
@@ -171,7 +184,7 @@ const FormSubmitButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         >
           {isSubmitting ? '...' : children}
         </Button>
-        {errors.root ? <FormMessage>{errors.root.message}</FormMessage> : null}
+        <FormErrorMessage />
       </>
     );
   }
@@ -182,6 +195,7 @@ export {
   Form,
   FormControl,
   FormDescription,
+  FormErrorMessage,
   FormField,
   FormItem,
   FormLabel,

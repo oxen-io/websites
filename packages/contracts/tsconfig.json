@@ -7,7 +7,9 @@
     "./constants.ts",
     "./abis/*",
     "./hooks/*.tsx",
-    "./scripts/*.ts"
+    "./scripts/*.ts",
+    "tests/**.ts",
+    "jest.config.js"
   ],
   "exclude": ["node_modules", "turbo", "dist", ".cache"]
 }

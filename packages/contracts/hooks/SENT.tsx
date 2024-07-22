@@ -8,12 +8,15 @@ import {
   ContractReadQueryFetchOptions,
   ReadContractQuery,
   useContractReadQuery,
+  useContractWriteQuery,
 } from './contract-hooks';
+import type { WriteContractErrorType } from 'wagmi/actions';
+import type { ContractWriteStatus } from './ServiceNodeRewards';
 
 export type SENTBalanceQuery = ReadContractQuery & {
-  /** Get the reward rate */
+  /** Get the session token balance */
   getBalance: () => void;
-  /** The reward rate */
+  /** The session token balance */
   balance: ReadContractData<typeof SENTAbi, 'balanceOf', [Address]>;
 };
 
@@ -37,7 +40,7 @@ export function useSENTBalanceQuery(
 
   const getBalance = () => {
     if (!address) {
-      throwError(new Error('Address is required to get reward rate'));
+      throwError(new Error('Address is required to get balance'));
       return;
     }
     readContract({ args: [address] });
@@ -48,4 +51,31 @@ export function useSENTBalanceQuery(
     getBalance,
     ...rest,
   };
+}
+
+export type UseProxyApprovalReturn = {
+  approve: () => void;
+  writeStatus: ContractWriteStatus;
+  error: WriteContractErrorType | Error | null;
+};
+
+export function useProxyApproval({
+  contractAddress,
+  tokenAmount,
+}: {
+  contractAddress: Address;
+  tokenAmount: bigint;
+}): UseProxyApprovalReturn {
+  const { writeContract, error, writeStatus } = useContractWriteQuery({
+    contract: 'SENT',
+    functionName: 'approve',
+  });
+
+  const approve = () => {
+    writeContract({
+      args: [contractAddress, tokenAmount],
+    });
+  };
+
+  return { approve, writeStatus, error };
 }

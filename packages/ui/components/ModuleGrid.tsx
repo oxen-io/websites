@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import { forwardRef, type HTMLAttributes } from 'react';
+import { forwardRef, type HTMLAttributes, ReactNode } from 'react';
 import { cn } from '../lib/utils';
 import { Loading } from './loading';
 
@@ -64,12 +64,17 @@ const ModuleGridTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadin
 );
 ModuleGridTitle.displayName = 'ModuleGridTitle';
 
-const ModuleGridHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
+type ModuleGridHeaderProps = HTMLAttributes<HTMLDivElement> & {
+  keepDesktopHeaderOnMobile?: boolean;
+};
+
+const ModuleGridHeader = forwardRef<HTMLDivElement, ModuleGridHeaderProps>(
+  ({ className, keepDesktopHeaderOnMobile, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
-        'absolute -top-16 flex w-full flex-row items-center justify-between px-8 pt-6 md:relative md:top-0',
+        'flex w-full flex-row items-center justify-between px-8 pt-6',
+        keepDesktopHeaderOnMobile ? 'relative top-0' : 'absolute -top-16 md:relative md:top-0',
         className
       )}
       {...props}
@@ -89,4 +94,30 @@ const ModuleGridContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
 );
 ModuleGridContent.displayName = 'ModuleGridContent';
 
-export { ModuleGrid, ModuleGridContent, ModuleGridHeader, ModuleGridTitle, moduleGridVariants };
+function ModuleGridInfoContent({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <ModuleGridContent
+      className={cn(
+        'text-session-text flex h-full w-1/2 flex-col items-center justify-center gap-6 self-center text-center text-xl',
+        className
+      )}
+    >
+      {children}
+    </ModuleGridContent>
+  );
+}
+
+export {
+  ModuleGrid,
+  ModuleGridContent,
+  ModuleGridHeader,
+  ModuleGridInfoContent,
+  ModuleGridTitle,
+  moduleGridVariants,
+};

@@ -5,11 +5,13 @@ import { NextIntlClientProvider } from 'next-intl';
 
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+export type LocalizationProviderProps = Parameters<typeof NextIntlClientProvider>[0];
+
 export default function LocalizationProvider({
   messages,
   locale,
   children,
-}: Parameters<typeof NextIntlClientProvider>[0]) {
+}: LocalizationProviderProps) {
   return (
     <NextIntlClientProvider
       messages={messages}

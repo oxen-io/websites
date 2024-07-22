@@ -8,10 +8,12 @@
     "./components/*": "./components/*.tsx",
     "./lib/*": "./lib/*.ts",
     "./icons/*": "./icons/*.tsx",
+    "./icons/types": "./icons/types.ts",
     "./taiwind": "./tailwind.config.ts",
     "./postcss": "./postcss.config.js"
   },
   "scripts": {
+    "check-types": "tsc --noEmit",
     "lint": "eslint .",
     "lint-staged": "lint-staged",
     "component:generate": "turbo gen react-component",
@@ -31,6 +33,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.5.0",
     "@radix-ui/react-avatar": "^1.0.4",
+    "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-label": "^2.0.2",
@@ -39,6 +42,7 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.1.1",
     "@session/testing": "workspace:*",
+    "@uidotdev/usehooks": "^2.4.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",

@@ -34,18 +34,26 @@ export const formatLocalizedRelativeTimeToNowClient = (
   });
 };
 
-type LocalizedNumberOptions = Parameters<typeof Intl.NumberFormat>[1];
-
-export const formatNumber = (num: number, options: LocalizedNumberOptions) => {
+export const formatNumber = (num: number, options: Intl.NumberFormatOptions) => {
   const locale = useLocale();
   return new Intl.NumberFormat(locale, options).format(num);
 };
 
-export const formatPercentage = (num: number, options?: LocalizedNumberOptions) => {
+export const formatPercentage = (num: number, options?: Intl.NumberFormatOptions) => {
   return formatNumber(num, {
     style: 'percent',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
     ...options,
   });
+};
+
+export const formatDate = (date: Date, options?: Intl.DateTimeFormatOptions) => {
+  const locale = useLocale();
+  return new Intl.DateTimeFormat(locale, options).format(date);
+};
+
+export const formatList = (list: Array<string>, options?: Intl.ListFormatOptions) => {
+  const locale = useLocale();
+  return new Intl.ListFormat(locale, options).format(list);
 };

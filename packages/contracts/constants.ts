@@ -13,18 +13,18 @@ export type ContractName = (typeof contracts)[number];
 export const addresses: Record<ContractName, Record<CHAIN.MAINNET | CHAIN.TESTNET, Address>> = {
   SENT: {
     /** @deprecated - The Mainnet value is a mock value */
-    [CHAIN.MAINNET]: '0xbF3e23d546D19302e911AAc26B3c01A73c7De380',
-    [CHAIN.TESTNET]: '0xbF3e23d546D19302e911AAc26B3c01A73c7De380',
+    [CHAIN.MAINNET]: '0x7FBDC29b81e410eB0eaE75Dca64a76d898EAc4A9',
+    [CHAIN.TESTNET]: '0x7FBDC29b81e410eB0eaE75Dca64a76d898EAc4A9',
   },
   ServiceNodeRewards: {
     /** @deprecated - The Mainnet value is a mock value */
-    [CHAIN.MAINNET]: '0xC75A34c31C2b8780a20AfCD75473Ac0Ad82352B6',
-    [CHAIN.TESTNET]: '0xC75A34c31C2b8780a20AfCD75473Ac0Ad82352B6',
+    [CHAIN.MAINNET]: '0xEF43cd64528eA89966E251d4FE17c660222D2c9d',
+    [CHAIN.TESTNET]: '0xEF43cd64528eA89966E251d4FE17c660222D2c9d',
   },
   RewardRatePool: {
     /** @deprecated - The Mainnet value is a mock value */
-    [CHAIN.MAINNET]: '0x821340A591C10492d7F494285BABFcc2645396a3',
-    [CHAIN.TESTNET]: '0x821340A591C10492d7F494285BABFcc2645396a3',
+    [CHAIN.MAINNET]: '0x408bCc6C9b942ECc4F289C080d2A1a2a3617Aff8',
+    [CHAIN.TESTNET]: '0x408bCc6C9b942ECc4F289C080d2A1a2a3617Aff8',
   },
 } as const;
 

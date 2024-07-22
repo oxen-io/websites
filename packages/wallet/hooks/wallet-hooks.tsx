@@ -1,12 +1,18 @@
-import { SENT_DECIMALS, SENT_SYMBOL, addresses } from '@session/contracts';
-import { CHAIN, ChainId, chainIdMap, chains } from '@session/contracts/chains';
+import { addresses, SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
+import { CHAIN, chains } from '@session/contracts/chains';
+import { useSENTBalanceQuery } from '@session/contracts/hooks/SENT';
 import { useEns } from '@session/contracts/hooks/ens';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { useMemo, useState } from 'react';
-import { createWalletClient, custom, type Address } from 'viem';
-import { useAccount, useConfig } from 'wagmi';
+import { type Address, createWalletClient, custom, type SwitchChainErrorType } from 'viem';
+import { useAccount, useBalance, useConfig, useDisconnect } from 'wagmi';
 import { switchChain as switchChainWagmi } from 'wagmi/actions';
 import { getEthereumWindowProvider } from '../lib/eth';
 import { useArbName } from './arb';
+
+export const useToggleWalletModal = (): ReturnType<typeof useWeb3Modal> => {
+  return useWeb3Modal();
+};
 
 /**
  * The status of a wallet.
@@ -54,14 +60,29 @@ type UseWalletType = {
   ensAvatar?: string | null;
   /** The .arb name of the wallet. */
   arbName?: string | null;
+  /** The token balance of the wallet. */
+  tokenBalance?: bigint | null;
+  /** The eth balance of the wallet. */
+  ethBalance?: bigint | null;
   /** The status of the wallet. */
   status: WALLET_STATUS;
   /** Whether the wallet is connected. */
   isConnected: boolean;
+  /** Disconnect the wallet. */
+  disconnect: () => void;
 };
 
 export function useWallet(): UseWalletType {
   const { address, isConnected, isConnecting, isDisconnected, isReconnecting } = useAccount();
+  const { disconnect } = useDisconnect();
+  const { balance: tokenBalanceData } = useSENTBalanceQuery({
+    startEnabled: Boolean(address),
+    args: [address!],
+  });
+  const { data: ethBalanceData } = useBalance({
+    address,
+    query: { enabled: isConnected },
+  });
   const { ensName, ensAvatar } = useEns({
     address,
     enabled: isConnected,
@@ -69,12 +90,32 @@ export function useWallet(): UseWalletType {
 
   const { arbName } = useArbName({ address });
 
+  const tokenBalance = useMemo(
+    () => (tokenBalanceData ? tokenBalanceData : null),
+    [tokenBalanceData]
+  );
+
+  const ethBalance = useMemo(
+    () => (ethBalanceData ? ethBalanceData?.value : null),
+    [ethBalanceData]
+  );
+
   const status = useMemo(
     () => parseWalletStatus({ isConnected, isConnecting, isDisconnected, isReconnecting }),
     [isConnected, isConnecting, isDisconnected, isReconnecting]
   );
 
-  return { address, ensName, ensAvatar, arbName, status, isConnected };
+  return {
+    address,
+    ensName,
+    ensAvatar,
+    arbName,
+    status,
+    isConnected,
+    tokenBalance,
+    ethBalance,
+    disconnect,
+  };
 }
 
 export function useWalletChain() {
@@ -84,21 +125,32 @@ export function useWalletChain() {
   const chain = useMemo(() => {
     if (!chainId) return null;
 
-    const validChain = chainIdMap[chainId as ChainId];
+    // Finds the key (CHAIN) where value.id is equal to chainId
+    const validChain = Object.keys(chains).find((key) => chains[key as CHAIN].id === chainId) as
+      | CHAIN
+      | undefined;
     if (!validChain) return null;
 
     return validChain;
   }, [chainId]);
 
-  const switchChain = async (targetChain: CHAIN) =>
-    switchChainWagmi(config, {
-      chainId: chains[targetChain].id,
-    });
+  const switchChain = async (
+    targetChain: CHAIN,
+    handleError?: (error: SwitchChainErrorType) => void
+  ) => {
+    try {
+      await switchChainWagmi(config, {
+        chainId: chains[targetChain].id,
+      });
+    } catch (error) {
+      handleError?.(error as SwitchChainErrorType);
+    }
+  };
 
   return { chain, switchChain };
 }
 
-export function useAddSessionTokenToWallet() {
+export function useAddSessionTokenToWallet(tokenIcon: string) {
   const [isPending, setIsPending] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -132,7 +184,7 @@ export function useAddSessionTokenToWallet() {
           // The number of decimals in the token.
           decimals: SENT_DECIMALS,
           // A string URL of the token logo.
-          image: '/images/icon.png',
+          image: tokenIcon,
         },
       });
 

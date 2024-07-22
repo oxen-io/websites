@@ -2,8 +2,11 @@
   "name": "@session/sent-staking-js",
   "version": "0.0.0",
   "private": true,
-  "exports": "./client.ts",
+  "exports": {
+    "./*": "./*.ts"
+  },
   "scripts": {
+    "check-types": "tsc --noEmit",
     "lint": "eslint .",
     "lint-staged": "lint-staged",
     "format": "prettier --write ."

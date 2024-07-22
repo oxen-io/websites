@@ -1,6 +1,6 @@
 import { CHAIN, isChain } from '@session/contracts/chains';
 import { Button, type ButtonVariantProps } from '@session/ui/components/ui/button';
-import { GlobeIcon } from '@session/ui/icons/GlobeIcon';
+import { ArbitrumIcon } from '@session/ui/icons/ArbitrumIcon';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,9 +12,11 @@ import {
 import { useMemo } from 'react';
 import { useWalletChain } from '../hooks/wallet-hooks';
 import { ButtonDataTestId } from '../testing/data-test-ids';
+import { SwitchChainErrorType } from 'viem';
 
 export type WalletNetworkButtonProps = ButtonVariantProps & {
   className?: string;
+  handleError: (error: SwitchChainErrorType) => void;
   labels: {
     mainnet: string;
     testnet: string;
@@ -27,10 +29,10 @@ export type WalletNetworkButtonProps = ButtonVariantProps & {
   };
 };
 
-export default function WalletNetworkDropdown(props: WalletNetworkButtonProps) {
+export default function WalletNetworkDropdown({ handleError, ...props }: WalletNetworkButtonProps) {
   const { chain, switchChain } = useWalletChain();
 
-  const handleValueChange = (selectedChain: string) => {
+  const handleValueChange = async (selectedChain: string) => {
     if (selectedChain === chain) {
       return;
     }
@@ -39,7 +41,7 @@ export default function WalletNetworkDropdown(props: WalletNetworkButtonProps) {
       return;
     }
 
-    switchChain(selectedChain);
+    await switchChain(selectedChain, handleError);
   };
 
   return <NetworkDropdown {...props} handleValueChange={handleValueChange} chain={chain} />;
@@ -56,7 +58,7 @@ export function NetworkDropdown({
   handleValueChange,
   chain,
   ...props
-}: NetworkButtonProps) {
+}: Omit<NetworkButtonProps, 'handleError'>) {
   const label = useMemo(() => {
     if (chain === null) {
       return labels.invalid;
@@ -74,9 +76,7 @@ export function NetworkDropdown({
           aria-label={ariaLabels.dropdown}
           {...props}
         >
-          {chain === null ? null : (
-            <GlobeIcon className="fill-session-green group-hover:fill-session-black mr-1 h-4 w-4" />
-          )}
+          {chain === null ? null : <ArbitrumIcon className="mr-1 h-4 w-4" />}
           {label}
         </Button>
       </DropdownMenuTrigger>

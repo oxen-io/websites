@@ -7,14 +7,22 @@ import { Banner } from '@session/ui/components/Banner';
 import { useWallet, useWalletChain } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
+import { SwitchChainErrorType } from 'viem';
+import { toast } from '@session/ui/lib/sonner';
 
 export default function ChainBanner() {
   const { isConnected } = useWallet();
   const { chain, switchChain } = useWalletChain();
   const dictionary = useTranslations('chainBanner');
+  const generalDictionary = useTranslations('wallet.networkDropdown');
 
-  const handleClick = () => {
-    switchChain(preferredChain);
+  // TODO - handle specific errors
+  const handleError = (error: SwitchChainErrorType) => {
+    toast.error(generalDictionary('errorNotSupported'));
+  };
+
+  const handleClick = async () => {
+    await switchChain(preferredChain, handleError);
   };
 
   const isUnsupportedChain = useMemo(
@@ -26,10 +34,9 @@ export default function ChainBanner() {
     <Banner>
       <span>
         {dictionary.rich('unsupportedChain', {
-          change: (chunks) => (
+          link: (chunks) => (
             <a
               role="button"
-              aria-label={dictionary('ariaUnsupportedChain')}
               data-testid={SpecialDataTestId.Unsupported_Chain_Link}
               onClick={handleClick}
               className="underline"
@@ -48,10 +55,16 @@ export default function ChainBanner() {
 function MainnetNotLiveBanner() {
   const { isConnected } = useWallet();
   const { chain, switchChain } = useWalletChain();
-  const dictionary = useTranslations('chainBannerMainnetNotLive');
+  const dictionary = useTranslations('chainBanner');
+  const generalDictionary = useTranslations('wallet.networkDropdown');
+
+  // TODO - handle specific errors
+  const handleError = (error: SwitchChainErrorType) => {
+    toast.error(generalDictionary('errorNotSupported'));
+  };
 
   const handleClick = () => {
-    switchChain(CHAIN.TESTNET);
+    switchChain(CHAIN.TESTNET, handleError);
   };
 
   const isMainnet = useMemo(() => isConnected && chain === CHAIN.MAINNET, [chain, isConnected]);
@@ -60,15 +73,14 @@ function MainnetNotLiveBanner() {
     <Banner>
       <span>
         {dictionary.rich('mainnetNotLive', {
-          change: (chunks) => (
+          link: (children) => (
             <a
               role="button"
-              aria-label={dictionary('ariaMainnetNotLive')}
               data-testid={SpecialDataTestId.Mainnet_Not_Live_Link}
               onClick={handleClick}
               className="underline"
             >
-              {chunks}
+              {children}
             </a>
           ),
         })}

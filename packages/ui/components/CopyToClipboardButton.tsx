@@ -37,12 +37,13 @@ const CopyToClipboardButton = forwardRef<HTMLButtonElement, CopyToClipboardButto
       <Button
         onClick={() => copyToClipboard(textToCopy, copyToClipboardToastMessage, onCopyComplete)}
         variant="ghost"
-        className={cn(className, 'select-all p-0')}
+        rounded={'md'}
+        className={cn('select-all p-0', className)}
         ref={ref}
         {...props}
         data-testid={props['data-testid']}
       >
-        <ClipboardIcon className="fill-session-white" />
+        <ClipboardIcon className="fill-session-white h-5 w-5" />
       </Button>
     );
   }

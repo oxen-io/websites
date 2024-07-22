@@ -1,7 +1,9 @@
 import {
-  NODE_STATE,
   type Contributor,
   type GetNodesForWalletResponse,
+  NODE_STATE,
+  OpenNode,
+  type Registration,
   type ServiceNode,
 } from './client';
 
@@ -302,4 +304,100 @@ export const generateMockNodeData = ({
   mockNodeData.nodes.push(generateUnlockedNode({ userAddress, operatorAddress }));
 
   return mockNodeData;
+};
+
+export const generateMinAndMaxContribution = ({
+  contributors,
+}: {
+  contributors: Array<Contributor>;
+}): { minContribution: number; maxContribution: number } => {
+  const totalStaked =
+    contributors.reduce((acc, contributor) => acc + contributor.amount, 0) / Math.pow(10, 9);
+  const remainingSlots = 10 - contributors.length;
+
+  if (remainingSlots === 0) {
+    return { minContribution: 0, maxContribution: 0 };
+  }
+
+  // NOTE: 120 is current stake requirement
+  const remainingStake = 120 - totalStaked;
+
+  return {
+    minContribution: Math.max(0, remainingStake / remainingSlots),
+    maxContribution: remainingStake,
+  };
+};
+
+// TODO - Rework node generation logic
+const generateOpenNode = ({
+  userAddress,
+  maxContributors,
+}: {
+  userAddress?: string;
+  maxContributors: number;
+}): OpenNode => {
+  const contributions = generateContributors(maxContributors, userAddress);
+
+  return {
+    service_node_pubkey: generateNodePubKey(),
+    service_node_signature: generateNodePubKey(),
+    contract: generateNodePubKey(),
+    bls_pubkey: generateNodePubKey(),
+    fee: Math.random() * 1000,
+    finalized: false,
+    cancelled: false,
+    total_contributions: 0,
+    contributions,
+  };
+};
+
+export const generateOpenNodes = (args?: { userAddress?: string }): Array<OpenNode> => {
+  const userAddress = args?.userAddress;
+  return [
+    generateOpenNode({ maxContributors: 1 }),
+    generateOpenNode({ maxContributors: 9 }),
+    generateOpenNode({ userAddress, maxContributors: 5 }),
+    generateOpenNode({ userAddress, maxContributors: 1 }),
+    generateOpenNode({ userAddress, maxContributors: 1 }),
+    generateOpenNode({ userAddress, maxContributors: 5 }),
+    generateOpenNode({ maxContributors: 9 }),
+    generateOpenNode({ maxContributors: 9 }),
+    generateOpenNode({ maxContributors: 5 }),
+    generateOpenNode({ maxContributors: 5 }),
+    generateOpenNode({ userAddress, maxContributors: 5 }),
+    generateOpenNode({ userAddress, maxContributors: 10 }),
+    generateOpenNode({ userAddress, maxContributors: 10 }),
+  ];
+};
+
+export const generateNodeRegistration = ({
+  userAddress,
+  type,
+}: {
+  userAddress: string;
+  type: Registration['type'];
+}): Registration => {
+  return {
+    contract: generateNodePubKey(),
+    pubkey_ed25519: generateNodePubKey(),
+    pubkey_bls: generateNodePubKey(),
+    sig_bls: generateNodePubKey(),
+    sig_ed25519: generateNodePubKey(),
+    // Generates a random time in the near past
+    timestamp: (Date.now() - Math.random() * Math.pow(Math.random() * 10, 10)) / 1000,
+    type,
+    operator: userAddress,
+  };
+};
+
+export const generatePendingNodes = ({
+  userAddress,
+  numberOfNodes,
+}: {
+  userAddress: string;
+  numberOfNodes: number;
+}): Array<Registration> => {
+  return Array.from({
+    length: numberOfNodes,
+  }).map(() => generateNodeRegistration({ userAddress, type: 'solo' }));
 };

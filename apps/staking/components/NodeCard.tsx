@@ -1,10 +1,19 @@
-import { ButtonDataTestId } from '@/testing/data-test-ids';
-import { CopyToClipboardButton } from '@session/ui/components/CopyToClipboardButton';
 import { Loading } from '@session/ui/components/loading';
+import { HumanIcon } from '@session/ui/icons/HumanIcon';
 import { cn } from '@session/ui/lib/utils';
+import { Tooltip } from '@session/ui/ui/tooltip';
+import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { forwardRef, type HTMLAttributes, useMemo } from 'react';
+import { bigIntToNumber } from '@session/util/maths';
+import { formatSENT, SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import { useTranslations } from 'next-intl';
-import { forwardRef, useCallback, useEffect, useMemo, useState, type HTMLAttributes } from 'react';
+import { areHexesEqual } from '@session/util/string';
+
+export interface Contributor {
+  address: string;
+  amount: bigint;
+}
 
 export const outerNodeCardVariants = cva(
   'rounded-xl transition-all ease-in-out bg-module-outline bg-blend-lighten shadow-md p-px',
@@ -104,60 +113,134 @@ const NodeCardText = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>
 );
 NodeCardText.displayName = 'NodeCardText';
 
-function getPublicKeyEnds(pubKey: string): [string, string] {
-  const start = pubKey.slice(0, 6);
-  const end = pubKey.slice(pubKey.length - 6);
-  return [start, end];
-}
-
-const NodePubKey = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & { pubKey: string }>(
-  ({ className, pubKey, ...props }, ref) => {
-    const dictionary = useTranslations('nodeCard.pubKey');
-    const [isSelected, setIsSelected] = useState(false);
-    const [pubKeyStart, pubKeyEnd] = useMemo(() => getPublicKeyEnds(pubKey), [pubKey]);
-
-    const handleSelectionChange = useCallback(() => {
-      const selection = window.getSelection();
-      if (selection?.toString().includes(pubKey)) {
-        setIsSelected(true);
-      } else {
-        setIsSelected(false);
+const ContributorIcon = ({
+  className,
+  contributor,
+  isUser,
+}: {
+  className?: string;
+  contributor?: Contributor;
+  isUser?: boolean;
+}) => {
+  const dictionary = useTranslations('general');
+  return (
+    <Tooltip
+      tooltipContent={
+        <p>
+          {contributor
+            ? `${isUser ? dictionary('you') : contributor.address} | ${formatSENT(contributor.amount)} ${SENT_SYMBOL}`
+            : dictionary('emptySlot')}
+        </p>
       }
-    }, [pubKey]);
+    >
+      <HumanIcon
+        className={cn('fill-text-primary h-4 w-4 cursor-pointer', className)}
+        full={Boolean(contributor)}
+      />
+    </Tooltip>
+  );
+};
 
-    useEffect(() => {
-      /**
-       * Keeps the full pubkey visible when selected.
-       */
-      document.addEventListener('selectionchange', handleSelectionChange);
-      return () => {
-        document.removeEventListener('selectionchange', handleSelectionChange);
-      };
-    }, [handleSelectionChange]);
+export const getTotalStakedAmountForAddress = (
+  contributors: Contributor[],
+  address: string
+): number => {
+  return contributors.reduce((acc, { amount, address: contributorAddress }) => {
+    return areHexesEqual(contributorAddress, address)
+      ? acc + bigIntToNumber(amount, SENT_DECIMALS)
+      : acc;
+  }, 0);
+};
+
+type StakedNodeContributorListProps = HTMLAttributes<HTMLDivElement> & {
+  contributors: Contributor[];
+  showEmptySlots?: boolean;
+  forceExpand?: boolean;
+};
+
+const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorListProps>(
+  ({ className, contributors, showEmptySlots, forceExpand, ...props }, ref) => {
+    const { address: userAddress } = useWallet();
+
+    const dictionary = useTranslations('maths');
+
+    const [mainContributor, ...otherContributors] = useMemo(() => {
+      const userContributor = contributors.find(({ address }) =>
+        areHexesEqual(address, userAddress)
+      );
+      const otherContributors = contributors.filter(
+        ({ address }) => !areHexesEqual(address, userAddress)
+      );
+      // TODO - add contributor list sorting
+      //.sort((a, b) => b.amount - a.amount);
+
+      return userContributor ? [userContributor, ...otherContributors] : otherContributors;
+    }, [contributors]);
+
+    const emptyContributorSlots = useMemo(
+      () =>
+        showEmptySlots
+          ? Array.from(
+              {
+                length: 10 - contributors.length,
+              },
+              (_, index) => `empty-slot-${index}`
+            )
+          : [],
+      [showEmptySlots, contributors.length]
+    );
 
     return (
-      <span ref={ref} className={cn('group flex select-all', className)} {...props}>
-        <span
-          className={cn('select-all break-all group-hover:hidden', isSelected ? 'hidden' : 'block')}
-        >
-          {pubKeyStart}...{pubKeyEnd}
-        </span>
-        <div
-          className={cn('select-all break-all group-hover:block', isSelected ? 'block' : 'hidden')}
-        >
-          {pubKey}
-        </div>
-        <CopyToClipboardButton
-          className={cn('group-hover:block', isSelected ? 'block' : 'hidden')}
-          textToCopy={pubKey}
-          data-testid={ButtonDataTestId.Copy_Node_Id_To_Clipboard}
-          aria-label={dictionary('copyPubkeyToClipboard')}
-          copyToClipboardToastMessage={dictionary('copyPubkeyToClipboardSuccessToast')}
+      <>
+        <ContributorIcon
+          className="-mr-1"
+          contributor={mainContributor}
+          isUser={areHexesEqual(mainContributor?.address, userAddress)}
         />
-      </span>
+        <div
+          className={cn(
+            'flex w-min flex-row items-center overflow-x-hidden align-middle',
+            forceExpand
+              ? 'md:gap-1 md:[&>span]:w-0 md:[&>span]:opacity-0 md:[&>svg]:w-4'
+              : 'md:peer-checked:gap-1 [&>span]:w-max [&>span]:opacity-100 md:peer-checked:[&>span]:w-0 md:peer-checked:[&>span]:opacity-0 [&>svg]:w-0 [&>svg]:transition-all [&>svg]:duration-300 [&>svg]:motion-reduce:transition-none md:peer-checked:[&>svg]:w-4',
+            className
+          )}
+          ref={ref}
+          {...props}
+        >
+          {otherContributors.map((contributor) => (
+            <ContributorIcon
+              key={contributor.address}
+              contributor={contributor}
+              className={cn('fill-text-primary h-4')}
+            />
+          ))}
+          {showEmptySlots
+            ? emptyContributorSlots.map((key) => (
+                <ContributorIcon key={key} className="fill-text-primary h-4" />
+              ))
+            : null}
+          <span
+            className={cn(
+              'letter mt-0.5 block text-lg tracking-widest transition-all duration-300 ease-in-out'
+            )}
+          >
+            {showEmptySlots
+              ? dictionary('outOf', { count: contributors.length, max: 10 })
+              : contributors.length}
+          </span>
+        </div>
+      </>
     );
   }
 );
-NodePubKey.displayName = 'NodePubKey';
 
-export { NodeCard, NodeCardHeader, NodeCardText, NodeCardTitle, NodePubKey, innerNodeCardVariants };
+export {
+  ContributorIcon,
+  NodeCard,
+  NodeCardHeader,
+  NodeCardText,
+  NodeCardTitle,
+  NodeContributorList,
+  innerNodeCardVariants,
+};
