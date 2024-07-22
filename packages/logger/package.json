@@ -8,8 +8,7 @@
   },
   "scripts": {
     "check-types": "tsc --noEmit",
-    "lint": "eslint .",
-    "test": "jest"
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@session/eslint-config": "workspace:*",
