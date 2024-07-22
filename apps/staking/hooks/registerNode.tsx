@@ -113,7 +113,7 @@ export default function useRegisterNode({
   const dictionary = useTranslations('actionModules.register.stage');
   const {
     approve,
-    writeStatus: approveWriteStatus,
+    status: approveWriteStatus,
     error: approveWriteError,
   } = useProxyApproval({
     // TODO: Create network provider to handle network specific logic
