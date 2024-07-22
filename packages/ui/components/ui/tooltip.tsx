@@ -2,21 +2,28 @@
 
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import * as React from 'react';
-
+import {
+  type ComponentPropsWithoutRef,
+  type ElementRef,
+  forwardRef,
+  type ReactNode,
+  useState,
+} from 'react';
+import { useDebounce } from '@uidotdev/usehooks';
 import { cn } from '../../lib/utils';
 
-const Tooltip = PopoverPrimitive.Root;
+const TooltipRoot = PopoverPrimitive.Root;
 
-const TooltipTrigger = React.forwardRef<
-  React.ElementRef<typeof PopoverPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Trigger>
+const TooltipTrigger = forwardRef<
+  ElementRef<typeof PopoverPrimitive.Trigger>,
+  ComponentPropsWithoutRef<typeof PopoverPrimitive.Trigger>
 >(({ className, ...props }, ref) => (
   <PopoverPrimitive.Trigger ref={ref} className={cn('cursor-pointer', className)} {...props} />
 ));
 
-const TooltipContent = React.forwardRef<
-  React.ElementRef<typeof PopoverPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
+const TooltipContent = forwardRef<
+  ElementRef<typeof PopoverPrimitive.Content>,
+  ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
 >(({ className, sideOffset = 4, ...props }, ref) => (
   <PopoverPrimitive.Content
     ref={ref}
@@ -31,4 +38,56 @@ const TooltipContent = React.forwardRef<
 ));
 TooltipContent.displayName = PopoverPrimitive.Content.displayName;
 
-export { Tooltip, TooltipContent, TooltipTrigger };
+type TooltipProps = ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> & {
+  disableOnHover?: boolean;
+  tooltipContent: ReactNode;
+  triggerProps?: Omit<ComponentPropsWithoutRef<typeof PopoverPrimitive.Trigger>, 'children'>;
+};
+
+const Tooltip = forwardRef<ElementRef<typeof PopoverPrimitive.Content>, TooltipProps>(
+  ({ tooltipContent, children, triggerProps, disableOnHover, ...props }, ref) => {
+    const [hovered, setHovered] = useState(false);
+    const [clicked, setClicked] = useState(false);
+    const debouncedHover = useDebounce(hovered, 150);
+
+    const handleMouseEnter = () => {
+      if (disableOnHover) return;
+      setHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+      if (disableOnHover) return;
+      if (!clicked) {
+        setHovered(false);
+      }
+    };
+
+    const handleClick = () => {
+      setClicked((prev) => !prev);
+    };
+
+    return (
+      <TooltipRoot open={debouncedHover || clicked} onOpenChange={setHovered}>
+        <TooltipTrigger
+          asChild
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onClick={handleClick}
+          {...triggerProps}
+        >
+          {children}
+        </TooltipTrigger>
+        <TooltipContent
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          ref={ref}
+          {...props}
+        >
+          {tooltipContent}
+        </TooltipContent>
+      </TooltipRoot>
+    );
+  }
+);
+
+export { Tooltip, TooltipRoot, TooltipContent, TooltipTrigger };

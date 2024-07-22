@@ -19,6 +19,7 @@ describe('isChain', () => {
   });
 });
 
+// #endregion
 // #region - chains object
 
 describe('chains object', () => {
@@ -39,6 +40,7 @@ describe('chains object', () => {
   });
 });
 
+// #endregion
 // #region - chain enum
 
 describe('chain enum', () => {
@@ -48,3 +50,5 @@ describe('chain enum', () => {
     expect(CHAIN.ETHEREUM).toBe('ethereum');
   });
 });
+
+// #endregion

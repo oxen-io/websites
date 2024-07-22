@@ -53,6 +53,7 @@ describe('roundNumber', () => {
   });
 });
 
+// #endregion
 // #region - formatNumber
 
 describe('formatNumber', () => {
@@ -112,6 +113,7 @@ describe('formatNumber', () => {
   });
 });
 
+// #endregion
 // #region - bigIntToNumber
 
 describe('bigIntToNumber', () => {
@@ -181,6 +183,7 @@ describe('bigIntToNumber', () => {
   });
 });
 
+// #endregion
 // #region - formatBigIntTokenValue
 
 describe('formatBigIntTokenValue', () => {
@@ -207,3 +210,5 @@ describe('formatBigIntTokenValue', () => {
     expect(formatBigIntTokenValue(BigInt(1), 9, 12)).toBe('0.000000001');
   });
 });
+
+// #endregion

@@ -17,6 +17,21 @@ const getSENTStakingApiUrl = () => {
   return url;
 };
 
+const getSENTExplorerApiUrl = () => {
+  let url = process.env.NEXT_PUBLIC_SENT_EXPLORER_API_URL;
+  if (!url) {
+    throw new Error('NEXT_PUBLIC_SENT_EXPLORER_API_URL is not set');
+  }
+
+  if (url.endsWith('/')) {
+    url = url.substring(0, url.length - 1);
+  }
+
+  console.log('SENT Explorer API URL:', url);
+
+  return url;
+};
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: [
@@ -62,6 +77,10 @@ const nextConfig = {
       {
         source: '/api/ssb/:path*',
         destination: `${getSENTStakingApiUrl()}/:path*`,
+      },
+      {
+        source: '/api/explorer',
+        destination: getSENTExplorerApiUrl(),
       },
     ];
   },

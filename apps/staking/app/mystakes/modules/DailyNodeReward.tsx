@@ -20,7 +20,6 @@ export default function DailyNodeReward() {
 
   return (
     <Module>
-      fix: tmp
       <ModuleTooltip>
         {dictionary.rich('description', { link: externalLink(URL.LEARN_MORE_DAILY_REWARDS) })}
       </ModuleTooltip>
@@ -37,7 +36,7 @@ export default function DailyNodeReward() {
           refetch,
         }}
       >
-        {data}
+        ~{data}
       </ModuleDynamicContractReadText>
     </Module>
   );

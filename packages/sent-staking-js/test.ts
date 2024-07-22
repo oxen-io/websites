@@ -328,6 +328,7 @@ export const generateMinAndMaxContribution = ({
   };
 };
 
+// TODO - Rework node generation logic
 const generateOpenNode = ({
   userAddress,
   maxContributors,
@@ -382,7 +383,8 @@ export const generateNodeRegistration = ({
     pubkey_bls: generateNodePubKey(),
     sig_bls: generateNodePubKey(),
     sig_ed25519: generateNodePubKey(),
-    timestamp: Date.now() - Math.random() * 10000,
+    // Generates a random time in the near past
+    timestamp: (Date.now() - Math.random() * Math.pow(Math.random() * 10, 10)) / 1000,
     type,
     operator: userAddress,
   };

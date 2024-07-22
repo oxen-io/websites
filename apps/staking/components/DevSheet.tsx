@@ -3,6 +3,7 @@
 import {
   FEATURE_FLAG,
   FEATURE_FLAG_DESCRIPTION,
+  globalFeatureFlags,
   pageFeatureFlags,
   useFeatureFlags,
   useSetFeatureFlag,
@@ -15,12 +16,13 @@ import {
   SheetTitle,
 } from '@session/ui/ui/sheet';
 import { Switch } from '@session/ui/ui/switch';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
+import { Tooltip } from '@session/ui/ui/tooltip';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export function DevSheet() {
   const [isOpen, setIsOpen] = useState(false);
+  const featureFlags = useFeatureFlags();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -53,6 +55,9 @@ export function DevSheet() {
           </SheetDescription>
           <SheetTitle>Global Feature Flags</SheetTitle>
           🧑‍🔬
+          {globalFeatureFlags.map((flag) => (
+            <FeatureFlagToggle flag={flag} key={flag} initialState={featureFlags[flag]} />
+          ))}
           <PageSpecificFeatureFlags />
         </SheetHeader>
       </SheetContent>
@@ -95,11 +100,8 @@ function FeatureFlagToggle({ flag, initialState }: { flag: FEATURE_FLAG; initial
         }}
         className="h-4 w-8 [&>span]:h-4 [&>span]:w-4 [&>span]:data-[state=checked]:translate-x-4"
       />
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <span className="cursor-pointer">{FEATURE_FLAG_DESCRIPTION[flag]}</span>
-        </TooltipTrigger>
-        <TooltipContent>{flag}</TooltipContent>
+      <Tooltip tooltipContent={flag}>
+        <span className="cursor-pointer">{FEATURE_FLAG_DESCRIPTION[flag]}</span>
       </Tooltip>
     </span>
   );

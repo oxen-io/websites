@@ -1,14 +1,18 @@
 import { Loading } from '@session/ui/components/loading';
 import { HumanIcon } from '@session/ui/icons/HumanIcon';
 import { cn } from '@session/ui/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@session/ui/ui/tooltip';
+import { Tooltip } from '@session/ui/ui/tooltip';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { forwardRef, useMemo, type HTMLAttributes } from 'react';
+import { forwardRef, type HTMLAttributes, useMemo } from 'react';
+import { bigIntToNumber } from '@session/util/maths';
+import { formatSENT, SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
+import { useTranslations } from 'next-intl';
+import { areHexesEqual } from '@session/util/string';
 
 export interface Contributor {
   address: string;
-  amount: number;
+  amount: bigint;
 }
 
 export const outerNodeCardVariants = cva(
@@ -117,26 +121,24 @@ const ContributorIcon = ({
   className?: string;
   contributor?: Contributor;
   isUser?: boolean;
-}) => (
-  <Tooltip>
-    <TooltipTrigger asChild>
+}) => {
+  const dictionary = useTranslations('general');
+  return (
+    <Tooltip
+      tooltipContent={
+        <p>
+          {contributor
+            ? `${isUser ? dictionary('you') : contributor.address} | ${formatSENT(contributor.amount)} ${SENT_SYMBOL}`
+            : dictionary('emptySlot')}
+        </p>
+      }
+    >
       <HumanIcon
         className={cn('fill-text-primary h-4 w-4 cursor-pointer', className)}
         full={Boolean(contributor)}
       />
-    </TooltipTrigger>
-    <TooltipContent>
-      <p>
-        {contributor
-          ? `${isUser ? 'You' : ''} ${contributor.address} | ${contributor.amount}`
-          : 'Empty contributor slot'}
-      </p>
-    </TooltipContent>
-  </Tooltip>
-);
-
-export const getTotalStakedAmount = (contributors: Contributor[]): number => {
-  return contributors.reduce((acc, { amount }) => acc + amount, 0);
+    </Tooltip>
+  );
 };
 
 export const getTotalStakedAmountForAddress = (
@@ -144,7 +146,9 @@ export const getTotalStakedAmountForAddress = (
   address: string
 ): number => {
   return contributors.reduce((acc, { amount, address: contributorAddress }) => {
-    return contributorAddress === address ? acc + amount : acc;
+    return areHexesEqual(contributorAddress, address)
+      ? acc + bigIntToNumber(amount, SENT_DECIMALS)
+      : acc;
   }, 0);
 };
 
@@ -158,11 +162,17 @@ const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorList
   ({ className, contributors, showEmptySlots, forceExpand, ...props }, ref) => {
     const { address: userAddress } = useWallet();
 
+    const dictionary = useTranslations('maths');
+
     const [mainContributor, ...otherContributors] = useMemo(() => {
-      const userContributor = contributors.find(({ address }) => address === userAddress);
-      const otherContributors = contributors
-        .filter(({ address }) => address !== userAddress)
-        .sort((a, b) => b.amount - a.amount);
+      const userContributor = contributors.find(({ address }) =>
+        areHexesEqual(address, userAddress)
+      );
+      const otherContributors = contributors.filter(
+        ({ address }) => !areHexesEqual(address, userAddress)
+      );
+      // TODO - add contributor list sorting
+      //.sort((a, b) => b.amount - a.amount);
 
       return userContributor ? [userContributor, ...otherContributors] : otherContributors;
     }, [contributors]);
@@ -185,7 +195,7 @@ const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorList
         <ContributorIcon
           className="-mr-1"
           contributor={mainContributor}
-          isUser={mainContributor?.address === userAddress}
+          isUser={areHexesEqual(mainContributor?.address, userAddress)}
         />
         <div
           className={cn(
@@ -215,8 +225,9 @@ const NodeContributorList = forwardRef<HTMLDivElement, StakedNodeContributorList
               'letter mt-0.5 block text-lg tracking-widest transition-all duration-300 ease-in-out'
             )}
           >
-            {contributors.length}
-            {showEmptySlots ? '/10' : null}
+            {showEmptySlots
+              ? dictionary('outOf', { count: contributors.length, max: 10 })
+              : contributors.length}
           </span>
         </div>
       </>

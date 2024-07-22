@@ -6,7 +6,12 @@
     "and": "and",
     "unknownError": "An unknown error occurred.",
     "viewOnExplorer": "View on Explorer",
-    "viewOnExplorerShort": "View"
+    "viewOnExplorerShort": "View",
+    "you": "You",
+    "emptySlot": "EmptyContributorSlot"
+  },
+  "maths": {
+    "outOf": "{count}/{max}"
   },
   "clipboard": {
     "copyToClipboard": "Copy to Clipboard",
@@ -56,7 +61,8 @@
       "invalid": "Invalid network",
       "ariaMainnet": "Switch to {mainnetName}",
       "ariaTestnet": "Switch to {testnetName}",
-      "ariaDropdown": "Open network dropdown"
+      "ariaDropdown": "Open network dropdown",
+      "errorNotSupported": "It looks like your wallet doesn't support the Arbitrum Sepolia test network. Try connecting with a different wallet."
     }
   },
   "notFound": {
@@ -67,8 +73,8 @@
     "title": "Stake <text-semibold>{tokenSymbol}</text-semibold>",
     "titleDescription": "Secure the Network",
     "buttons": {
-      "primary": "Stake Now",
-      "secondary": "How to Run a Session Node"
+      "primary": "Participate in Incentivised Testnet",
+      "secondary": "Join Bug Bounty"
     },
     "heroImageAlt": "Glass cube with green highlights"
   },
@@ -158,10 +164,10 @@
       "description": "Nodes that are open for staking. <link>Learn more</link>",
       "noNodesP1": "There are currently no Open Session Nodes available to stake to.",
       "noNodesP2": "Check out the <link>docs</link> to learn about setting up and registering your own Session Node.",
-      "landingP1": "Click on an Open Session Node to stake SENT and earn rewards for securing the network.",
-      "landingP2Mobile": "Want to run your own Session Node? Find out how.",
-      "landingP2Desktop1": "Want to run your own Session Node?",
-      "landingP2Desktop2": "Find out how.",
+      "landingP1": "Once Multi-Contributor Nodes are enabled on the Session Testnet, you'll be able to choose an Open Session Node to stake test {tokenSymbol} to. ",
+      "landingP2": "Testnet participants can currently run and stake to their own Single Contributor Nodes.",
+      "landingP1Mainnet": "Click on an Open Session Node to stake {tokenSymbol} and earn rewards for securing the network.",
+      "landingP2Mainnet": "Want to run your own Session Node?",
       "learnMoreButtonText": "Learn More",
       "learnMoreButtonAria": "Navigate to the Session Node documentation page."
     },
@@ -247,7 +253,42 @@
       },
       "description": "Please start the registration process from your client or select from the list of open Session Node.",
       "notFound": {
-        "foundOpenNode": "It looks like this node is already registered an open for staking:"
+        "description": "The registration you are looking for could not be found.",
+        "foundOpenNode": "It looks like this node is already registered and open for staking:",
+        "foundRunningNode": "It looks like this node is already registered and running:"
+      },
+      "goToMyStakes": "The Session Node has been successfully registered and joined the network. It will appear on <link></link> soon",
+      "stage": {
+        "approve": {
+          "pending": "Requesting wallet permission to stake {tokenSymbol}",
+          "success": "Requesting wallet permission to stake {tokenSymbol}",
+          "error": "Requesting wallet permission to stake {tokenSymbol}",
+          "errorTooltip": "Wallet permission was not granted"
+        },
+        "simulate": {
+          "pending": "Validating Session node registration parameters",
+          "success": "Validating Session node registration parameters",
+          "error": "Validating Session node registration parameters",
+          "errorTooltip": "Registration was malformed, please regenerate the registration"
+        },
+        "write": {
+          "pending": "Requesting Session node registration stake from wallet",
+          "success": "Requesting Session node registration stake from wallet",
+          "error": "Requesting Session node registration stake from wallet",
+          "errorTooltip": "Session node registration stake was not approved"
+        },
+        "transaction": {
+          "pending": "Submitting Session node registration to Arbitrum",
+          "success": "Submitting Session node registration to Arbitrum",
+          "error": "Submitting Session node registration to Arbitrum",
+          "errorTooltip": "Session node registration was not sent to Arbitrum"
+        },
+        "join": {
+          "pending": "Waiting for Session node to join the network",
+          "success": "Waiting for Session node to join the network",
+          "error": "Waiting for Session node to join the network",
+          "error_tooltip": "Session node was not able to join the network"
+        }
       }
     },
     "node": {

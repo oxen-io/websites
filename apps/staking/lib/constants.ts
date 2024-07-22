@@ -20,7 +20,18 @@ export enum URL {
   LEARN_MORE_UNCLAIMED_REWARDS = 'https://docs.getsession.org/staking-reward-pool#claiming-rewards',
   OXEN_SERVICE_NODE_BONUS_PROGRAM = 'https://swap.oxen.io/',
   SESSION_TOKEN_COMMUNITY_SNAPSHOT = 'https://token.getsession.org/testnet-incentive-program',
+  INCENTIVE_PROGRAM_TOS = 'https://token.getsession.org/incentive-program-terms',
+  BUG_BOUNTY_PROGRAM = 'https://token.getsession.org/bug-bounty-program',
+  BUG_BOUNTY_TOS = 'https://token.getsession.org/bug-bounty-terms',
+  SESSION_NODE_SOLO_SETUP_DOCS = 'https://docs.getsession.org/class-is-in-session/session-stagenet-single-contributor-node-setup',
 }
+
+export const LANDING_BUTTON_URL = {
+  PRIMARY: '/stake',
+  SECONDARY: URL.BUG_BOUNTY_PROGRAM,
+};
+
+export const TOS_LOCKED_PATHS = ['/stake', '/mystakes'];
 
 export enum COMMUNITY_DATE {
   SESSION_TOKEN_COMMUNITY_SNAPSHOT = '2024-06-12',
@@ -80,10 +91,27 @@ export const EXTERNAL_ROUTES: LinkItem[] = [
 ] as const;
 
 export enum QUERY {
+  /** 60 seconds */
   STALE_TIME_DEFAULT = 60 * 1000,
+  /** 1 second */
   STALE_TIME_DEFAULT_DEV = 1000,
+  /** 1 second */
+  STALE_TIME_REGISTRATIONS_PAGE = 1000,
+  /** 1 second */
+  STALE_TIME_REGISTRATIONS_LIST_DEV = 1000,
+  /** 60 seconds */
+  STALE_TIME_REGISTRATIONS_LIST = 60 * 1000,
 }
 
 export enum SESSION_NODE {
-  FULL_STAKE_AMOUNT = '240000000000',
+  /** 120 SENT  */
+  FULL_STAKE_AMOUNT = '120000000000',
+  /** Average blocks per millisecond (~2 minutes per block) */
+  MS_PER_BLOCK = 2 * 60 * 1000,
+  /** Average millisecond per block (~2 minutes per block) */
+  BLOCK_VELOCITY = 2 / 60 / 4 / 1000,
+}
+
+export enum TOAST {
+  ERROR_COLLAPSE_LENGTH = 128,
 }

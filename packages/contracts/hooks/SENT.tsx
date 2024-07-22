@@ -8,7 +8,10 @@ import {
   ContractReadQueryFetchOptions,
   ReadContractQuery,
   useContractReadQuery,
+  useContractWriteQuery,
 } from './contract-hooks';
+import type { WriteContractErrorType } from 'wagmi/actions';
+import type { ContractWriteStatus } from './ServiceNodeRewards';
 
 export type SENTBalanceQuery = ReadContractQuery & {
   /** Get the session token balance */
@@ -48,4 +51,31 @@ export function useSENTBalanceQuery(
     getBalance,
     ...rest,
   };
+}
+
+export type UseProxyApprovalReturn = {
+  approve: () => void;
+  writeStatus: ContractWriteStatus;
+  error: WriteContractErrorType | Error | null;
+};
+
+export function useProxyApproval({
+  contractAddress,
+  tokenAmount,
+}: {
+  contractAddress: Address;
+  tokenAmount: bigint;
+}): UseProxyApprovalReturn {
+  const { writeContract, error, writeStatus } = useContractWriteQuery({
+    contract: 'SENT',
+    functionName: 'approve',
+  });
+
+  const approve = () => {
+    writeContract({
+      args: [contractAddress, tokenAmount],
+    });
+  };
+
+  return { approve, writeStatus, error };
 }

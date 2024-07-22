@@ -22,6 +22,12 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { getStakedNodes } from '@/lib/queries/getStakedNodes';
+import {
+  getDateFromUnixTimestampSeconds,
+  getUnixTimestampNowSeconds,
+  timeBetweenEvents,
+} from '@session/util/date';
+import { SESSION_NODE } from '@/lib/constants';
 
 function StakedNodesWithAddress({ address }: { address: string }) {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_STAKED_NODES);
@@ -52,7 +58,13 @@ function StakedNodesWithAddress({ address }: { address: string }) {
         nodes.map((node) => (
           <StakedNodeCard
             key={node.service_node_pubkey}
-            node={parseSessionNodeData(node) as StakedNode}
+            node={
+              parseSessionNodeData(
+                node,
+                data?.network?.block_height,
+                data?.network?.block_timestamp
+              ) as StakedNode
+            }
           />
         ))
       ) : (
@@ -109,33 +121,38 @@ function NoNodes() {
   );
 }
 
-// TODO - replace these with real values
-const currentBlockHeight = 1000;
-const blocksPerMs = 0.00001;
-
-const msToBlockHeight = (height: number) => {
-  return Math.floor((currentBlockHeight + height) / blocksPerMs);
-};
-
-const parseSessionNodeData = (node: ServiceNode): GenericStakedNode => {
+export const parseSessionNodeData = (
+  node: ServiceNode,
+  currentBlock: number = 0,
+  networkTime: number = getUnixTimestampNowSeconds()
+): GenericStakedNode => {
   return {
     state: node.state,
     contributors: node.contributors,
     lastRewardHeight: 0,
-    lastUptime: new Date(Date.now() - msToBlockHeight(node.last_uptime_proof)),
+    lastUptime: getDateFromUnixTimestampSeconds(node.last_uptime_proof),
     pubKey: node.service_node_pubkey,
     balance: node.total_contributed,
-    operatorFee: node.portions_for_operator,
+    operatorFee: node.operator_fee,
     operator_address: node.operator_address,
     ...(node.awaiting_liquidation ? { awaitingLiquidation: true } : {}),
     ...(node.decomm_blocks_remaining
       ? {
-          deregistrationDate: new Date(Date.now() + msToBlockHeight(node.decomm_blocks_remaining)),
+          deregistrationDate: new Date(
+            networkTime * 1000 + node.decomm_blocks_remaining * SESSION_NODE.MS_PER_BLOCK
+          ),
         }
       : {}),
     ...(node.requested_unlock_height
       ? {
-          unlockDate: new Date(Date.now() + msToBlockHeight(node.requested_unlock_height)),
+          unlockDate: new Date(
+            networkTime * 1000 +
+              timeBetweenEvents(
+                node.requested_unlock_height,
+                currentBlock,
+                SESSION_NODE.BLOCK_VELOCITY
+              )
+          ),
         }
       : {}),
   };

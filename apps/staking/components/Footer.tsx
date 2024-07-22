@@ -3,6 +3,7 @@ import { Footer as FooterComp } from '@session/ui/components/Footer';
 import { cn } from '@session/ui/lib/utils';
 
 import { useTranslations } from 'next-intl';
+
 export function Footer() {
   const dictionary = useTranslations('navigation');
 

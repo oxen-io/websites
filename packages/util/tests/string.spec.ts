@@ -1,4 +1,4 @@
-import { collapseString } from '../string';
+import { areHexesEqual, collapseString } from '../string';
 
 // #region - collapseString
 
@@ -31,3 +31,44 @@ describe('collapseString', () => {
     expect(collapsed).toBe('Short');
   });
 });
+
+// #endregion
+// #region - hexesAreEqual
+
+describe('hexesAreEqual', () => {
+  test('should return false for 0x only strings', () => {
+    expect(areHexesEqual('abc123', '0x')).toBe(false);
+    expect(areHexesEqual('0x', 'abc123')).toBe(false);
+    expect(areHexesEqual('0x', '0x')).toBe(false);
+  });
+
+  test('should return false for too short strings', () => {
+    expect(areHexesEqual('abc123', 'a')).toBe(false);
+    expect(areHexesEqual('a', 'abc123')).toBe(false);
+    expect(areHexesEqual('ab', 'ab')).toBe(false);
+    expect(areHexesEqual('a', 'a')).toBe(false);
+  });
+
+  test('should return true for equal strings', () => {
+    expect(areHexesEqual('abc123', 'abc123')).toBe(true);
+    expect(areHexesEqual('hex', 'hex')).toBe(true);
+    expect(areHexesEqual('0xhex', '0xhex')).toBe(true);
+  });
+
+  test('should return true for mixed capital equal strings', () => {
+    expect(areHexesEqual('aBc123', 'abc123')).toBe(true);
+    expect(areHexesEqual('hex', 'hEX')).toBe(true);
+    expect(areHexesEqual('0XHex', '0xHex')).toBe(true);
+  });
+
+  test('should return false for falsy strings', () => {
+    expect(areHexesEqual('', 'a')).toBe(false);
+    expect(areHexesEqual('a', '')).toBe(false);
+    expect(areHexesEqual('', '')).toBe(false);
+    expect(areHexesEqual(undefined, 'a')).toBe(false);
+    expect(areHexesEqual('a', undefined)).toBe(false);
+    expect(areHexesEqual(undefined, undefined)).toBe(false);
+  });
+});
+
+// #endregion

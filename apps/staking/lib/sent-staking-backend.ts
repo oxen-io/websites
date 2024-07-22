@@ -24,3 +24,8 @@ export function getStakingBackendQueryWithParamsArgs<Q extends StakingBackendQue
     queryKey: [query.name, params.toString()],
   };
 }
+
+export type QueryOptions = {
+  enabled?: boolean;
+  staleTime?: number;
+};

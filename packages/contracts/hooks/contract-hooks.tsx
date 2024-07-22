@@ -102,6 +102,8 @@ export type GenericContractWriteQuery<Args> = WriteContractQuery & {
   writeContract: WriteContractFunction<Args>;
   /** Throw an error */
   throwError: (error: Error) => void;
+  writeStatus: 'error' | 'pending' | 'idle' | 'success';
+  transactionStatus: 'error' | 'pending' | 'success';
 };
 
 export type GenericContractReadQuery<Args, Data> = ReadContractQuery & {
@@ -132,6 +134,7 @@ export function useContractWriteQuery<
     data: hash,
     error: writeError,
     isError: isWriteError,
+    status: writeStatus,
   } = useWriteContract();
 
   const {
@@ -139,6 +142,7 @@ export function useContractWriteQuery<
     isSuccess: isConfirmed,
     isError: isTransactionError,
     error: transactionError,
+    status: transactionStatus,
   } = useWaitForTransactionReceipt({ hash });
 
   const isError = useMemo(
@@ -188,6 +192,8 @@ export function useContractWriteQuery<
     isConfirmed,
     isError,
     error,
+    writeStatus,
+    transactionStatus,
     throwError: setInternalError,
   };
 }

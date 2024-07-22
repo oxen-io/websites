@@ -12,6 +12,7 @@ import { cookieToInitialState } from 'wagmi';
 import ChainBanner from '@/components/ChainBanner';
 import Header from '@/components/Header';
 import { GlobalProvider } from '@/providers/global-provider';
+import { TOSHandler } from '@/components/TOSHandler';
 
 const wagmiConfig = createWagmiConfig({
   projectId: NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
@@ -44,6 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <main>{children}</main>
           <Toaster />
           {!isProduction ? <DevSheet /> : null}
+          <TOSHandler />
         </body>
       </GlobalProvider>
     </html>

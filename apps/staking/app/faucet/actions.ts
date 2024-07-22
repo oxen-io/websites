@@ -10,21 +10,20 @@ import {
   SENT_SYMBOL,
 } from '@session/contracts';
 import { SENTAbi } from '@session/contracts/abis';
-import { isProduction } from '@/lib/env';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { createPublicWalletClient, createServerWallet } from '@session/wallet/lib/server-wallet';
 import * as BetterSql3 from 'better-sqlite3-multiple-ciphers';
 import { getLocale, getTranslations } from 'next-intl/server';
-import { formatEther, isAddress as isAddressViem, type Address } from 'viem';
+import { type Address, formatEther, isAddress as isAddressViem } from 'viem';
 import { FaucetFormSchema } from './AuthModule';
 import {
-  TABLE,
-  TransactionHistory,
   getTransactionHistory,
   hasRecentTransaction,
   idIsInTable,
   openDatabase,
   setupDatababse,
+  TABLE,
+  TransactionHistory,
 } from './utils';
 
 class FaucetError extends Error {

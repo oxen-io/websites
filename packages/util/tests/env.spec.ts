@@ -37,6 +37,7 @@ describe('getEnvironment', () => {
   });
 });
 
+// #endregion
 // #region - isProduction
 
 describe('isProduction', () => {
@@ -55,6 +56,7 @@ describe('isProduction', () => {
   });
 });
 
+// #endregion
 // #region - getEnvironmentTaggedDomain
 
 describe('getEnvironmentTaggedDomain', () => {
@@ -88,3 +90,5 @@ describe('getEnvironmentTaggedDomain', () => {
     expect(mockConsoleLog).toHaveBeenCalled();
   });
 });
+
+// #endregion
