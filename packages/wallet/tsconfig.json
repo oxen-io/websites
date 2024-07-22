@@ -16,7 +16,7 @@
   "include": [
     "next-env.d.ts",
     "next.config.js",
-    "tailwind.config.js",
+    "tailwind.config.ts",
     "postcss.config.js",
     "**/*.ts",
     "**/*.tsx",

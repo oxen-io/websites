@@ -1,8 +1,10 @@
 'use client';
+
 import type { Address, ContractFunctionArgs } from 'viem';
 import type { ReadContractData } from 'wagmi/query';
 import type { ServiceNodeRewardsAbi } from '../abis';
 import {
+  ContractReadQueryFetchOptions,
   ReadContractQuery,
   WriteContractQuery,
   useContractReadQuery,
@@ -86,15 +88,9 @@ export type TotalNodesQuery = ReadContractQuery & {
 };
 
 export function useTotalNodesQuery(
-  props?:
-    | {
-        startEnabled: never;
-        args: never;
-      }
-    | {
-        startEnabled: boolean;
-        args: ContractFunctionArgs<typeof ServiceNodeRewardsAbi, 'pure' | 'view', 'totalNodes'>;
-      }
+  props?: ContractReadQueryFetchOptions<
+    ContractFunctionArgs<typeof ServiceNodeRewardsAbi, 'pure' | 'view', 'totalNodes'>
+  >
 ): TotalNodesQuery {
   const {
     data: totalNodes,

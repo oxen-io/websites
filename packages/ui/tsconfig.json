@@ -4,6 +4,6 @@
     "baseUrl": ".",
     "outDir": "dist"
   },
-  "include": ["./**/*.ts", "./**/*.tsx", "tailwind.config.js", "postcss.config.js"],
+  "include": ["./**/*.ts", "./**/*.tsx", "tailwind.config.ts", "postcss.config.js"],
   "exclude": ["node_modules", "turbo", "dist"]
 }

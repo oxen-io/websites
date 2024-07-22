@@ -1,4 +1,4 @@
-import type { Address } from 'viem';
+import { type Address } from 'viem';
 import type { ContractWithAbiName } from './abis';
 import { CHAIN } from './chains';
 
@@ -10,7 +10,7 @@ const contracts = [
 export type ContractName = (typeof contracts)[number];
 
 // TODO - Replace Mainnet addresses with the correct addresses once they are available
-export const addresses: Record<ContractName, Record<CHAIN, Address>> = {
+export const addresses: Record<ContractName, Record<CHAIN.MAINNET | CHAIN.TESTNET, Address>> = {
   SENT: {
     /** @deprecated - The Mainnet value is a mock value */
     [CHAIN.MAINNET]: '0xbF3e23d546D19302e911AAc26B3c01A73c7De380',
@@ -27,3 +27,6 @@ export const addresses: Record<ContractName, Record<CHAIN, Address>> = {
     [CHAIN.TESTNET]: '0x821340A591C10492d7F494285BABFcc2645396a3',
   },
 } as const;
+
+export const SENT_DECIMALS = 9;
+export const SENT_SYMBOL = 'SENT';

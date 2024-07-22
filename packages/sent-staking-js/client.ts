@@ -22,7 +22,7 @@ export enum NODE_STATE {
   CANCELLED = 'Cancelled',
   DECOMMISSIONED = 'Decommissioned',
   DEREGISTERED = 'Deregistered',
-  VOLUNTARY_DEREGISTRATION = 'Voluntary Deregistration',
+  UNLOCKED = 'Unlocked',
 }
 
 export interface LockedContribution {
@@ -185,7 +185,7 @@ export class SessionStakingClient {
   }: {
     address: string;
   }): Promise<SSBResponse<GetNodesForWalletResponse>> {
-    const mockData = generateMockNodeData({ operatorAddress: address });
+    const mockData = generateMockNodeData({ userAddress: address });
     return {
       body: mockData,
       status: 200,

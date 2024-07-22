@@ -1,0 +1,189 @@
+{
+  "general": {
+    "comingSoon": "Coming Soon",
+    "loading": "Loading..."
+  },
+  "navigation": {
+    "home": "Home",
+    "stake": "Stake Now",
+    "myStakes": "My Stakes",
+    "docs": "Docs",
+    "support": "Support",
+    "faucet": "Faucet",
+    "hamburgerDropdown": {
+      "ariaLabel": "Open navigation menu",
+      "language": "Change language",
+      "ariaLanguage": "Open language selection",
+      "support": "Support",
+      "ariaSupport": "Go to support page",
+      "faucet": "Faucet",
+      "ariaFaucet": "Go to faucet page"
+    }
+  },
+  "wallet": {
+    "modalButton": {
+      "connect": "Connect Wallet",
+      "connected": "Open Wallet",
+      "connecting": "Connecting Wallet...",
+      "reconnecting": "Reconnecting Wallet...",
+      "ariaConnected": "Open wallet account modal",
+      "ariaDisconnected": "Open connect wallet modal",
+      "balance": "Balance",
+      "address": "Address",
+      "fallbackName": "No name"
+    },
+    "addTokenButton": {
+      "addToken": "Add {tokenSymbol} to Wallet",
+      "ariaAddToken": "Add {tokenSymbol} to Wallet",
+      "changeNetwork": "Change Network",
+      "ariaChangeNetwork": "Change Network",
+      "pending": "Pending",
+      "ariaPending": "Pending"
+    },
+    "networkDropdown": {
+      "mainnet": "MAINNET",
+      "testnet": "TESTNET",
+      "invalid": "INVALID NETWORK",
+      "ariaMainnet": "Switch to Mainnet",
+      "ariaTestnet": "Switch to Testnet",
+      "ariaDropdown": "Open network dropdown"
+    }
+  },
+  "notFound": {
+    "description": "Sorry! We couldn't find the page you were looking for.",
+    "homeButton": "Return Home"
+  },
+  "home": {
+    "title": "Stake <semibold>{tokenSymbol}</semibold> Earn Rewards",
+    "buttons": {
+      "primary": "STAKE NOW",
+      "secondary": "HOW TO RUN A SESSION NODE"
+    },
+    "heroImageAlt": "Glass cube with green highlights"
+  },
+  "stakeNow": {
+    "title": "Open Session Nodes"
+  },
+  "faucet": {
+    "title": "Faucet",
+    "connectedWalletInfo": "Your wallet's account {address} is connected and is being used to fill out this form. We will not ask you to make any transactions.",
+    "or": "or",
+    "addTokenInfo": "You may need to add {tokenSymbol} to your wallet to make it show up, click the button below to add it.",
+    "form": {
+      "disconnectWallet": "Disconnect Wallet",
+      "label": "Enter your wallet address",
+      "placeholder": "Wallet address",
+      "description": "Enter your wallet address to receive test {tokenSymbol} from the faucet.",
+      "button": "Get test {tokenSymbol}",
+      "testnet": "Swap to Arbitrum Sepolia testnet",
+      "lowEthBalance": "It looks like you dont have enough test eth on Arbitrum Sepolia, go to <link>QuickNode Arbitrum Sepolia Faucet</link> to get some. You have {ethAmount} ETH",
+      "transactionHash": "Transaction Hash: {hash}",
+      "transactionHashDescription": "Transaction hash of the faucet transaction.",
+      "copyTransactionHash": "Copy Transaction Hash",
+      "copyTransactionHashSuccessToast": "Copied Transaction Hash to clipboard!",
+      "error": "Failed to get test {tokenSymbol}.",
+      "errorInvalidAddress": "Wallet address is not valid. It must be a valid address: {example}",
+      "success": "Successfully received test {tokenSymbol}.",
+      "loading": "Getting test {tokenSymbol}..."
+    },
+    "disconnectWallet": "Disconnect Wallet",
+    "description": "This wallet will"
+  },
+  "chainBanner": {
+    "unsupportedChain": "You are currently on an unsupported chain. <change>Click here to switch chain</change>",
+    "ariaUnsupportedChain": "Click here to switch chain"
+  },
+  "chainBannerMainnetNotLive": {
+    "mainnetNotLive": "Mainnet is not live yet. <change>Click here to switch to Testnet</change>",
+    "ariaMainnetNotLive": "Click here to switch chain"
+  },
+  "modules": {
+    "stakedNodes": {
+      "title": "My Stakes",
+      "showHiddenText": "Show Hidden"
+    },
+    "buttons": {
+      "refetch": "Refetch"
+    },
+    "balance": {
+      "title": "Total Staked {tokenSymbol}:",
+      "description": "Total {tokenSymbol} in your wallet.",
+      "error": "Failed to fetch balance.",
+      "refetching": "Refetching balance...",
+      "refetchSuccess": "Successfully refetched balance"
+    },
+    "dailyRewards": {
+      "title": "Daily Node Rewards:",
+      "description": "Current daily rewards per node.",
+      "error": "Failed to fetch daily rewards.",
+      "refetching": "Refetching daily rewards...",
+      "refetchSuccess": "Successfully refetched daily rewards"
+    },
+    "totalRewards": {
+      "title": "Total Rewards Earned:",
+      "description": "Total rewards earned from staking.",
+      "error": "Failed to fetch total rewards.",
+      "refetching": "Refetching total rewards...",
+      "refetchSuccess": "Successfully refetched total rewards"
+    },
+    "unclaimedTokens": {
+      "title": "Unclaimed Tokens:",
+      "description": "Total rewards that have not been claimed.",
+      "error": "Failed to fetch unclaimed tokens.",
+      "refetching": "Refetching unclaimed tokens...",
+      "refetchSuccess": "Successfully refetched unclaimed tokens"
+    },
+    "claim": {
+      "title": "Claim",
+      "description": "Claim your rewards from staking.",
+      "error": "Failed to claim rewards."
+    },
+    "price": {
+      "title": "Price:",
+      "description": "Current price of {tokenSymbol}."
+    }
+  },
+  "nodeCard": {
+    "pubKey": {
+      "sessionNodePubkey": "Session Node Pubkey",
+      "copyPubkeyToClipboard": "Copy to Clipboard",
+      "copyPubkeyToClipboardSuccessToast": "Copied Session Node Pubkey to clipboard!"
+    },
+    "open": {
+      "title": "SN Pubkey:",
+      "minContribution": "Min Contribution:",
+      "minContributionDescription": "Minimum amount of {tokenSymbol} required to stake.",
+      "maxContribution": "Max Contribution:",
+      "maxContributionDescription": "Maximum amount of {tokenSymbol} that can be staked.",
+      "fee": "Fee:",
+      "feeDescription": "The node operator fee.",
+      "button": {
+        "text": "View",
+        "ariaLabel": "View the node details in the side pannel"
+      }
+    },
+    "staked": {
+      "operator": "Operator",
+      "labelExpand": "Expand",
+      "ariaExpand": "Expand node details",
+      "labelCollapse": "Collapse",
+      "ariaCollapse": "Collapse node details",
+      "lastUptime": "Last Uptime: {time}",
+      "lastUptimeDescription": "Last time the node was online.",
+      "lastRewardHeight": "Last Reward Height: {height}",
+      "lastRewardHeightDescription": "Last block height the node received rewards.",
+      "pubKey": "<medium>Public Key:</medium> {pubKey}",
+      "pubKeyDescription": "Public key of the node.",
+      "stakedBalance": "<medium>Staked Balance:</medium> {balance} {tokenSymbol}",
+      "stakedBalanceDescription": "Total {tokenSymbol} staked in the node.",
+      "operatorFee": "<medium>Operator Fee:</medium> {fee}",
+      "operatorFeeDescription": "The node operator fee.",
+      "unlockingTimerNotification": "Unlocking {time}",
+      "unlockingTimerDescription": "Time left until the node is unlocked.",
+      "deregistrationTimerNotification": "Deregistration {time}",
+      "deregistrationTimerDescription": "Time left until the node is deregistered.",
+      "liquidationNotification": "Awaiting liquidation",
+      "liquidationDescription": "Node is awaiting liquidation by the network."
+    }
+  }
+}

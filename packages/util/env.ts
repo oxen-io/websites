@@ -1,38 +1,35 @@
 enum Environment {
-  Development = 'development',
-  Dev = 'dev',
-  Production = 'production',
-  Prod = 'prod',
-  Staging = 'staging',
-  Stg = 'stg',
-  Testing = 'testing',
-  Test = 'test',
+  PRD = 'prd',
+  STG = 'stg',
+  QA = 'qa',
+  DEV = 'dev',
 }
 
-/**
- * Checks if the current environment is not production.
- * This function checks if the environment is not production by checking if the
- * environment is not set or if it is set to a development, staging, or testing environment.
- * @returns {boolean} Returns true if the environment is not production, false otherwise.
- */
-export const isNotProduction = (): boolean => {
-  return (
-    !process.env.NEXT_PUBLIC_SITE_ENV ||
-    [
-      Environment.Development,
-      Environment.Dev,
-      Environment.Staging,
-      Environment.Stg,
-      Environment.Testing,
-      Environment.Test,
-    ].includes(process.env.NEXT_PUBLIC_SITE_ENV as Environment)
-  );
+const environments = [Environment.PRD, Environment.STG, Environment.QA, Environment.DEV];
+
+export const getEnvironment = (): Environment => {
+  const environment = process.env.NEXT_PUBLIC_ENV_FLAG;
+  if (!environment || !environments.includes(environment as Environment)) {
+    console.warn(`Invalid environment flag (NEXT_PUBLIC_ENV_FLAG): ${environment}`);
+    return Environment.DEV;
+  }
+  console.log(`Environment: ${environment}`);
+  return environment as Environment;
 };
 
+export const isProduction = (): boolean => getEnvironment() === Environment.PRD;
+
 /**
- * Checks if the current environment is production. This function is calls {@link isNotProduction} and inverts the result.
- * @returns {boolean} Returns true if the environment is production, false otherwise.
+ * Returns the domain with environment tag based on the root subdomain and current environment.
+ * @param rootSubdomain - The root subdomain to be used in the domain. This is required if the production site is on a subdomain.
+ * @returns The domain with environment tag.
  */
-export const isProduction = (): boolean => {
-  return !isNotProduction();
+export const getEnvironmentTaggedDomain = (rootSubdomain?: string): string => {
+  const environment = getEnvironment();
+
+  if (rootSubdomain) {
+    return environment === Environment.PRD ? rootSubdomain : `${rootSubdomain}-${environment}`;
+  }
+
+  return environment === Environment.PRD ? '' : environment;
 };

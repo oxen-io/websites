@@ -2,16 +2,27 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
   "globalDotEnv": [".env"],
+  "globalEnv": ["NEXT_PUBLIC_ENV_FLAG"],
   "pipeline": {
-    "build": {
-      "dependsOn": ["^build"],
+    "@session/staking#build": {
       "dotEnv": [".env.production.local", ".env.local", ".env.production", ".env"],
       "env": [
         "NEXT_PUBLIC_SITE_ENV",
         "NEXT_PUBLIC_SENT_STAKING_API_URL",
-        "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID"
+        "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID",
+        "FAUCET_WALLET_PRIVATE_KEY",
+        "NEXT_PUBLIC_ENV_FLAG"
       ],
       "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "@session/staking#start": {
+      "env": [
+        "NEXT_PUBLIC_SITE_ENV",
+        "NEXT_PUBLIC_SENT_STAKING_API_URL",
+        "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID",
+        "FAUCET_WALLET_PRIVATE_KEY",
+        "NEXT_PUBLIC_ENV_FLAG"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"]

@@ -16,13 +16,27 @@ export const testnet = defineChain({
 export enum CHAIN {
   MAINNET = 'mainnet',
   TESTNET = 'testnet',
+  ETHEREUM = 'ethereum',
 }
+
+const chainNames = Object.values(CHAIN);
 
 export const chains = {
   [CHAIN.MAINNET]: mainnet,
   [CHAIN.TESTNET]: testnet,
+  [CHAIN.ETHEREUM]: ethereum,
 } as const;
 
+export const chainIdMap = {
+  [mainnet.id]: CHAIN.MAINNET,
+  [testnet.id]: CHAIN.TESTNET,
+} as const;
+
+export type ChainId = keyof typeof chainIdMap;
 export type ChainData = keyof typeof chains;
+
+export function isChain(chain: string): chain is CHAIN {
+  return chainNames.includes(chain as CHAIN);
+}
 
 export { ethereum };
