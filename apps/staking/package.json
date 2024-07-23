@@ -17,6 +17,7 @@
     "@session/ui": "workspace:*",
     "@session/util": "workspace:*",
     "@session/wallet": "workspace:*",
+    "@session/logger": "workspace:*",
     "@tanstack/react-query": "5.51.1",
     "better-sqlite3-multiple-ciphers": "11.1.2",
     "class-variance-authority": "^0.7.0",

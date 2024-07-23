@@ -80,6 +80,9 @@ importers:
       '@session/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      '@session/logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
       '@session/sent-staking-js':
         specifier: workspace:*
         version: link:../../packages/sent-staking-js

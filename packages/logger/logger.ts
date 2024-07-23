@@ -1,6 +1,6 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
-import { initTimedLogWithInitialLog, TimedLog } from './timedLog';
+import { type InitialLog, TimedLog } from './timedLog';
 
 export enum LOG_LEVEL {
   DEBUG = 'debug',
@@ -10,9 +10,9 @@ export enum LOG_LEVEL {
 }
 
 export type Logger = Record<LOG_LEVEL, LogFunction>;
-export type LogFunction = (...args: any[]) => any;
+export type LogFunction = (...args: Array<any>) => any;
 
-export type LogCallbackFunction = (...args: any[]) => any;
+export type LogCallbackFunction = (...args: Array<any>) => any;
 
 type LogCallbackOptions = {
   callbackFunctionBeforeLogging?: LogCallbackFunction;
@@ -56,7 +56,8 @@ export class SessionLogger {
   private readonly timedLogOptions?: TimedLogOptions;
   private readonly ignoredLevels?: Array<string> = [];
 
-  private readonly constructLoggingArgs: (...args: any[]) => any = (...args: any[]) => args;
+  private readonly constructLoggingArgs: (...args: Array<any>) => any = (...args: Array<any>) =>
+    args;
 
   private activeTimedLogs: Map<string, TimedLog> = new Map();
   private readonly maxActiveTimedLogs: number = 500;
@@ -147,6 +148,9 @@ export class SessionLogger {
    * @param options Options for using timed log storage inside the logger instance. Using {@link activeTimedLogs}.
    * @param options.saveTimedLogInstanceInLogger Set to true to save the {@link TimedLog} instance inside the logger.
    * @param options.uniqueId The unique id the {@link TimedLog} instance will be saved under.
+   * @param options.initialLog Send an initial log message.
+   * @param options.initialLog.message The message to log when the instance is created.
+   * @param options.initialLog.level The level to log the initial message at.
    *
    * @returns A new TimedLog instance.
    *
@@ -169,60 +173,33 @@ export class SessionLogger {
    * const timedLog = logger.getTimedLog('abc123');
    * timedLog.debug('A message was sent with id 7');
    * // Output: A message was sent with id 7: 1.923s
-   */
-  public initTimedLog(options?: { saveTimedLogInstanceInLogger: boolean; uniqueId: string }) {
-    const timedLog = new TimedLog(this);
-
-    if (options?.saveTimedLogInstanceInLogger) {
-      this.saveTimedLog(options.uniqueId, timedLog);
-    }
-
-    return timedLog;
-  }
-
-  /**
-   * Create a new {@link TimedLog} instance. This can be called later to log a message with an elapsed time.
-   * @param initialLogMessage The message to log when the instance is created.
-   * @param initialLogMessageLevel The level to log the initial message at.
-   * @param options Options for using timed log storage inside the logger instance. Using {@link activeTimedLogs}.
-   * @param options.saveTimedLogInstanceInLogger Set to true to save the {@link TimedLog} instance inside the logger.
-   * @param options.uniqueId The unique id the {@link TimedLog} instance will be saved under.
    *
-   * @returns A new TimedLog instance.
-   *
-   * @see {@link getTimedLog} to retrieve the timed log.
-   * @see {@link TimedLog} for more information on how to use the returned instance.
-   *
-   * @example Basic Usage
-   * const timedLog = logger.initTimedLogWithInitialLog('A message is being sent with id 7');
+   * @example Basic Usage - Initial Log
+   * const timedLog = logger.initTimedLog('A message is being sent with id 7');
    * // Output: A message is being sent with id 7
    * timedLog.debug('A message was sent with id 7');
    * // Output: A message was sent with id 7: 1.923s
    *
-   * @example Template String
-   * const timedLog = logger.initTimedLogWithInitialLog('A message is being sent with id 7', 'info');
+   * @example Template String - Initial Log
+   * const timedLog = logger.initTimedLog('A message is being sent with id 7', 'info');
    * // Output: A message is being sent with id 7
    * timedLog.info('A message was sent after {time} with id 7');
    * // Output: A message was sent after 1.923s with id 7
    *
-   * @example Saving the Timed Log
-   * logger.initTimedLogWithInitialLog('A message is being sent with id 7', 'info', { saveTimedLogInstanceInLogger: true, uniqueId: 'abc123' });
+   * @example Saving the Timed Log - Initial Log
+   * logger.initTimedLog('A message is being sent with id 7', 'info', { saveTimedLogInstanceInLogger: true, uniqueId: 'abc123' });
    * // Output: A message is being sent with id 7
    * // ...
    * const timedLog = logger.getTimedLog('abc123');
    * timedLog.info('A message was sent with id 7');
    * // Output: A message was sent with id 7: 1.923s
    */
-  public initTimedLogWithInitialLog(
-    initialLogMessage: string,
-    initialLogMessageLevel: keyof Logger = LOG_LEVEL.DEBUG,
-    options?: { saveTimedLogInstanceInLogger: boolean; uniqueId: string }
-  ) {
-    const timedLog = initTimedLogWithInitialLog(
-      this.logger,
-      initialLogMessage,
-      initialLogMessageLevel
-    );
+  public initTimedLog(options?: {
+    saveTimedLogInstanceInLogger: boolean;
+    uniqueId: string;
+    initialLog?: InitialLog;
+  }) {
+    const timedLog = new TimedLog(this, options?.initialLog);
 
     if (options?.saveTimedLogInstanceInLogger) {
       this.saveTimedLog(options.uniqueId, timedLog);
@@ -235,6 +212,10 @@ export class SessionLogger {
    * Save a {@link TimedLog} to the logger.
    * @param uniqueId The unique id to save the {@link TimedLog} as.
    * @param timedLog The {@link TimedLog} instance to save.
+   *
+   * @deprecated This is a helper method for {@link time}, which is deprecated.
+   * Use {@link initTimedLog} for proper timed logs using {@link TimedLog}
+   *
    */
   private saveTimedLog(uniqueId: string, timedLog: TimedLog) {
     if (this.activeTimedLogs.has(uniqueId)) {
@@ -250,6 +231,10 @@ export class SessionLogger {
   /**
    * Get a saved {@link TimedLog} instance.
    * @param uniqueId The unique id of the {@link TimedLog} instance.
+   *
+   * @deprecated This is a helper method for {@link time}, which is deprecated.
+   * Use {@link initTimedLog} for proper timed logs using {@link TimedLog}
+   *
    */
   public getTimedLog(uniqueId: string) {
     return this.activeTimedLogs.get(uniqueId);
@@ -343,7 +328,7 @@ export class SessionLogger {
   }
 
   /**
-   * Handle log stale checking for all logs in {@link activeTimedLogs}.
+   * Handle stale log checking for all logs in {@link activeTimedLogs}.
    * This calls {@link handleStaleTimedLog} on each stale log.
    */
   private handleStaleTimedLogs() {

@@ -1,4 +1,18 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+
 import { LOG_LEVEL, type Logger } from './logger';
+
+export type InitialLog = { message: string; level?: keyof Logger };
+
+/**
+ * Format a millisecond value to a seconds string
+ * @param milliseconds the time value in milliseconds
+ * @return the seconds value as a string
+ */
+function formatMillisecondsToSeconds(milliseconds: number): string {
+  const seconds = milliseconds / 1000;
+  return seconds.toFixed(3).replace(/\.?0+$/, '');
+}
 
 /**
  * Create a new TimedLog instance. A logging method can be called later to log a message with an elapsed time.
@@ -23,11 +37,11 @@ export class TimedLog {
   private static millisecondSuffix = 'ms';
   private static secondSuffix = 's';
 
-  constructor(logger: Logger, initialLogMessage?: string, initialLogMessageLevel?: keyof Logger) {
+  constructor(logger: Logger, initialLog?: InitialLog) {
     this.logger = logger;
 
-    if (initialLogMessage) {
-      this.log(initialLogMessageLevel ?? LOG_LEVEL.DEBUG, initialLogMessage);
+    if (initialLog?.message) {
+      this.log(initialLog.level ?? LOG_LEVEL.DEBUG, initialLog.message);
     }
   }
 
@@ -67,11 +81,6 @@ export class TimedLog {
 
     if (ms === 0) {
       return `${s}${TimedLog.secondSuffix}`;
-    }
-
-    function formatMillisecondsToSeconds(milliseconds: number): string {
-      const seconds = milliseconds / 1000;
-      return seconds.toFixed(3).replace(/\.?0+$/, '');
     }
 
     return `${formatMillisecondsToSeconds(ms)}${TimedLog.secondSuffix}`;
@@ -209,49 +218,36 @@ export class TimedLog {
 /**
  * Create a new TimedLog instance. This can be called later to log a message with an elapsed time.
  * @param logger A Logger
+ * @param initialLog Send an initial log message.
+ * @param initialLog.message The message to log when the instance is created.
+ * @param initialLog.level The level to log the initial message at.
  *
  * @returns A new TimedLog instance.
  *
  * @see {@link TimedLog} for more information on how to use the returned instance.
  *
- * @example
- * const timedLog = TimedLog();
+ * @example Basic Usage
+ * const timedLog = initTimedLog(console.log);
  * timedLog.debug('A message was sent with id 7');
  * // Output: A message was sent with id 7: 1.923s
  *
- * @example
- * const timedLog = TimedLog();
+ * @example Format string usage
+ * const timedLog = initTimedLog(console.log);
  * timedLog.info('A message was sent after {time} with id 7');
  * // Output: A message was sent after 1.923s with id 7
- */
-export const initTimedLog = (logger: Logger) => {
-  return new TimedLog(logger);
-};
-/**
- * Create a new TimedLog instance. This can be called later to log a message with an elapsed time.
- * @param logger A logger
- * @param initialLogMessage The message to log when the instance is created.
- * @param initialLogMessageLevel The level to log the initial message at.
- * @returns A new TimedLog instance.
  *
- * @see {@link TimedLog} for more information on how to use the returned instance.
- *
- * @example
- * const timedLog = initTimedLogWithInitialLog(console.log, 'A message is being sent with id 7');
+ * @example Basic Usage - Initial log
+ * const timedLog = initTimedLog(console.log, { message: 'A message is being sent with id 7' });
  * // Output: A message is being sent with id 7
  * timedLog.debug('A message was sent with id 7');
  * // Output: A message was sent with id 7: 1.923s
  *
- * @example
- * const timedLog = initTimedLogWithInitialLog(console.log, 'A message is being sent with id 7', 'info');
+ * @example Format string usage - Initial log
+ * const timedLog = initTimedLog(console.log, { message: 'A message is being sent with id 7', level: 'info' });
  * // Output: A message is being sent with id 7
  * timedLog.info('A message was sent after {time} with id 7');
  * // Output: A message was sent after 1.923s with id 7
  */
-export const initTimedLogWithInitialLog = (
-  logger: Logger,
-  initialLogMessage: string,
-  initialLogMessageLevel: keyof Logger = LOG_LEVEL.DEBUG
-) => {
-  return new TimedLog(logger, initialLogMessage, initialLogMessageLevel);
+export const initTimedLog = (logger: Logger, initialLog?: InitialLog) => {
+  return new TimedLog(logger, initialLog);
 };
