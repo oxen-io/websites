@@ -298,7 +298,9 @@ export class SessionLogger {
   }
 
   /**
-   * Determine if a timed log is stale
+   * Determine if a timed log is stale.
+   * The staleTime is the time in milliseconds after the timed log is considered stale.
+   * When the timed log will be removed if accessed or a cleanup method is invoked.
    * @param timedLog The {@link TimedLog} instance
    */
   private isTimedLogStale(timedLog: TimedLog) {
