@@ -91,7 +91,6 @@ export type ReadContractQuery = ContractQuery & {
   isSuccess: boolean;
   /** The status of the read contract */
   status: CONTRACT_READ_STATUS;
-
   refetch: (
     options?: RefetchOptions | undefined
   ) => Promise<QueryObserverResult<unknown, ReadContractErrorType>>;
@@ -115,6 +114,11 @@ export type GenericContractReadQuery<Args, Data> = ReadContractQuery & {
   data: Data;
 };
 
+export type ContractWriteQueryFetchOptions = {
+  /** Chain id the contract is on */
+  chainId: number;
+};
+
 export function useContractWriteQuery<
   T extends ContractName,
   C extends ContractAbis[T],
@@ -123,10 +127,11 @@ export function useContractWriteQuery<
 >({
   contract,
   functionName,
+  chainId,
 }: {
   contract: T;
   functionName: FName;
-}): GenericContractWriteQuery<Args> {
+} & ContractWriteQueryFetchOptions): GenericContractWriteQuery<Args> {
   const [internalError, setInternalError] = useState<Error | null>(null);
   const {
     writeContract: write,
@@ -162,7 +167,7 @@ export function useContractWriteQuery<
       setInternalError(new Error('Failed to get contract address'));
       return;
     } */
-    /* 
+    /*
     if (Array.isArray(args)) {
       const missingArgs: Array<number> = [];
       args.forEach((arg, index) => {
@@ -182,6 +187,7 @@ export function useContractWriteQuery<
       abi: abi as Abi,
       functionName: functionName,
       args: args as ContractFunctionArgs,
+      chainId,
     });
   };
 
@@ -203,6 +209,8 @@ export type ContractReadQueryFetchOptions<Args = unknown> = {
   startEnabled?: boolean;
   /** The initial arguments to use when fetching the contract. */
   args?: Args;
+  /** Chain id the contract is on */
+  chainId: number;
 };
 
 export function useContractReadQuery<
@@ -216,6 +224,7 @@ export function useContractReadQuery<
   functionName,
   startEnabled = false,
   args: initialArgs,
+  chainId,
 }: {
   contract: T;
   functionName: FName;
@@ -243,6 +252,7 @@ export function useContractReadQuery<
     abi: abi as Abi,
     functionName: functionName,
     args: args as ContractFunctionArgs,
+    chainId,
   });
 
   const readContract: WriteContractFunction<Args> = ({ args }) => {
