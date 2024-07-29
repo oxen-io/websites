@@ -1,5 +1,6 @@
 'use client';
 
+import { ContractFunctionArgs } from 'viem';
 import { CHAIN, chains } from '../chains';
 import type { ReadContractData } from 'wagmi/query';
 import type { RewardRatePoolAbi } from '../abis';
