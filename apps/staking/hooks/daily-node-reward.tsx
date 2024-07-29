@@ -2,7 +2,7 @@
 
 import { useRewardRateQuery } from '@session/contracts/hooks/RewardRatePool';
 import { useTotalNodesQuery } from '@session/contracts/hooks/ServiceNodeRewards';
-import { mergeContractReadStatuses } from '@session/contracts/hooks/contract-hooks';
+import { CONTRACT_READ_STATUS, mergeContractReadStatuses } from '@session/contracts/hooks/contract-hooks';
 import { useMemo } from 'react';
 import { formatBigIntTokenValue } from '@session/util/maths';
 import { CHAIN, chains, SENT_DECIMALS } from '@session/contracts';
