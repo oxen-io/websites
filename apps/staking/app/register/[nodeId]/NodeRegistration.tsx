@@ -218,7 +218,7 @@ function RegisterButton({
   disabled?: boolean;
 }) {
   const dictionary = useTranslations('actionModules.register');
-  const { registerAndStake, stage, subStage, enabled } = useRegisterNode({
+  const { registerAndStake, stage, subStage } = useRegisterNode({
     blsPubKey,
     blsSignature,
     nodePubKey,
@@ -236,7 +236,7 @@ function RegisterButton({
       >
         {dictionary('button.submit', { amount: stakeAmountString })}
       </Button>
-      {enabled && (stage !== REGISTER_STAGE.APPROVE || subStage !== 'idle') ? (
+      {stage !== REGISTER_STAGE.APPROVE || subStage !== 'idle' ? (
         <QueryStatusInformation nodeId={nodePubKey} stage={stage} subStage={subStage} />
       ) : null}
     </>
