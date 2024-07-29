@@ -1,9 +1,14 @@
+'use client';
+
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { useTranslations } from 'next-intl';
 import { NodeCard, NodeCardText, NodeCardTitle } from '@/components/NodeCard';
 import { cn } from '@session/ui/lib/utils';
-import { StatusIndicator } from '@session/ui/components/StatusIndicator';
+import {
+  StatusIndicator,
+  type StatusIndicatorVariants,
+} from '@session/ui/components/StatusIndicator';
 import { PubKey } from '@/components/PubKey';
 import Link from 'next/link';
 import { Button, ButtonSkeleton } from '@session/ui/ui/button';
@@ -18,10 +23,11 @@ export type InfoNodeCardProps = HTMLAttributes<HTMLDivElement> & {
     dataTestId: ButtonDataTestId;
     ariaLabel: string;
   };
+  statusIndicatorColour?: StatusIndicatorVariants['status'];
 };
 
 export const InfoNodeCard = forwardRef<HTMLDivElement, InfoNodeCardProps>(
-  ({ className, pubKey, button, children, ...props }, ref) => {
+  ({ statusIndicatorColour, className, pubKey, button, children, ...props }, ref) => {
     const generalNodeDictionary = useTranslations('sessionNodes.general');
     const titleFormat = useTranslations('modules.title');
     return (
@@ -32,9 +38,11 @@ export const InfoNodeCard = forwardRef<HTMLDivElement, InfoNodeCardProps>(
       >
         <div className={cn('text-center sm:text-start', className)}>
           <div className="flex w-full cursor-pointer items-baseline gap-3 text-center align-middle sm:text-start">
-            <div className="-mr-2 scale-75 p-0 sm:mr-0 md:scale-100 md:p-0.5">
-              <StatusIndicator status="green" />
-            </div>
+            {statusIndicatorColour ? (
+              <div className="-mr-2 scale-75 p-0 sm:mr-0 md:scale-100 md:p-0.5">
+                <StatusIndicator status={statusIndicatorColour} />
+              </div>
+            ) : null}
             <NodeCardTitle className="inline-flex flex-wrap gap-2 text-sm md:text-lg">
               <span className="text-nowrap font-normal">
                 {titleFormat('format', { title: generalNodeDictionary('publicKeyShort') })}

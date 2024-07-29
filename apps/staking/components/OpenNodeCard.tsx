@@ -39,6 +39,7 @@ const OpenNodeCard = forwardRef<
       ref={ref}
       className={className}
       pubKey={pubKey}
+      statusIndicatorColour="blue"
       button={{
         ariaLabel: dictionary('viewButton.ariaLabel'),
         text: dictionary('viewButton.text'),
