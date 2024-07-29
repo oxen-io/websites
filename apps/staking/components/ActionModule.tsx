@@ -93,20 +93,26 @@ export const ActionModuleRow = ({
   tooltip: string;
   children: ReactNode;
 }) => (
-  <div className="flex flex-row flex-wrap items-center justify-between">
-    <span className="inline-flex items-center gap-2 text-nowrap align-middle">
-      {label}
-      <ActionModuleTooltip>{tooltip}</ActionModuleTooltip>
-    </span>
-    <div>{children}</div>
-  </div>
+  <>
+    <div className="flex flex-row flex-wrap items-center justify-between">
+      <span className="inline-flex items-center gap-2 text-nowrap align-middle">
+        {label}
+        <ActionModuleTooltip>{tooltip}</ActionModuleTooltip>
+      </span>
+      <div>{children}</div>
+    </div>
+    <ActionModuleDivider />
+  </>
 );
 
 export const ActionModuleRowSkeleton = () => (
-  <div className="flex flex-row flex-wrap items-center justify-between">
-    <Skeleton className="h-5 w-full max-w-32" />
-    <Skeleton className="h-5 w-full max-w-48" />
-  </div>
+  <>
+    <div className="flex flex-row flex-wrap items-center justify-between">
+      <Skeleton className="h-5 w-full max-w-32" />
+      <Skeleton className="h-5 w-full max-w-48" />
+    </div>
+    <ActionModuleDivider />
+  </>
 );
 
 export const ActionModuleDivider = () => <div className="bg-gray-dark h-px w-full" />;
