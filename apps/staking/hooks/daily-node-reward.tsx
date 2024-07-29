@@ -2,10 +2,10 @@
 
 import { useRewardRateQuery } from '@session/contracts/hooks/RewardRatePool';
 import { useTotalNodesQuery } from '@session/contracts/hooks/ServiceNodeRewards';
+import { mergeContractReadStatuses } from '@session/contracts/hooks/contract-hooks';
 import { useMemo } from 'react';
 import { formatBigIntTokenValue } from '@session/util/maths';
 import { CHAIN, chains, SENT_DECIMALS } from '@session/contracts';
-import { mergeContractReadStatuses } from '@session/contracts/hooks/contract-hooks';
 
 /**
  * Calculate the daily node reward of a node on the network based on the total number of nodes and the last block reward rate.
@@ -45,8 +45,8 @@ export default function useDailyNodeReward() {
 
   const dailyNodeReward = useMemo(() => {
     if (
-      totalNodesStatus === 'success' &&
-      rewardRateStatus === 'success' &&
+      totalNodesStatus === CONTRACT_READ_STATUS.SUCCESS &&
+      rewardRateStatus === CONTRACT_READ_STATUS.SUCCESS &&
       totalNodes &&
       rewardRate
     ) {
@@ -63,7 +63,7 @@ export default function useDailyNodeReward() {
   }
 
   const status = useMemo(
-    () => mergeContractReadStatuses(totalNodesStatus, rewardRateStatus),
+    () => mergeContractReadStatuses([totalNodesStatus, rewardRateStatus]),
     [totalNodesStatus, rewardRateStatus]
   );
 
