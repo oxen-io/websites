@@ -11,7 +11,7 @@ import { Button, ButtonSkeleton } from '@session/ui/ui/button';
 import { bigIntToNumber, formatNumber } from '@session/util/maths';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
-import { ActionModuleDivider, ActionModuleRow, ActionModuleRowSkeleton } from '../ActionModule';
+import { ActionModuleRow, ActionModuleRowSkeleton } from '@/components/ActionModule';
 import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-client';
 import { getOpenNodes } from '@/lib/queries/getOpenNodes';
 import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';

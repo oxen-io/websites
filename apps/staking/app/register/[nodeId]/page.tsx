@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import ActionModule from '../../ActionModule';
+import ActionModule from '../../../components/ActionModule';
 import NodeRegistration, { NodeRegistrationFormSkeleton } from './NodeRegistration';
 import { Suspense } from 'react';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';

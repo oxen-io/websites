@@ -7,7 +7,7 @@ import { Loading } from '@session/ui/components/loading';
 import { Button, ButtonSkeleton } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
-import { ActionModuleDivider, ActionModuleRow, ActionModuleRowSkeleton } from '../../ActionModule';
+import { ActionModuleRow, ActionModuleRowSkeleton } from '../../../components/ActionModule';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import type { LoadRegistrationsResponse } from '@session/sent-staking-js/client';
 import { getPendingNodes } from '@/lib/queries/getPendingNodes';
@@ -18,7 +18,7 @@ import { formatBigIntTokenValue } from '@session/util/maths';
 import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import { getDateFromUnixTimestampSeconds } from '@session/util/date';
 import { notFound } from 'next/navigation';
-import { generatePendingNodes } from '@session/sent-staking-js/test';
+import { generateMockRegistrations } from '@session/sent-staking-js/test';
 import useRegisterNode, { type ContractWriteStatus, REGISTER_STAGE } from '@/hooks/registerNode';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import type { VariantProps } from 'class-variance-authority';
@@ -55,7 +55,7 @@ export default function NodeRegistration({ nodeId }: { nodeId: string }) {
       showThreeMockNodes ||
       showManyMockNodes
     ) {
-      return generatePendingNodes({ userAddress: address!, numberOfNodes: 1 })[0];
+      return generateMockRegistrations({ userAddress: address!, numberOfNodes: 1 })[0];
     }
     return data?.registrations?.find((node) => areHexesEqual(node.pubkey_ed25519, nodeId));
   }, [
@@ -218,7 +218,7 @@ function RegisterButton({
   disabled?: boolean;
 }) {
   const dictionary = useTranslations('actionModules.register');
-  const { registerAndStake, stage, subStage } = useRegisterNode({
+  const { registerAndStake, stage, subStage, enabled } = useRegisterNode({
     blsPubKey,
     blsSignature,
     nodePubKey,
@@ -236,7 +236,7 @@ function RegisterButton({
       >
         {dictionary('button.submit', { amount: stakeAmountString })}
       </Button>
-      {stage !== REGISTER_STAGE.APPROVE || subStage !== 'idle' ? (
+      {enabled && (stage !== REGISTER_STAGE.APPROVE || subStage !== 'idle') ? (
         <QueryStatusInformation nodeId={nodePubKey} stage={stage} subStage={subStage} />
       ) : null}
     </>
@@ -284,14 +284,12 @@ export function NodeRegistrationForm({
       >
         <PubKey pubKey={node.pubkey_ed25519} force="collapse" alwaysShowCopyButton />
       </ActionModuleRow>
-      <ActionModuleDivider />
       <ActionModuleRow
         label={registerCardDictionary('type')}
         tooltip={registerCardDictionary('typeDescription')}
       >
         {registerCardDictionary(node.type === 'solo' ? 'solo' : 'multi')}
       </ActionModuleRow>
-      <ActionModuleDivider />
       <ActionModuleRow
         label={dictionary('preparedAtTimestamp')}
         tooltip={dictionary('preparedAtTimestampDescription')}
@@ -307,7 +305,6 @@ export function NodeRegistrationForm({
           </div>
         </Tooltip>
       </ActionModuleRow>
-      <ActionModuleDivider />
       {node.type === 'solo' ? (
         <ActionModuleRow
           label={actionModuleSharedDictionary('stakeAmount')}
@@ -316,7 +313,6 @@ export function NodeRegistrationForm({
           {stakeAmountString} {SENT_SYMBOL}
         </ActionModuleRow>
       ) : null}
-      <ActionModuleDivider />
       <RegisterButton
         nodePubKey={node.pubkey_ed25519}
         blsPubKey={node.pubkey_bls}
@@ -334,13 +330,9 @@ export function NodeRegistrationFormSkeleton() {
   return (
     <div className="flex flex-col gap-4">
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ButtonSkeleton rounded="lg" size="lg" />
     </div>
   );

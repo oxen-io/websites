@@ -65,11 +65,6 @@ const nextConfig = {
         destination: '/stake',
         permanent: false,
       },
-      {
-        source: '/register/:node',
-        destination: '/stake/:node/register',
-        permanent: false,
-      },
     ];
   },
   rewrites: async () => {
