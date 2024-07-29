@@ -5,7 +5,7 @@ import { useTotalNodesQuery } from '@session/contracts/hooks/ServiceNodeRewards'
 import { CONTRACT_READ_STATUS, mergeContractReadStatuses } from '@session/contracts/hooks/contract-hooks';
 import { useMemo } from 'react';
 import { formatBigIntTokenValue } from '@session/util/maths';
-import { SENT_DECIMALS } from '@session/contracts';
+import { CHAIN, chains, SENT_DECIMALS } from '@session/contracts';
 
 /**
  * Calculate the daily node reward of a node on the network based on the total number of nodes and the last block reward rate.
@@ -35,13 +35,13 @@ export default function useDailyNodeReward() {
     status: totalNodesStatus,
     error: errorNodesQuery,
     refetch: refetchTotalNodes,
-  } = useTotalNodesQuery({ startEnabled: true, args: [] });
+  } = useTotalNodesQuery({ startEnabled: true, args: [], chainId: chains[CHAIN.TESTNET].id });
   const {
     rewardRate,
     status: rewardRateStatus,
     error: errorRewardRateQuery,
     refetch: refetchRewardRate,
-  } = useRewardRateQuery({ startEnabled: true, args: [] });
+  } = useRewardRateQuery({ startEnabled: true, args: [], chainId: chains[CHAIN.TESTNET].id });
 
   const dailyNodeReward = useMemo(() => {
     if (

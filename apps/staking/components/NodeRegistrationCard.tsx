@@ -6,13 +6,13 @@ import { forwardRef, type HTMLAttributes } from 'react';
 import type { Registration } from '@session/sent-staking-js/client';
 import { InfoNodeCard, NodeItem, NodeItemLabel, NodeItemValue } from '@/components/InfoNodeCard';
 
-const PendingNodeCard = forwardRef<
+const NodeRegistrationCard = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement> & { node: Registration }
 >(({ className, node, ...props }, ref) => {
   const dictionary = useTranslations('nodeCard.pending');
   const titleFormat = useTranslations('modules.title');
-  
+
   const { pubkey_ed25519: pubKey, type: nodeType } = node;
 
   return (
@@ -24,7 +24,7 @@ const PendingNodeCard = forwardRef<
         ariaLabel: dictionary('registerButton.ariaLabel'),
         text: dictionary('registerButton.text'),
         dataTestId: ButtonDataTestId.Node_Card_Register,
-        link: `/stake/${pubKey}/register`,
+        link: `/register/${pubKey}`,
       }}
       {...props}
     >
@@ -36,6 +36,6 @@ const PendingNodeCard = forwardRef<
   );
 });
 
-PendingNodeCard.displayName = 'PendingNodeCard';
+NodeRegistrationCard.displayName = 'NodeRegistrationCard';
 
-export { PendingNodeCard };
+export { NodeRegistrationCard };

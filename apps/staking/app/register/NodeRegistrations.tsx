@@ -1,24 +1,21 @@
 'use client';
 
-import {
-  ModuleGrid,
-  ModuleGridContent,
-  ModuleGridHeader,
-  ModuleGridTitle,
-} from '@session/ui/components/ModuleGrid';
 import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import { useMemo } from 'react';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { getPendingNodes } from '@/lib/queries/getPendingNodes';
-import { PendingNodeCard } from '@/components/PendingNodeCard';
+import { NodeRegistrationCard } from '@/components/NodeRegistrationCard';
 import { useTranslations } from 'next-intl';
-import { cn } from '@session/ui/lib/utils';
-import { generatePendingNodes } from '@session/sent-staking-js/test';
-import { QUERY } from '@/lib/constants';
+import { generateMockRegistrations } from '@session/sent-staking-js/test';
+import { QUERY, URL } from '@/lib/constants';
 import { isProduction } from '@/lib/env';
+import { NodesListSkeleton } from '@/components/NodesListModule';
+import { ModuleGridInfoContent } from '@session/ui/components/ModuleGrid';
+import { externalLink } from '@/lib/locale-defaults';
+import { WalletModalButtonWithLocales } from '@/components/WalletModalButtonWithLocales';
 
-export default function PendingNodesModule() {
+export default function NodeRegistrations() {
   const showOneMockNode = useFeatureFlag(FEATURE_FLAG.MOCK_PENDING_NODES_ONE);
   const showTwoMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_PENDING_NODES_TWO);
   const showThreeMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_PENDING_NODES_THREE);
@@ -41,7 +38,6 @@ export default function PendingNodesModule() {
     );
   }
 
-  const dictionary = useTranslations('modules.pendingNodes');
   const { address, isConnected } = useWallet();
 
   const { data, isLoading } = useStakingBackendQueryWithParams(
@@ -61,13 +57,13 @@ export default function PendingNodesModule() {
     }
     if (address) {
       if (showManyMockNodes) {
-        return generatePendingNodes({ userAddress: address, numberOfNodes: 12 });
+        return generateMockRegistrations({ userAddress: address, numberOfNodes: 12 });
       } else if (showThreeMockNodes) {
-        return generatePendingNodes({ userAddress: address, numberOfNodes: 3 });
+        return generateMockRegistrations({ userAddress: address, numberOfNodes: 3 });
       } else if (showTwoMockNodes) {
-        return generatePendingNodes({ userAddress: address, numberOfNodes: 2 });
+        return generateMockRegistrations({ userAddress: address, numberOfNodes: 2 });
       } else if (showOneMockNode) {
-        return generatePendingNodes({ userAddress: address, numberOfNodes: 1 });
+        return generateMockRegistrations({ userAddress: address, numberOfNodes: 1 });
       }
     }
     return data?.registrations ?? [];
@@ -81,28 +77,40 @@ export default function PendingNodesModule() {
     showManyMockNodes,
   ]);
 
-  /** NOTE: The parent div needs to be rendered while loading in case nodes are returned, this
-   *  allows the height transition to work.
-   *  Once we know there are no nodes (loading is done and there are no nodes) it can be null */
-  return isLoading || nodes.length ? (
-    <div
-      className={cn(
-        'col-span-2 grid h-min w-full transition-all duration-500 ease-in-out motion-reduce:transition-none',
-        nodes.length ? 'max-h-96' : '-mb-6 max-h-0'
-      )}
-    >
-      {nodes.length ? (
-        <ModuleGrid variant="section" colSpan={2} className="max-h-96">
-          <ModuleGridHeader>
-            <ModuleGridTitle>{dictionary('title')}</ModuleGridTitle>
-          </ModuleGridHeader>
-          <ModuleGridContent className="h-full md:overflow-y-auto">
-            {nodes.map((node) => (
-              <PendingNodeCard key={node.pubkey_ed25519} node={node} />
-            ))}
-          </ModuleGridContent>
-        </ModuleGrid>
-      ) : null}
-    </div>
-  ) : null;
+  return address ? (
+    isLoading ? (
+      <NodesListSkeleton />
+    ) : nodes.length ? (
+      nodes.map((node) => <NodeRegistrationCard key={node.pubkey_ed25519} node={node} />)
+    ) : (
+      <NoNodes />
+    )
+  ) : (
+    <NoWallet />
+  );
+}
+
+function NoWallet() {
+  const dictionary = useTranslations('modules.nodeRegistrations');
+  return (
+    <ModuleGridInfoContent>
+      <p>{dictionary('noWalletP1')}</p>
+      <p>
+        {dictionary.rich('noNodesP2', { link: externalLink(URL.SESSION_NODE_SOLO_SETUP_DOCS) })}
+      </p>
+      <WalletModalButtonWithLocales rounded="md" size="lg" />
+    </ModuleGridInfoContent>
+  );
+}
+
+function NoNodes() {
+  const dictionary = useTranslations('modules.nodeRegistrations');
+  return (
+    <ModuleGridInfoContent>
+      <p>{dictionary('noNodesP1')}</p>
+      <p>
+        {dictionary.rich('noNodesP2', { link: externalLink(URL.SESSION_NODE_SOLO_SETUP_DOCS) })}
+      </p>
+    </ModuleGridInfoContent>
+  );
 }

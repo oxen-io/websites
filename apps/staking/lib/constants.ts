@@ -80,6 +80,7 @@ type LinkItem = {
 
 export const ROUTES: LinkItem[] = [
   { dictionaryKey: 'stake', href: '/stake' },
+  { dictionaryKey: 'register', href: '/register' },
   { dictionaryKey: 'myStakes', href: '/mystakes' },
   { dictionaryKey: 'faucet', href: '/faucet' },
 ] as const;

@@ -11,7 +11,7 @@ import { Button, ButtonSkeleton } from '@session/ui/ui/button';
 import { bigIntToNumber, formatNumber } from '@session/util/maths';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
-import { ActionModuleDivider, ActionModuleRow, ActionModuleRowSkeleton } from '../ActionModule';
+import { ActionModuleRow, ActionModuleRowSkeleton } from '@/components/ActionModule';
 import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-client';
 import { getOpenNodes } from '@/lib/queries/getOpenNodes';
 import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
@@ -61,21 +61,18 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
           <NodeContributorList contributors={node.contributions} forceExpand showEmptySlots />
         </span>
       </ActionModuleRow>
-      <ActionModuleDivider />
       <ActionModuleRow
         label={sessionNodeStakingDictionary('stakedAmount')}
         tooltip={sessionNodeStakingDictionary('stakedAmountDescription')}
       >
         {formattedTotalStakedAmount} {SENT_SYMBOL}
       </ActionModuleRow>
-      <ActionModuleDivider />
       <ActionModuleRow
         label={sessionNodeDictionary('publicKeyShort')}
         tooltip={sessionNodeDictionary('publicKeyDescription')}
       >
         <PubKey pubKey={node.service_node_pubkey} force="collapse" alwaysShowCopyButton />
       </ActionModuleRow>
-      <ActionModuleDivider />
       <ActionModuleRow
         label={sessionNodeDictionary('operatorAddress')}
         tooltip={sessionNodeDictionary('operatorAddressTooltip')}
@@ -84,7 +81,6 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
           <PubKey pubKey={node.contributions[0]?.address} force="collapse" alwaysShowCopyButton />
         ) : null}
       </ActionModuleRow>
-      <ActionModuleDivider />
       <ActionModuleRow
         label={sessionNodeDictionary('operatorFee')}
         tooltip={sessionNodeDictionary('operatorFeeDescription')}
@@ -92,7 +88,6 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
         {/** TODO: replace this */}
         {formatPercentage(node.fee / 10000)}
       </ActionModuleRow>
-      <ActionModuleDivider />
       {/* <SessionTokenInput
         type="number"
         value={value}
@@ -113,17 +108,11 @@ export function NodeStakingFormSkeleton() {
   return (
     <div className="flex flex-col gap-4">
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ButtonSkeleton rounded="lg" size="lg" />
     </div>
   );

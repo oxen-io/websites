@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
-import ActionModule from '../ActionModule';
-import { BlockExplorerLink, BlockExplorerLinkText } from './BlockExplorerLink';
+import ActionModule from '@/components/ActionModule';
+import { BlockExplorerLink, BlockExplorerLinkText } from '@/components/BlockExplorerLink';
 import NodeStaking, { NodeStakingFormSkeleton } from './NodeStaking';
 import { Suspense } from 'react';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';

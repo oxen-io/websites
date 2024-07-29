@@ -390,7 +390,7 @@ export const generateNodeRegistration = ({
   };
 };
 
-export const generatePendingNodes = ({
+export const generateMockRegistrations = ({
   userAddress,
   numberOfNodes,
 }: {

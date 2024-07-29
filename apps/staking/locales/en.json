@@ -24,6 +24,7 @@
     "docs": "Docs",
     "tokenSite": "Session Token",
     "support": "Support",
+    "register": "Register",
     "faucet": "Faucet",
     "hamburgerDropdown": {
       "ariaLabel": "Open navigation menu",
@@ -171,8 +172,15 @@
       "learnMoreButtonText": "Learn More",
       "learnMoreButtonAria": "Navigate to the Session Node documentation page."
     },
-    "pendingNodes": {
-      "title": "Pending Session Nodes"
+    "nodeRegistrations": {
+      "title": "Your Prepared Registrations",
+      "showHiddenText": "Show Hidden",
+      "landingP1": "Click on a node you have prepared to stake and confirm registration.",
+      "noWalletP1": "Connect your wallet to view Session Nodes that you have prepared registrations for.",
+      "noNodesP1": "You have not prepared registrations for any Session Nodes.",
+      "noNodesP2": "Learn how to prepare registration for your Session Node <link>here</link>.",
+      "learnMoreButtonText": "Learn More",
+      "learnMoreButtonAria": "Navigate to the Session Node documentation page."
     },
     "stakedNodes": {
       "title": "My Stakes",
@@ -191,8 +199,8 @@
       "refetchSuccess": "Successfully refetched {module}"
     },
     "balance": {
-      "title": "Total Staked {tokenSymbol}",
-      "description": "Total {tokenSymbol} in your wallet."
+      "title": "Total Staked",
+      "description": "Total {tokenSymbol} you have staked to nodes."
     },
     "dailyRewards": {
       "title": "Daily Node Rewards",
@@ -208,7 +216,17 @@
     },
     "claim": {
       "title": "Claim",
-      "error": "Failed to claim rewards."
+      "dialog": {
+        "title": "Claim Rewards",
+        "claimFee": "Claim Fee",
+        "claimFeeTooltip": "The amount of {gasTokenSymbol} this transaction will use. <link>Learn more</link>",
+        "amountClaimable": "Amount Claimable",
+        "amountClaimableTooltip": "Amount of {tokenSymbol} rewards able to be claimed.",
+        "buttons": {
+          "submit": "Claim",
+          "submitAria": "Claim {tokenAmount} {tokenSymbol} with a claim gas fee of {gasAmount} {gasSymbol}"
+        }
+      }
     },
     "price": {
       "title": "Price",

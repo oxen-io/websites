@@ -1,6 +1,7 @@
 'use client';
 
 import { ContractFunctionArgs } from 'viem';
+import { CHAIN, chains } from '../chains';
 import type { ReadContractData } from 'wagmi/query';
 import type { RewardRatePoolAbi } from '../abis';
 import {
@@ -28,6 +29,7 @@ export function useRewardRateQuery(
   } = useContractReadQuery({
     contract: 'RewardRatePool',
     functionName: 'rewardRate',
+    chainId: chains[CHAIN.TESTNET].id,
     startEnabled: props?.startEnabled ?? false,
     args: props?.args,
   });
