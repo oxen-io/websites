@@ -175,7 +175,7 @@
     "nodeRegistrations": {
       "title": "Your Prepared Registrations",
       "showHiddenText": "Show Hidden",
-      "landingP1": "Click on a node that you have prepared registration for to confirm registration and stake.",
+      "landingP1": "Click on a node you have prepared to stake and confirm registration.",
       "noWalletP1": "Connect your wallet to view Session Nodes that you have prepared registrations for.",
       "noNodesP1": "You have not prepared registrations for any Session Nodes.",
       "noNodesP2": "Learn how to prepare registration for your Session Node <link>here</link>.",
