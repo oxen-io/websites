@@ -28,6 +28,7 @@ export function useRewardRateQuery(
   } = useContractReadQuery({
     contract: 'RewardRatePool',
     functionName: 'rewardRate',
+    chainId: chains[CHAIN.TESTNET].id,
     startEnabled: props?.startEnabled ?? false,
     args: props?.args,
   });
