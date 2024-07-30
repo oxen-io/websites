@@ -1,115 +1,29 @@
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import type { Abi, ContractFunctionArgs, ContractFunctionName, ReadContractErrorType } from 'viem';
-import { useReadContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
-import type { WaitForTransactionReceiptErrorType, WriteContractErrorType } from 'wagmi/actions';
+import { useReadContract } from 'wagmi';
 import { ReadContractData } from 'wagmi/query';
 import { ContractAbis, Contracts } from '../abis';
-import { CHAIN } from '../chains';
+import { CHAIN, chains } from '../chains';
 import { addresses, type ContractName } from '../constants';
+import type { GenericContractStatus } from './useContractWriteQuery';
 
-/**
- * The read status of a contract.
- */
-export enum CONTRACT_READ_STATUS {
-  /** The contract read is pending, this is the initial state when the query exists but has not begun to run. */
-  PENDING,
-  /** The contract read is loading. */
-  LOADING,
-  /** The contract read was successful. */
-  SUCCESS,
-  /** The contract read had an error. */
-  ERROR,
-}
+export type ReadContractFunction<Args> = (args?: Args) => void;
 
-/**
- * Parses the contract read status based on the provided flags.
- *
- * @param flags - The flags indicating the status of the contract read operation.
- * @param flags.isPending - Indicates if the contract read operation is pending.
- * @param flags.isLoading - Indicates if the contract read operation is loading.
- * @param flags.isSuccess - Indicates if the contract read operation is successful.
- * @param flags.isError - Indicates if the contract read operation encountered an error.
- * @returns The contract read status.
- */
-const parseContractReadStatus = ({
-  isPending,
-  isLoading,
-  isSuccess,
-  isError,
-}: {
-  isPending: boolean;
-  isLoading: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-}): CONTRACT_READ_STATUS => {
-  if (isError) return CONTRACT_READ_STATUS.ERROR;
-  if (isSuccess) return CONTRACT_READ_STATUS.SUCCESS;
-  if (isLoading) return CONTRACT_READ_STATUS.LOADING;
-  if (isPending) return CONTRACT_READ_STATUS.PENDING;
-  return CONTRACT_READ_STATUS.PENDING;
-};
-
-/**
- * Merges an array of contract read statuses into a single status.
- * If the array contains an ERROR status, the function returns ERROR.
- * Otherwise, it returns the minimum status value from the array.
- *
- * @param statuses - An array of contract read statuses.
- * @returns The merged contract read status.
- */
-export const mergeContractReadStatuses = (
-  statuses: Array<CONTRACT_READ_STATUS>
-): CONTRACT_READ_STATUS => {
-  if (statuses.includes(CONTRACT_READ_STATUS.ERROR)) return CONTRACT_READ_STATUS.ERROR;
-  return Math.min(...statuses);
-};
-
-type WriteContractFunction<Args> = ({ args }: { args: Args }) => void;
-type ReadContractFunction<Args> = ({ args }: { args: Args }) => void;
-
-export type ContractQuery = {
-  /** Is the contract write pending */
-  isPending: boolean;
-  /** Was there an error with the transaction */
-  isError: boolean;
-  /** The error if an error occurred */
-  error: Error | WriteContractErrorType | WaitForTransactionReceiptErrorType | null;
-};
-
-export type WriteContractQuery = ContractQuery & {
-  /** Is the transaction being confirmed */
-  isConfirming: boolean;
-  /** Is the transaction confirmed */
-  isConfirmed: boolean;
-};
-
-export type ReadContractQuery = ContractQuery & {
-  /** Is the contract read pending */
-  isLoading: boolean;
-  /** Is the contract read successful and ready to display data*/
-  isSuccess: boolean;
+export type ContractReadQueryProps = {
   /** The status of the read contract */
-  status: CONTRACT_READ_STATUS;
+  status: GenericContractStatus;
+  /** Contract read error */
+  error: ReadContractErrorType | null;
+  /** Re-fetch the contract read */
   refetch: (
     options?: RefetchOptions | undefined
   ) => Promise<QueryObserverResult<unknown, ReadContractErrorType>>;
 };
 
-export type GenericContractWriteQuery<Args> = WriteContractQuery & {
-  /** Write to the contract */
-  writeContract: WriteContractFunction<Args>;
-  /** Throw an error */
-  throwError: (error: Error) => void;
-  writeStatus: 'error' | 'pending' | 'idle' | 'success';
-  transactionStatus: 'error' | 'pending' | 'success';
-};
-
-export type GenericContractReadQuery<Args, Data> = ReadContractQuery & {
+export type UseContractRead<Args, Data> = ContractReadQueryProps & {
   /** Read the contract */
   readContract: ReadContractFunction<Args>;
-  /** Throw an error */
-  throwError: (error: Error) => void;
   /** The data from the contract */
   data: Data;
 };
@@ -117,10 +31,8 @@ export type GenericContractReadQuery<Args, Data> = ReadContractQuery & {
 export type ContractReadQueryFetchOptions = {
   /** Set startEnabled to true to enable automatic fetching when the query mounts or changes query keys. To manually fetch the query, use the readContract method returned from the useContractReadQuery instance. Defaults to false. */
   startEnabled?: boolean;
-  /** The initial arguments to use when fetching the contract. */
-  args?: Args;
-  /** Chain id the contract is on */
-  chainId: number;
+  /** Chain the contract is on */
+  chain: CHAIN;
 };
 
 export function useContractReadQuery<
@@ -133,81 +45,50 @@ export function useContractReadQuery<
   contract,
   functionName,
   startEnabled = false,
-  args: initialArgs,
-  chainId,
+  defaultArgs,
+  chain,
 }: {
   contract: T;
+  defaultArgs?: Args;
   functionName: FName;
-} & ContractReadQueryFetchOptions<Args>): GenericContractReadQuery<Args, Data> {
-  const [internalError, setInternalError] = useState<Error | null>(null);
-  const [args, setArgs] = useState<Args | null>(initialArgs ?? null);
-  const enabled = useMemo(() => startEnabled || args !== null, [startEnabled, args]);
+} & ContractReadQueryFetchOptions): UseContractRead<Args, Data> {
+  const [readEnabled, setReadEnabled] = useState<boolean>(startEnabled);
+  const [contractArgs, setContractArgs] = useState<Args | undefined>(defaultArgs);
 
   const abi = useMemo(() => Contracts[contract], [contract]);
-  const address = useMemo(() => addresses[contract][CHAIN.TESTNET], [contract]);
+  const address = useMemo(() => addresses[contract][chain], [contract, chain]);
 
-  const {
-    data,
-    error: readError,
-    isError: isReadError,
-    isPending,
-    isLoading,
-    isSuccess,
-    refetch,
-  } = useReadContract({
+  const { data, status, refetch, error } = useReadContract({
     query: {
-      enabled,
+      enabled: readEnabled,
     },
     address: address,
     abi: abi as Abi,
     functionName: functionName,
-    args: args as ContractFunctionArgs,
-    chainId,
+    args: contractArgs as ContractFunctionArgs,
+    chainId: chains[chain].id,
   });
 
-  const readContract: WriteContractFunction<Args> = ({ args }) => {
-    if (!address) {
-      setInternalError(new Error('Failed to get contract address'));
-      return;
-    }
-
-    if (Array.isArray(args)) {
-      const missingArgs: Array<number> = [];
-      args.forEach((arg, index) => {
-        if (arg === undefined || arg === null) {
-          missingArgs.push(index);
-        }
-      });
-
-      if (missingArgs.length) {
-        setInternalError(new Error(`Missing arguments at index: ${missingArgs.join(', ')}`));
-        return;
-      }
-    }
-
-    setArgs(args);
+  const readContract: ReadContractFunction<Args> = (args) => {
+    if (args) setContractArgs(args);
+    setReadEnabled(true);
   };
-
-  const isError = useMemo(
-    () => internalError !== null || isReadError,
-    [internalError, isReadError]
-  );
-  const error = useMemo(() => internalError ?? readError, [internalError, readError]);
-  const status = useMemo(
-    () => parseContractReadStatus({ isPending, isLoading, isSuccess, isError }),
-    [isPending, isLoading, isSuccess, isError]
-  );
 
   return {
     data: data as Data,
     readContract,
     status,
-    isPending,
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-    throwError: setInternalError,
     refetch,
+    error,
   };
 }
+
+export const mergeContractReadStatuses = (
+  status1: GenericContractStatus,
+  status2: GenericContractStatus
+) => {
+  if (status1 === status2) return status1;
+  if (status1 === 'error' || status2 === 'error') return 'error';
+  if (status1 === 'pending' || status2 === 'pending') return 'pending';
+  return 'pending';
+};
