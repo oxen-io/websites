@@ -1,19 +1,12 @@
 'use client';
 
-import { type Address, type ContractFunctionArgs, type SimulateContractErrorType } from 'viem';
+import { type Address } from 'viem';
 import type { ReadContractData } from 'wagmi/query';
 import { ServiceNodeRewardsAbi } from '../abis';
-import {
-  ContractReadQueryFetchOptions,
-  ReadContractQuery,
-  useContractReadQuery,
-  useContractWriteQuery,
-  WriteContractQuery,
-} from './contract-hooks';
-import { useSimulateContract } from 'wagmi';
-import { useEffect, useMemo, useState } from 'react';
-import { addresses } from '../constants';
-import type { WriteContractErrorType } from 'wagmi/actions';
+import { type ContractReadQueryProps, useContractReadQuery } from './useContractReadQuery';
+import { useMemo } from 'react';
+import { type ContractWriteQueryProps, useContractWriteQuery } from './useContractWriteQuery';
+import { useChain } from './useChain';
 
 export type ClaimRewardsQuery = WriteContractQuery & {
   /** Claim rewards */
@@ -84,18 +77,15 @@ export function useUpdateRewardsBalanceQuery({
   };
 }
 
-export type TotalNodesQuery = ReadContractQuery & {
+export type TotalNodesQuery = ContractReadQueryProps & {
   /** Update rewards balance */
   getTotalNodes: () => void;
   /** The total number of nodes */
   totalNodes: ReadContractData<typeof ServiceNodeRewardsAbi, 'totalNodes', []>;
 };
 
-export function useTotalNodesQuery(
-  props?: ContractReadQueryFetchOptions<
-    ContractFunctionArgs<typeof ServiceNodeRewardsAbi, 'pure' | 'view', 'totalNodes'>
-  >
-): TotalNodesQuery {
+export function useTotalNodesQuery(): TotalNodesQuery {
+  const chain = useChain();
   const {
     data: totalNodes,
     readContract,
@@ -103,17 +93,13 @@ export function useTotalNodesQuery(
   } = useContractReadQuery({
     contract: 'ServiceNodeRewards',
     functionName: 'totalNodes',
-    startEnabled: props?.startEnabled ?? false,
-    args: props?.args,
+    startEnabled: true,
+    chain,
   });
-
-  const getTotalNodes = () => {
-    readContract({ args: [] });
-  };
 
   return {
     totalNodes,
-    getTotalNodes,
+    getTotalNodes: readContract,
     ...rest,
   };
 }
