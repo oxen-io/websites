@@ -10,20 +10,26 @@ const contracts = [
 export type ContractName = (typeof contracts)[number];
 
 // TODO - Replace Mainnet addresses with the correct addresses once they are available
-export const addresses: Record<ContractName, Record<CHAIN.MAINNET | CHAIN.TESTNET, Address>> = {
+export const addresses: Record<ContractName, Record<CHAIN, Address>> = {
   SENT: {
     /** @deprecated - The Mainnet value is a mock value */
     [CHAIN.MAINNET]: '0x7FBDC29b81e410eB0eaE75Dca64a76d898EAc4A9',
+    /** @deprecated - The Eth value is a mock value */
+    [CHAIN.ETHEREUM]: '0x7FBDC29b81e410eB0eaE75Dca64a76d898EAc4A9',
     [CHAIN.TESTNET]: '0x7FBDC29b81e410eB0eaE75Dca64a76d898EAc4A9',
   },
   ServiceNodeRewards: {
     /** @deprecated - The Mainnet value is a mock value */
     [CHAIN.MAINNET]: '0xEF43cd64528eA89966E251d4FE17c660222D2c9d',
+    /** @deprecated - The Eth value is a mock value */
+    [CHAIN.ETHEREUM]: '0xEF43cd64528eA89966E251d4FE17c660222D2c9d',
     [CHAIN.TESTNET]: '0xEF43cd64528eA89966E251d4FE17c660222D2c9d',
   },
   RewardRatePool: {
     /** @deprecated - The Mainnet value is a mock value */
     [CHAIN.MAINNET]: '0x408bCc6C9b942ECc4F289C080d2A1a2a3617Aff8',
+    /** @deprecated - The Eth value is a mock value */
+    [CHAIN.ETHEREUM]: '0x408bCc6C9b942ECc4F289C080d2A1a2a3617Aff8',
     [CHAIN.TESTNET]: '0x408bCc6C9b942ECc4F289C080d2A1a2a3617Aff8',
   },
 } as const;
