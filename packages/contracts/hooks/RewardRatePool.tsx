@@ -1,27 +1,21 @@
 'use client';
 
-import { ContractFunctionArgs } from 'viem';
-import { CHAIN, chains } from '../chains';
 import type { ReadContractData } from 'wagmi/query';
 import type { RewardRatePoolAbi } from '../abis';
-import {
-  ContractReadQueryFetchOptions,
-  ReadContractQuery,
-  useContractReadQuery,
-} from './contract-hooks';
+import { type ContractReadQueryProps, useContractReadQuery } from './useContractReadQuery';
+import { useChain } from './useChain';
 
-export type RewardRateQuery = ReadContractQuery & {
+type RewardRate = ReadContractData<typeof RewardRatePoolAbi, 'rewardRate', []>;
+
+export type RewardRateQuery = ContractReadQueryProps & {
   /** Get the reward rate */
   getRewardRate: () => void;
   /** The reward rate */
-  rewardRate: ReadContractData<typeof RewardRatePoolAbi, 'rewardRate', []>;
+  rewardRate: RewardRate;
 };
 
-export function useRewardRateQuery(
-  props?: ContractReadQueryFetchOptions<
-    ContractFunctionArgs<typeof RewardRatePoolAbi, 'pure' | 'view', 'rewardRate'>
-  >
-): RewardRateQuery {
+export function useRewardRateQuery(): RewardRateQuery {
+  const chain = useChain();
   const {
     data: rewardRate,
     readContract,
@@ -29,18 +23,13 @@ export function useRewardRateQuery(
   } = useContractReadQuery({
     contract: 'RewardRatePool',
     functionName: 'rewardRate',
-    chainId: chains[CHAIN.TESTNET].id,
-    startEnabled: props?.startEnabled ?? false,
-    args: props?.args,
+    startEnabled: true,
+    chain,
   });
-
-  const getRewardRate = () => {
-    readContract({ args: [] });
-  };
 
   return {
     rewardRate,
-    getRewardRate,
+    getRewardRate: readContract,
     ...rest,
   };
 }
