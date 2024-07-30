@@ -1,105 +1,84 @@
 'use client';
 
-import { Address, ContractFunctionArgs } from 'viem';
+import { Address } from 'viem';
 import { useAccount } from 'wagmi';
 import { ReadContractData } from 'wagmi/query';
 import { SENTAbi } from '../abis';
-import {
-  CONTRACT_READ_STATUS,
-  ContractReadQueryFetchOptions,
-  ReadContractQuery,
-  useContractReadQuery,
-  useContractWriteQuery,
-} from './contract-hooks';
+import { type ContractReadQueryProps, useContractReadQuery } from './useContractReadQuery';
 import type { WriteContractErrorType } from 'wagmi/actions';
-import type { ContractWriteStatus } from './ServiceNodeRewards';
-import { CHAIN, chains } from '../chains';
 import { useEffect, useMemo, useState } from 'react';
 import { isProduction } from '@session/util/env';
+import { formatBigIntTokenValue, formatNumber } from '@session/util/maths';
+import { SENT_DECIMALS, SENT_SYMBOL } from '../constants';
+import { useContractWriteQuery, type WriteContractStatus } from './useContractWriteQuery';
+import { useChain } from './useChain';
 
-export type SENTBalanceQuery = ReadContractQuery & {
+export const formatSENTBigInt = (value?: bigint, decimals?: number, hideSymbol?: boolean) =>
+  `${value ? formatBigIntTokenValue(value, SENT_DECIMALS, decimals) : 0}${hideSymbol ? '' : ` ${SENT_SYMBOL}`}`;
+
+export const formatSENTNumber = (value?: number, decimals?: number, hideSymbol?: boolean) =>
+  `${value ? formatNumber(value, decimals) : 0}${hideSymbol ? '' : ` ${SENT_SYMBOL}`}`;
+
+type SENTBalance = ReadContractData<typeof SENTAbi, 'balanceOf', [Address]>;
+
+export type SENTBalanceQuery = ContractReadQueryProps & {
   /** Get the session token balance */
   getBalance: () => void;
   /** The session token balance */
-  balance: ReadContractData<typeof SENTAbi, 'balanceOf', [Address]>;
+  balance: SENTBalance;
 };
 
-export function useSENTBalanceQuery({
-  chainId,
-  startEnabled,
-}: ContractReadQueryFetchOptions<
-  ContractFunctionArgs<typeof SENTAbi, 'pure' | 'view', 'balanceOf'>
->): SENTBalanceQuery {
-  const { address } = useAccount();
+export function useSENTBalanceQuery({ address }: { address?: Address }): SENTBalanceQuery {
+  const chain = useChain();
   const {
     data: balance,
     readContract,
-    throwError,
     ...rest
   } = useContractReadQuery({
     contract: 'SENT',
     functionName: 'balanceOf',
-    startEnabled: startEnabled && !!address,
-    args: address ? [address] : undefined,
-    chainId,
+    defaultArgs: [address!],
+    startEnabled: !!address,
+    chain,
   });
-
-  const getBalance = () => {
-    if (!address) {
-      throwError(new Error('Address is required to get balance'));
-      return;
-    }
-    readContract({ args: [address] });
-  };
 
   return {
     balance,
-    getBalance,
+    getBalance: readContract,
     ...rest,
   };
 }
 
-export type SENTAllowanceQuery = ReadContractQuery & {
+type SENTAllowance = ReadContractData<typeof SENTAbi, 'allowance', [Address, Address]>;
+
+export type SENTAllowanceQuery = ContractReadQueryProps & {
   /** Get the session token allowance */
   getAllowance: () => void;
   /** The session token allowance for a contract */
-  allowance: ReadContractData<typeof SENTAbi, 'allowance', [Address, Address]>;
+  allowance: SENTAllowance;
 };
 
 export function useAllowanceQuery({
   contractAddress,
-  chainId,
-}: Omit<
-  ContractReadQueryFetchOptions<ContractFunctionArgs<typeof SENTAbi, 'pure' | 'view', 'allowance'>>,
-  'startEnabled' | 'args'
-> & { contractAddress: Address }): SENTAllowanceQuery {
+}: {
+  contractAddress: Address;
+}): SENTAllowanceQuery {
   const { address } = useAccount();
+  const chain = useChain();
   const {
     data: allowance,
     readContract,
-    throwError,
     ...rest
   } = useContractReadQuery({
     contract: 'SENT',
     functionName: 'allowance',
-    chainId: chainId,
+    defaultArgs: [address!, contractAddress],
+    chain,
   });
-
-  const getAllowance = () => {
-    if (!address) {
-      throwError(new Error('Address is required to get balance'));
-      return;
-    }
-    if (!contractAddress) {
-      throwError(new Error('Contract Address is required to get allowance'));
-      return;
-    }
-    readContract({ args: [address, contractAddress] });
-  };
 
   return {
     allowance,
-    getAllowance,
+    getAllowance: readContract,
     ...rest,
   };
 }
