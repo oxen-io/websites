@@ -85,7 +85,7 @@ export function useAllowanceQuery({
 
 export type UseProxyApprovalReturn = {
   approve: () => void;
-  status: ContractWriteStatus;
+  status: WriteContractStatus;
   error: WriteContractErrorType | Error | null;
 };
 
@@ -97,6 +97,7 @@ export function useProxyApproval({
   tokenAmount: bigint;
 }): UseProxyApprovalReturn {
   const [hasEnoughAllowance, setHasEnoughAllowance] = useState<boolean>(false);
+  const chain = useChain();
   const { address } = useAccount();
   const {
     allowance,
@@ -104,21 +105,21 @@ export function useProxyApproval({
     status: readStatus,
   } = useAllowanceQuery({
     contractAddress,
-    chainId: chains[CHAIN.TESTNET].id,
   });
 
-  const { writeContract, error, writeStatus } = useContractWriteQuery({
-    contract: 'SENT',
-    functionName: 'approve',
-    chainId: chains[CHAIN.TESTNET].id,
-  });
+  const { simulateAndWriteContract, writeStatus, simulateError, writeError } =
+    useContractWriteQuery({
+      contract: 'SENT',
+      functionName: 'approve',
+      chain,
+    });
 
   const approve = () => {
     getAllowance();
   };
 
   const approveWrite = () => {
-    if (readStatus !== CONTRACT_READ_STATUS.SUCCESS) {
+    if (readStatus !== 'success') {
       throw new Error('Checking if current allowance is sufficient');
     }
 
@@ -131,14 +132,12 @@ export function useProxyApproval({
       }
       return;
     }
-    
-    writeContract({
-      args: [contractAddress, tokenAmount],
-    });
+
+    simulateAndWriteContract([contractAddress, tokenAmount]);
   };
 
   const status = useMemo(() => {
-    if (readStatus === CONTRACT_READ_STATUS.SUCCESS && hasEnoughAllowance) {
+    if (readStatus === 'success' && hasEnoughAllowance) {
       return 'success';
     }
 
@@ -146,15 +145,17 @@ export function useProxyApproval({
       return writeStatus;
     }
 
-    if (readStatus === CONTRACT_READ_STATUS.PENDING) {
+    if (readStatus === 'pending') {
       return 'idle';
     } else {
       return writeStatus;
     }
   }, [readStatus, writeStatus, hasEnoughAllowance]);
 
+  const error = useMemo(() => simulateError ?? writeError, [simulateError, writeError]);
+
   useEffect(() => {
-    if (readStatus === CONTRACT_READ_STATUS.SUCCESS) {
+    if (readStatus === 'success') {
       approveWrite();
     }
   }, [allowance, readStatus]);
