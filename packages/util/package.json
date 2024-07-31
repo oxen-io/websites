@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "pino": "^9.2.0",
-    "pino-pretty": "^11.2.1"
+    "pino-pretty": "^11.2.1",
+    "@session/logger": "workspace:*"
   }
 }

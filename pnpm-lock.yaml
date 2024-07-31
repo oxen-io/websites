@@ -407,6 +407,9 @@ importers:
 
   packages/util:
     dependencies:
+      '@session/logger':
+        specifier: workspace:*
+        version: link:../logger
       pino:
         specifier: ^9.2.0
         version: 9.2.0

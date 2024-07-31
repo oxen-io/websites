@@ -1,7 +1,7 @@
 'use client';
 
 import { ModuleDynamicContractReadText } from '@/components/ModuleDynamic';
-import useDailyNodeReward from '@/hooks/daily-node-reward';
+import useDailyNodeReward from '@/hooks/useDailyNodeReward';
 import { URL } from '@/lib/constants';
 import { externalLink } from '@/lib/locale-defaults';
 import { Module, ModuleTitle, ModuleTooltip } from '@session/ui/components/Module';

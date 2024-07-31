@@ -1,81 +1,11 @@
 'use client';
 
-import { type Address } from 'viem';
 import type { ReadContractData } from 'wagmi/query';
 import { ServiceNodeRewardsAbi } from '../abis';
 import { type ContractReadQueryProps, useContractReadQuery } from './useContractReadQuery';
 import { useMemo } from 'react';
 import { type ContractWriteQueryProps, useContractWriteQuery } from './useContractWriteQuery';
 import { useChain } from './useChain';
-
-export type ClaimRewardsQuery = WriteContractQuery & {
-  /** Claim rewards */
-  claimRewards: () => void;
-};
-
-export function useClaimRewardsQuery({
-  address,
-}: {
-  address: Address | undefined;
-}): ClaimRewardsQuery {
-  const { writeContract, isPending, isConfirming, isConfirmed, isError, error, throwError } =
-    useContractWriteQuery({
-      contract: 'ServiceNodeRewards',
-      functionName: 'claimRewards',
-    });
-
-  const claimRewards = () => {
-    if (!address) {
-      throwError(new Error('Address is required to claim rewards'));
-      return;
-    }
-    writeContract({ args: [] });
-  };
-
-  return {
-    claimRewards,
-    isPending,
-    isConfirming,
-    isConfirmed,
-    isError,
-    error,
-  };
-}
-
-export type UpdateRewardsBalanceQuery = WriteContractQuery & {
-  /** Update rewards balance */
-  updateRewardsBalance: () => void;
-};
-
-export function useUpdateRewardsBalanceQuery({
-  address,
-}: {
-  address: Address | undefined;
-}): UpdateRewardsBalanceQuery {
-  const { isPending, isConfirming, isConfirmed, isError, error, throwError } =
-    useContractWriteQuery({
-      contract: 'ServiceNodeRewards',
-      functionName: 'updateRewardsBalance',
-    });
-
-  const updateRewardsBalance = () => {
-    if (!address) {
-      throwError(new Error('Address is required to update rewards balance'));
-      return;
-    }
-    throw new Error('not implemented yet');
-    // writeContract({ args: [address] });
-  };
-
-  return {
-    updateRewardsBalance,
-    isPending,
-    isConfirming,
-    isConfirmed,
-    isError,
-    error,
-  };
-}
 
 export type TotalNodesQuery = ContractReadQueryProps & {
   /** Update rewards balance */
@@ -171,16 +101,8 @@ const encodeED25519Signature = (hex: string) => {
   return { sigs0, sigs1 };
 };
 
-export type ContractWriteStatus = 'idle' | 'pending' | 'error' | 'success';
-export type ContractWriteUtilStatus = 'pending' | 'error' | 'success';
-
-export type UseAddBLSPubKeyReturn = {
+export type UseAddBLSPubKeyReturn = ContractWriteQueryProps & {
   addBLSPubKey: () => void;
-  simulateStatus: ContractWriteUtilStatus;
-  writeStatus: ContractWriteStatus;
-  simulateError: SimulateContractErrorType | Error | null;
-  writeError: WriteContractErrorType | Error | null;
-  transactionStatus: ContractWriteUtilStatus;
 };
 
 export function useAddBLSPubKey({
@@ -188,24 +110,16 @@ export function useAddBLSPubKey({
   blsSignature,
   nodePubKey,
   userSignature,
+  fee = 0,
 }: {
   blsPubKey: string;
   blsSignature: string;
   nodePubKey: string;
   userSignature: string;
+  fee?: number;
 }): UseAddBLSPubKeyReturn {
-  const [simulateEnabled, setSimulateEnabled] = useState<boolean>(false);
-  const {
-    writeContract,
-    writeStatus,
-    transactionStatus,
-    error: writeError,
-  } = useContractWriteQuery({
-    contract: 'ServiceNodeRewards',
-    functionName: 'addBLSPublicKey',
-  });
-
-  const contractArgs = useMemo(() => {
+  const chain = useChain();
+  const defaultArgs = useMemo(() => {
     const encodedBlsPubKey = encodeBlsPubKey(blsPubKey);
     const encodedBlsSignature = encodeBlsSignature(blsSignature);
     const { pubKey } = encodeED25519PubKey(nodePubKey);
@@ -215,43 +129,21 @@ export function useAddBLSPubKey({
       serviceNodePubkey: pubKey,
       serviceNodeSignature1: sigs0,
       serviceNodeSignature2: sigs1,
-      fee: 0,
+      fee,
     };
 
     return [encodedBlsPubKey, encodedBlsSignature, encodedNodeParams, []] as const;
   }, [blsPubKey, blsSignature, nodePubKey, userSignature]);
 
-  const {
-    data,
-    status: simulateStatus,
-    refetch,
-    error: simulateError,
-  } = useSimulateContract({
-    abi: ServiceNodeRewardsAbi,
-    address: addresses.ServiceNodeRewards.testnet,
+  const { simulateAndWriteContract, ...rest } = useContractWriteQuery({
+    contract: 'ServiceNodeRewards',
     functionName: 'addBLSPublicKey',
-    query: { enabled: simulateEnabled },
-    args: contractArgs,
+    chain,
+    defaultArgs,
   });
 
-  const addBLSPubKey = () => {
-    setSimulateEnabled(true);
-    void refetch();
-  };
-
-  useEffect(() => {
-    if (simulateStatus === 'success' && data?.request) {
-      writeContract(data.request);
-      addBLSPubKey();
-    }
-  }, [simulateStatus, data?.request]);
-
   return {
-    addBLSPubKey,
-    simulateStatus,
-    writeStatus,
-    simulateError,
-    writeError,
-    transactionStatus,
+    addBLSPubKey: simulateAndWriteContract,
+    ...rest,
   };
 }

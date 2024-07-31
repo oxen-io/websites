@@ -7,7 +7,7 @@ import { Loading } from '@session/ui/components/loading';
 import { Button, ButtonSkeleton } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
-import { ActionModuleRow, ActionModuleRowSkeleton } from '../../../components/ActionModule';
+import { ActionModuleRow, ActionModuleRowSkeleton } from '@/components/ActionModule';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import type { LoadRegistrationsResponse } from '@session/sent-staking-js/client';
 import { getPendingNodes } from '@/lib/queries/getPendingNodes';
@@ -19,7 +19,7 @@ import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import { getDateFromUnixTimestampSeconds } from '@session/util/date';
 import { notFound } from 'next/navigation';
 import { generateMockRegistrations } from '@session/sent-staking-js/test';
-import useRegisterNode, { type ContractWriteStatus, REGISTER_STAGE } from '@/hooks/registerNode';
+import useRegisterNode, { REGISTER_STAGE } from '@/hooks/useRegisterNode';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import type { VariantProps } from 'class-variance-authority';
 import { useQuery } from '@tanstack/react-query';
@@ -29,6 +29,7 @@ import Link from 'next/link';
 import { Tooltip } from '@session/ui/ui/tooltip';
 import { areHexesEqual } from '@session/util/string';
 import { isProduction } from '@/lib/env';
+import type { WriteContractStatus } from '@session/contracts/hooks/useContractWriteQuery';
 
 export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showMockRegistration = useFeatureFlag(FEATURE_FLAG.MOCK_REGISTRATION);
@@ -72,7 +73,7 @@ export default function NodeRegistration({ nodeId }: { nodeId: string }) {
 }
 
 function getStatusFromSubStage(
-  subStage: ContractWriteStatus
+  subStage: WriteContractStatus
 ): VariantProps<typeof statusVariants>['status'] {
   switch (subStage) {
     case 'error':
@@ -97,7 +98,7 @@ const stageDictionaryMap: Record<REGISTER_STAGE, string> = {
 
 function getDictionaryKeyFromStageAndSubStage<
   Stage extends REGISTER_STAGE,
-  SubStage extends ContractWriteStatus,
+  SubStage extends WriteContractStatus,
 >({
   currentStage,
   stage,
@@ -117,7 +118,7 @@ function StageRow({
 }: {
   currentStage: REGISTER_STAGE;
   stage: REGISTER_STAGE;
-  subStage: ContractWriteStatus;
+  subStage: WriteContractStatus;
 }) {
   const dictionary = useTranslations('actionModules.register.stage');
   return (
@@ -149,7 +150,7 @@ function QueryStatusInformation({
 }: {
   nodeId: string;
   stage: REGISTER_STAGE;
-  subStage: ContractWriteStatus;
+  subStage: WriteContractStatus;
 }) {
   const dictionary = useTranslations('actionModules.register');
 
