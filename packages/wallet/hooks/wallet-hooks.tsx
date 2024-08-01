@@ -76,8 +76,7 @@ export function useWallet(): UseWalletType {
   const { address, isConnected, isConnecting, isDisconnected, isReconnecting } = useAccount();
   const { disconnect } = useDisconnect();
   const { balance: tokenBalanceData } = useSENTBalanceQuery({
-    startEnabled: Boolean(address),
-    args: [address!],
+    address,
   });
   const { data: ethBalanceData } = useBalance({
     address,

@@ -1,11 +1,11 @@
 'use client';
 
-import { CONTRACT_READ_STATUS } from '@session/contracts/hooks/contract-hooks';
 import { ModuleText } from '@session/ui/components/Module';
 import { LoadingText } from '@session/ui/components/loading-text';
 import { forwardRef, type HTMLAttributes, type ReactNode, useId } from 'react';
 import { toastErrorRefetch, type ToastErrorRefetchProps } from './Toast';
 import { QUERY_STATUS } from '@/lib/query';
+import type { GenericContractStatus } from '@session/contracts/hooks/useContractWriteQuery';
 
 type GenericQueryProps = {
   fallback: ReactNode;
@@ -13,14 +13,14 @@ type GenericQueryProps = {
 };
 
 type ModuleContractReadTextProps = HTMLAttributes<HTMLSpanElement> & {
-  status: CONTRACT_READ_STATUS;
+  status: GenericContractStatus;
 } & GenericQueryProps;
 
 const ModuleDynamicContractReadText = forwardRef<HTMLSpanElement, ModuleContractReadTextProps>(
   ({ className, children, status, fallback, errorToast, ...props }, ref) => {
     const toastId = useId();
 
-    if (status === CONTRACT_READ_STATUS.ERROR) {
+    if (status === 'error') {
       toastErrorRefetch({
         ...errorToast,
         toastId,
@@ -28,9 +28,9 @@ const ModuleDynamicContractReadText = forwardRef<HTMLSpanElement, ModuleContract
     }
     return (
       <ModuleText ref={ref} className={className} {...props}>
-        {status === CONTRACT_READ_STATUS.SUCCESS ? (
+        {status === 'success' ? (
           children ?? fallback
-        ) : status === CONTRACT_READ_STATUS.ERROR ? (
+        ) : status === 'error' ? (
           fallback
         ) : (
           <LoadingText />

@@ -27,11 +27,6 @@ export const ServiceNodeRewardsAbi = [
     type: 'error',
   },
   {
-    inputs: [],
-    name: 'ArrayLengthMismatch',
-    type: 'error',
-  },
-  {
     inputs: [
       {
         internalType: 'uint64',
@@ -1084,6 +1079,61 @@ export const ServiceNodeRewardsAbi = [
   },
   {
     inputs: [],
+    name: 'allServiceNodeIDs',
+    outputs: [
+      {
+        internalType: 'uint64[]',
+        name: 'ids',
+        type: 'uint64[]',
+      },
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct BN256G1.G1Point[]',
+        name: 'pubkeys',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'allServiceNodePubkeys',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct BN256G1.G1Point[]',
+        name: 'pubkeys',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'blsNonSignerThreshold',
     outputs: [
       {
@@ -1570,19 +1620,45 @@ export const ServiceNodeRewardsAbi = [
   {
     inputs: [
       {
-        internalType: 'uint256[]',
-        name: 'pkX',
-        type: 'uint256[]',
-      },
-      {
-        internalType: 'uint256[]',
-        name: 'pkY',
-        type: 'uint256[]',
-      },
-      {
-        internalType: 'uint256[]',
-        name: 'amounts',
-        type: 'uint256[]',
+        components: [
+          {
+            components: [
+              {
+                internalType: 'uint256',
+                name: 'X',
+                type: 'uint256',
+              },
+              {
+                internalType: 'uint256',
+                name: 'Y',
+                type: 'uint256',
+              },
+            ],
+            internalType: 'struct BN256G1.G1Point',
+            name: 'pubkey',
+            type: 'tuple',
+          },
+          {
+            components: [
+              {
+                internalType: 'address',
+                name: 'addr',
+                type: 'address',
+              },
+              {
+                internalType: 'uint256',
+                name: 'stakedAmount',
+                type: 'uint256',
+              },
+            ],
+            internalType: 'struct IServiceNodeRewards.Contributor[]',
+            name: 'contributors',
+            type: 'tuple[]',
+          },
+        ],
+        internalType: 'struct IServiceNodeRewards.SeedServiceNode[]',
+        name: 'nodes',
+        type: 'tuple[]',
       },
     ],
     name: 'seedPublicKeyList',

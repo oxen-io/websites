@@ -4,15 +4,16 @@ import { addresses } from '@session/contracts';
 import { useProxyApproval } from '@session/contracts/hooks/SENT';
 import { SESSION_NODE, TOAST } from '@/lib/constants';
 import { useAddBLSPubKey } from '@session/contracts/hooks/ServiceNodeRewards';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from '@session/ui/lib/sonner';
 import { collapseString } from '@session/util/string';
 import type { SimulateContractErrorType, WriteContractErrorType } from 'viem';
 import { isProduction } from '@/lib/env';
 import { useTranslations } from 'next-intl';
-
-export type ContractWriteStatus = 'idle' | 'pending' | 'error' | 'success';
-export type ContractWriteUtilStatus = 'pending' | 'error' | 'success';
+import type {
+  GenericContractStatus,
+  WriteContractStatus,
+} from '@session/contracts/hooks/useContractWriteQuery';
 
 export enum REGISTER_STAGE {
   APPROVE,
@@ -28,10 +29,10 @@ const useRegisterStage = ({
   addBLSWriteStatus,
   addBLSTransactionStatus,
 }: {
-  approveWriteStatus: ContractWriteStatus;
-  addBLSSimulateStatus: ContractWriteUtilStatus;
-  addBLSWriteStatus: ContractWriteStatus;
-  addBLSTransactionStatus: ContractWriteUtilStatus;
+  approveWriteStatus: WriteContractStatus;
+  addBLSSimulateStatus: GenericContractStatus;
+  addBLSWriteStatus: WriteContractStatus;
+  addBLSTransactionStatus: GenericContractStatus;
 }) => {
   const stage = useMemo(() => {
     if (
@@ -110,6 +111,7 @@ export default function useRegisterNode({
   nodePubKey: string;
   userSignature: string;
 }) {
+  const [enabled, setEnabled] = useState<boolean>(false);
   const dictionary = useTranslations('actionModules.register.stage');
   const {
     approve,
@@ -143,15 +145,16 @@ export default function useRegisterNode({
   });
 
   const registerAndStake = () => {
+    setEnabled(true);
     approve();
   };
 
   // NOTE: Automatically triggers the write stage once the approval has succeeded
   useEffect(() => {
-    if (approveWriteStatus === 'success') {
+    if (enabled && approveWriteStatus === 'success') {
       addBLSPubKey();
     }
-  }, [approveWriteStatus]);
+  }, [enabled, approveWriteStatus]);
 
   const handleError = (error: Error | SimulateContractErrorType | WriteContractErrorType) => {
     console.error(error);
@@ -190,5 +193,6 @@ export default function useRegisterNode({
     registerAndStake,
     stage,
     subStage,
+    enabled,
   };
 }
