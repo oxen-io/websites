@@ -57,13 +57,12 @@ export const getFaucetFormSchema = () => {
     }),
     discordId: z.string().optional(),
     telegramId: z.string().optional(),
-    referralCode: z.string().optional(),
   });
 };
 
 export type FaucetFormSchema = z.infer<ReturnType<typeof getFaucetFormSchema>>;
 
-export const AuthModule = ({ referralCode }: { referralCode?: string }) => {
+export const AuthModule = () => {
   const dictionary = useTranslations('faucet.form');
   const generalDictionary = useTranslations('general');
   const [submitAttemptCounter, setSubmitAttemptCounter] = useState<number>(0);
@@ -89,7 +88,6 @@ export const AuthModule = ({ referralCode }: { referralCode?: string }) => {
       walletAddress: '',
       discordId: '',
       telegramId: '',
-      referralCode,
     },
     reValidateMode: 'onChange',
   });
@@ -197,12 +195,6 @@ export const AuthModule = ({ referralCode }: { referralCode?: string }) => {
       });
     }
   }, [address, ethAmount, form]); */
-
-  useEffect(() => {
-    if (referralCode) {
-      toast.info(dictionary('referralCodeAdded'));
-    }
-  }, [referralCode]);
 
   useEffect(() => {
     if (walletStatus === WALLET_STATUS.CONNECTED && address) {
@@ -353,12 +345,10 @@ export const AuthModule = ({ referralCode }: { referralCode?: string }) => {
         <>
           <span className="text-center">- {generalDictionary('or')} -</span>
           <WalletModalButtonWithLocales rounded="md" size="lg" className="uppercase" hideBalance />
-          {!referralCode ? (
-            <span className="inline-flex w-full flex-col gap-2 uppercase xl:flex-row [&>*]:flex-grow">
-              {!isConnected || (isConnected && discordId) ? <DiscordAuthButton /> : null}
-              {!isConnected || (isConnected && telegramId) ? <TelegramAuthButton /> : null}
-            </span>
-          ) : null}
+          <span className="inline-flex w-full flex-col gap-2 uppercase xl:flex-row [&>*]:flex-grow">
+            {!isConnected || (isConnected && discordId) ? <DiscordAuthButton /> : null}
+            {!isConnected || (isConnected && telegramId) ? <TelegramAuthButton /> : null}
+          </span>
         </>
       ) : null}
 
