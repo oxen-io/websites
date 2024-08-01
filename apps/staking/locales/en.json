@@ -153,7 +153,7 @@
       "watchSENTInfo": "You may need to manually add {tokenSymbol} to your wallet’s token list to make it show up, click the button below to add it.",
       "copyTransactionHash": "Copy Transaction Hash",
       "copyTransactionHashSuccessToast": "Copied Transaction Hash to clipboard!",
-      "referralCodeAdded": "Faucet referral code detected and added. Submit with just your wallet to use it."
+      "referralCodeAdded": "Faucet referral code detected and added."
     }
   },
   "chainBanner": {
