@@ -10,7 +10,7 @@ export function RegistrationPausedInfo() {
   const dictionary =  useTranslations('banner')
   return (
     <span>
-      {dictionary.rich('registrationPaused', {link: (children:ReactNode) => <Link className='underline' href={SOCIALS[Social.Discord].link} referrerPolicy="no-referrer" target="_blank">
+      {dictionary.rich('registrationPaused', {link: (children:ReactNode) => <Link className='underline font-medium' href={SOCIALS[Social.Discord].link} referrerPolicy="no-referrer" target="_blank">
           {children}
         </Link>})}
     </span>
