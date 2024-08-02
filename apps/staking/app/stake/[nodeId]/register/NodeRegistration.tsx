@@ -19,7 +19,7 @@ import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import { getDateFromUnixTimestampSeconds } from '@session/util/date';
 import { notFound } from 'next/navigation';
 import { generatePendingNodes } from '@session/sent-staking-js/test';
-import useRegisterNode, { type ContractWriteStatus, REGISTER_STAGE } from '@/hooks/registerNode';
+import { type ContractWriteStatus, REGISTER_STAGE } from '@/hooks/registerNode';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import type { VariantProps } from 'class-variance-authority';
 import { useQuery } from '@tanstack/react-query';
@@ -29,6 +29,8 @@ import Link from 'next/link';
 import { Tooltip } from '@session/ui/ui/tooltip';
 import { areHexesEqual } from '@session/util/string';
 import { isProduction } from '@/lib/env';
+import { toast } from '@session/ui/lib/sonner';
+import { RegistrationPausedInfo } from '@/components/RegistrationPausedInfo';
 
 export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showMockRegistration = useFeatureFlag(FEATURE_FLAG.MOCK_REGISTRATION);
@@ -218,12 +220,16 @@ function RegisterButton({
   disabled?: boolean;
 }) {
   const dictionary = useTranslations('actionModules.register');
-  const { registerAndStake, stage, subStage } = useRegisterNode({
-    blsPubKey,
-    blsSignature,
-    nodePubKey,
-    userSignature,
-  });
+  // const { registerAndStake, stage, subStage } = useRegisterNode({
+  //   blsPubKey,
+  //   blsSignature,
+  //   nodePubKey,
+  //   userSignature,
+  // });
+
+  const handleClick = () => {
+    toast.error(<RegistrationPausedInfo />);
+  };
 
   return (
     <>
@@ -231,14 +237,15 @@ function RegisterButton({
         data-testid={ButtonDataTestId.Register_Submit}
         rounded="lg"
         size="lg"
-        onClick={registerAndStake}
+        onClick={handleClick}
+        // onClick={registerAndStake}
         disabled={disabled}
       >
         {dictionary('button.submit', { amount: stakeAmountString })}
       </Button>
-      {stage !== REGISTER_STAGE.APPROVE || subStage !== 'idle' ? (
-        <QueryStatusInformation nodeId={nodePubKey} stage={stage} subStage={subStage} />
-      ) : null}
+      {/*{stage !== REGISTER_STAGE.APPROVE || subStage !== 'idle' ? (*/}
+      {/*  <QueryStatusInformation nodeId={nodePubKey} stage={stage} subStage={subStage} />*/}
+      {/*) : null}*/}
     </>
   );
 }
@@ -260,6 +267,7 @@ export function NodeRegistrationForm({
   const { data: runningNode, isLoading } = useQuery({
     queryKey: ['getNode', node.pubkey_ed25519],
     queryFn: () => getNode({ address: node.pubkey_ed25519 }),
+    enabled: false,
   });
 
   const nodeAlreadyRunning = useMemo(
