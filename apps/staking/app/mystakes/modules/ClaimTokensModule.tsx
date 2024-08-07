@@ -18,7 +18,7 @@ import { formatBigIntTokenValue } from '@session/util/maths';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { LoadingText } from '@session/ui/components/loading-text';
 import { TICKER, URL } from '@/lib/constants';
-import useClaimRewards, { CLAIM_REWARDS_STATE } from '@/hooks/claimRewards';
+import useClaimRewards, { CLAIM_REWARDS_STATE } from '@/hooks/useClaimRewards';
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { externalLink } from '@/lib/locale-defaults';
