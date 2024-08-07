@@ -89,6 +89,7 @@ export const EXTERNAL_ROUTES: LinkItem[] = [
   { dictionaryKey: 'tokenSite', href: 'https://token.getsession.org', linkType: 'external' },
   { dictionaryKey: 'support', href: '/support', linkType: 'external' },
   { dictionaryKey: 'docs', href: 'https://docs.getsession.org', linkType: 'external' },
+  { dictionaryKey: 'explorer', href: 'https://stagenet.oxen.observer', linkType: 'external' },
 ] as const;
 
 export enum QUERY {
@@ -115,4 +116,9 @@ export enum SESSION_NODE {
 
 export enum TOAST {
   ERROR_COLLAPSE_LENGTH = 128,
+}
+
+export enum DYNAMIC_MODULE {
+  /** The number of decimal places to round SENT values to */
+  SENT_ROUNDED_DECIMALS = 2,
 }
