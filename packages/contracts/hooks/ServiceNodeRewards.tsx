@@ -6,6 +6,67 @@ import { type ContractReadQueryProps, useContractReadQuery } from './useContract
 import { useMemo } from 'react';
 import { type ContractWriteQueryProps, useContractWriteQuery } from './useContractWriteQuery';
 import { useChain } from './useChain';
+import type { Address } from 'viem';
+
+export type ClaimRewardsQuery = ContractWriteQueryProps & {
+  /** Claim rewards */
+  claimRewards: () => void;
+};
+
+export function useClaimRewardsQuery(): ClaimRewardsQuery {
+  const chain = useChain();
+  const { simulateAndWriteContract, ...rest } = useContractWriteQuery({
+    contract: 'ServiceNodeRewards',
+    functionName: 'claimRewards',
+    chain,
+  });
+
+  return {
+    claimRewards: simulateAndWriteContract,
+    ...rest,
+  };
+}
+
+export type UpdateRewardsBalanceQuery = ContractWriteQueryProps & {
+  /** Update rewards balance */
+  updateRewardsBalance: () => void;
+};
+
+export type UseUpdateRewardsBalanceQueryParams = {
+  address?: Address;
+  rewards?: bigint;
+  blsSignature?: string;
+  excludedSigners?: Array<bigint>;
+};
+
+export function useUpdateRewardsBalanceQuery({
+  address,
+  rewards,
+  blsSignature,
+  excludedSigners,
+}: UseUpdateRewardsBalanceQueryParams): UpdateRewardsBalanceQuery {
+  const chain = useChain();
+
+  const defaultArgs = useMemo(() => {
+    const encodedBlsSignature = blsSignature ? encodeBlsSignature(blsSignature) : null;
+
+    return [address, rewards, encodedBlsSignature, excludedSigners] as const;
+  }, [address, rewards, blsSignature, excludedSigners]);
+
+  const { simulateAndWriteContract, ...rest } = useContractWriteQuery({
+    contract: 'ServiceNodeRewards',
+    functionName: 'updateRewardsBalance',
+    chain,
+    // TODO: update the types to better reflect optional args as default
+    // @ts-expect-error -- This is fine as the args change once the query is ready to execute.
+    defaultArgs,
+  });
+
+  return {
+    updateRewardsBalance: simulateAndWriteContract,
+    ...rest,
+  };
+}
 
 export type TotalNodesQuery = ContractReadQueryProps & {
   /** Update rewards balance */
@@ -139,6 +200,8 @@ export function useAddBLSPubKey({
     contract: 'ServiceNodeRewards',
     functionName: 'addBLSPublicKey',
     chain,
+    // TODO: update the types to better reflect optional args as default
+    // @ts-expect-error -- This is fine as the args change once the query is ready to execute.
     defaultArgs,
   });
 
