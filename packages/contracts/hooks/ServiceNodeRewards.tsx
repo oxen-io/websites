@@ -64,7 +64,7 @@ function encodeHexToBigIntChunks(hex: string, hexBytes: number): Array<bigint> {
 const encodeBlsPubKey = (hex: string) => {
   const chunks = encodeHexToBigIntChunks(hex, HEX_BYTES.BLS_KEY_BYTES);
   const [X, Y] = chunks;
-  if (chunks.length !== 2 || !X || !Y) {
+  if (chunks.length !== 2) {
     throw new Error(`BLS Pubkey improperly chunked. Expected 2 chunks, got ${chunks.length}`);
   }
   return { X, Y };
@@ -73,7 +73,7 @@ const encodeBlsPubKey = (hex: string) => {
 const encodeBlsSignature = (hex: string) => {
   const chunks = encodeHexToBigIntChunks(hex, HEX_BYTES.BLS_SIG_BYTES);
   const [sigs0, sigs1, sigs2, sigs3] = chunks;
-  if (chunks.length !== 4 || !sigs0 || !sigs1 || !sigs2 || !sigs3) {
+  if (chunks.length !== 4) {
     throw new Error(`BLS Signature improperly chunked. Expected 4 chunks, got ${chunks.length}`);
   }
   return { sigs0, sigs1, sigs2, sigs3 };
@@ -82,7 +82,7 @@ const encodeBlsSignature = (hex: string) => {
 const encodeED25519PubKey = (hex: string) => {
   const chunks = encodeHexToBigIntChunks(hex, HEX_BYTES.ED_25519_KEY_BYTES);
   const [pubKey] = chunks;
-  if (chunks.length !== 1 || !pubKey) {
+  if (chunks.length !== 1) {
     throw new Error(
       `ED 25519 Public Key improperly chunked. Expected 1 chunk, got ${chunks.length}`
     );
@@ -93,7 +93,7 @@ const encodeED25519PubKey = (hex: string) => {
 const encodeED25519Signature = (hex: string) => {
   const chunks = encodeHexToBigIntChunks(hex, HEX_BYTES.ED_25519_SIG_BYTES);
   const [sigs0, sigs1] = chunks;
-  if (chunks.length !== 2 || !sigs0 || !sigs1) {
+  if (chunks.length !== 2) {
     throw new Error(
       `ED 25519 Signature improperly chunked. Expected 2 chunks, got ${chunks.length}`
     );
