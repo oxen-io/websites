@@ -39,9 +39,16 @@ export interface Contributor {
   locked_contributions: LockedContribution[];
 }
 
+export interface WalletInfo {
+  contract_claimed: bigint;
+  contract_rewards: bigint;
+  rewards: bigint;
+}
+
 export interface GetNodesForWalletResponse {
-  nodes: ServiceNode[];
   network: NetworkInfo;
+  nodes: ServiceNode[];
+  wallet: WalletInfo;
 }
 
 export interface ServiceNode {
@@ -133,6 +140,21 @@ interface ValidateRegistrationResponse {
   remaining_spots?: number;
   remaining_min_contribution?: number;
 }
+
+/** POST /rewards */
+
+export interface GetRewardsClaimSignatureResponse {
+  network: NetworkInfo;
+  bls_rewards_response: BlsRewardsResponse;
+}
+
+export type BlsRewardsResponse = {
+  amount: number;
+  height: number;
+  msg_to_sign: string;
+  non_signer_indices: Array<number>;
+  signature: string;
+};
 
 /** Client types */
 type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -255,6 +277,18 @@ export class SessionStakingClient {
       method: 'GET',
     };
     return this.request<GetNodesForWalletResponse>(options);
+  }
+
+  public async getRewardsClaimSignature({
+    address,
+  }: {
+    address: string;
+  }): Promise<StakingBackendResponse<GetRewardsClaimSignatureResponse>> {
+    const options: RequestOptions = {
+      endpoint: `/rewards/${address}`,
+      method: 'POST',
+    };
+    return this.request<GetRewardsClaimSignatureResponse>(options);
   }
 
   /**
