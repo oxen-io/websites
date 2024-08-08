@@ -244,15 +244,15 @@
             "errorTooltip": "Rewards update parameters were malformed, please refresh the page and try again"
           },
           "write": {
-            "pending": "Requesting rewards update",
-            "success": "Requesting rewards update",
-            "error": "Requesting rewards update",
-            "errorTooltip": "Rewards update was not successful"
-          },
-          "transaction": {
             "pending": "Updating rewards amount on Arbitrum",
             "success": "Updating rewards amount on Arbitrum",
             "error": "Updating rewards amount on Arbitrum",
+            "errorTooltip": "Rewards update was not successful on Arbitrum"
+          },
+          "transaction": {
+            "pending": "Waiting for confirmation of rewards amount on Arbitrum",
+            "success": "Waiting for confirmation of rewards amount on Arbitrum",
+            "error": "Waiting for confirmation of rewards amount on Arbitrum",
             "errorTooltip": "Rewards update was not successful on Arbitrum"
           }
         },
@@ -264,15 +264,15 @@
             "errorTooltip": "Rewards claim validation failed"
           },
           "write": {
-            "pending": "Requesting rewards claim",
-            "success": "Requesting rewards claim",
-            "error": "Requesting rewards claim",
-            "errorTooltip": "Rewards claim failed"
-          },
-          "transaction": {
             "pending": "Submitting rewards claim on Arbitrum",
             "success": "Submitting rewards claim on Arbitrum",
             "error": "Submitting rewards claim on Arbitrum",
+            "errorTooltip": "Rewards claim was not successful on Arbitrum"
+          },
+          "transaction": {
+            "pending": "Waiting for confirmation of rewards claim",
+            "success": "Waiting for confirmation of rewards claim",
+            "error": "Waiting for confirmation of rewards claim",
             "errorTooltip": "Rewards claim was not successful on Arbitrum"
           }
         },
