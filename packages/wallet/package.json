@@ -14,6 +14,7 @@
     "test": "jest"
   },
   "devDependencies": {
+    "@session/storybook": "workspace:*",
     "@session/eslint-config": "workspace:*",
     "@session/typescript-config": "workspace:*",
     "@session/testing": "workspace:*",
