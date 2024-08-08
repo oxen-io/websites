@@ -103,6 +103,8 @@ export enum QUERY {
   STALE_TIME_REGISTRATIONS_LIST_DEV = 1000,
   /** 60 seconds */
   STALE_TIME_REGISTRATIONS_LIST = 60 * 1000,
+  /** 2 minutes */
+  STALE_TIME_CLAIM_REWARDS = 2 * 60 * 1000,
 }
 
 export enum SESSION_NODE {

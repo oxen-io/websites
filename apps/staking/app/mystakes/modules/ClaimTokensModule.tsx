@@ -17,9 +17,9 @@ import { Button } from '@session/ui/ui/button';
 import { formatBigIntTokenValue } from '@session/util/maths';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { LoadingText } from '@session/ui/components/loading-text';
-import { TICKER, URL } from '@/lib/constants';
+import { QUERY, TICKER, URL } from '@/lib/constants';
 import useClaimRewards, { CLAIM_REWARDS_STATE } from '@/hooks/useClaimRewards';
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useEffect, useMemo } from 'react';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { externalLink } from '@/lib/locale-defaults';
 import { TriangleAlertIcon } from '@session/ui/icons/TriangleAlertIcon';
@@ -29,38 +29,67 @@ import { getRewardsClaimSignature } from '@/lib/queries/getRewardsClaimSignature
 import type { WriteContractStatus } from '@session/contracts/hooks/useContractWriteQuery';
 import type { VariantProps } from 'class-variance-authority';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
+import type { Address } from 'viem';
+import { Loading } from '@session/ui/components/loading';
 
 export default function ClaimTokensModule() {
-  const [open, setOpen] = useState<boolean>(false);
+  const { address } = useWallet();
   const dictionary = useTranslations('modules.claim');
   const { canClaim, unclaimedRewards, formattedUnclaimedRewardsAmount } = useUnclaimedTokens();
 
+  const {
+    data: rewardsClaimData,
+    status: rewardsClaimDataStatus,
+    refetch,
+    isStale,
+  } = useStakingBackendQueryWithParams(
+    getRewardsClaimSignature,
+    { address: address! },
+    {
+      enabled: !!address,
+      staleTime: QUERY.STALE_TIME_CLAIM_REWARDS,
+    }
+  );
+
   const handleClick = () => {
     if (!canClaim) return;
+    if (isStale) {
+      void refetch();
+    }
   };
 
+  const [rewards, blsSignature, excludedSigners] = useMemo(() => {
+    if (!rewardsClaimData) return [null, null, null];
+    const { amount, signature, non_signer_indices } = rewardsClaimData.bls_rewards_response;
+
+    return [BigInt(amount), signature, non_signer_indices.map(BigInt)];
+  }, [rewardsClaimData, rewardsClaimDataStatus]);
+
+  const isDisabled = !(address && canClaim && unclaimedRewards);
+  const isReady = !!(!isDisabled && rewards && excludedSigners && blsSignature);
+
   return (
-    <AlertDialog onOpenChange={setOpen} open={open}>
-      <AlertDialogTrigger asChild onClick={handleClick}>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
         <ButtonModule
           data-testid={ButtonDataTestId.Claim_Tokens_Open_Dialog}
           className="group items-center transition-all duration-300"
-          disabled={!canClaim}
+          disabled={isDisabled}
           onClick={handleClick}
         >
           <ModuleContent className="flex h-full select-none flex-row items-center gap-2 p-0 align-middle font-bold">
             <PresentIcon
               className={cn(
                 'mb-2 h-8 w-8 transition-all duration-300',
-                canClaim
-                  ? 'fill-session-green group-hover:fill-session-black'
-                  : 'fill-session-text opacity-50'
+                isDisabled
+                  ? 'fill-session-text opacity-50'
+                  : 'fill-session-green group-hover:fill-session-black'
               )}
             />
             <ModuleText
               className={cn(
                 'h-8 text-3xl transition-all duration-300',
-                canClaim ? 'text-session-green group-hover:text-black' : 'opacity-50'
+                isDisabled ? 'opacity-50' : 'text-session-green group-hover:text-black'
               )}
             >
               {dictionary('title')}
@@ -68,13 +97,19 @@ export default function ClaimTokensModule() {
           </ModuleContent>
         </ButtonModule>
       </AlertDialogTrigger>
-      {canClaim && unclaimedRewards && open ? (
-        <ClaimTokensDialog
-          canClaim={canClaim}
-          unclaimedRewards={unclaimedRewards}
-          formattedUnclaimedRewardsAmount={formattedUnclaimedRewardsAmount}
-        />
-      ) : null}
+      <AlertDialogContent title={dictionary('title')}>
+        {isReady ? (
+          <ClaimTokensDialog
+            formattedUnclaimedRewardsAmount={formattedUnclaimedRewardsAmount}
+            address={address}
+            rewards={rewards}
+            excludedSigners={excludedSigners}
+            blsSignature={blsSignature}
+          />
+        ) : (
+          <Loading />
+        )}
+      </AlertDialogContent>
     </AlertDialog>
   );
 }
@@ -213,27 +248,33 @@ const GasAlertTooltip = ({ tooltipContent }: { tooltipContent: ReactNode }) => {
 
 function ClaimTokensDialog({
   formattedUnclaimedRewardsAmount,
-  unclaimedRewards,
-  canClaim,
-}: Omit<ReturnType<typeof useUnclaimedTokens>, 'refetch' | 'status'>) {
-  const [enabled, setEnabled] = useState<boolean>(false);
-  const { address } = useWallet();
+  address,
+  rewards,
+  blsSignature,
+  excludedSigners,
+}: {
+  formattedUnclaimedRewardsAmount: string;
+  address: Address;
+  rewards: bigint;
+  blsSignature: string;
+  excludedSigners: Array<bigint>;
+}) {
   const dictionary = useTranslations('modules.claim.dialog');
 
-  const { data: rewardsClaimData, status: rewardsClaimDataStatus } =
-    useStakingBackendQueryWithParams(
-      getRewardsClaimSignature,
-      { address: address! },
-      { enabled: !!address }
-    );
-
-  const { updateBalanceAndClaimRewards, claimFee, updateBalanceFee, estimateFee, stage, subStage } =
-    useClaimRewards({
-      address: address,
-      rewards: rewardsClaimData ? BigInt(rewardsClaimData.bls_rewards_response.amount) : undefined,
-      blsSignature: rewardsClaimData?.bls_rewards_response.signature,
-      excludedSigners: rewardsClaimData?.bls_rewards_response.non_signer_indices.map(BigInt),
-    });
+  const {
+    updateBalanceAndClaimRewards,
+    claimFee,
+    updateBalanceFee,
+    estimateFee,
+    stage,
+    subStage,
+    enabled,
+  } = useClaimRewards({
+    address,
+    rewards,
+    blsSignature,
+    excludedSigners,
+  });
 
   const feeEstimate = useMemo(
     () =>
@@ -248,24 +289,19 @@ function ClaimTokensDialog({
   );
 
   const handleClick = () => {
-    setEnabled(true);
     updateBalanceAndClaimRewards();
   };
 
+  const isDisabled = !(address && rewards && blsSignature);
+
   useEffect(() => {
-    if (
-      address &&
-      unclaimedRewards &&
-      canClaim &&
-      rewardsClaimData &&
-      rewardsClaimDataStatus === 'success'
-    ) {
+    if (!isDisabled) {
       estimateFee();
     }
-  }, [address, unclaimedRewards, canClaim, rewardsClaimDataStatus, rewardsClaimData]);
+  }, [address, rewards, blsSignature]);
 
   return (
-    <AlertDialogContent title={dictionary('title')}>
+    <>
       <div className="flex flex-col gap-4">
         <ActionModuleRow
           label={dictionary('claimFee')}
@@ -280,7 +316,11 @@ function ClaimTokensDialog({
             {feeEstimate && !claimFee ? (
               <GasAlertTooltip tooltipContent={dictionary('alert.gasFetchFailedClaimRewards')} />
             ) : null}
-            {feeEstimate ? `${feeEstimate} ${TICKER.ETH}` : <LoadingText />}
+            {feeEstimate ? (
+              `${feeEstimate} ${TICKER.ETH}`
+            ) : (
+              <LoadingText className="mr-8 scale-x-75 scale-y-50" />
+            )}
           </span>
         </ActionModuleRow>
         <ActionModuleRow
@@ -301,13 +341,16 @@ function ClaimTokensDialog({
           })}
           className="w-full"
           data-testid={ButtonDataTestId.Claim_Tokens_Submit}
-          disabled={!canClaim}
+          disabled={
+            isDisabled ||
+            (stage !== CLAIM_REWARDS_STATE.SIMULATE_UPDATE_BALANCE && subStage !== 'idle')
+          }
           onClick={handleClick}
         >
           {dictionary('buttons.submit')}
         </Button>
         {enabled ? <QueryStatusInformation stage={stage} subStage={subStage} /> : null}
       </AlertDialogFooter>
-    </AlertDialogContent>
+    </>
   );
 }

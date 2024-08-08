@@ -187,8 +187,6 @@ export default function useClaimRewards({
     transactionError: updateBalanceTransactionError,
   } = useUpdateRewardsBalanceQuery({ address, rewards, blsSignature, excludedSigners });
 
-  console.log(updateBalanceEstimateFeeError);
-
   const {
     claimRewards,
     fee: claimFee,
@@ -205,8 +203,6 @@ export default function useClaimRewards({
     writeError: claimWriteError,
     transactionError: claimTransactionError,
   } = useClaimRewardsQuery();
-
-  console.log(claimEstimateFeeError);
 
   const { stage, subStage } = useClaimRewardsStage({
     updateBalanceSimulateStatus,
