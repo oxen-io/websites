@@ -14,6 +14,8 @@ export enum ButtonDataTestId {
   Register_Submit = 'button:register-submit',
   Learn_More_Open_Nodes = 'button:learn-more-open-nodes',
   Agree_TOS = 'button:agree-tos',
+  Claim_Tokens_Open_Dialog = 'button:claim-tokens-open-dialog',
+  Claim_Tokens_Submit = 'button:claim-tokens-submit',
 }
 
 export enum SpecialDataTestId {

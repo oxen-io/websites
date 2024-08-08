@@ -16,6 +16,28 @@ type ModuleContractReadTextProps = HTMLAttributes<HTMLSpanElement> & {
   status: GenericContractStatus;
 } & GenericQueryProps;
 
+export const getVariableFontSizeForLargeModule = (
+  stringLength: number,
+  minTextSize = 20,
+  maxTextSize = 48,
+  moduleViewportWidth = 7
+) => getVariableFontSize(stringLength, minTextSize, maxTextSize, moduleViewportWidth);
+
+export const getVariableFontSizeForSmallModule = (
+  stringLength: number,
+  minTextSize = 20,
+  maxTextSize = 36,
+  moduleViewportWidth = 3.5
+) => getVariableFontSize(stringLength, minTextSize, maxTextSize, moduleViewportWidth);
+
+export const getVariableFontSize = (
+  stringLength: number,
+  minTextSize: number,
+  maxTextSize: number,
+  moduleViewportWidth: number
+) =>
+  `clamp(${minTextSize}px, min(${maxTextSize + 2 - stringLength}px, ${moduleViewportWidth}vw), ${maxTextSize}px)`;
+
 const ModuleDynamicContractReadText = forwardRef<HTMLSpanElement, ModuleContractReadTextProps>(
   ({ className, children, status, fallback, errorToast, ...props }, ref) => {
     const toastId = useId();

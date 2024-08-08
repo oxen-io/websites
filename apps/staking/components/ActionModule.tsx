@@ -90,7 +90,7 @@ export const ActionModuleRow = ({
   children,
 }: {
   label: string;
-  tooltip: string;
+  tooltip: ReactNode;
   children: ReactNode;
 }) => (
   <>

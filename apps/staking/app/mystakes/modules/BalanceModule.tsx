@@ -1,11 +1,12 @@
 'use client';
 
-import { ModuleDynamicQueryText } from '@/components/ModuleDynamic';
+import {
+  getVariableFontSizeForLargeModule,
+  ModuleDynamicQueryText,
+} from '@/components/ModuleDynamic';
 import { getTotalStakedAmountForAddress } from '@/components/NodeCard';
-import { SENT_SYMBOL } from '@session/contracts';
 import type { ServiceNode } from '@session/sent-staking-js/client';
 import { Module, ModuleTitle } from '@session/ui/components/Module';
-import { formatNumber } from '@session/util/maths';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
@@ -15,6 +16,8 @@ import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-cli
 import { getStakedNodes } from '@/lib/queries/getStakedNodes';
 import { generateMockNodeData } from '@session/sent-staking-js/test';
 import type { QUERY_STATUS } from '@/lib/query';
+import { formatSENTNumber } from '@session/contracts/hooks/SENT';
+import { DYNAMIC_MODULE } from '@/lib/constants';
 
 const getTotalStakedAmount = ({
   nodes,
@@ -69,12 +72,10 @@ export default function BalanceModule() {
   const dictionary = useTranslations('modules.balance');
   const toastDictionary = useTranslations('modules.toast');
   const titleFormat = useTranslations('modules.title');
-
-  const title = dictionary('title', { tokenSymbol: SENT_SYMBOL });
+  const title = dictionary('title');
 
   const formattedTotalStakedAmount = useMemo(() => {
-    if (!totalStakedAmount) return '0';
-    return formatNumber(totalStakedAmount);
+    return `${formatSENTNumber(totalStakedAmount ?? 0, DYNAMIC_MODULE.SENT_ROUNDED_DECIMALS)}`;
   }, [totalStakedAmount]);
 
   return (
@@ -92,7 +93,7 @@ export default function BalanceModule() {
           refetch,
         }}
         style={{
-          fontSize: `clamp(32px, min(${(formattedTotalStakedAmount?.length ?? 0) / 2}ch, 8vw), 100px)`,
+          fontSize: getVariableFontSizeForLargeModule(formattedTotalStakedAmount.length),
         }}
       >
         {formattedTotalStakedAmount}

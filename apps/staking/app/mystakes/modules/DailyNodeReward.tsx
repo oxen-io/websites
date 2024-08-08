@@ -1,12 +1,16 @@
 'use client';
 
-import { ModuleDynamicContractReadText } from '@/components/ModuleDynamic';
+import {
+  getVariableFontSizeForSmallModule,
+  ModuleDynamicContractReadText,
+} from '@/components/ModuleDynamic';
 import useDailyNodeReward from '@/hooks/useDailyNodeReward';
-import { URL } from '@/lib/constants';
+import { DYNAMIC_MODULE, URL } from '@/lib/constants';
 import { externalLink } from '@/lib/locale-defaults';
 import { Module, ModuleTitle, ModuleTooltip } from '@session/ui/components/Module';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
+import { formatSENTNumber } from '@session/contracts/hooks/SENT';
 
 export default function DailyNodeReward() {
   const { dailyNodeReward, status, refetch } = useDailyNodeReward();
@@ -16,7 +20,10 @@ export default function DailyNodeReward() {
 
   const title = dictionary('title');
 
-  const data = useMemo(() => dailyNodeReward?.toLocaleString(), [dailyNodeReward]);
+  const formattedDailyNodeRewardAmount = useMemo(
+    () => `~ ${formatSENTNumber(dailyNodeReward ?? 0, DYNAMIC_MODULE.SENT_ROUNDED_DECIMALS)}`,
+    [dailyNodeReward]
+  );
 
   return (
     <Module>
@@ -35,8 +42,11 @@ export default function DailyNodeReward() {
           },
           refetch,
         }}
+        style={{
+          fontSize: getVariableFontSizeForSmallModule(formattedDailyNodeRewardAmount.length),
+        }}
       >
-        ~{data}
+        {formattedDailyNodeRewardAmount}
       </ModuleDynamicContractReadText>
     </Module>
   );

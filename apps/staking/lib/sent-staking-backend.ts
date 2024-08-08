@@ -21,7 +21,7 @@ export function getStakingBackendQueryWithParamsArgs<Q extends StakingBackendQue
   params: Parameters<Q>[1]
 ) {
   return {
-    queryKey: [query.name, params.toString()],
+    queryKey: [query.name, params],
   };
 }
 

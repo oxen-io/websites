@@ -46,10 +46,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <ChainBanner />
           <Header />
           <main>{children}</main>
-          <Toaster />
           {!isProduction ? <DevSheet buildInfo={buildInfo} /> : null}
           <TOSHandler />
         </body>
+        <Toaster />
       </GlobalProvider>
     </html>
   );
