@@ -7,6 +7,10 @@ import { useTranslations } from 'next-intl';
 import { AuthModule } from './AuthModule';
 
 export default function FaucetPage() {
+  return <Faucet />;
+}
+
+export function Faucet({ referralCode }: { referralCode?: string }) {
   const dictionary = useTranslations('faucet.information');
   return (
     <NextAuthProvider>
@@ -38,7 +42,7 @@ export default function FaucetPage() {
           <p>{dictionary.rich('walletRequirementDescription')}</p>
         </div>
         <div className="h-max min-h-[400px]">
-          <AuthModule />
+          <AuthModule referralCode={referralCode} />
         </div>
       </div>
     </NextAuthProvider>

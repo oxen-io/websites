@@ -17,6 +17,9 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { type Address, formatEther, isAddress as isAddressViem } from 'viem';
 import { FaucetFormSchema } from './AuthModule';
 import {
+  codeExists,
+  getCodeUseTransactionHistory,
+  getReferralCodeDetails,
   getTransactionHistory,
   hasRecentTransaction,
   idIsInTable,
@@ -76,7 +79,6 @@ class FaucetResult {
 
 const faucetTokenWarning = BigInt(20000 * Math.pow(10, SENT_DECIMALS));
 const faucetGasWarning = BigInt(0.01 * Math.pow(10, ETH_DECIMALS));
-const faucetTokenDrip = BigInt(FAUCET.DRIP * Math.pow(10, SENT_DECIMALS));
 
 const minTargetEthBalance = BigInt(FAUCET.MIN_ETH_BALANCE * Math.pow(10, ETH_DECIMALS));
 
@@ -138,18 +140,20 @@ export async function transferTestTokens({
   walletAddress: targetAddress,
   discordId,
   telegramId,
+  referralCode: code,
 }: FaucetFormSchema) {
   const dictionary = await getTranslations('faucet.form.error');
   const locale = await getLocale();
 
   let result: FaucetResult = new FaucetResult({});
   let db: BetterSql3.Database | undefined;
+  let faucetTokenDrip = BigInt(FAUCET.DRIP * Math.pow(10, SENT_DECIMALS));
 
   try {
     if (!isAddress(targetAddress)) {
       throw new FaucetError(
         FAUCET_ERROR.INVALID_ADDRESS,
-        dictionary('invalidAddress', { example: '0x...' })
+        dictionary(FAUCET_ERROR.INVALID_ADDRESS, { example: '0x...' })
       );
     }
 
@@ -158,7 +162,7 @@ export async function transferTestTokens({
      */
     const chain = process.env.FAUCET_CHAIN;
     if (!chain || !isChain(chain) || chain !== CHAIN.TESTNET) {
-      throw new FaucetError(FAUCET_ERROR.INCORRECT_CHAIN, dictionary('incorrectChain'));
+      throw new FaucetError(FAUCET_ERROR.INCORRECT_CHAIN, dictionary(FAUCET_ERROR.INCORRECT_CHAIN));
     }
 
     const { faucetAddress, faucetWallet } = await connectFaucetWallet();
@@ -200,21 +204,73 @@ export async function transferTestTokens({
     db = openDatabase();
 
     let usedOperatorAddress = false;
+    let usedWalletListAddress = false;
+    let usedCode = false;
 
     /**
-     * If the user has not provided a Discord or Telegram ID, they must be an operator.
+     * If the user provided a referral code, check only the referral code to determine eligibility
      */
-    if (!discordId && !telegramId) {
+    if (code) {
+      if (!codeExists({ db, code })) {
+        throw new FaucetError(
+          FAUCET_ERROR.INVALID_REFERRAL_CODE,
+          dictionary(FAUCET_ERROR.INVALID_REFERRAL_CODE)
+        );
+      }
+
+      const { wallet, maxuses, drip: codeDrip } = getReferralCodeDetails({ db, code });
+
+      if (wallet === targetAddress) {
+        throw new FaucetError(
+          FAUCET_ERROR.REFERRAL_CODE_CANT_BE_USED_BY_CREATOR,
+          dictionary(FAUCET_ERROR.REFERRAL_CODE_CANT_BE_USED_BY_CREATOR)
+        );
+      }
+
+      const codeTransactionHistory = getCodeUseTransactionHistory({ db, code });
+
+      if (codeTransactionHistory.length >= (maxuses ?? 1)) {
+        throw new FaucetError(
+          FAUCET_ERROR.REFERRAL_CODE_OUT_OF_USES,
+          dictionary(FAUCET_ERROR.REFERRAL_CODE_OUT_OF_USES)
+        );
+      }
+
       if (
-        !idIsInTable({
-          db,
-          source: TABLE.OPERATOR,
-          id: targetAddress,
-        })
+        codeTransactionHistory.filter((transaction) => transaction.target === targetAddress)
+          .length >= 1
       ) {
         throw new FaucetError(
+          FAUCET_ERROR.REFERRAL_CODE_ALREADY_USED,
+          dictionary(FAUCET_ERROR.REFERRAL_CODE_ALREADY_USED)
+        );
+      }
+
+      if (codeDrip) {
+        faucetTokenDrip = BigInt(parseInt(codeDrip) * Math.pow(10, SENT_DECIMALS));
+      }
+
+      usedCode = true;
+    } else if (!discordId && !telegramId) {
+      /**
+       * If the user has not provided a Discord or Telegram ID, they must be an operator.
+       */
+      const idIsOxenOperator = idIsInTable({
+        db,
+        source: TABLE.OPERATOR,
+        id: targetAddress,
+      });
+
+      const idIsInWalletList = idIsInTable({
+        db,
+        source: TABLE.WALLET,
+        id: targetAddress,
+      });
+
+      if (!idIsOxenOperator && !idIsInWalletList) {
+        throw new FaucetError(
           FAUCET_ERROR.INVALID_OXEN_ADDRESS,
-          dictionary('invalidOxenAddress', {
+          dictionary(FAUCET_ERROR.INVALID_OXEN_ADDRESS, {
             oxenRegistrationDate: new Intl.DateTimeFormat(locale, {
               dateStyle: 'long',
             }).format(new Date(COMMUNITY_DATE.OXEN_SERVICE_NODE_BONUS_PROGRAM)),
@@ -223,22 +279,31 @@ export async function transferTestTokens({
       }
 
       if (
-        hasRecentTransaction({
-          db,
-          source: TABLE.OPERATOR,
-          id: targetAddress,
-          hoursBetweenTransactions,
-        })
+        (idIsOxenOperator &&
+          hasRecentTransaction({
+            db,
+            source: TABLE.OPERATOR,
+            id: targetAddress,
+            hoursBetweenTransactions,
+          })) ||
+        (idIsInWalletList &&
+          hasRecentTransaction({
+            db,
+            source: TABLE.WALLET,
+            id: targetAddress,
+            hoursBetweenTransactions,
+          }))
       ) {
         const transactionHistory = getTransactionHistory({ db, address: targetAddress });
         throw new FaucetError(
           FAUCET_ERROR.ALREADY_USED,
-          dictionary('alreadyUsed'),
+          dictionary(FAUCET_ERROR.ALREADY_USED),
           transactionHistory
         );
       }
 
-      usedOperatorAddress = true;
+      if (idIsOxenOperator) usedOperatorAddress = true;
+      else if (idIsInWalletList) usedWalletListAddress = true;
 
       /**
        * If the user has provided a Discord ID they must be in the approved list of Discord IDs and not have used the faucet recently.
@@ -253,7 +318,7 @@ export async function transferTestTokens({
       ) {
         throw new FaucetError(
           FAUCET_ERROR.INVALID_SERVICE,
-          dictionary('invalidService', {
+          dictionary(FAUCET_ERROR.INVALID_SERVICE, {
             service: 'Discord',
             snapshotDate: new Intl.DateTimeFormat(locale, {
               dateStyle: 'long',
@@ -267,7 +332,7 @@ export async function transferTestTokens({
       ) {
         throw new FaucetError(
           FAUCET_ERROR.ALREADY_USED_SERVICE,
-          dictionary('alreadyUsedService', {
+          dictionary(FAUCET_ERROR.ALREADY_USED_SERVICE, {
             service: 'Discord',
           })
         );
@@ -286,7 +351,7 @@ export async function transferTestTokens({
       ) {
         throw new FaucetError(
           FAUCET_ERROR.INVALID_SERVICE,
-          dictionary('invalidService', {
+          dictionary(FAUCET_ERROR.INVALID_SERVICE, {
             service: 'Telegram',
             snapshotDate: new Intl.DateTimeFormat(locale, {
               dateStyle: 'long',
@@ -305,7 +370,7 @@ export async function transferTestTokens({
       ) {
         throw new FaucetError(
           FAUCET_ERROR.ALREADY_USED_SERVICE,
-          dictionary('alreadyUsedService', {
+          dictionary(FAUCET_ERROR.ALREADY_USED_SERVICE, {
             service: 'Telegram',
           })
         );
@@ -338,7 +403,7 @@ export async function transferTestTokens({
     const timestamp = Date.now();
     const writeTransactionResult = db
       .prepare(
-        `INSERT INTO ${TABLE.TRANSACTIONS} (hash, target, amount, timestamp, discord, telegram, operator, ethhash, ethamount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        `INSERT INTO ${TABLE.TRANSACTIONS} (hash, target, amount, timestamp, discord, telegram, operator, wallet, code, ethhash, ethamount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .run(
         sessionTokenTxHash,
@@ -348,6 +413,8 @@ export async function transferTestTokens({
         discordId,
         telegramId,
         usedOperatorAddress ? targetAddress : undefined,
+        usedWalletListAddress ? targetAddress : undefined,
+        usedCode ? code : undefined,
         ethTxHash ?? null,
         ethTopupValue.toString()
       );
