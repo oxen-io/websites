@@ -1,5 +1,6 @@
-name: Builds
+name: Type Checks
 on:
+  - push
   - pull_request
 
 jobs:
@@ -37,5 +38,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run builds
-        run: pnpm build:test
+      - name: Run type checks
+        run: pnpm check-types
