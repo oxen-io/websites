@@ -4,6 +4,11 @@
     "NEXT_PUBLIC_ENV_FLAG"
   ],
   "tasks": {
+    "build:test": {
+      "dependsOn": [
+        "^build:test"
+      ]
+    },
     "build": {
       "dependsOn": [
         "^build"
