@@ -1598,6 +1598,19 @@ export const ServiceNodeRewardsAbi = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'uint64[]',
+        name: 'ids',
+        type: 'uint64[]',
+      },
+    ],
+    name: 'removeNodeBySNID',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'renounceOwnership',
     outputs: [],
@@ -1884,6 +1897,13 @@ export const ServiceNodeRewardsAbi = [
   {
     inputs: [],
     name: 'unpause',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'updateAggregatePubkey',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
