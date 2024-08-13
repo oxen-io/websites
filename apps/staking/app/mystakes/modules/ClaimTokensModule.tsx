@@ -63,7 +63,7 @@ export default function ClaimTokensModule() {
     const { amount, signature, non_signer_indices } = rewardsClaimData.bls_rewards_response;
 
     return [BigInt(amount), signature, non_signer_indices.map(BigInt)];
-  }, [rewardsClaimData, rewardsClaimDataStatus]);
+  }, [rewardsClaimData]);
 
   const isDisabled = !(address && canClaim && unclaimedRewards);
   const isReady = !!(!isDisabled && rewards && excludedSigners && blsSignature);
