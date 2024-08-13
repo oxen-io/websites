@@ -39,7 +39,6 @@ export default function ClaimTokensModule() {
 
   const {
     data: rewardsClaimData,
-    status: rewardsClaimDataStatus,
     refetch,
     isStale,
   } = useStakingBackendQueryWithParams(
