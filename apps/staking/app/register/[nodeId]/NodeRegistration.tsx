@@ -274,7 +274,7 @@ export function NodeRegistrationForm({
   const { data: runningNode, isLoading } = useQuery({
     queryKey: ['getNode', node.pubkey_ed25519],
     queryFn: () => getNode({ address: node.pubkey_ed25519 }),
-    enabled: false,
+    enabled: !registrationPaused,
   });
 
   const nodeAlreadyRunning = useMemo(
