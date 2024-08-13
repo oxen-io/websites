@@ -4,10 +4,8 @@ import { formatPercentage } from '@/lib/locale-client';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { SENT_SYMBOL } from '@session/contracts';
 import type { OpenNode } from '@session/sent-staking-js/client';
-import { generateMinAndMaxContribution } from '@session/sent-staking-js/test';
-import { formatNumber } from '@session/util/maths';
 import { useTranslations } from 'next-intl';
-import { forwardRef, type HTMLAttributes, useMemo } from 'react';
+import { forwardRef, type HTMLAttributes } from 'react';
 import {
   InfoNodeCard,
   NodeItem,
@@ -25,14 +23,6 @@ const OpenNodeCard = forwardRef<
   const titleFormat = useTranslations('modules.title');
 
   const { service_node_pubkey: pubKey, fee } = node;
-
-  const [formattedMinContribution, formattedMaxContribution] = useMemo(() => {
-    const { minContribution, maxContribution } = generateMinAndMaxContribution({
-      contributors: node.contributions,
-    });
-
-    return [formatNumber(minContribution, 2), formatNumber(maxContribution, 2)];
-  }, [node.contributions]);
 
   return (
     <InfoNodeCard
@@ -56,14 +46,14 @@ const OpenNodeCard = forwardRef<
           {titleFormat('format', { title: dictionary('minContribution') })}
         </NodeItemLabel>
         <NodeItemValue>
-          {formattedMinContribution} {SENT_SYMBOL}
+          {1} {SENT_SYMBOL}
         </NodeItemValue>
       </NodeItem>
       <NodeItemSeparator className="hidden md:block" />
       <NodeItem className="hidden md:block">
         <NodeItemLabel>{titleFormat('format', { title: dictionary('max') })}</NodeItemLabel>
         <NodeItemValue>
-          {formattedMaxContribution} {SENT_SYMBOL}
+          {10} {SENT_SYMBOL}
         </NodeItemValue>
       </NodeItem>
       <NodeItemSeparator />
