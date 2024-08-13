@@ -294,6 +294,13 @@ function ClaimTokensDialog({
 
   const isDisabled = !(address && rewards && blsSignature);
 
+  const isButtonDisabled =
+    isDisabled ||
+    (!skipUpdateBalance &&
+      stage !== CLAIM_REWARDS_STATE.SIMULATE_UPDATE_BALANCE &&
+      subStage !== 'idle') ||
+    (skipUpdateBalance && stage !== CLAIM_REWARDS_STATE.SIMULATE_CLAIM && subStage !== 'idle');
+
   useEffect(() => {
     if (!isDisabled) {
       estimateFee();
@@ -327,7 +334,6 @@ function ClaimTokensDialog({
           label={dictionary('amountClaimable')}
           tooltip={dictionary('amountClaimableTooltip')}
         >
-          {}
           {formattedUnclaimedRewardsAmount}
         </ActionModuleRow>
       </div>
@@ -342,15 +348,7 @@ function ClaimTokensDialog({
           })}
           className="w-full"
           data-testid={ButtonDataTestId.Claim_Tokens_Submit}
-          disabled={
-            isDisabled ||
-            (!skipUpdateBalance &&
-              stage !== CLAIM_REWARDS_STATE.SIMULATE_UPDATE_BALANCE &&
-              subStage !== 'idle') ||
-            (skipUpdateBalance &&
-              stage !== CLAIM_REWARDS_STATE.SIMULATE_CLAIM &&
-              (subStage !== 'pending' || subStage !== 'idle'))
-          }
+          disabled={isButtonDisabled}
           onClick={handleClick}
         >
           {dictionary('buttons.submit')}
