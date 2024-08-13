@@ -39,8 +39,8 @@ body:
       label: Feature Motivation
       description: |
         A clear and concise description of the feature motivation. 
-        Eg. I'm always frustrated when [...] so I would like to see [...]
         If you are suggesting a new feature, please explain why you think it should be added.
+      placeholder: Eg. I'm frustrated when [...] so I would like to see [...]
     validations:
       required: false
   - type: textarea
