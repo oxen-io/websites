@@ -130,7 +130,7 @@ function getStatusFromSubStage(
   }
 }
 
-const stageDictionaryMap: Record<CLAIM_REWARDS_STATE, string> = {
+const dictionaryKey: Record<CLAIM_REWARDS_STATE, string> = {
   [CLAIM_REWARDS_STATE.SIMULATE_UPDATE_BALANCE]: 'updateBalance.simulate',
   [CLAIM_REWARDS_STATE.WRITE_UPDATE_BALANCE]: 'updateBalance.write',
   [CLAIM_REWARDS_STATE.TRANSACTION_UPDATE_BALANCE]: 'updateBalance.transaction',
@@ -151,7 +151,7 @@ function getDictionaryKeyFromStageAndSubStage<
   stage: Stage;
   subStage: SubStage;
 }) {
-  return `${stageDictionaryMap[stage]}.${stage > currentStage || subStage === 'idle' ? 'pending' : subStage}`;
+  return `${dictionaryKey[stage]}.${stage > currentStage || subStage === 'idle' ? 'pending' : subStage}`;
 }
 
 function StageRow({
