@@ -124,3 +124,8 @@ export enum DYNAMIC_MODULE {
   /** The number of decimal places to round SENT values to */
   SENT_ROUNDED_DECIMALS = 2,
 }
+
+export enum HANDRAIL_THRESHOLD {
+  /** 0.005 SENT */
+  CLAIM_REWARDS_AMOUNT = '5000000',
+}

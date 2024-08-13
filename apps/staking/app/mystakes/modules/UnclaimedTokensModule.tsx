@@ -1,6 +1,6 @@
 'use client';
 
-import { DYNAMIC_MODULE, URL } from '@/lib/constants';
+import { DYNAMIC_MODULE, HANDRAIL_THRESHOLD, URL } from '@/lib/constants';
 import { externalLink } from '@/lib/locale-defaults';
 import { Module, ModuleTitle, ModuleTooltip } from '@session/ui/components/Module';
 import { useTranslations } from 'next-intl';
@@ -38,7 +38,11 @@ export const useUnclaimedTokens = () => {
     [unclaimedRewards]
   );
 
-  const canClaim = Boolean(status === 'success' && unclaimedRewards && unclaimedRewards > 0);
+  const canClaim = Boolean(
+    status === 'success' &&
+      unclaimedRewards &&
+      unclaimedRewards >= HANDRAIL_THRESHOLD.CLAIM_REWARDS_AMOUNT
+  );
 
   return { status, refetch, unclaimedRewards, formattedUnclaimedRewardsAmount, canClaim };
 };

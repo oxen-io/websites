@@ -237,7 +237,7 @@ function QueryStatusInformation({
   );
 }
 
-const GasAlertTooltip = ({ tooltipContent }: { tooltipContent: ReactNode }) => {
+const AlertTooltip = ({ tooltipContent }: { tooltipContent: ReactNode }) => {
   return (
     <Tooltip tooltipContent={tooltipContent}>
       <TriangleAlertIcon className="stroke-warning mb-0.5 h-4 w-4" />
@@ -268,6 +268,7 @@ function ClaimTokensDialog({
     stage,
     subStage,
     enabled,
+    skipUpdateBalance,
   } = useClaimRewards({
     address,
     rewards,
@@ -310,10 +311,10 @@ function ClaimTokensDialog({
         >
           <span className="inline-flex flex-row items-center gap-1.5 align-middle">
             {feeEstimate && !updateBalanceFee ? (
-              <GasAlertTooltip tooltipContent={dictionary('alert.gasFetchFailedUpdateBalance')} />
+              <AlertTooltip tooltipContent={dictionary('alert.gasFetchFailedUpdateBalance')} />
             ) : null}
             {feeEstimate && !claimFee ? (
-              <GasAlertTooltip tooltipContent={dictionary('alert.gasFetchFailedClaimRewards')} />
+              <AlertTooltip tooltipContent={dictionary('alert.gasFetchFailedClaimRewards')} />
             ) : null}
             {feeEstimate ? (
               `${feeEstimate} ${TICKER.ETH}`
@@ -326,6 +327,7 @@ function ClaimTokensDialog({
           label={dictionary('amountClaimable')}
           tooltip={dictionary('amountClaimableTooltip')}
         >
+          {}
           {formattedUnclaimedRewardsAmount}
         </ActionModuleRow>
       </div>
@@ -342,7 +344,12 @@ function ClaimTokensDialog({
           data-testid={ButtonDataTestId.Claim_Tokens_Submit}
           disabled={
             isDisabled ||
-            (stage !== CLAIM_REWARDS_STATE.SIMULATE_UPDATE_BALANCE && subStage !== 'idle')
+            (!skipUpdateBalance &&
+              stage !== CLAIM_REWARDS_STATE.SIMULATE_UPDATE_BALANCE &&
+              subStage !== 'idle') ||
+            (skipUpdateBalance &&
+              stage !== CLAIM_REWARDS_STATE.SIMULATE_CLAIM &&
+              (subStage !== 'pending' || subStage !== 'idle'))
           }
           onClick={handleClick}
         >

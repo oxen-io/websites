@@ -33,6 +33,7 @@ const useClaimRewardsStage = ({
   claimSimulateStatus,
   claimWriteStatus,
   claimTransactionStatus,
+  skipUpdateBalance,
 }: {
   updateBalanceSimulateStatus: GenericContractStatus;
   updateBalanceWriteStatus: WriteContractStatus;
@@ -40,12 +41,14 @@ const useClaimRewardsStage = ({
   claimSimulateStatus: GenericContractStatus;
   claimWriteStatus: WriteContractStatus;
   claimTransactionStatus: GenericContractStatus;
+  skipUpdateBalance: boolean;
 }) => {
   const stage = useMemo(() => {
     if (
-      updateBalanceSimulateStatus === 'success' &&
-      updateBalanceWriteStatus === 'success' &&
-      updateBalanceTransactionStatus === 'success' &&
+      (skipUpdateBalance ||
+        (updateBalanceSimulateStatus === 'success' &&
+          updateBalanceWriteStatus === 'success' &&
+          updateBalanceTransactionStatus === 'success')) &&
       claimSimulateStatus === 'success' &&
       claimWriteStatus === 'success' &&
       claimTransactionStatus === 'success'
@@ -54,9 +57,10 @@ const useClaimRewardsStage = ({
     }
 
     if (
-      updateBalanceSimulateStatus === 'success' &&
-      updateBalanceWriteStatus === 'success' &&
-      updateBalanceTransactionStatus === 'success' &&
+      (skipUpdateBalance ||
+        (updateBalanceSimulateStatus === 'success' &&
+          updateBalanceWriteStatus === 'success' &&
+          updateBalanceTransactionStatus === 'success')) &&
       claimSimulateStatus === 'success' &&
       claimWriteStatus === 'success' &&
       claimTransactionStatus !== 'success'
@@ -65,9 +69,10 @@ const useClaimRewardsStage = ({
     }
 
     if (
-      updateBalanceSimulateStatus === 'success' &&
-      updateBalanceWriteStatus === 'success' &&
-      updateBalanceTransactionStatus === 'success' &&
+      (skipUpdateBalance ||
+        (updateBalanceSimulateStatus === 'success' &&
+          updateBalanceWriteStatus === 'success' &&
+          updateBalanceTransactionStatus === 'success')) &&
       claimSimulateStatus === 'success' &&
       claimWriteStatus !== 'success' &&
       claimTransactionStatus !== 'success'
@@ -76,9 +81,10 @@ const useClaimRewardsStage = ({
     }
 
     if (
-      updateBalanceSimulateStatus === 'success' &&
-      updateBalanceWriteStatus === 'success' &&
-      updateBalanceTransactionStatus === 'success' &&
+      (skipUpdateBalance ||
+        (updateBalanceSimulateStatus === 'success' &&
+          updateBalanceWriteStatus === 'success' &&
+          updateBalanceTransactionStatus === 'success')) &&
       claimSimulateStatus !== 'success' &&
       claimWriteStatus !== 'success' &&
       claimTransactionStatus !== 'success'
@@ -126,6 +132,7 @@ const useClaimRewardsStage = ({
     claimSimulateStatus,
     claimWriteStatus,
     claimTransactionStatus,
+    skipUpdateBalance,
   ]);
 
   const subStage = useMemo(() => {
@@ -167,6 +174,8 @@ export default function useClaimRewards({
   excludedSigners,
 }: UseClaimRewardsParams) {
   const [enabled, setEnabled] = useState<boolean>(false);
+  const [skipUpdateBalance, setSkipUpdateBalance] = useState<boolean>(false);
+
   const dictionary = useTranslations('modules.claim.stage');
   const dictionaryFee = useTranslations('modules.claim.dialog.alert');
 
@@ -211,6 +220,7 @@ export default function useClaimRewards({
     claimSimulateStatus,
     claimWriteStatus,
     claimTransactionStatus,
+    skipUpdateBalance,
   });
 
   const estimateFee = () => {
@@ -225,14 +235,16 @@ export default function useClaimRewards({
 
   const updateBalanceAndClaimRewards = () => {
     setEnabled(true);
-    updateRewardsBalance();
+    if (!skipUpdateBalance) {
+      updateRewardsBalance();
+    }
   };
 
   useEffect(() => {
-    if (enabled && updateBalanceTransactionStatus === 'success') {
+    if (enabled && (skipUpdateBalance || updateBalanceTransactionStatus === 'success')) {
       claimRewards();
     }
-  }, [enabled, updateBalanceTransactionStatus]);
+  }, [enabled, skipUpdateBalance, updateBalanceTransactionStatus]);
 
   const handleError = (error: Error | SimulateContractErrorType | WriteContractErrorType) => {
     console.error(error);
@@ -248,8 +260,14 @@ export default function useClaimRewards({
    */
   useEffect(() => {
     if (updateBalanceEstimateFeeError) {
-      handleError(updateBalanceEstimateFeeError);
-      toast.error(dictionaryFee('gasFetchFailedUpdateBalance'));
+      // If the gas estimation fails with the RecipientRewardsTooLow error, we can skip the update balance step
+      // @ts-expect-error -- TODO: Properly type this error
+      if (updateBalanceEstimateFeeError?.cause?.data?.abiItem?.name === 'RecipientRewardsTooLow') {
+        setSkipUpdateBalance(true);
+      } else {
+        handleError(updateBalanceEstimateFeeError);
+        toast.error(dictionaryFee('gasFetchFailedUpdateBalance'));
+      }
     }
   }, [updateBalanceEstimateFeeError]);
 
@@ -317,5 +335,6 @@ export default function useClaimRewards({
     enabled,
     updateBalanceEstimateFeeStatus,
     claimEstimateFeeStatus,
+    skipUpdateBalance,
   };
 }
