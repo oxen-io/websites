@@ -7,7 +7,7 @@ import { Loading } from '@session/ui/components/loading';
 import { Button, ButtonSkeleton } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
-import { ActionModuleRow, ActionModuleRowSkeleton } from '../../../components/ActionModule';
+import { ActionModuleRow, ActionModuleRowSkeleton } from '@/components/ActionModule';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import type { LoadRegistrationsResponse } from '@session/sent-staking-js/client';
 import { getPendingNodes } from '@/lib/queries/getPendingNodes';
