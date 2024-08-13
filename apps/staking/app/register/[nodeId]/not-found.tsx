@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { getOpenNodes } from '@/lib/queries/getOpenNodes';
-import ActionModule from '@/app/stake/ActionModule';
+import ActionModule from '@/components/ActionModule';
 import { useMemo } from 'react';
 import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-client';
 import { NodeStakingForm } from '@/app/stake/[nodeId]/NodeStaking';

@@ -2,7 +2,7 @@
 
 import { useRewardRateQuery } from '@session/contracts/hooks/RewardRatePool';
 import { useTotalNodesQuery } from '@session/contracts/hooks/ServiceNodeRewards';
-import { CONTRACT_READ_STATUS, mergeContractReadStatuses } from '@session/contracts/hooks/contract-hooks';
+import { mergeContractReadStatuses } from '@session/contracts/hooks/useContractReadQuery';
 import { useMemo } from 'react';
 import { formatBigIntTokenValue } from '@session/util/maths';
 import { SENT_DECIMALS } from '@session/contracts';
@@ -35,18 +35,18 @@ export default function useDailyNodeReward() {
     status: totalNodesStatus,
     error: errorNodesQuery,
     refetch: refetchTotalNodes,
-  } = useTotalNodesQuery({ startEnabled: true, args: [] });
+  } = useTotalNodesQuery();
   const {
     rewardRate,
     status: rewardRateStatus,
     error: errorRewardRateQuery,
     refetch: refetchRewardRate,
-  } = useRewardRateQuery({ startEnabled: true, args: [] });
+  } = useRewardRateQuery();
 
   const dailyNodeReward = useMemo(() => {
     if (
-      totalNodesStatus === CONTRACT_READ_STATUS.SUCCESS &&
-      rewardRateStatus === CONTRACT_READ_STATUS.SUCCESS &&
+      totalNodesStatus === 'success' &&
+      rewardRateStatus === 'success' &&
       totalNodes &&
       rewardRate
     ) {
@@ -63,7 +63,7 @@ export default function useDailyNodeReward() {
   }
 
   const status = useMemo(
-    () => mergeContractReadStatuses([totalNodesStatus, rewardRateStatus]),
+    () => mergeContractReadStatuses(totalNodesStatus, rewardRateStatus),
     [totalNodesStatus, rewardRateStatus]
   );
 

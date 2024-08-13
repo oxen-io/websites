@@ -1,15 +1,14 @@
 {
-  "name": "@session/util",
+  "name": "@session/logger",
   "version": "0.0.0",
   "private": true,
   "exports": {
+    ".": "./logger.ts",
     "./*": "./*.ts"
   },
   "scripts": {
     "check-types": "tsc --noEmit",
-    "lint": "eslint .",
-    "lint-staged": "lint-staged",
-    "test": "jest"
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@session/eslint-config": "workspace:*",
@@ -21,10 +20,5 @@
     "pnpm": ">=9",
     "yarn": "use pnpm",
     "npm": "use pnpm"
-  },
-  "dependencies": {
-    "pino": "^9.2.0",
-    "pino-pretty": "^11.2.1",
-    "@session/logger": "workspace:*"
   }
 }

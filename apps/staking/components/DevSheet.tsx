@@ -19,8 +19,14 @@ import { Switch } from '@session/ui/ui/switch';
 import { Tooltip } from '@session/ui/ui/tooltip';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { SOCIALS } from '@/lib/constants';
+import { Social } from '@session/ui/components/SocialLinkList';
+import type { BuildInfo } from '@session/util/build';
+import { getEnvironment } from '@session/util/env';
+import { isProduction } from '@/lib/env';
 
-export function DevSheet() {
+export function DevSheet({ buildInfo }: { buildInfo: BuildInfo }) {
   const [isOpen, setIsOpen] = useState(false);
   const featureFlags = useFeatureFlags();
 
@@ -53,6 +59,25 @@ export function DevSheet() {
             This action cannot be undone. This will permanently delete your account and remove your
             data from our servers.
           </SheetDescription>
+          <SheetTitle>Build Info</SheetTitle>
+          <span className="inline-flex justify-start gap-1 align-middle">
+            Commit Hash:
+            <Link
+              href={`${SOCIALS[Social.Github].link}/commit/${buildInfo.env.COMMIT_HASH}`}
+              target="_blank"
+              className="text-session-green"
+            >
+              <span>{buildInfo.env.COMMIT_HASH_PRETTY}</span>
+            </Link>
+          </span>
+          <span className="inline-flex justify-start gap-1 align-middle">
+            Build Env:
+            <span>{getEnvironment()}</span>
+          </span>
+          <span className="inline-flex justify-start gap-1 align-middle">
+            Is Production:
+            <span>{isProduction ? 'True' : 'False'}</span>
+          </span>
           <SheetTitle>Global Feature Flags</SheetTitle>
           🧑‍🔬
           {globalFeatureFlags.map((flag) => (

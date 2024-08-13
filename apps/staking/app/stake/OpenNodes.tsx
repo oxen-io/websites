@@ -3,15 +3,14 @@
 import { OpenNodeCard } from '@/components/OpenNodeCard';
 import { URL } from '@/lib/constants';
 import { externalLink } from '@/lib/locale-defaults';
-import { ModuleGridContent, ModuleGridInfoContent } from '@session/ui/components/ModuleGrid';
-import { Loading } from '@session/ui/components/loading';
+import { ModuleGridInfoContent } from '@session/ui/components/ModuleGrid';
 import { useTranslations } from 'next-intl';
 import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import { useMemo } from 'react';
 import { generateOpenNodes } from '@session/sent-staking-js/test';
 import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-client';
 import { getOpenNodes } from '@/lib/queries/getOpenNodes';
-import { InfoNodeCardSkeleton } from '@/components/InfoNodeCard';
+import { NodesListSkeleton } from '@/components/NodesListModule';
 
 export default function OpenNodes() {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);
@@ -32,26 +31,12 @@ export default function OpenNodes() {
     return data?.nodes ?? [];
   }, [data?.nodes, showMockNodes, showNoNodes]);
 
-  return (
-    <ModuleGridContent className="h-full md:overflow-y-auto">
-      {isLoading ? (
-        <Loading />
-      ) : nodes.length ? (
-        nodes.map((node) => <OpenNodeCard key={node.service_node_pubkey} node={node} />)
-      ) : (
-        <NoNodes />
-      )}
-    </ModuleGridContent>
-  );
-}
-
-export function OpenNodesSkeleton() {
-  return (
-    <ModuleGridContent className="h-full md:overflow-y-auto">
-      <InfoNodeCardSkeleton />
-      <InfoNodeCardSkeleton />
-      <InfoNodeCardSkeleton />
-    </ModuleGridContent>
+  return isLoading ? (
+    <NodesListSkeleton />
+  ) : nodes.length ? (
+    nodes.map((node) => <OpenNodeCard key={node.service_node_pubkey} node={node} />)
+  ) : (
+    <NoNodes />
   );
 }
 

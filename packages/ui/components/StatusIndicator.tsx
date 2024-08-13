@@ -16,10 +16,12 @@ export const statusVariants = cva('w-3 h-3 rounded-full filter drop-shadow-lg', 
   },
 });
 
+export type StatusIndicatorVariants = VariantProps<typeof statusVariants>;
+
 export const StatusIndicator = ({
   className,
   status,
   ...props
-}: HTMLAttributes<HTMLDivElement> & VariantProps<typeof statusVariants>) => (
+}: HTMLAttributes<HTMLDivElement> & StatusIndicatorVariants) => (
   <div className={cn(statusVariants({ status, className }))} {...props} />
 );

@@ -15,6 +15,7 @@ import { GlobalProvider } from '@/providers/global-provider';
 import { TOSHandler } from '@/components/TOSHandler';
 import { RegistrationPausedInfo } from '@/components/RegistrationPausedInfo';
 import { Banner } from '@session/ui/components/Banner';
+import { getBuildInfo } from '@session/util/build';
 
 const wagmiConfig = createWagmiConfig({
   projectId: NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
@@ -24,6 +25,8 @@ const wagmiConfig = createWagmiConfig({
 export async function generateMetadata() {
   return siteMetadata({});
 }
+
+const buildInfo = getBuildInfo();
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { locale, direction, messages } = await getLocalizationData();
@@ -46,10 +49,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Banner><RegistrationPausedInfo /></Banner>
         <Header />
         <main>{children}</main>
-        <Toaster />
-        {!isProduction ? <DevSheet /> : null}
+        {!isProduction ? <DevSheet buildInfo={buildInfo}/> : null}
         <TOSHandler />
         </body>
+        <Toaster />
       </GlobalProvider>
     </html>
   );

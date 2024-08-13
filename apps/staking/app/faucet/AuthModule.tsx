@@ -8,8 +8,7 @@ import { ModuleGridHeader } from '@session/ui/components/ModuleGrid';
 import { Button } from '@session/ui/ui/button';
 import { Input } from '@session/ui/ui/input';
 import { useTranslations } from 'next-intl';
-import ActionModule, { ActionModuleDivider } from '../stake/ActionModule';
-
+import ActionModule, { ActionModuleDivider } from '@/components/ActionModule';
 import { WalletAddTokenWithLocales } from '@/components/WalletAddTokenWithLocales';
 import { BASE_URL, FAUCET_ERROR } from '@/lib/constants';
 import { ButtonDataTestId } from '@/testing/data-test-ids';

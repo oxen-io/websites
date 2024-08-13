@@ -24,7 +24,9 @@
     "docs": "Docs",
     "tokenSite": "Session Token",
     "support": "Support",
+    "register": "Register",
     "faucet": "Faucet",
+    "explorer": "Explorer",
     "hamburgerDropdown": {
       "ariaLabel": "Open navigation menu",
       "language": "Change language",
@@ -32,9 +34,11 @@
       "support": "Support",
       "ariaSupport": "Go to support page",
       "faucet": "Faucet",
-      "ariaFaucet": "Go to faucet page"
+      "ariaFaucet": "Go to faucet page",
+      "explorer": "Explorer",
+      "ariaExplorer": "Go to node explorer"
     },
-    "managedBy": "/ Managed by the Session Network"
+    "managedBy": ""
   },
   "wallet": {
     "modalButton": {
@@ -174,8 +178,15 @@
       "learnMoreButtonText": "Learn More",
       "learnMoreButtonAria": "Navigate to the Session Node documentation page."
     },
-    "pendingNodes": {
-      "title": "Pending Session Nodes"
+    "nodeRegistrations": {
+      "title": "Your Prepared Registrations",
+      "showHiddenText": "Show Hidden",
+      "landingP1": "Click on a node you have prepared to stake and confirm registration.",
+      "noWalletP1": "Connect your wallet to view Session Nodes that you have prepared registrations for.",
+      "noNodesP1": "You have not prepared registrations for any Session Nodes.",
+      "noNodesP2": "Learn how to prepare registration for your Session Node <link>here</link>.",
+      "learnMoreButtonText": "Learn More",
+      "learnMoreButtonAria": "Navigate to the Session Node documentation page."
     },
     "stakedNodes": {
       "title": "My Stakes",
@@ -194,8 +205,8 @@
       "refetchSuccess": "Successfully refetched {module}"
     },
     "balance": {
-      "title": "Total Staked {tokenSymbol}",
-      "description": "Total {tokenSymbol} in your wallet."
+      "title": "Total Staked",
+      "description": "Total {tokenSymbol} you have staked to nodes."
     },
     "dailyRewards": {
       "title": "Daily Node Rewards",
@@ -211,7 +222,68 @@
     },
     "claim": {
       "title": "Claim",
-      "error": "Failed to claim rewards."
+      "dialog": {
+        "title": "Claim Rewards",
+        "claimFee": "Claim Fee",
+        "claimFeeTooltip": "The amount of {gasTokenSymbol} this transaction will use. <link>Learn more</link>",
+        "amountClaimable": "Amount Claimable",
+        "amountClaimableTooltip": "Amount of {tokenSymbol} rewards able to be claimed.",
+        "buttons": {
+          "submit": "Claim",
+          "submitAria": "Claim {tokenAmount} {tokenSymbol} with a claim gas fee of {gasAmount} {gasTokenSymbol}"
+        },
+        "alert": {
+          "gasFetchFailedUpdateBalance": "Failed to fetch fee estimate for updating rewards balance. Fee estimate may be inaccurate.",
+          "gasFetchFailedClaimRewards": "Failed to fetch fee estimate for claiming rewards. Fee estimate may be inaccurate.",
+          "highGas": "The price of Gas is higher than usual."
+        }
+      },
+      "stage": {
+        "updateBalance": {
+          "simulate": {
+            "pending": "Validating rewards update parameters",
+            "success": "Validating rewards update parameters",
+            "error": "Validating rewards update parameters",
+            "errorTooltip": "Rewards update parameters were malformed, please refresh the page and try again"
+          },
+          "write": {
+            "pending": "Updating rewards amount on Arbitrum",
+            "success": "Updating rewards amount on Arbitrum",
+            "error": "Updating rewards amount on Arbitrum",
+            "errorTooltip": "Rewards update was not successful on Arbitrum"
+          },
+          "transaction": {
+            "pending": "Waiting for confirmation of rewards amount on Arbitrum",
+            "success": "Waiting for confirmation of rewards amount on Arbitrum",
+            "error": "Waiting for confirmation of rewards amount on Arbitrum",
+            "errorTooltip": "Rewards update was not successful on Arbitrum"
+          }
+        },
+        "claimRewards": {
+          "simulate": {
+            "pending": "Validating rewards claim",
+            "success": "Validating rewards claim",
+            "error": "Validating rewards claim",
+            "errorTooltip": "Rewards claim validation failed"
+          },
+          "write": {
+            "pending": "Submitting rewards claim on Arbitrum",
+            "success": "Submitting rewards claim on Arbitrum",
+            "error": "Submitting rewards claim on Arbitrum",
+            "errorTooltip": "Rewards claim was not successful on Arbitrum"
+          },
+          "transaction": {
+            "pending": "Waiting for confirmation of rewards claim",
+            "success": "Waiting for confirmation of rewards claim",
+            "error": "Waiting for confirmation of rewards claim",
+            "errorTooltip": "Rewards claim was not successful on Arbitrum"
+          }
+        },
+        "done": {
+          "pending": "Claim Completed",
+          "success": "Claim Completed"
+        }
+      }
     },
     "price": {
       "title": "Price",

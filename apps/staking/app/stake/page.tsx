@@ -5,7 +5,7 @@ import { ModuleGridInfoContent } from '@session/ui/components/ModuleGrid';
 import { Button } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import ActionModule from './ActionModule';
+import ActionModule from '@/components/ActionModule';
 
 export async function generateMetadata() {
   return siteMetadata({

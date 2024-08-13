@@ -38,8 +38,12 @@ const nextConfig = {
     '@session/ui',
     '@session/wallet',
     '@session/contracts',
+    '@session/util',
     'better-sqlite3-multiple-ciphers',
   ],
+  experimental: {
+    serverComponentsExternalPackages: ['pino', 'pino-pretty'],
+  },
   webpack: (config) => {
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
     return config;
@@ -59,11 +63,6 @@ const nextConfig = {
       {
         source: '/nodes',
         destination: '/stake',
-        permanent: false,
-      },
-      {
-        source: '/register/:node',
-        destination: '/stake/:node/register',
         permanent: false,
       },
     ];

@@ -80,6 +80,7 @@ type LinkItem = {
 
 export const ROUTES: LinkItem[] = [
   { dictionaryKey: 'stake', href: '/stake' },
+  { dictionaryKey: 'register', href: '/register' },
   { dictionaryKey: 'myStakes', href: '/mystakes' },
   { dictionaryKey: 'faucet', href: '/faucet' },
 ] as const;
@@ -88,6 +89,7 @@ export const EXTERNAL_ROUTES: LinkItem[] = [
   { dictionaryKey: 'tokenSite', href: 'https://token.getsession.org', linkType: 'external' },
   { dictionaryKey: 'support', href: '/support', linkType: 'external' },
   { dictionaryKey: 'docs', href: 'https://docs.getsession.org', linkType: 'external' },
+  { dictionaryKey: 'explorer', href: 'https://stagenet.oxen.observer', linkType: 'external' },
 ] as const;
 
 export enum QUERY {
@@ -101,6 +103,8 @@ export enum QUERY {
   STALE_TIME_REGISTRATIONS_LIST_DEV = 1000,
   /** 60 seconds */
   STALE_TIME_REGISTRATIONS_LIST = 60 * 1000,
+  /** 2 minutes */
+  STALE_TIME_CLAIM_REWARDS = 2 * 60 * 1000,
 }
 
 export enum SESSION_NODE {
@@ -114,4 +118,14 @@ export enum SESSION_NODE {
 
 export enum TOAST {
   ERROR_COLLAPSE_LENGTH = 128,
+}
+
+export enum DYNAMIC_MODULE {
+  /** The number of decimal places to round SENT values to */
+  SENT_ROUNDED_DECIMALS = 2,
+}
+
+export enum HANDRAIL_THRESHOLD {
+  /** 0.005 SENT */
+  CLAIM_REWARDS_AMOUNT = '5000000',
 }

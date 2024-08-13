@@ -7,7 +7,7 @@ import { Loading } from '@session/ui/components/loading';
 import { Button, ButtonSkeleton } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
-import { ActionModuleDivider, ActionModuleRow, ActionModuleRowSkeleton } from '../../ActionModule';
+import { ActionModuleRow, ActionModuleRowSkeleton } from '@/components/ActionModule';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import type { LoadRegistrationsResponse } from '@session/sent-staking-js/client';
 import { getPendingNodes } from '@/lib/queries/getPendingNodes';
@@ -18,8 +18,8 @@ import { formatBigIntTokenValue } from '@session/util/maths';
 import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import { getDateFromUnixTimestampSeconds } from '@session/util/date';
 import { notFound } from 'next/navigation';
-import { generatePendingNodes } from '@session/sent-staking-js/test';
-import { type ContractWriteStatus, REGISTER_STAGE } from '@/hooks/registerNode';
+import { generateMockRegistrations } from '@session/sent-staking-js/test';
+import { REGISTER_STAGE } from '@/hooks/useRegisterNode';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import type { VariantProps } from 'class-variance-authority';
 import { useQuery } from '@tanstack/react-query';
@@ -29,6 +29,7 @@ import Link from 'next/link';
 import { Tooltip } from '@session/ui/ui/tooltip';
 import { areHexesEqual } from '@session/util/string';
 import { isProduction } from '@/lib/env';
+import type { WriteContractStatus } from '@session/contracts/hooks/useContractWriteQuery';
 import { toast } from '@session/ui/lib/sonner';
 import { RegistrationPausedInfo } from '@/components/RegistrationPausedInfo';
 
@@ -57,7 +58,7 @@ export default function NodeRegistration({ nodeId }: { nodeId: string }) {
       showThreeMockNodes ||
       showManyMockNodes
     ) {
-      return generatePendingNodes({ userAddress: address!, numberOfNodes: 1 })[0];
+      return generateMockRegistrations({ userAddress: address!, numberOfNodes: 1 })[0];
     }
     return data?.registrations?.find((node) => areHexesEqual(node.pubkey_ed25519, nodeId));
   }, [
@@ -74,7 +75,7 @@ export default function NodeRegistration({ nodeId }: { nodeId: string }) {
 }
 
 function getStatusFromSubStage(
-  subStage: ContractWriteStatus
+  subStage: WriteContractStatus
 ): VariantProps<typeof statusVariants>['status'] {
   switch (subStage) {
     case 'error':
@@ -99,7 +100,7 @@ const stageDictionaryMap: Record<REGISTER_STAGE, string> = {
 
 function getDictionaryKeyFromStageAndSubStage<
   Stage extends REGISTER_STAGE,
-  SubStage extends ContractWriteStatus,
+  SubStage extends WriteContractStatus,
 >({
   currentStage,
   stage,
@@ -119,7 +120,7 @@ function StageRow({
 }: {
   currentStage: REGISTER_STAGE;
   stage: REGISTER_STAGE;
-  subStage: ContractWriteStatus;
+  subStage: WriteContractStatus;
 }) {
   const dictionary = useTranslations('actionModules.register.stage');
   return (
@@ -151,7 +152,7 @@ function QueryStatusInformation({
 }: {
   nodeId: string;
   stage: REGISTER_STAGE;
-  subStage: ContractWriteStatus;
+  subStage: WriteContractStatus;
 }) {
   const dictionary = useTranslations('actionModules.register');
 
@@ -243,9 +244,9 @@ function RegisterButton({
       >
         {dictionary('button.submit', { amount: stakeAmountString })}
       </Button>
-      {/*{stage !== REGISTER_STAGE.APPROVE || subStage !== 'idle' ? (*/}
-      {/*  <QueryStatusInformation nodeId={nodePubKey} stage={stage} subStage={subStage} />*/}
-      {/*) : null}*/}
+      {/*{enabled && (stage !== REGISTER_STAGE.APPROVE || subStage !== 'idle') ? (
+        <QueryStatusInformation nodeId={nodePubKey} stage={stage} subStage={subStage} />
+      ) : null}*/}
     </>
   );
 }
@@ -342,13 +343,9 @@ export function NodeRegistrationFormSkeleton() {
   return (
     <div className="flex flex-col gap-4">
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ActionModuleRowSkeleton />
-      <ActionModuleDivider />
       <ButtonSkeleton rounded="lg" size="lg" />
     </div>
   );

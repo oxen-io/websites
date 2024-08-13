@@ -1,3 +1,5 @@
+'use client';
+
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { CopyToClipboardButton } from '@session/ui/components/CopyToClipboardButton';
 import { cn } from '@session/ui/lib/utils';
