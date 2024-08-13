@@ -4,6 +4,7 @@ import { QuestionIcon } from '../icons/QuestionIcon';
 import { cn } from '../lib/utils';
 import { Loading } from './loading';
 import { Tooltip } from './ui/tooltip';
+import { Button, type ButtonProps } from './ui/button';
 
 export const outerModuleVariants = cva(
   'rounded-3xl transition-all ease-in-out bg-module-outline bg-blend-lighten shadow-md p-px',
@@ -81,8 +82,8 @@ const Module = forwardRef<HTMLDivElement, ModuleProps>(
               ? {
                   background: 'url(/images/module-hero.png)',
                   backgroundPositionX: '35%',
-                  backgroundPositionY: '43%',
-                  backgroundSize: '150%',
+                  backgroundPositionY: '35%',
+                  backgroundSize: '135%',
                 }
               : undefined
           }
@@ -95,6 +96,47 @@ const Module = forwardRef<HTMLDivElement, ModuleProps>(
 );
 
 Module.displayName = 'Module';
+
+export interface ButtonModuleProps
+  extends Omit<ButtonProps, 'size' | 'variant'>,
+    VariantProps<typeof innerModuleVariants> {
+  loading?: boolean;
+  noPadding?: boolean;
+}
+
+const ButtonModule = forwardRef<HTMLButtonElement, ButtonModuleProps>(
+  ({ className, variant, size, loading, children, noPadding, ...props }, ref) => {
+    return (
+      <div className={cn(outerModuleVariants({ size, variant, className }))}>
+        <Button
+          className={cn(
+            innerModuleVariants({ size, variant, className }),
+            'relative disabled:opacity-100',
+            !props.disabled && 'hover:bg-session-green border-session-green border',
+            noPadding && 'p-0'
+          )}
+          variant="ghost"
+          ref={ref}
+          {...props}
+          style={
+            variant === 'hero'
+              ? {
+                  background: 'url(/images/module-hero.png)',
+                  backgroundPositionX: '35%',
+                  backgroundPositionY: '35%',
+                  backgroundSize: '135%',
+                }
+              : undefined
+          }
+        >
+          {loading ? <Loading /> : children}
+        </Button>
+      </div>
+    );
+  }
+);
+
+ButtonModule.displayName = 'ButtonModule';
 
 const moduleHeaderVariants = cva('w-full', {
   variants: {
@@ -202,5 +244,6 @@ export {
   ModuleText,
   ModuleTitle,
   ModuleTooltip,
+  ButtonModule,
   innerModuleVariants as moduleVariants,
 };

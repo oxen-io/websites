@@ -34,8 +34,8 @@ const generateWalletAddress = (): string =>
 const generateContributor = (): Contributor => {
   return {
     address: generateWalletAddress(),
-    amount: Math.random() * 1000,
-    reserved: Math.random() * 1000,
+    amount: BigInt(Math.random() * 1000),
+    reserved: BigInt(Math.random() * 1000),
     locked_contributions: [],
   };
 };
@@ -55,8 +55,8 @@ const generateContributors = (maxN = 10, userAddress?: string): Contributor[] =>
   if (userAddress) {
     contributors.unshift({
       address: userAddress,
-      amount: Math.random() * 1000,
-      reserved: Math.random() * 1000,
+      amount: BigInt(Math.random() * 1000),
+      reserved: BigInt(Math.random() * 1000),
       locked_contributions: [],
     });
   }
@@ -120,6 +120,7 @@ function generateBasicNodeData({
     last_uptime_proof: generatePastBlockHeight(),
     state_height: 0,
     swarm_id: 0,
+    operator_fee: 0,
     contribution_open: 0,
     contribution_required: 0,
     num_contributions,
@@ -270,6 +271,15 @@ export const generateMockNodeData = ({
 }): GetNodesForWalletResponse => {
   const mockNodeData: GetNodesForWalletResponse = {
     nodes: [],
+    network: {
+      block_height: 1000,
+      block_timestamp: Date.now(),
+    } as never,
+    wallet: {
+      rewards: BigInt(0),
+      contract_rewards: BigInt(0),
+      contract_claimed: BigInt(0),
+    },
   };
 
   const operatorAddress = userAddress;
@@ -312,7 +322,8 @@ export const generateMinAndMaxContribution = ({
   contributors: Array<Contributor>;
 }): { minContribution: number; maxContribution: number } => {
   const totalStaked =
-    contributors.reduce((acc, contributor) => acc + contributor.amount, 0) / Math.pow(10, 9);
+    contributors.reduce((acc, contributor) => acc + contributor.amount, BigInt(0)) /
+    BigInt(Math.pow(10, 9));
   const remainingSlots = 10 - contributors.length;
 
   if (remainingSlots === 0) {
@@ -320,11 +331,11 @@ export const generateMinAndMaxContribution = ({
   }
 
   // NOTE: 120 is current stake requirement
-  const remainingStake = 120 - totalStaked;
+  const remainingStake = BigInt(120) * BigInt(Math.pow(10, 9)) - totalStaked;
 
   return {
-    minContribution: Math.max(0, remainingStake / remainingSlots),
-    maxContribution: remainingStake,
+    minContribution: Math.max(0, Number(remainingStake) / remainingSlots),
+    maxContribution: Number(remainingStake),
   };
 };
 

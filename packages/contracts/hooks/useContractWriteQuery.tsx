@@ -152,6 +152,8 @@ export function useContractWriteQuery<
     }
   }, [estimateGasEnabled]);
 
+  useEffect(() => setContractArgs(defaultArgs), [defaultArgs]);
+
   return {
     simulateAndWriteContract,
     estimateContractWriteFee,

@@ -1,42 +1,83 @@
 'use client';
 
-import { URL } from '@/lib/constants';
+import { DYNAMIC_MODULE, HANDRAIL_THRESHOLD, URL } from '@/lib/constants';
 import { externalLink } from '@/lib/locale-defaults';
-import { Module, ModuleText, ModuleTitle, ModuleTooltip } from '@session/ui/components/Module';
+import { Module, ModuleTitle, ModuleTooltip } from '@session/ui/components/Module';
 import { useTranslations } from 'next-intl';
-/* import { useSessionStakingQuery } from '@/providers/sent-staking-provider';
-import { useAccount } from 'wagmi';
-import { ModuleQueryText } from '@/components/ModuleDynamic';
-import { toast } from '@session/ui/lib/sonner';
-import { useEffect } from 'react'; */
+import { useWallet } from '@session/wallet/hooks/wallet-hooks';
+import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
+import { getStakedNodes } from '@/lib/queries/getStakedNodes';
+import { useMemo } from 'react';
+import type { QUERY_STATUS } from '@/lib/query';
+import {
+  getVariableFontSizeForSmallModule,
+  ModuleDynamicQueryText,
+} from '@/components/ModuleDynamic';
+import { formatSENTBigInt } from '@session/contracts/hooks/SENT';
+
+export const useUnclaimedTokens = () => {
+  const { address } = useWallet();
+
+  const { data, status, refetch } = useStakingBackendQueryWithParams(
+    getStakedNodes,
+    {
+      address: address!,
+    },
+    {
+      enabled: !!address,
+    }
+  );
+
+  const unclaimedRewards = useMemo(
+    () => (data?.wallet ? data.wallet.rewards - data.wallet.contract_claimed : undefined),
+    [data?.wallet?.rewards, data?.wallet?.contract_claimed]
+  );
+
+  const formattedUnclaimedRewardsAmount = useMemo(
+    () => formatSENTBigInt(unclaimedRewards, DYNAMIC_MODULE.SENT_ROUNDED_DECIMALS),
+    [unclaimedRewards]
+  );
+
+  const canClaim = Boolean(
+    status === 'success' &&
+      unclaimedRewards &&
+      unclaimedRewards >= BigInt(HANDRAIL_THRESHOLD.CLAIM_REWARDS_AMOUNT)
+  );
+
+  return { status, refetch, unclaimedRewards, formattedUnclaimedRewardsAmount, canClaim };
+};
 
 export default function UnclaimedTokensModule() {
   const dictionary = useTranslations('modules.unclaimedTokens');
+  const toastDictionary = useTranslations('modules.toast');
   const titleFormat = useTranslations('modules.title');
-
   const title = dictionary('title');
 
-  // const { address } = useAccount();
+  const { formattedUnclaimedRewardsAmount, status, refetch } = useUnclaimedTokens();
+
   return (
     <Module>
       <ModuleTooltip>
         {dictionary.rich('description', { link: externalLink(URL.LEARN_MORE_UNCLAIMED_REWARDS) })}
       </ModuleTooltip>
       <ModuleTitle>{titleFormat('format', { title })}</ModuleTitle>
-      <ModuleText>0</ModuleText>
-      {/* {address ? <UnclaimedTokensQueryContainer address={address} /> : null} */}
+      <ModuleDynamicQueryText
+        status={status as QUERY_STATUS}
+        fallback={0}
+        errorToast={{
+          messages: {
+            error: toastDictionary('error', { module: title }),
+            refetching: toastDictionary('refetching'),
+            success: toastDictionary('refetchSuccess', { module: title }),
+          },
+          refetch,
+        }}
+        style={{
+          fontSize: getVariableFontSizeForSmallModule(formattedUnclaimedRewardsAmount.length),
+        }}
+      >
+        {formattedUnclaimedRewardsAmount}
+      </ModuleDynamicQueryText>
     </Module>
   );
 }
-/* 
-function UnclaimedTokensQueryContainer({ address }: { address: any }) {
-  const { data, status } = useSessionStakingQuery({ query: 'getRewardsForEthWallet', inputs: { address } });
-
-  return (
-    <ModuleQueryText fallback={0} status={status} errorToast="Failed to fetch unclaimed tokens">
-      {data}
-    </ModuleQueryText>
-  );
-
-  return 0;
-} */
