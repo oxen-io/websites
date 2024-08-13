@@ -30,6 +30,11 @@ import { Tooltip } from '@session/ui/ui/tooltip';
 import { areHexesEqual } from '@session/util/string';
 import { isProduction } from '@/lib/env';
 import type { WriteContractStatus } from '@session/contracts/hooks/useContractWriteQuery';
+import { toast } from '@session/ui/lib/sonner';
+import { RegistrationPausedInfo } from '@/components/RegistrationPausedInfo';
+
+// TODO - remove with feature flag pr
+const registrationPaused = true;
 
 export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showMockRegistration = useFeatureFlag(FEATURE_FLAG.MOCK_REGISTRATION);
@@ -226,13 +231,21 @@ function RegisterButton({
     userSignature,
   });
 
+  const handleClick = () => {
+    if (registrationPaused) {
+      toast.error(<RegistrationPausedInfo />);
+    } else {
+      registerAndStake();
+    }
+  };
+
   return (
     <>
       <Button
         data-testid={ButtonDataTestId.Register_Submit}
         rounded="lg"
         size="lg"
-        onClick={registerAndStake}
+        onClick={handleClick}
         disabled={disabled}
       >
         {dictionary('button.submit', { amount: stakeAmountString })}
@@ -261,6 +274,7 @@ export function NodeRegistrationForm({
   const { data: runningNode, isLoading } = useQuery({
     queryKey: ['getNode', node.pubkey_ed25519],
     queryFn: () => getNode({ address: node.pubkey_ed25519 }),
+    enabled: !registrationPaused,
   });
 
   const nodeAlreadyRunning = useMemo(

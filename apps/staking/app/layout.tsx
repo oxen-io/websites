@@ -13,6 +13,8 @@ import ChainBanner from '@/components/ChainBanner';
 import Header from '@/components/Header';
 import { GlobalProvider } from '@/providers/global-provider';
 import { TOSHandler } from '@/components/TOSHandler';
+import { RegistrationPausedInfo } from '@/components/RegistrationPausedInfo';
+import { Banner } from '@session/ui/components/Banner';
 import { getBuildInfo } from '@session/util/build';
 
 const wagmiConfig = createWagmiConfig({
@@ -43,11 +45,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         wagmiMetadata={wagmiMetadata}
       >
         <body className="bg-session-black text-session-text font-atyp-text overflow-x-hidden">
-          <ChainBanner />
-          <Header />
-          <main>{children}</main>
-          {!isProduction ? <DevSheet buildInfo={buildInfo} /> : null}
-          <TOSHandler />
+        <ChainBanner />
+        <Banner><RegistrationPausedInfo /></Banner>
+        <Header />
+        <main>{children}</main>
+        {!isProduction ? <DevSheet buildInfo={buildInfo}/> : null}
+        <TOSHandler />
         </body>
         <Toaster />
       </GlobalProvider>

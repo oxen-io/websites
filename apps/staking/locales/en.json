@@ -159,6 +159,9 @@
     "mainnetNotLive": "{mainnetName} is not live yet. <link>Click here to switch to {testnetName}</link>",
     "testnet": "You are currently on {testnetName}."
   },
+  "banner": {
+    "registrationPaused": "Stagenet node registration is temporarily paused. Apologies for any inconvenience, we expect to be able to re-enable registrations soon. For updates, visit the <link>Session Token discord</link>."
+  },
   "modules": {
     "title": {
       "format": "{title}:"
