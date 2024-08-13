@@ -19,7 +19,7 @@ import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import { getDateFromUnixTimestampSeconds } from '@session/util/date';
 import { notFound } from 'next/navigation';
 import { generateMockRegistrations } from '@session/sent-staking-js/test';
-import { REGISTER_STAGE } from '@/hooks/useRegisterNode';
+import useRegisterNode, { REGISTER_STAGE } from '@/hooks/useRegisterNode';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import type { VariantProps } from 'class-variance-authority';
 import { useQuery } from '@tanstack/react-query';
@@ -32,6 +32,9 @@ import { isProduction } from '@/lib/env';
 import type { WriteContractStatus } from '@session/contracts/hooks/useContractWriteQuery';
 import { toast } from '@session/ui/lib/sonner';
 import { RegistrationPausedInfo } from '@/components/RegistrationPausedInfo';
+
+// TODO - remove with feature flag pr
+const registrationPaused = true;
 
 export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showMockRegistration = useFeatureFlag(FEATURE_FLAG.MOCK_REGISTRATION);
@@ -221,15 +224,19 @@ function RegisterButton({
   disabled?: boolean;
 }) {
   const dictionary = useTranslations('actionModules.register');
-  // const { registerAndStake, stage, subStage } = useRegisterNode({
-  //   blsPubKey,
-  //   blsSignature,
-  //   nodePubKey,
-  //   userSignature,
-  // });
+  const { registerAndStake, stage, subStage, enabled } = useRegisterNode({
+    blsPubKey,
+    blsSignature,
+    nodePubKey,
+    userSignature,
+  });
 
   const handleClick = () => {
-    toast.error(<RegistrationPausedInfo />);
+    if (registrationPaused) {
+      toast.error(<RegistrationPausedInfo />);
+    } else {
+      registerAndStake();
+    }
   };
 
   return (
@@ -239,14 +246,13 @@ function RegisterButton({
         rounded="lg"
         size="lg"
         onClick={handleClick}
-        // onClick={registerAndStake}
         disabled={disabled}
       >
         {dictionary('button.submit', { amount: stakeAmountString })}
       </Button>
-      {/*{enabled && (stage !== REGISTER_STAGE.APPROVE || subStage !== 'idle') ? (
+      {enabled && (stage !== REGISTER_STAGE.APPROVE || subStage !== 'idle') ? (
         <QueryStatusInformation nodeId={nodePubKey} stage={stage} subStage={subStage} />
-      ) : null}*/}
+      ) : null}
     </>
   );
 }
@@ -293,14 +299,12 @@ export function NodeRegistrationForm({
       >
         <PubKey pubKey={node.pubkey_ed25519} force="collapse" alwaysShowCopyButton />
       </ActionModuleRow>
-      <ActionModuleDivider />
       <ActionModuleRow
         label={registerCardDictionary('type')}
         tooltip={registerCardDictionary('typeDescription')}
       >
         {registerCardDictionary(node.type === 'solo' ? 'solo' : 'multi')}
       </ActionModuleRow>
-      <ActionModuleDivider />
       <ActionModuleRow
         label={dictionary('preparedAtTimestamp')}
         tooltip={dictionary('preparedAtTimestampDescription')}
@@ -316,7 +320,6 @@ export function NodeRegistrationForm({
           </div>
         </Tooltip>
       </ActionModuleRow>
-      <ActionModuleDivider />
       {node.type === 'solo' ? (
         <ActionModuleRow
           label={actionModuleSharedDictionary('stakeAmount')}
@@ -325,7 +328,6 @@ export function NodeRegistrationForm({
           {stakeAmountString} {SENT_SYMBOL}
         </ActionModuleRow>
       ) : null}
-      <ActionModuleDivider />
       <RegisterButton
         nodePubKey={node.pubkey_ed25519}
         blsPubKey={node.pubkey_bls}
