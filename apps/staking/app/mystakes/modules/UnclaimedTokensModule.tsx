@@ -41,7 +41,7 @@ export const useUnclaimedTokens = () => {
   const canClaim = Boolean(
     status === 'success' &&
       unclaimedRewards &&
-      unclaimedRewards >= HANDRAIL_THRESHOLD.CLAIM_REWARDS_AMOUNT
+      unclaimedRewards >= BigInt(HANDRAIL_THRESHOLD.CLAIM_REWARDS_AMOUNT)
   );
 
   return { status, refetch, unclaimedRewards, formattedUnclaimedRewardsAmount, canClaim };
