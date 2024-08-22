@@ -160,7 +160,8 @@
     "testnet": "You are currently on {testnetName}."
   },
   "banner": {
-    "registrationPaused": "Stagenet node registration is temporarily paused. Apologies for any inconvenience, we expect to be able to re-enable registrations soon. For updates, visit the <link>Session Token discord</link>."
+    "registrationPaused": "Stagenet node registration is temporarily paused. Apologies for any inconvenience, we expect to be able to re-enable registrations soon. For updates, visit the <link>Session Token discord</link>.",
+    "newTokenContract": "The Session Token contract has been updated. <remove-token-link>Remove the old token</remove-token-link> and <watch-token>add the new token contract</watch-token> to your wallet watch list to continue using the Staking Portal. If you have any questions, visit the <link>Session Token Discord</link>."
   },
   "modules": {
     "title": {
