@@ -76,7 +76,7 @@ async function downloadRepository({
     // Clone the repository
     execSync(`git clone ${url} ${destinationPath}`);
     logger.info('Repository downloaded successfully!');
-    execSync(`cd ${destinationPath} && git switch integration`);
+    execSync(`cd ${destinationPath} && git switch master`);
   } catch (error) {
     logger.error('Error downloading repository:', error);
   }

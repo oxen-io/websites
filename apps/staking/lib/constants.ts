@@ -24,6 +24,7 @@ export enum URL {
   BUG_BOUNTY_PROGRAM = 'https://token.getsession.org/bug-bounty-program',
   BUG_BOUNTY_TOS = 'https://token.getsession.org/bug-bounty-terms',
   SESSION_NODE_SOLO_SETUP_DOCS = 'https://docs.getsession.org/class-is-in-session/session-stagenet-single-contributor-node-setup',
+  REMOVE_TOKEN_FROM_WATCH_LIST = 'https://support.metamask.io/managing-my-tokens/custom-tokens/how-to-remove-a-token/',
 }
 
 export const LANDING_BUTTON_URL = {
