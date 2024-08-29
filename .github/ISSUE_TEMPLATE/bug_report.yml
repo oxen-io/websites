@@ -90,8 +90,8 @@ body:
     attributes:
       label: Are you using "Wallet Connect" to connect your wallet?
       options:
-        - Yes
-        - No
+        - "Yes"
+        - "No"
       default: 1
   - type: input
     attributes:
