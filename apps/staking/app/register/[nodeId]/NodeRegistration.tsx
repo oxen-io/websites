@@ -34,7 +34,7 @@ import { toast } from '@session/ui/lib/sonner';
 import { RegistrationPausedInfo } from '@/components/RegistrationPausedInfo';
 
 // TODO - remove with feature flag pr
-const registrationPaused = true;
+const registrationPaused = false;
 
 export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showMockRegistration = useFeatureFlag(FEATURE_FLAG.MOCK_REGISTRATION);

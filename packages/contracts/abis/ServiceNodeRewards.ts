@@ -121,7 +121,7 @@ export const ServiceNodeRewardsAbi = [
       },
       {
         internalType: 'address',
-        name: 'recipient',
+        name: 'contributor',
         type: 'address',
       },
     ],
@@ -326,7 +326,7 @@ export const ServiceNodeRewardsAbi = [
       },
       {
         internalType: 'address',
-        name: 'recipient',
+        name: 'contributor',
         type: 'address',
       },
     ],
@@ -402,7 +402,7 @@ export const ServiceNodeRewardsAbi = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'recipient',
+        name: 'initiator',
         type: 'address',
       },
       {
@@ -580,7 +580,7 @@ export const ServiceNodeRewardsAbi = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'recipient',
+        name: 'operator',
         type: 'address',
       },
       {
@@ -617,7 +617,7 @@ export const ServiceNodeRewardsAbi = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'recipient',
+        name: 'operator',
         type: 'address',
       },
       {
@@ -660,7 +660,7 @@ export const ServiceNodeRewardsAbi = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'recipient',
+        name: 'contributor',
         type: 'address',
       },
       {
@@ -1593,19 +1593,6 @@ export const ServiceNodeRewardsAbi = [
       },
     ],
     name: 'removeBLSPublicKeyWithSignature',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint64[]',
-        name: 'ids',
-        type: 'uint64[]',
-      },
-    ],
-    name: 'removeNodeBySNID',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
