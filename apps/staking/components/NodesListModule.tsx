@@ -10,14 +10,17 @@ import { InfoNodeCardSkeleton } from '@/components/InfoNodeCard';
 export default function NodesListModule({
   title,
   children,
+  headerItems,
 }: {
   title: string;
   children: ReactNode;
+  headerItems?: ReactNode;
 }) {
   return (
     <ModuleGrid variant="section" colSpan={2} className="h-full">
       <ModuleGridHeader>
         <ModuleGridTitle>{title}</ModuleGridTitle>
+        {headerItems}
       </ModuleGridHeader>
       <ModuleGridContent className="h-full md:overflow-y-auto">{children}</ModuleGridContent>
     </ModuleGrid>

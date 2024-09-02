@@ -39,6 +39,7 @@ const nextConfig = {
     '@session/wallet',
     '@session/contracts',
     '@session/util',
+    '@session/feature-flags',
     'better-sqlite3-multiple-ciphers',
   ],
   experimental: {
