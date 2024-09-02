@@ -62,6 +62,10 @@ export enum FAUCET_ERROR {
   INVALID_OXEN_ADDRESS = 'invalidOxenAddress',
   ALREADY_USED = 'alreadyUsed',
   ALREADY_USED_SERVICE = 'alreadyUsedService',
+  INVALID_REFERRAL_CODE = 'invalidReferralCode',
+  REFERRAL_CODE_CANT_BE_USED_BY_CREATOR = 'referralCodeCantBeUsedByCreator',
+  REFERRAL_CODE_OUT_OF_USES = 'referralCodeOutOfUses',
+  REFERRAL_CODE_ALREADY_USED = 'referralCodeAlreadyUsed',
 }
 
 export enum TICKER {

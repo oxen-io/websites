@@ -144,14 +144,19 @@
         "invalidOxenAddress": "This wallet address was not registered for the {oxenProgram} on {oxenRegistrationDate} and is not eligible for testnet access. Try connecting with Discord or Telegram instead.",
         "alreadyUsedService": "The connected {service} account has already been used to claim testnet {tokenSymbol} for another wallet address.",
         "alreadyUsed": "The connected wallet address has already been used to claim testnet {tokenSymbol}.",
-        "authFailed": "{service} authentication failed. Please refresh the page and try again."
+        "authFailed": "{service} authentication failed. Please refresh the page and try again.",
+        "invalidReferralCode": "Referral code is invalid.",
+        "referralCodeCantBeUsedByCreator": "Referral code can't be used by this wallet, consider sharing it with someone.",
+        "referralCodeOutOfUses": "Referral code is out of uses.",
+        "referralCodeAlreadyUsed": "You have already used this referral code."
       },
       "transactionHash": "Transaction Hash: {hash}",
       "transactionHashDescription": "Transaction hash of the faucet transaction.",
       "haveSomeMore": "Alright then, you can have some more",
       "watchSENTInfo": "You may need to manually add {tokenSymbol} to your wallet’s token list to make it show up, click the button below to add it.",
       "copyTransactionHash": "Copy Transaction Hash",
-      "copyTransactionHashSuccessToast": "Copied Transaction Hash to clipboard!"
+      "copyTransactionHashSuccessToast": "Copied Transaction Hash to clipboard!",
+      "referralCodeAdded": "Faucet referral code detected and added."
     }
   },
   "chainBanner": {
