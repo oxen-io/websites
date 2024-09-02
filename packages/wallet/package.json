@@ -26,9 +26,9 @@
     "@session/util": "workspace:*",
     "@session/ui": "workspace:*",
     "@tanstack/react-query": "^5.32.1",
-    "@web3modal/wagmi": "^4.1.11",
-    "viem": "2.17.3",
-    "wagmi": "2.9.10"
+    "@web3modal/wagmi": "5.1.4",
+    "viem": "2.21.1",
+    "wagmi": "2.12.8"
   },
   "engines": {
     "node": ">=22",

@@ -24,7 +24,7 @@
     "@session/ui": "workspace:*",
     "@telegram-auth/react": "^1.0.3",
     "@telegram-auth/server": "^1.0.3",
-    "next": "14.2.3",
+    "next": "14.2.5",
     "next-auth": "^4.24.7"
   },
   "engines": {
