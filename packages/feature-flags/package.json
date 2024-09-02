@@ -1,0 +1,36 @@
+{
+  "name": "@session/feature-flags",
+  "version": "0.0.0",
+  "exports": {
+    "./*": "./lib/*.ts",
+    "./remote": "./lib/remote.tsx",
+    "./providers/*": "./providers/*.tsx",
+    "./components/*": "./components/*.tsx"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@session/eslint-config": "workspace:*",
+    "@session/typescript-config": "workspace:*",
+    "@session/logger": "workspace:*",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
+    "react": "^18.2.0"
+  },
+  "dependencies": {
+    "@session/testing": "workspace:*",
+    "@session/util": "workspace:*",
+    "@session/ui": "workspace:*",
+    "better-sqlite3-multiple-ciphers": "11.1.2",
+    "next": "14.2.5"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9",
+    "yarn": "use pnpm",
+    "npm": "use pnpm"
+  }
+}
