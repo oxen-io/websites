@@ -17,13 +17,11 @@
     "@session/logger": "workspace:*",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
-    "autoprefixer": "^10.4.19",
     "react": "^18.2.0"
   },
   "dependencies": {
     "@session/testing": "workspace:*",
     "@session/util": "workspace:*",
-    "@session/ui": "workspace:*",
     "better-sqlite3-multiple-ciphers": "11.1.2",
     "next": "14.2.5"
   },

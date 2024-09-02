@@ -281,9 +281,6 @@ importers:
       '@session/testing':
         specifier: workspace:*
         version: link:../testing
-      '@session/ui':
-        specifier: workspace:*
-        version: link:../ui
       '@session/util':
         specifier: workspace:*
         version: link:../util
@@ -309,9 +306,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
-      autoprefixer:
-        specifier: ^10.4.19
-        version: 10.4.19(postcss@8.4.38)
       react:
         specifier: ^18.2.0
         version: 18.3.1
