@@ -1,8 +1,4 @@
-import {
-  genericCreateDataTestId,
-  genericIsDataTestId,
-  type GenericDataTestId,
-} from '@session/testing/ids';
+import { genericCreateDataTestId, type GenericDataTestId, genericIsDataTestId } from '@session/testing/ids';
 import { GenericTestingProps } from '@session/testing/react';
 
 /** The base data test IDs for UI components. */
@@ -41,3 +37,7 @@ export const isDataTestId = genericIsDataTestId<BaseDataTestId>;
  * @returns The generic data test ID.
  */
 export const createDataTestId = genericCreateDataTestId<BaseDataTestId>;
+
+export enum ButtonDataTestId {
+  Copy_Pub_key_To_Clipboard = 'button:copy-pub-key-to-clipboard',
+}

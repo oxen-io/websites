@@ -153,13 +153,13 @@ export function useAddSessionTokenToWallet(tokenIcon: string) {
   const [isPending, setIsPending] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { chain } = useWalletChain();
+  const { chain: currentChain } = useWalletChain();
 
   const addToken = async () => {
     setIsPending(true);
     setIsSuccess(false);
     try {
-      if (!chain || (chain !== CHAIN.MAINNET && chain !== CHAIN.TESTNET)) {
+      if (!currentChain || (currentChain !== CHAIN.MAINNET && currentChain !== CHAIN.TESTNET)) {
         throw new Error('Invalid chain');
       }
 
@@ -169,7 +169,7 @@ export function useAddSessionTokenToWallet(tokenIcon: string) {
       }
 
       const walletClient = createWalletClient({
-        chain: chains[chain],
+        chain: chains[currentChain],
         transport: custom(ethereumProvider),
       });
 
@@ -177,7 +177,7 @@ export function useAddSessionTokenToWallet(tokenIcon: string) {
         type: 'ERC20',
         options: {
           // The address of the token.
-          address: addresses.SENT[chain],
+          address: addresses.SENT[currentChain],
           // A ticker symbol or shorthand, up to 5 characters.
           symbol: SENT_SYMBOL.replaceAll('$', ''),
           // The number of decimals in the token.
@@ -210,7 +210,7 @@ export function useAddChain() {
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const addChain = async (chain: CHAIN) => {
+  const addChain = async (chainToAdd: CHAIN) => {
     setIsPending(true);
     setIsSuccess(false);
     try {
@@ -219,12 +219,14 @@ export function useAddChain() {
         throw new Error('No ethereum provider detected in window object');
       }
 
+      const chain = chains[chainToAdd];
+
       const walletClient = createWalletClient({
-        chain: chains[chain],
+        chain,
         transport: custom(ethereumProvider),
       });
 
-      await walletClient.addChain({ chain: chains[chain] });
+      await walletClient.addChain({ chain });
 
       setIsSuccess(true);
     } catch (error) {
