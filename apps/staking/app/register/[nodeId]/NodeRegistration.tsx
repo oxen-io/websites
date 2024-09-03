@@ -342,7 +342,7 @@ export function NodeRegistrationForm({
         userSignature={node.sig_ed25519}
         stakeAmount={stakeAmount}
         stakeAmountString={stakeAmountString}
-        disabled={nodeAlreadyRunning || isRegistrationPausedFlagEnabled}
+        disabled={nodeAlreadyRunning || isRegistrationPausedFlagEnabled || isRemoteFlagLoading}
         isRegistrationPausedFlagEnabled={isRegistrationPausedFlagEnabled}
       />
     </div>
