@@ -39,7 +39,7 @@ export default function ChainBanner() {
               role="button"
               data-testid={SpecialDataTestId.Unsupported_Chain_Link}
               onClick={handleClick}
-              className="underline"
+              className="font-medium underline"
             >
               {chunks}
             </a>
