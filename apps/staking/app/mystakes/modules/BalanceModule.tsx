@@ -11,13 +11,14 @@ import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { Address } from 'viem';
-import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { getStakedNodes } from '@/lib/queries/getStakedNodes';
 import { generateMockNodeData } from '@session/sent-staking-js/test';
 import type { QUERY_STATUS } from '@/lib/query';
 import { formatSENTNumber } from '@session/contracts/hooks/SENT';
 import { DYNAMIC_MODULE } from '@/lib/constants';
+import { FEATURE_FLAG } from '@/lib/feature-flags';
+import { useFeatureFlag } from '@/lib/feature-flags-client';
 
 const getTotalStakedAmount = ({
   nodes,

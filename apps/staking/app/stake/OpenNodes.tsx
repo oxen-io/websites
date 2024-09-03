@@ -5,12 +5,13 @@ import { URL } from '@/lib/constants';
 import { externalLink } from '@/lib/locale-defaults';
 import { ModuleGridInfoContent } from '@session/ui/components/ModuleGrid';
 import { useTranslations } from 'next-intl';
-import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import { useMemo } from 'react';
 import { generateOpenNodes } from '@session/sent-staking-js/test';
 import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-client';
 import { getOpenNodes } from '@/lib/queries/getOpenNodes';
 import { NodesListSkeleton } from '@/components/NodesListModule';
+import { useFeatureFlag } from '@/lib/feature-flags-client';
+import { FEATURE_FLAG } from '@/lib/feature-flags';
 
 export default function OpenNodes() {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);

@@ -1,7 +1,7 @@
 'use client';
 
 import { NodeContributorList } from '@/components/NodeCard';
-import { PubKey } from '@/components/PubKey';
+import { PubKey } from '@session/ui/components/PubKey';
 import { formatPercentage } from '@/lib/locale-client';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
@@ -14,9 +14,10 @@ import { useMemo } from 'react';
 import { ActionModuleRow, ActionModuleRowSkeleton } from '@/components/ActionModule';
 import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-client';
 import { getOpenNodes } from '@/lib/queries/getOpenNodes';
-import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import { generateOpenNodes } from '@session/sent-staking-js/test';
 import { areHexesEqual } from '@session/util/string';
+import { FEATURE_FLAG } from '@/lib/feature-flags';
+import { useFeatureFlag } from '@/lib/feature-flags-client';
 
 export default function NodeStaking({ nodeId }: { nodeId: string }) {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);

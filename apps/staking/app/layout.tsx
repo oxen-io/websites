@@ -10,12 +10,13 @@ import { createWagmiConfig } from '@session/wallet/lib/wagmi';
 import { headers } from 'next/headers';
 import { cookieToInitialState } from 'wagmi';
 import ChainBanner from '@/components/ChainBanner';
-import Header from '@/components/Header';
 import { GlobalProvider } from '@/providers/global-provider';
 import { TOSHandler } from '@/components/TOSHandler';
 import { getBuildInfo } from '@session/util/build';
-import { Banner } from '@session/ui/components/Banner';
-import { NewTokenContractInfo } from '@/components/NewTokenContractInfo';
+import { FeatureFlagProvider } from '@/lib/feature-flags-client';
+import RemoteBanner from '@/components/RemoteBanner';
+import Header from '@/components/Header';
+import { Suspense } from 'react';
 
 const wagmiConfig = createWagmiConfig({
   projectId: NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
@@ -38,25 +39,28 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       dir={direction}
       className={`${AtypDisplay.variable} ${AtypText.variable} ${MonumentExtended.variable}`}
     >
-      <GlobalProvider
-        messages={messages}
-        locale={locale}
-        initialState={initialWagmiState}
-        wagmiMetadata={wagmiMetadata}
-      >
-        <body className="bg-session-black text-session-text font-atyp-text overflow-x-hidden">
-          <ChainBanner />
-          <Banner>
-            <NewTokenContractInfo />
-          </Banner>
-          {/*<Banner><RegistrationPausedInfo /></Banner>*/}
-          <Header />
-          <main>{children}</main>
-          {!isProduction ? <DevSheet buildInfo={buildInfo} /> : null}
-          <TOSHandler />
-        </body>
-        <Toaster />
-      </GlobalProvider>
+      <FeatureFlagProvider>
+        <GlobalProvider
+          messages={messages}
+          locale={locale}
+          initialState={initialWagmiState}
+          wagmiMetadata={wagmiMetadata}
+        >
+          <body className="bg-session-black text-session-text font-atyp-text overflow-x-hidden">
+            <ChainBanner />
+            <Suspense>
+              <RemoteBanner />
+            </Suspense>
+            <Suspense>
+              <Header />
+            </Suspense>
+            <main>{children}</main>
+            {!isProduction ? <DevSheet buildInfo={buildInfo} /> : null}
+            <TOSHandler />
+          </body>
+          <Toaster />
+        </GlobalProvider>
+      </FeatureFlagProvider>
     </html>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { PubKey } from '@/components/PubKey';
+import { PubKey } from '@session/ui/components/PubKey';
 import { TICKER } from '@/lib/constants';
 import { formatLocalizedRelativeTimeToNowClient } from '@/lib/locale-client';
 import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';

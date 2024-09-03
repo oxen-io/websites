@@ -16,6 +16,7 @@ export enum ButtonDataTestId {
   Agree_TOS = 'button:agree-tos',
   Claim_Tokens_Open_Dialog = 'button:claim-tokens-open-dialog',
   Claim_Tokens_Submit = 'button:claim-tokens-submit',
+  Hide_Prepared_Registration = 'button:hide-prepared-registration',
 }
 
 export enum SpecialDataTestId {
