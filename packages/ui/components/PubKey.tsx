@@ -16,6 +16,8 @@ type PubKeyType = HTMLAttributes<HTMLDivElement> & {
   expandOnHover?: boolean;
   alwaysShowCopyButton?: boolean;
   force?: 'expand' | 'collapse';
+  copyToClipboardAriaLabel?: string;
+  copyToClipboardToastMessage?: string;
 };
 
 export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
@@ -26,6 +28,8 @@ export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
     trailingChars,
     expandOnHover,
     alwaysShowCopyButton,
+    copyToClipboardAriaLabel,
+    copyToClipboardToastMessage,
     force,
     ...rest
   } = props;
@@ -87,8 +91,8 @@ export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
         )}
         textToCopy={pubKey}
         data-testid={ButtonDataTestId.Copy_Pub_Key_To_Clipboard}
-        aria-label={'Copy to Clipboard'}
-        copyToClipboardToastMessage={'Copied to clipboard!'}
+        aria-label={copyToClipboardAriaLabel ?? 'Copy to Clipboard'}
+        copyToClipboardToastMessage={copyToClipboardToastMessage ?? 'Copied to clipboard!'}
       />
     </span>
   );
