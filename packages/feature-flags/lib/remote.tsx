@@ -52,7 +52,7 @@ export async function getRemoteFeatureFlagContentGeneric<Flag extends GenericRem
   let db: BetterSql3.Database | undefined;
   try {
     db = openDatabase();
-    const content = getFeatureFlagContent<Flag>({ db, flag })[0]?.content ?? '';
+    const content = getFeatureFlagContent<Flag>({ db, flag }).content ?? '';
     return {
       content,
     };

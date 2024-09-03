@@ -13,5 +13,5 @@ export function getFeatureFlagContent<Flag extends GenericRemoteFeatureFlag>({
     .prepare(
       `SELECT ${FLAGS_TABLE.CONTENT} FROM ${TABLE.FLAGS} WHERE ${FLAGS_TABLE.FLAG} = ? AND ${FLAGS_TABLE.ENABLED} = 1`
     )
-    .get(flag) as Array<FlagsRowContent>;
+    .get(flag) as FlagsRowContent;
 }
