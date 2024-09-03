@@ -86,7 +86,7 @@ export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
           alwaysShowCopyButton || isExpanded ? 'opacity-100' : 'opacity-0'
         )}
         textToCopy={pubKey}
-        data-testid={ButtonDataTestId.Copy_Pub_key_To_Clipboard}
+        data-testid={ButtonDataTestId.Copy_Pub_Key_To_Clipboard}
         aria-label={'Copy to Clipboard'}
         copyToClipboardToastMessage={'Copied to clipboard!'}
       />
