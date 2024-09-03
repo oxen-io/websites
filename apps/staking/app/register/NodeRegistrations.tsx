@@ -23,6 +23,7 @@ export default function NodeRegistrations() {
   const showManyMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_PENDING_NODES_MANY);
   const showNoNodes = useFeatureFlag(FEATURE_FLAG.MOCK_NO_PENDING_NODES);
 
+  // TODO: use once we have user preferences
   /* const hideRegistrationsEnabled = useExperimentalFeatureFlag(
      EXPERIMENTAL_FEATURE_FLAG.HIDE_REGISTRATIONS
    );
