@@ -19,7 +19,7 @@
     "@session/testing": "workspace:*",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
-    "react": "^18.2.0"
+    "react": "18.3.1"
   },
   "dependencies": {
     "@session/contracts": "workspace:*",
