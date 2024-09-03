@@ -39,13 +39,12 @@ function bootstrapFeatureFlags<Flag extends GenericFeatureFlag>(validFeatureFlag
     return {};
   }
   const featureFlags = loadFeatureFlagsFromStorage();
-  const searchParams = useSearchParams();
-  const searchParamEntries = searchParams.entries();
+  const searchParamEntries = useSearchParams();
 
   if (validFeatureFlags?.length) {
-    for (const [key, value] of searchParamEntries) {
-      if (validFeatureFlags.includes(key as Flag)) {
-        featureFlags[key as Flag] = value === 'true';
+    for (const flag of validFeatureFlags) {
+      if (searchParamEntries.has(flag)) {
+        featureFlags[flag] = searchParamEntries.get(flag) === 'true';
       }
     }
   }
