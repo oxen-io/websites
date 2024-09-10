@@ -9,7 +9,7 @@ import {
   type ReactNode,
   useState,
 } from 'react';
-/** @ts-expect-error TS doesnt know what its talking about */
+/** @ts-ignore TS doesnt know what its talking about */
 import { useDebounce } from '@uidotdev/usehooks';
 import { cn } from '../../lib/utils';
 
