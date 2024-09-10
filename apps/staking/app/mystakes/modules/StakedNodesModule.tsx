@@ -21,11 +21,7 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { getStakedNodes } from '@/lib/queries/getStakedNodes';
-import {
-  getDateFromUnixTimestampSeconds,
-  getUnixTimestampNowSeconds,
-  timeBetweenEvents,
-} from '@session/util/date';
+import { getDateFromUnixTimestampSeconds, getUnixTimestampNowSeconds } from '@session/util/date';
 import { SESSION_NODE } from '@/lib/constants';
 import { EXPERIMENTAL_FEATURE_FLAG, FEATURE_FLAG } from '@/lib/feature-flags';
 import { useExperimentalFeatureFlag, useFeatureFlag } from '@/lib/feature-flags-client';
@@ -145,6 +141,7 @@ export const parseSessionNodeData = (
     balance: node.total_contributed,
     operatorFee: node.operator_fee,
     operator_address: node.operator_address,
+    contract_id: node.contract_id,
     ...(node.awaiting_liquidation ? { awaitingLiquidation: true } : {}),
     ...(node.decomm_blocks_remaining
       ? {
