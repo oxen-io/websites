@@ -225,17 +225,20 @@ const NodeOperatorIndicator = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivE
 
     return (
       <>
-        <div
-          ref={ref}
-          className={cn(
-            'text-session-green flex flex-row items-center gap-1 align-middle text-sm font-normal md:text-base',
-            className
-          )}
-          {...props}
-        >
-          <SpannerAndScrewdriverIcon className="fill-session-green mb-1 h-3.5 w-3.5" />
-          {dictionary('operator')}
-        </div>
+        <Tooltip tooltipContent={dictionary('operatorTooltip')}>
+          <div
+            ref={ref}
+            className={cn(
+              'text-session-green flex flex-row items-center gap-1 align-middle text-sm font-normal md:text-base',
+              className
+            )}
+            {...props}
+          >
+            <SpannerAndScrewdriverIcon className="fill-session-green mb-1 h-3.5 w-3.5" />
+            {dictionary('operator')}
+          </div>
+        </Tooltip>
+
         <TextSeparator className="mx-1 font-medium" />
       </>
     );

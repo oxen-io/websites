@@ -406,6 +406,7 @@
     },
     "staked": {
       "operator": "Operator",
+      "operatorTooltip": "You are the operator of this node",
       "labelExpand": "Expand",
       "ariaExpand": "Expand node details",
       "labelCollapse": "Collapse",
