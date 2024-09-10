@@ -1,7 +1,16 @@
 'use client';
 
-import { formatLocalizedRelativeTimeToNowClient, formatPercentage } from '@/lib/locale-client';
-import { NodeCardDataTestId, StakedNodeDataTestId } from '@/testing/data-test-ids';
+import {
+  formatDate,
+  formatLocalizedRelativeTimeToNowClient,
+  formatLocalizedTimeFromSeconds,
+  formatPercentage,
+} from '@/lib/locale-client';
+import {
+  ButtonDataTestId,
+  NodeCardDataTestId,
+  StakedNodeDataTestId,
+} from '@/testing/data-test-ids';
 import { SENT_SYMBOL } from '@session/contracts';
 import { NODE_STATE } from '@session/sent-staking-js/client';
 import { TextSeparator } from '@session/ui/components/Separator';
@@ -24,6 +33,12 @@ import {
 } from './NodeCard';
 import { PubKey } from '@session/ui/components/PubKey';
 import { areHexesEqual } from '@session/util/string';
+import { Button } from '@session/ui/ui/button';
+import { NodeRequestExitButton } from '@/components/StakedNode/NodeRequestExitButton';
+import { Tooltip } from '@session/ui/ui/tooltip';
+import { SESSION_NODE_TIME } from '@/lib/constants';
+import { useChain } from '@session/contracts/hooks/useChain';
+import { NodeExitButton } from '@/components/StakedNode/NodeExitButton';
 
 export const NODE_STATE_VALUES = Object.values(NODE_STATE);
 
@@ -54,7 +69,7 @@ type CancelledStakedNode = GenericStakedNode & { state: NODE_STATE.CANCELLED };
 
 type DecommissionedStakedNode = GenericStakedNode & {
   state: NODE_STATE.DECOMMISSIONED;
-  deregistrationDate?: Date;
+  deregistrationDate: Date;
   unlockDate?: Date;
 };
 
@@ -104,12 +119,16 @@ const isUnlocked = (node: StakedNode): node is UnlockedStakedNode =>
  * @returns `true` if the node is being deregistered, `false` otherwise.
  */
 const isBeingDeregistered = (node: StakedNode): node is DecommissionedStakedNode =>
-  node.state === NODE_STATE.DECOMMISSIONED;
+  !!(
+    node.state === NODE_STATE.DECOMMISSIONED &&
+    'deregistrationDate' in node &&
+    node.deregistrationDate
+  );
 
-const isBeingUnlocked = (
+const isRequestingToExit = (
   node: StakedNode
 ): node is (RunningStakedNode | DecommissionedStakedNode) & { unlockDate: Date } =>
-  'unlockDate' in node && node.unlockDate !== undefined;
+  !!('unlockDate' in node && node.unlockDate);
 
 /**
  * Checks if a given node is awaiting liquidation.
@@ -245,6 +264,65 @@ const NodeOperatorIndicator = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivE
   }
 );
 
+const RequestingExitNotification = ({
+  node,
+  className,
+}: {
+  node: Required<RunningStakedNode> | Required<DecommissionedStakedNode>;
+  className?: string;
+}) => {
+  const dictionary = useTranslations('nodeCard.staked');
+  return (
+    <Tooltip
+      tooltipContent={dictionary('requestingExitDescription', {
+        relative_time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, {
+          addSuffix: true,
+        }),
+        date: formatDate(node.unlockDate, { dateStyle: 'full', timeStyle: 'long' }),
+      })}
+    >
+      <NodeNotification level="warning" className={className}>
+        {dictionary('requestingExitTimerNotification', {
+          time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, { addSuffix: true }),
+        })}
+      </NodeNotification>
+    </Tooltip>
+  );
+};
+
+const DeregisteringNotification = ({ node }: { node: DecommissionedStakedNode }) => {
+  const chain = useChain();
+  const dictionary = useTranslations('nodeCard.staked');
+  const generalDictionary = useTranslations('general');
+  return (
+    <Tooltip
+      tooltipContent={dictionary('deregistrationTimerDescription', {
+        deregistration_locked_stake_time: formatLocalizedTimeFromSeconds(
+          SESSION_NODE_TIME(chain).DEREGISTRATION_LOCKED_STAKE_SECONDS,
+          { unit: 'day' }
+        ),
+        relative_time: formatLocalizedRelativeTimeToNowClient(node.deregistrationDate, {
+          addSuffix: true,
+        }),
+        date: formatDate(node.deregistrationDate, {
+          dateStyle: 'full',
+          timeStyle: 'long',
+        }),
+      })}
+    >
+      <NodeNotification level="error">
+        {dictionary('deregistrationTimerNotification', {
+          time: node.deregistrationDate
+            ? formatLocalizedRelativeTimeToNowClient(node.deregistrationDate, {
+                addSuffix: true,
+              })
+            : generalDictionary('soon'),
+        })}
+      </NodeNotification>
+    </Tooltip>
+  );
+};
+
 const NodeSummary = ({ node }: { node: StakedNode }) => {
   const dictionary = useTranslations('nodeCard.staked');
   const generalDictionary = useTranslations('general');
@@ -256,31 +334,17 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
   }
 
   if (isBeingDeregistered(node)) {
-    return (
-      <NodeNotification level="error">
-        {dictionary('deregistrationTimerNotification', {
-          time: node.deregistrationDate
-            ? formatLocalizedRelativeTimeToNowClient(node.deregistrationDate, {
-                addSuffix: true,
-              })
-            : generalDictionary('soon'),
-        })}
-      </NodeNotification>
-    );
+    return <DeregisteringNotification node={node} />;
   }
 
-  if (isBeingUnlocked(node)) {
+  if (isRequestingToExit(node)) {
     return (
       <>
         <NodeContributorList
           contributors={node.contributors}
           data-testid={StakedNodeDataTestId.Contributor_List}
         />
-        <NodeNotification level="warning">
-          {dictionary('unlockingTimerNotification', {
-            time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, { addSuffix: true }),
-          })}
-        </NodeNotification>
+        <RequestingExitNotification node={node} />
       </>
     );
   }
@@ -305,6 +369,7 @@ const collapsableContentVariants = cva(
       size: {
         xs: 'text-xs md:text-xs peer-checked:max-h-4',
         base: cn('text-sm peer-checked:max-h-5', 'md:text-base md:peer-checked:max-h-6'),
+        buttonMd: cn('peer-checked:max-h-8', 'md:peer-checked:max-h-10'),
       },
     },
     defaultVariants: {
@@ -313,10 +378,10 @@ const collapsableContentVariants = cva(
   }
 );
 
-type CollapsableContentProps = React.HTMLAttributes<HTMLDivElement> &
+type CollapsableContentProps = HTMLAttributes<HTMLSpanElement> &
   VariantProps<typeof collapsableContentVariants>;
 
-const CollapsableContent = forwardRef<HTMLDivElement, CollapsableContentProps>(
+export const CollapsableContent = forwardRef<HTMLSpanElement, CollapsableContentProps>(
   ({ className, size, ...props }, ref) => (
     <NodeCardText
       ref={ref}
@@ -329,6 +394,31 @@ const CollapsableContent = forwardRef<HTMLDivElement, CollapsableContentProps>(
 const RowLabel = ({ children }: { children: ReactNode }) => (
   <span className="font-semibold">{children} </span>
 );
+
+export const CollapsableButton = forwardRef<
+  HTMLButtonElement,
+  HTMLAttributes<HTMLButtonElement> & {
+    ariaLabel: string;
+    dataTestId: ButtonDataTestId;
+    disabled?: boolean;
+  }
+>(({ ariaLabel, dataTestId, disabled, children, className, ...props }, ref) => (
+  <CollapsableContent className="absolute bottom-4 right-6 flex w-max items-end" size="buttonMd">
+    <Button
+      data-testid={dataTestId}
+      aria-label={ariaLabel}
+      disabled={disabled}
+      rounded="md"
+      size="md"
+      variant="destructive-outline"
+      className="uppercase"
+      ref={ref}
+      {...props}
+    >
+      {children}
+    </Button>
+  </CollapsableContent>
+));
 
 const StakedNodeCard = forwardRef<
   HTMLDivElement,
@@ -351,12 +441,34 @@ const StakedNodeCard = forwardRef<
 
   const isSoloNode = contributors.length === 1;
 
+  const button = useMemo(() => {
+    if (state === NODE_STATE.RUNNING) {
+      if (!isRequestingToExit(node)) {
+        return <NodeRequestExitButton node={node} />;
+      } else {
+        return (
+          <Tooltip
+            tooltipContent={dictionary('exit.disabledButtonTooltipContent', {
+              relative_time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, {
+                addSuffix: true,
+              }),
+              date: formatDate(node.unlockDate, { dateStyle: 'full', timeStyle: 'long' }),
+            })}
+          >
+            <NodeExitButton disabled />
+          </Tooltip>
+        );
+      }
+    }
+    return null;
+  }, [node, state]);
+
   return (
     <NodeCard
       ref={ref}
       {...props}
       className={cn(
-        'flex flex-row flex-wrap items-center gap-x-2 gap-y-0.5 overflow-hidden pb-4 align-middle',
+        'relative flex flex-row flex-wrap items-center gap-x-2 gap-y-0.5 overflow-hidden pb-4 align-middle',
         className
       )}
       data-testid={NodeCardDataTestId.Staked_Node}
@@ -370,11 +482,9 @@ const StakedNodeCard = forwardRef<
       <NodeCardTitle data-testid={StakedNodeDataTestId.Title}>{state}</NodeCardTitle>
       <NodeSummary node={node} />
       <ToggleCardExpansionButton htmlFor={id} />
-      {isBeingDeregistered(node) && isBeingUnlocked(node) ? (
+      {isBeingDeregistered(node) && isRequestingToExit(node) ? (
         <CollapsableContent className="text-warning" size="xs">
-          {dictionary('unlockingTimerNotification', {
-            time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, { addSuffix: true }),
-          })}
+          <RequestingExitNotification node={node} className="md:text-xs" />
         </CollapsableContent>
       ) : null}
       {state === NODE_STATE.DECOMMISSIONED ||
@@ -386,12 +496,16 @@ const StakedNodeCard = forwardRef<
           })}
         </CollapsableContent>
       ) : null}
-      <CollapsableContent className="font-medium opacity-75" size="xs">
-        {dictionary('lastUptime', {
-          time: lastUptime.getTime()
-            ? formatLocalizedRelativeTimeToNowClient(lastUptime, { addSuffix: true })
-            : generalDictionary('notFound'),
-        })}
+      <CollapsableContent className="font-medium" size="xs">
+        <Tooltip tooltipContent={formatDate(lastUptime, { dateStyle: 'full', timeStyle: 'long' })}>
+          <span className="opacity-75">
+            {dictionary('lastUptime', {
+              time: lastUptime.getTime()
+                ? formatLocalizedRelativeTimeToNowClient(lastUptime, { addSuffix: true })
+                : generalDictionary('notFound'),
+            })}
+          </span>
+        </Tooltip>
       </CollapsableContent>
       {/** NOTE - ensure any changes here still work with the pubkey component */}
       <NodeCardText className="flex w-full flex-row flex-wrap gap-1 peer-checked:mt-1 peer-checked:[&>span>span>button]:opacity-100 peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">
@@ -423,6 +537,7 @@ const StakedNodeCard = forwardRef<
           {formatPercentage(operatorFee)}
         </CollapsableContent>
       ) : null}
+      {button}
     </NodeCard>
   );
 });
