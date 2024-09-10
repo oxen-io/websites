@@ -46,6 +46,9 @@ export default {
       minHeight: {
         'screen-without-header': 'var(--screen-without-header)',
       },
+      borderColor: {
+        DEFAULT: 'var(--session-green)',
+      },
       colors: {
         session: {
           green: 'var(--session-green)',
@@ -152,5 +155,5 @@ export default {
       transitionDuration: ['group-hover'],
     },
   },
-  plugins: [require('tailwindcss-selection-variant')],
+  plugins: [require('tailwindcss-selection-variant'), require('tailwindcss-animate')],
 } satisfies Config;

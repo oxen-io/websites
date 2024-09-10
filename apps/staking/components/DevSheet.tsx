@@ -1,14 +1,6 @@
 'use client';
 
 import {
-  FEATURE_FLAG,
-  FEATURE_FLAG_DESCRIPTION,
-  globalFeatureFlags,
-  pageFeatureFlags,
-  useFeatureFlags,
-  useSetFeatureFlag,
-} from '@/providers/feature-flag-provider';
-import {
   Sheet,
   SheetContent,
   SheetDescription,
@@ -25,10 +17,23 @@ import { Social } from '@session/ui/components/SocialLinkList';
 import type { BuildInfo } from '@session/util/build';
 import { getEnvironment } from '@session/util/env';
 import { isProduction } from '@/lib/env';
+import {
+  type FEATURE_FLAG,
+  FEATURE_FLAG_DESCRIPTION,
+  globalFeatureFlags,
+  pageFeatureFlags,
+  remoteFeatureFlagsInfo,
+} from '@/lib/feature-flags';
+import {
+  useFeatureFlags,
+  useRemoteFeatureFlagsQuery,
+  useSetFeatureFlag,
+} from '@/lib/feature-flags-client';
 
 export function DevSheet({ buildInfo }: { buildInfo: BuildInfo }) {
   const [isOpen, setIsOpen] = useState(false);
   const featureFlags = useFeatureFlags();
+  const { data } = useRemoteFeatureFlagsQuery();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -56,12 +61,11 @@ export function DevSheet({ buildInfo }: { buildInfo: BuildInfo }) {
         <SheetHeader>
           <SheetTitle>Welcome to the danger zone</SheetTitle>
           <SheetDescription>
-            This action cannot be undone. This will permanently delete your account and remove your
-            data from our servers.
+            This sheet only shows when the site is in development mode.
           </SheetDescription>
           <SheetTitle>Build Info</SheetTitle>
           <span className="inline-flex justify-start gap-1 align-middle">
-            Commit Hash:
+            {'Commit Hash:'}
             <Link
               href={`${SOCIALS[Social.Github].link}/commit/${buildInfo.env.COMMIT_HASH}`}
               target="_blank"
@@ -71,18 +75,33 @@ export function DevSheet({ buildInfo }: { buildInfo: BuildInfo }) {
             </Link>
           </span>
           <span className="inline-flex justify-start gap-1 align-middle">
-            Build Env:
-            <span>{getEnvironment()}</span>
+            {'Build Env:'}
+            <span className="text-session-green">{getEnvironment()}</span>
           </span>
           <span className="inline-flex justify-start gap-1 align-middle">
-            Is Production:
-            <span>{isProduction ? 'True' : 'False'}</span>
+            {'Is Production:'}
+            <span className="text-session-green">{isProduction ? 'True' : 'False'}</span>
           </span>
+          <SheetTitle>Remote Feature Flags</SheetTitle>
+          <SheetDescription className="flex flex-col gap-2">
+            {data
+              ? Array.from(data).map((flag) => (
+                  <div key={flag}>
+                    <span className="font-medium">{'• '}</span>
+                    <span className="text-session-green">{remoteFeatureFlagsInfo[flag].name}</span>
+                    {': '}
+                    <span key={flag}>{remoteFeatureFlagsInfo[flag].description}</span>
+                  </div>
+                ))
+              : 'No remote feature flags enabled'}
+          </SheetDescription>
           <SheetTitle>Global Feature Flags</SheetTitle>
-          🧑‍🔬
-          {globalFeatureFlags.map((flag) => (
-            <FeatureFlagToggle flag={flag} key={flag} initialState={featureFlags[flag]} />
-          ))}
+          <SheetDescription className="flex flex-col gap-2">
+            🧑‍🔬
+            {globalFeatureFlags.map((flag) => (
+              <FeatureFlagToggle flag={flag} key={flag} initialState={featureFlags[flag]} />
+            ))}
+          </SheetDescription>
           <PageSpecificFeatureFlags />
         </SheetHeader>
       </SheetContent>
@@ -113,13 +132,22 @@ function PageSpecificFeatureFlags() {
   );
 }
 
-function FeatureFlagToggle({ flag, initialState }: { flag: FEATURE_FLAG; initialState: boolean }) {
+function FeatureFlagToggle({
+  flag,
+  initialState,
+  disabled,
+}: {
+  flag: FEATURE_FLAG;
+  initialState: boolean;
+  disabled?: boolean;
+}) {
   const { setFeatureFlag } = useSetFeatureFlag();
   return (
     <span className="inline-flex justify-start gap-1 align-middle">
       <Switch
         key={flag}
         defaultChecked={initialState}
+        disabled={disabled}
         onCheckedChange={(checked) => {
           setFeatureFlag(flag, checked);
         }}

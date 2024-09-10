@@ -1,6 +1,5 @@
 'use client';
 
-import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import { useMemo } from 'react';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
@@ -14,6 +13,8 @@ import { NodesListSkeleton } from '@/components/NodesListModule';
 import { ModuleGridInfoContent } from '@session/ui/components/ModuleGrid';
 import { externalLink } from '@/lib/locale-defaults';
 import { WalletModalButtonWithLocales } from '@/components/WalletModalButtonWithLocales';
+import { useFeatureFlag } from '@/lib/feature-flags-client';
+import { FEATURE_FLAG } from '@/lib/feature-flags';
 
 export default function NodeRegistrations() {
   const showOneMockNode = useFeatureFlag(FEATURE_FLAG.MOCK_PENDING_NODES_ONE);
@@ -21,6 +22,15 @@ export default function NodeRegistrations() {
   const showThreeMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_PENDING_NODES_THREE);
   const showManyMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_PENDING_NODES_MANY);
   const showNoNodes = useFeatureFlag(FEATURE_FLAG.MOCK_NO_PENDING_NODES);
+
+  // TODO: use once we have user preferences
+  /* const hideRegistrationsEnabled = useExperimentalFeatureFlag(
+     EXPERIMENTAL_FEATURE_FLAG.HIDE_REGISTRATIONS
+   );
+   const hiddenPreparedRegistrations = useUserPreference('hiddenPreparedRegistrations');
+   const forceShowPendingNodesModule = useUserPreference('forceShowPendingNodesModule');
+
+   const [showHidden, setShowHidden] = useState<boolean>(false); */
 
   if (
     (showOneMockNode || showTwoMockNodes || showThreeMockNodes || showManyMockNodes) &&

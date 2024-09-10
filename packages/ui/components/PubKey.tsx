@@ -1,12 +1,11 @@
 'use client';
 
-import { ButtonDataTestId } from '@/testing/data-test-ids';
-import { CopyToClipboardButton } from '@session/ui/components/CopyToClipboardButton';
-import { cn } from '@session/ui/lib/utils';
-import { Tooltip } from '@session/ui/ui/tooltip';
+import { CopyToClipboardButton } from './CopyToClipboardButton';
+import { cn } from '../lib/utils';
+import { Tooltip } from './ui/tooltip';
 import { collapseString } from '@session/util/string';
-import { useTranslations } from 'next-intl';
 import { forwardRef, HTMLAttributes, useCallback, useEffect, useMemo, useState } from 'react';
+import { ButtonDataTestId } from '../data-test-ids';
 
 type CollapseStringsParams = Parameters<typeof collapseString>;
 
@@ -17,6 +16,8 @@ type PubKeyType = HTMLAttributes<HTMLDivElement> & {
   expandOnHover?: boolean;
   alwaysShowCopyButton?: boolean;
   force?: 'expand' | 'collapse';
+  copyToClipboardAriaLabel?: string;
+  copyToClipboardToastMessage?: string;
 };
 
 export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
@@ -27,10 +28,11 @@ export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
     trailingChars,
     expandOnHover,
     alwaysShowCopyButton,
+    copyToClipboardAriaLabel,
+    copyToClipboardToastMessage,
     force,
     ...rest
   } = props;
-  const dictionary = useTranslations('clipboard');
   const [isExpanded, setIsExpanded] = useState(force === 'expand');
   const collapsedPubKey = useMemo(
     () => (pubKey ? collapseString(pubKey, leadingChars ?? 6, trailingChars ?? 6) : ''),
@@ -88,9 +90,9 @@ export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
           alwaysShowCopyButton || isExpanded ? 'opacity-100' : 'opacity-0'
         )}
         textToCopy={pubKey}
-        data-testid={ButtonDataTestId.Copy_Public_Key_To_Clipboard}
-        aria-label={dictionary('copyToClipboard')}
-        copyToClipboardToastMessage={dictionary('copyToClipboardSuccessToast')}
+        data-testid={ButtonDataTestId.Copy_Pub_Key_To_Clipboard}
+        aria-label={copyToClipboardAriaLabel ?? 'Copy to Clipboard'}
+        copyToClipboardToastMessage={copyToClipboardToastMessage ?? 'Copied to clipboard!'}
       />
     </span>
   );

@@ -22,7 +22,7 @@ import {
   NodeCardTitle,
   NodeContributorList,
 } from './NodeCard';
-import { PubKey } from './PubKey';
+import { PubKey } from '@session/ui/components/PubKey';
 import { areHexesEqual } from '@session/util/string';
 
 export const NODE_STATE_VALUES = Object.values(NODE_STATE);
@@ -53,7 +53,7 @@ type CancelledStakedNode = GenericStakedNode & { state: NODE_STATE.CANCELLED };
 
 type DecommissionedStakedNode = GenericStakedNode & {
   state: NODE_STATE.DECOMMISSIONED;
-  deregistrationDate: Date;
+  deregistrationDate?: Date;
   unlockDate?: Date;
 };
 
@@ -102,12 +102,8 @@ const isUnlocked = (node: StakedNode): node is UnlockedStakedNode =>
  * @param node - The node to check.
  * @returns `true` if the node is being deregistered, `false` otherwise.
  */
-const isBeingDeregistered = (
-  node: StakedNode
-): node is DecommissionedStakedNode & { deregistrationDate: Date } =>
-  node.state === NODE_STATE.DECOMMISSIONED &&
-  'deregistrationDate' in node &&
-  node.deregistrationDate !== undefined;
+const isBeingDeregistered = (node: StakedNode): node is DecommissionedStakedNode =>
+  node.state === NODE_STATE.DECOMMISSIONED;
 
 const isBeingUnlocked = (
   node: StakedNode
@@ -247,6 +243,7 @@ const NodeOperatorIndicator = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivE
 
 const NodeSummary = ({ node }: { node: StakedNode }) => {
   const dictionary = useTranslations('nodeCard.staked');
+  const generalDictionary = useTranslations('general');
 
   if (isAwaitingLiquidation(node)) {
     return (
@@ -258,9 +255,11 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
     return (
       <NodeNotification level="error">
         {dictionary('deregistrationTimerNotification', {
-          time: formatLocalizedRelativeTimeToNowClient(node.deregistrationDate, {
-            addSuffix: true,
-          }),
+          time: node.deregistrationDate
+            ? formatLocalizedRelativeTimeToNowClient(node.deregistrationDate, {
+                addSuffix: true,
+              })
+            : generalDictionary('soon'),
         })}
       </NodeNotification>
     );
@@ -332,6 +331,7 @@ const StakedNodeCard = forwardRef<
   HTMLAttributes<HTMLDivElement> & { node: StakedNode }
 >(({ className, node, ...props }, ref) => {
   const dictionary = useTranslations('nodeCard.staked');
+  const generalDictionary = useTranslations('general');
   const generalNodeDictionary = useTranslations('sessionNodes.general');
   const stakingNodeDictionary = useTranslations('sessionNodes.staking');
   const titleFormat = useTranslations('modules.title');
@@ -377,12 +377,16 @@ const StakedNodeCard = forwardRef<
       state === NODE_STATE.DEREGISTERED ||
       state === NODE_STATE.UNLOCKED ? (
         <CollapsableContent className="font-medium opacity-75" size="xs">
-          {dictionary('lastRewardHeight', { height: lastRewardHeight })}
+          {dictionary('lastRewardHeight', {
+            height: lastRewardHeight ? lastRewardHeight : generalDictionary('notFound'),
+          })}
         </CollapsableContent>
       ) : null}
       <CollapsableContent className="font-medium opacity-75" size="xs">
         {dictionary('lastUptime', {
-          time: formatLocalizedRelativeTimeToNowClient(lastUptime, { addSuffix: true }),
+          time: lastUptime.getTime()
+            ? formatLocalizedRelativeTimeToNowClient(lastUptime, { addSuffix: true })
+            : generalDictionary('notFound'),
         })}
       </CollapsableContent>
       {/** NOTE - ensure any changes here still work with the pubkey component */}

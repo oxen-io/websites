@@ -9,7 +9,7 @@ import {
   StatusIndicator,
   type StatusIndicatorVariants,
 } from '@session/ui/components/StatusIndicator';
-import { PubKey } from '@/components/PubKey';
+import { PubKey } from '@session/ui/components/PubKey';
 import Link from 'next/link';
 import { Button, ButtonSkeleton } from '@session/ui/ui/button';
 import { Skeleton } from '@session/ui/ui/skeleton';
@@ -17,6 +17,7 @@ import { TextSeparator } from '@session/ui/components/Separator';
 
 export type InfoNodeCardProps = HTMLAttributes<HTMLDivElement> & {
   pubKey: string;
+  buttonSiblings?: ReactNode;
   button?: {
     text: string;
     link: string;
@@ -27,7 +28,10 @@ export type InfoNodeCardProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 export const InfoNodeCard = forwardRef<HTMLDivElement, InfoNodeCardProps>(
-  ({ statusIndicatorColour, className, pubKey, button, children, ...props }, ref) => {
+  (
+    { statusIndicatorColour, buttonSiblings, className, pubKey, button, children, ...props },
+    ref
+  ) => {
     const generalNodeDictionary = useTranslations('sessionNodes.general');
     const titleFormat = useTranslations('modules.title');
     return (
@@ -54,20 +58,23 @@ export const InfoNodeCard = forwardRef<HTMLDivElement, InfoNodeCardProps>(
             {children}
           </NodeCardText>
         </div>
-        {button ? (
-          <Link href={button.link} className="w-full sm:w-auto" prefetch>
-            <Button
-              variant="outline"
-              size="md"
-              rounded="md"
-              aria-label={button.ariaLabel}
-              data-testid={button.dataTestId}
-              className="w-full sm:w-auto"
-            >
-              {button.text}
-            </Button>
-          </Link>
-        ) : null}
+        <div className="flex flex-row items-center gap-2 align-middle">
+          {buttonSiblings}
+          {button ? (
+            <Link href={button.link} className="w-full sm:w-auto" prefetch>
+              <Button
+                variant="outline"
+                size="md"
+                rounded="md"
+                aria-label={button.ariaLabel}
+                data-testid={button.dataTestId}
+                className="w-full sm:w-auto"
+              >
+                {button.text}
+              </Button>
+            </Link>
+          ) : null}
+        </div>
       </NodeCard>
     );
   }

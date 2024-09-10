@@ -8,7 +8,9 @@
     "viewOnExplorer": "View on Explorer",
     "viewOnExplorerShort": "View",
     "you": "You",
-    "emptySlot": "EmptyContributorSlot"
+    "emptySlot": "EmptyContributorSlot",
+    "notFound": "Not Found",
+    "soon": "Soon"
   },
   "maths": {
     "outOf": "{count}/{max}"
@@ -177,7 +179,8 @@
       "landingP1Mainnet": "Click on an Open Session Node to stake {tokenSymbol} and earn rewards for securing the network.",
       "landingP2Mainnet": "Want to run your own Session Node?",
       "learnMoreButtonText": "Learn More",
-      "learnMoreButtonAria": "Navigate to the Session Node documentation page."
+      "learnMoreButtonAria": "Navigate to the Session Node documentation page.",
+      "showHiddenPendingNodesText": "Show Pending Nodes"
     },
     "nodeRegistrations": {
       "title": "Your Prepared Registrations",
