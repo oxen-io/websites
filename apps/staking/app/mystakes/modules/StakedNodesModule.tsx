@@ -157,11 +157,7 @@ export const parseSessionNodeData = (
       ? {
           unlockDate: new Date(
             networkTime * 1000 +
-              timeBetweenEvents(
-                node.requested_unlock_height,
-                currentBlock,
-                SESSION_NODE.BLOCK_VELOCITY
-              )
+              (node.requested_unlock_height - currentBlock) * SESSION_NODE.MS_PER_BLOCK
           ),
         }
       : {}),
