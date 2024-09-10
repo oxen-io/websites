@@ -4,12 +4,14 @@ Session Websites is a collection of websites and libraries for the Session Web e
 
 ## Apps and Packages
 
-This repository is a monorepo that contains multiple apps and packages. Each app and package is located in its own directory.
+This repository is a monorepo that contains multiple apps and packages. Each app and package is located in its own
+directory.
 
 - `apps` directory contains all the apps.
 - `packages` directory contains all the packages.
 
-An app is a standalone application that can be run independently. A package is a library that can be used by other apps or packages.
+An app is a standalone application that can be run independently. A package is a library that can be used by other apps
+or packages.
 
 This repository contains the following apps and packages:
 
@@ -44,7 +46,11 @@ pnpm build
 - [pnpm](https://pnpm.io/) (v9 or higher)
 - [jq](https://jqlang.github.io/jq/) (see [jq for mac](https://formulae.brew.sh/formula/jq))
 
-We recommend using a node version manager like [asdf](https://asdf-vm.com/) to manage your node versions. The `.tool-versions` file in the root of the project specifies the node version to use. We also have an `.nvmrc` file that specifies the same node version to use. You can enable support for [Using Existing Tool Version Files](https://asdf-vm.com/guide/getting-started.html#using-existing-tool-version-files) in asdf to use these files.
+We recommend using a node version manager like [asdf](https://asdf-vm.com/) to manage your node versions. The
+`.tool-versions` file in the root of the project specifies the node version to use. We also have an `.nvmrc` file that
+specifies the same node version to use. You can enable support
+for [Using Existing Tool Version Files](https://asdf-vm.com/guide/getting-started.html#using-existing-tool-version-files)
+in asdf to use these files.
 
 ## Getting Started
 
@@ -58,4 +64,18 @@ This will install all the dependencies for all the apps and packages.
 
 ## Development
 
-You can find a `README.md` file in each app and package directory that explains how to develop and test that specific app or package.
+You can find a `README.md` file in each app and package directory that explains how to develop and test that specific
+app or package.
+
+### Developer Telemetry
+
+Some tools used in this repo have anonymous developer telemetry enabled by default. This is developer telemetry that
+tools creators use to report usage from developers and does not apply to any apps created using these
+tools. We
+have disabled all telemetry, you can ensure developer telemetry is disabled in all packages by running
+`pnpm check-telemetry`. We have disabled telemetry by aliasing the `turbo` command in the repository root with
+`NEXT_TELEMETRY_DISABLED=1 DO_NOT_TRACK=1`.
+- `NEXT_TELEMETRY_DISABLED=1` disables developer telemetry in nextjs.
+- `DO_NOT_TRACK` disables telemetry in all packages that respect
+the [Console Do Not Track (DNT) standard](https://consoledonottrack.com/)
+

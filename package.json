@@ -2,7 +2,7 @@
   "name": "websites",
   "private": true,
   "scripts": {
-    "turbo": "DO_NOT_TRACK=1 turbo",
+    "turbo": "DO_NOT_TRACK=1 NEXT_TELEMETRY_DISABLED=1 turbo",
     "build": "pnpm turbo build",
     "start": "pnpm turbo start",
     "dev": "pnpm turbo dev",
@@ -12,6 +12,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "engines": "./scripts/engines.sh",
     "clean:nm": "./scripts/clean-node-modules.sh",
+    "check-telemetry": "pnpm turbo telemetry && pnpm turbo check-telemetry",
     "prepare": "husky"
   },
   "devDependencies": {
