@@ -93,23 +93,23 @@ export type StakedNode =
 // #endregion
 // #region - Assertions
 /** Type assertions */
-const isRunning = (node: StakedNode): node is RunningStakedNode =>
-  node.state === NODE_STATE.RUNNING;
-
-const isAwaitingContributors = (node: StakedNode): node is AwaitingContributorsStakedNode =>
-  node.state === NODE_STATE.AWAITING_CONTRIBUTORS;
-
-const isCancelled = (node: StakedNode): node is CancelledStakedNode =>
-  node.state === NODE_STATE.CANCELLED;
-
-const isDecommissioned = (node: StakedNode): node is DecommissionedStakedNode =>
-  node.state === NODE_STATE.DECOMMISSIONED;
-
-const isDeregistered = (node: StakedNode): node is DeregisteredStakedNode =>
-  node.state === NODE_STATE.DEREGISTERED;
-
-const isUnlocked = (node: StakedNode): node is UnlockedStakedNode =>
-  node.state === NODE_STATE.UNLOCKED;
+// const isRunning = (node: StakedNode): node is RunningStakedNode =>
+//   node.state === NODE_STATE.RUNNING;
+//
+// const isAwaitingContributors = (node: StakedNode): node is AwaitingContributorsStakedNode =>
+//   node.state === NODE_STATE.AWAITING_CONTRIBUTORS;
+//
+// const isCancelled = (node: StakedNode): node is CancelledStakedNode =>
+//   node.state === NODE_STATE.CANCELLED;
+//
+// const isDecommissioned = (node: StakedNode): node is DecommissionedStakedNode =>
+//   node.state === NODE_STATE.DECOMMISSIONED;
+//
+// const isDeregistered = (node: StakedNode): node is DeregisteredStakedNode =>
+//   node.state === NODE_STATE.DEREGISTERED;
+//
+// const isUnlocked = (node: StakedNode): node is UnlockedStakedNode =>
+//   node.state === NODE_STATE.UNLOCKED;
 
 /** State assertions */
 
@@ -325,7 +325,6 @@ const DeregisteringNotification = ({ node }: { node: DecommissionedStakedNode })
 
 const NodeSummary = ({ node }: { node: StakedNode }) => {
   const dictionary = useTranslations('nodeCard.staked');
-  const generalDictionary = useTranslations('general');
 
   if (isAwaitingLiquidation(node)) {
     return (
@@ -402,7 +401,7 @@ export const CollapsableButton = forwardRef<
     dataTestId: ButtonDataTestId;
     disabled?: boolean;
   }
->(({ ariaLabel, dataTestId, disabled, children, className, ...props }, ref) => (
+>(({ ariaLabel, dataTestId, disabled, children, ...props }, ref) => (
   <CollapsableContent className="absolute bottom-4 right-6 flex w-max items-end" size="buttonMd">
     <Button
       data-testid={dataTestId}

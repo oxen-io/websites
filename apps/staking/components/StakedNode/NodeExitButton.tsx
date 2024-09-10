@@ -9,7 +9,7 @@ export const NodeExitButton = forwardRef<
   HTMLAttributes<HTMLSpanElement> & {
     disabled?: boolean;
   }
->(({ disabled, className, ...props }, ref) => {
+>(({ disabled, ...props }, ref) => {
   const dictionary = useTranslations('nodeCard.staked.exit');
   return (
     <CollapsableContent
