@@ -31,11 +31,11 @@ const generateWalletAddress = (): string =>
  * Generates a contributor object.
  * @returns The generated contributor object.
  */
-const generateContributor = (): Contributor => {
+const generateContributor = (address?: string): Contributor => {
   return {
-    address: generateWalletAddress(),
-    amount: BigInt(Math.random() * 1000),
-    reserved: BigInt(Math.random() * 1000),
+    address: address ?? generateWalletAddress(),
+    amount: BigInt(Math.round(Math.random() * 1000)),
+    reserved: BigInt(Math.round(Math.random() * 1000)),
     locked_contributions: [],
   };
 };
@@ -53,12 +53,7 @@ const generateContributors = (maxN = 10, userAddress?: string): Contributor[] =>
     () => generateContributor()
   );
   if (userAddress) {
-    contributors.unshift({
-      address: userAddress,
-      amount: BigInt(Math.random() * 1000),
-      reserved: BigInt(Math.random() * 1000),
-      locked_contributions: [],
-    });
+    contributors.unshift(generateContributor(userAddress));
   }
   return contributors;
 };
@@ -109,6 +104,7 @@ function generateBasicNodeData({
     active: true,
     funded: true,
     earned_downtime_blocks: 0,
+    contract_id: 0,
     service_node_version: [1, 1, 1],
     contributors: generateContributors(num_contributions, userAddress),
     total_contributed: 0,
@@ -276,9 +272,9 @@ export const generateMockNodeData = ({
       block_timestamp: Date.now(),
     } as never,
     wallet: {
-      rewards: BigInt(0),
-      contract_rewards: BigInt(0),
-      contract_claimed: BigInt(0),
+      rewards: BigInt('480000000000'),
+      contract_rewards: BigInt('240000000000'),
+      contract_claimed: BigInt('240000000000'),
     },
   };
 
