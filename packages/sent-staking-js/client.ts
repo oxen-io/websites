@@ -54,6 +54,7 @@ export interface GetNodesForWalletResponse {
 export interface ServiceNode {
   state: NODE_STATE;
   service_node_pubkey: string;
+  contract_id: number;
   requested_unlock_height: number;
   active: boolean;
   funded: boolean;

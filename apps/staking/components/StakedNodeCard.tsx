@@ -38,6 +38,7 @@ export interface GenericStakedNode {
   balance: number;
   operatorFee: number;
   operator_address: string;
+  contract_id: number;
 }
 
 type RunningStakedNode = GenericStakedNode & {
