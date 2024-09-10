@@ -29,7 +29,7 @@ export function DropdownHamburgerMenu() {
       <DropdownMenuTrigger asChild>
         <Button
           data-testid={ButtonDataTestId.Dropdown_Hamburger_Menu}
-          className="group p-0"
+          className="group p-1"
           aria-label={dictionary('ariaLabel')}
           variant="outline"
         >

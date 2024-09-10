@@ -22,9 +22,9 @@ export default async function Header() {
           ))}
         </div>
       </div>
-      <div className="flex flex-row items-center justify-end gap-2">
+      <div className="flex flex-row items-center justify-end gap-3">
         <WalletModalButtonWithLocales />
-        <WalletNetworkDropdownWithLocales className="hidden lg:flex" />
+        <WalletNetworkDropdownWithLocales className="hidden h-full px-5 py-3 lg:flex" />
         <DropdownHamburgerMenu />
       </div>
     </nav>
