@@ -308,39 +308,6 @@ export const ServiceNodeContributionAbi = [
         type: 'uint256',
       },
       {
-        internalType: 'uint256',
-        name: 'deadline',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint8',
-        name: 'v',
-        type: 'uint8',
-      },
-      {
-        internalType: 'bytes32',
-        name: 'r',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'bytes32',
-        name: 's',
-        type: 'bytes32',
-      },
-    ],
-    name: 'contributeFundsWithPermit',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
         components: [
           {
             internalType: 'uint256',
@@ -369,66 +336,6 @@ export const ServiceNodeContributionAbi = [
       },
     ],
     name: 'contributeOperatorFunds',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
-        components: [
-          {
-            internalType: 'uint256',
-            name: 'sigs0',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'sigs1',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'sigs2',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'sigs3',
-            type: 'uint256',
-          },
-        ],
-        internalType: 'struct IServiceNodeRewards.BLSSignatureParams',
-        name: '_blsSignature',
-        type: 'tuple',
-      },
-      {
-        internalType: 'uint256',
-        name: 'deadline',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint8',
-        name: 'v',
-        type: 'uint8',
-      },
-      {
-        internalType: 'bytes32',
-        name: 'r',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'bytes32',
-        name: 's',
-        type: 'bytes32',
-      },
-    ],
-    name: 'contributeOperatorFundsWithPermit',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -511,6 +418,24 @@ export const ServiceNodeContributionAbi = [
         internalType: 'bool',
         name: '',
         type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getContributions',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: 'addrs',
+        type: 'address[]',
+      },
+      {
+        internalType: 'uint256[]',
+        name: 'contribs',
+        type: 'uint256[]',
       },
     ],
     stateMutability: 'view',
@@ -678,6 +603,66 @@ export const ServiceNodeContributionAbi = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'X',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'Y',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct BN256G1.G1Point',
+        name: 'newBlsPubkey',
+        type: 'tuple',
+      },
+    ],
+    name: 'updateBLSPubkey',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'serviceNodePubkey',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'serviceNodeSignature1',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'serviceNodeSignature2',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint16',
+            name: 'fee',
+            type: 'uint16',
+          },
+        ],
+        internalType: 'struct IServiceNodeRewards.ServiceNodeParams',
+        name: 'newParams',
+        type: 'tuple',
+      },
+    ],
+    name: 'updateServiceNodeParams',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
