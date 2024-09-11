@@ -36,9 +36,11 @@ import { areHexesEqual } from '@session/util/string';
 import { Button } from '@session/ui/ui/button';
 import { NodeRequestExitButton } from '@/components/StakedNode/NodeRequestExitButton';
 import { Tooltip } from '@session/ui/ui/tooltip';
-import { SESSION_NODE_TIME } from '@/lib/constants';
+import { SESSION_NODE_TIME, URL } from '@/lib/constants';
 import { useChain } from '@session/contracts/hooks/useChain';
 import { NodeExitButton } from '@/components/StakedNode/NodeExitButton';
+import { NodeExitButtonDialog } from '@/components/StakedNode/NodeExitButtonDialog';
+import { externalLink } from '@/lib/locale-defaults';
 
 export const NODE_STATE_VALUES = Object.values(NODE_STATE);
 
@@ -125,10 +127,20 @@ const isBeingDeregistered = (node: StakedNode): node is DecommissionedStakedNode
     node.deregistrationDate
   );
 
-const isRequestingToExit = (
+const hasUnlockDate = (
   node: StakedNode
 ): node is (RunningStakedNode | DecommissionedStakedNode) & { unlockDate: Date } =>
   !!('unlockDate' in node && node.unlockDate);
+
+const isRequestingToExit = (
+  node: StakedNode
+): node is (RunningStakedNode | DecommissionedStakedNode) & { unlockDate: Date } =>
+  !!(hasUnlockDate(node) && node.unlockDate.getTime() >= Date.now());
+
+const isReadyToExit = (
+  node: StakedNode
+): node is (RunningStakedNode | DecommissionedStakedNode) & { unlockDate: Date } =>
+  !!(hasUnlockDate(node) && node.unlockDate.getTime() < Date.now());
 
 /**
  * Checks if a given node is awaiting liquidation.
@@ -264,6 +276,36 @@ const NodeOperatorIndicator = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivE
   }
 );
 
+const ReadyForExitNotification = ({
+  node,
+  className,
+}: {
+  node: Required<RunningStakedNode> | Required<DecommissionedStakedNode>;
+  className?: string;
+}) => {
+  const chain = useChain();
+  const dictionary = useTranslations('nodeCard.staked');
+  const time = formatLocalizedTimeFromSeconds(
+    node.unlockDate.getTime() / 1000 + SESSION_NODE_TIME(chain).EXIT_GRACE_TIME_SECONDS,
+    { addSuffix: true }
+  );
+
+  return (
+    <Tooltip
+      tooltipContent={dictionary('exitTimerDescription', {
+        time,
+      })}
+    >
+      <NodeNotification level="warning" className={className}>
+        {dictionary.rich('exitTimerNotification', {
+          time,
+          link: externalLink(URL.NODE_LIQUIDATION_LEARN_MORE),
+        })}
+      </NodeNotification>
+    </Tooltip>
+  );
+};
+
 const RequestingExitNotification = ({
   node,
   className,
@@ -348,6 +390,18 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
     );
   }
 
+  if (isReadyToExit(node)) {
+    return (
+      <>
+        <NodeContributorList
+          contributors={node.contributors}
+          data-testid={StakedNodeDataTestId.Contributor_List}
+        />
+        <RequestingExitNotification node={node} />
+      </>
+    );
+  }
+
   if (node.state === NODE_STATE.AWAITING_CONTRIBUTORS || node.state === NODE_STATE.RUNNING) {
     return (
       <NodeContributorList
@@ -362,7 +416,7 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
 };
 
 const collapsableContentVariants = cva(
-  'h-full max-h-0 w-full select-none gap-1 overflow-y-hidden transition-all duration-300 ease-in-out peer-checked:select-auto motion-reduce:transition-none',
+  'h-full max-h-0 select-none gap-1 overflow-y-hidden transition-all duration-300 ease-in-out peer-checked:select-auto motion-reduce:transition-none',
   {
     variants: {
       size: {
@@ -370,9 +424,14 @@ const collapsableContentVariants = cva(
         base: cn('text-sm peer-checked:max-h-5', 'md:text-base md:peer-checked:max-h-6'),
         buttonMd: cn('peer-checked:max-h-8', 'md:peer-checked:max-h-10'),
       },
+      width: {
+        'w-full': 'w-full',
+        'w-max': 'w-max',
+      },
     },
     defaultVariants: {
       size: 'base',
+      width: 'w-full',
     },
   }
 );
@@ -381,10 +440,10 @@ type CollapsableContentProps = HTMLAttributes<HTMLSpanElement> &
   VariantProps<typeof collapsableContentVariants>;
 
 export const CollapsableContent = forwardRef<HTMLSpanElement, CollapsableContentProps>(
-  ({ className, size, ...props }, ref) => (
+  ({ className, size, width, ...props }, ref) => (
     <NodeCardText
       ref={ref}
-      className={cn(collapsableContentVariants({ size, className }))}
+      className={cn(collapsableContentVariants({ size, width, className }))}
       {...props}
     />
   )
@@ -515,9 +574,9 @@ const StakedNodeCard = forwardRef<
         </CollapsableContent>
       ) : null}
       {state === NODE_STATE.RUNNING ? (
-        !isRequestingToExit(node) ? (
-          <NodeRequestExitButton node={node} />
-        ) : (
+        isReadyToExit(node) ? (
+          <NodeExitButtonDialog node={node} />
+        ) : isRequestingToExit(node) ? (
           <Tooltip
             tooltipContent={dictionary('exit.disabledButtonTooltipContent', {
               relative_time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, {
@@ -528,6 +587,8 @@ const StakedNodeCard = forwardRef<
           >
             <NodeExitButton disabled />
           </Tooltip>
+        ) : (
+          <NodeRequestExitButton node={node} />
         )
       ) : null}
     </NodeCard>

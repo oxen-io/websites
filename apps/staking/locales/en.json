@@ -417,6 +417,8 @@
       "lastRewardHeightDescription": "Last block height the node received rewards.",
       "requestingExitTimerNotification": "Exit available {time}",
       "requestingExitDescription": "Time left until the node is available for exit. Return {relative_time} ({date}) to exit the node.",
+      "exitTimerNotification": "Exit available. Exit {time} to avoid penalty.",
+      "exitTimerDescription": "Node is ready for exit. If you don't exit within {time}, you may be subject to a small penalty. <link>Learn more</link>",
       "deregistrationTimerNotification": "Deregistration {time}",
       "deregistrationTimerDescription": "Time left until the node is deregistered and funds are locked for {deregistration_locked_stake_time}. Node will be deregistered {relative_time} ({date})",
       "liquidationNotification": "Awaiting liquidation",
@@ -424,12 +426,33 @@
       "exit": {
         "buttonText": "Exit",
         "buttonAria": "Exit the node from the network",
-        "disabledButtonTooltipContent": "Return {relative_time} ({date}) to exit the node."
+        "disabledButtonTooltipContent": "Return {relative_time} ({date}) to exit the node.",
+        "disabledInfo": "Stagenet node exits are temporarily paused. Apologies for any inconvenience, we expect to be re-enable exits soon. For updates, visit the <link>Session Token discord</link>.",
+        "dialog": {
+          "title": "Exit Node",
+          "requestFee": "Exit Fee",
+          "requestFeeTooltip": "The amount of {gasTokenSymbol} this transaction will use. <link>Learn more</link>",
+          "amountStaked": "Amount Staked",
+          "amountStakedTooltip": "Amount of {tokenSymbol} staked by you in this node.",
+          "buttons": {
+            "submit": "Exit Node",
+            "submitAria": "Exit the node from the network with a gas fee of {gasAmount} {gasTokenSymbol}"
+          },
+          "alert": {
+            "gasFetchFailed": "Failed to fetch fee estimate exiting the node. Fee estimate may be inaccurate.",
+            "highGas": "The price of Gas is higher than usual."
+          }
+        },
+        "stage": {
+          "submit": "Submitting node exit to Arbitrum",
+          "error": "Failed to exit the node. Please try again later.",
+          "errorTooltip": "Failed to exit the node. Please try again later."
+        }
       },
       "requestExit": {
         "buttonText": "Request Exit",
         "buttonAria": "Request for the node to be exited",
-        "disabledInfo": "Stagenet node exit requests are temporarily paused. Apologies for any inconvenience, we expect to be re-enable exit requests soon. For updates , visit the <link>Session Token discord</link>.",
+        "disabledInfo": "Stagenet node exit requests are temporarily paused. Apologies for any inconvenience, we expect to be re-enable exit requests soon. For updates, visit the <link>Session Token discord</link>.",
         "dialog": {
           "title": "Request Exit",
           "submitAria": "Request exit for the node {pubKey}",

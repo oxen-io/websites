@@ -1,90 +1,69 @@
-import { ButtonDataTestId } from '@/testing/data-test-ids';
+import { type StakedNode } from '@/components/StakedNodeCard';
 import { useTranslations } from 'next-intl';
-import { CollapsableButton, type StakedNode } from '@/components/StakedNodeCard';
+import { useRemoteFeatureFlagQuery } from '@/lib/feature-flags-client';
+import { REMOTE_FEATURE_FLAG } from '@/lib/feature-flags';
 import {
   AlertDialog,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogTrigger,
 } from '@session/ui/ui/alert-dialog';
-import { Button } from '@session/ui/ui/button';
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
-import { formatLocalizedTimeFromSeconds } from '@/lib/locale-client';
-import { SESSION_NODE_TIME, SOCIALS, TICKER, TOAST, URL } from '@/lib/constants';
+import { ButtonDataTestId } from '@/testing/data-test-ids';
+import { Loading } from '@session/ui/components/loading';
+import { type ReactNode, useEffect, useMemo } from 'react';
+import Link from 'next/link';
+import { SOCIALS, TICKER, TOAST, URL } from '@/lib/constants';
+import { Social } from '@session/ui/components/SocialLinkList';
+import { useWallet } from '@session/wallet/hooks/wallet-hooks';
+import { useRemoveBLSPublicKeyWithSignature } from '@session/contracts/hooks/ServiceNodeRewards';
+import { formatBigIntTokenValue } from '@session/util/maths';
+import { ETH_DECIMALS } from '@session/wallet/lib/eth';
+import { getTotalStakedAmountForAddress, NodeContributorList } from '@/components/NodeCard';
+import { toast } from '@session/ui/lib/sonner';
 import { ActionModuleRow } from '@/components/ActionModule';
+import { PubKey } from '@session/ui/components/PubKey';
 import { externalLink } from '@/lib/locale-defaults';
+import { LoadingText } from '@session/ui/components/loading-text';
 import { SENT_SYMBOL } from '@session/contracts';
+import { Button } from '@session/ui/ui/button';
+import type { SimulateContractErrorType, WriteContractErrorType } from 'viem';
+import { collapseString } from '@session/util/string';
 import type {
   GenericContractStatus,
   WriteContractStatus,
 } from '@session/contracts/hooks/useContractWriteQuery';
 import { StatusIndicator } from '@session/ui/components/StatusIndicator';
-import type { SimulateContractErrorType, WriteContractErrorType } from 'viem';
-import { toast } from '@session/ui/lib/sonner';
-import { collapseString } from '@session/util/string';
-import { useChain } from '@session/contracts/hooks/useChain';
-import { useInitiateRemoveBLSPublicKey } from '@session/contracts/hooks/ServiceNodeRewards';
-import { useWallet } from '@session/wallet/hooks/wallet-hooks';
-import { getTotalStakedAmountForAddress, NodeContributorList } from '@/components/NodeCard';
-import { PubKey } from '@session/ui/components/PubKey';
-import { LoadingText } from '@session/ui/components/loading-text';
-import { formatBigIntTokenValue } from '@session/util/maths';
-import { ETH_DECIMALS } from '@session/wallet/lib/eth';
-import { useRemoteFeatureFlagQuery } from '@/lib/feature-flags-client';
-import { REMOTE_FEATURE_FLAG } from '@/lib/feature-flags';
-import { Loading } from '@session/ui/components/loading';
-import Link from 'next/link';
-import { Social } from '@session/ui/components/SocialLinkList';
-import { ChevronsDownIcon } from '@session/ui/icons/ChevronsDownIcon';
+import { NodeExitButton } from '@/components/StakedNode/NodeExitButton';
+import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
+import { getNodeExitSignatures } from '@/lib/queries/getNodeExitSignatures';
 
-enum EXIT_REQUEST_STATE {
-  ALERT,
-  PENDING,
-}
-
-export function NodeRequestExitButton({ node }: { node: StakedNode }) {
-  const [exitRequestState, setExitRequestState] = useState<EXIT_REQUEST_STATE>(
-    EXIT_REQUEST_STATE.ALERT
+export function NodeExitButtonDialog({ node }: { node: StakedNode }) {
+  const dictionary = useTranslations('nodeCard.staked.exit');
+  const { enabled: isNodeExitDisabled, isLoading: isRemoteFlagLoading } = useRemoteFeatureFlagQuery(
+    REMOTE_FEATURE_FLAG.DISABLE_NODE_EXIT
   );
-  const dictionary = useTranslations('nodeCard.staked.requestExit');
-  const { enabled: isNodeExitRequestDisabled, isLoading: isRemoteFlagLoading } =
-    useRemoteFeatureFlagQuery(REMOTE_FEATURE_FLAG.DISABLE_REQUEST_NODE_EXIT);
+
+  const { data, status } = useStakingBackendQueryWithParams(getNodeExitSignatures, {
+    nodePubKey: node.pubKey,
+  });
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <CollapsableButton
-          ariaLabel={dictionary('buttonAria')}
-          dataTestId={ButtonDataTestId.Staked_Node_Request_Exit}
-        >
-          {dictionary('buttonText')}
-        </CollapsableButton>
+        <NodeExitButton />
       </AlertDialogTrigger>
-      <AlertDialogContent
-        dialogTitle={
-          <>
-            {exitRequestState !== EXIT_REQUEST_STATE.ALERT ? (
-              <ChevronsDownIcon
-                className="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute left-8 mt-1.5 rotate-90 cursor-pointer rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none"
-                onClick={() => setExitRequestState(EXIT_REQUEST_STATE.ALERT)}
-              />
-            ) : null}
-            {dictionary('dialog.title')}
-          </>
-        }
-        className="text-center"
-      >
-        {isRemoteFlagLoading ? (
+      <AlertDialogContent dialogTitle={dictionary('dialog.title')} className="text-center">
+        {isRemoteFlagLoading || !data || status !== 'success' ? (
           <Loading />
-        ) : isNodeExitRequestDisabled ? (
-          <RequestNodeExitDisabled />
-        ) : exitRequestState === EXIT_REQUEST_STATE.PENDING ? (
-          <RequestNodeExitContractWriteDialog node={node} />
+        ) : isNodeExitDisabled ? (
+          <NodeExitDisabled />
         ) : (
-          <RequestNodeExitDialog
+          <NodeExitContractWriteDialog
             node={node}
-            onSubmit={() => setExitRequestState(EXIT_REQUEST_STATE.PENDING)}
+            blsPubKey={data.bls_exit_response.bls_pubkey}
+            timestamp={data.bls_exit_response.timestamp}
+            blsSignature={data.bls_exit_response.signature}
+            excludedSigners={data.bls_exit_response.non_signer_indices}
           />
         )}
       </AlertDialogContent>
@@ -92,8 +71,8 @@ export function NodeRequestExitButton({ node }: { node: StakedNode }) {
   );
 }
 
-function RequestNodeExitDisabled() {
-  const dictionary = useTranslations('nodeCard.staked.requestExit');
+function NodeExitDisabled() {
+  const dictionary = useTranslations('nodeCard.staked.exit');
   return (
     <p>
       {dictionary.rich('disabledInfo', {
@@ -112,78 +91,37 @@ function RequestNodeExitDisabled() {
   );
 }
 
-function RequestNodeExitDialog({ node, onSubmit }: { node: StakedNode; onSubmit: () => void }) {
-  const chain = useChain();
-  const dictionary = useTranslations('nodeCard.staked.requestExit.dialog');
-
-  return (
-    <>
-      <div className="text-lg font-medium">{dictionary('description1')}</div>
-      <p>
-        {dictionary('description2', {
-          request_time: formatLocalizedTimeFromSeconds(
-            SESSION_NODE_TIME(chain).EXIT_REQUEST_TIME_SECONDS,
-            {
-              addSuffix: true,
-            }
-          ),
-        })}
-        <br />
-        <br />
-        {dictionary.rich('description3', {
-          request_time: formatLocalizedTimeFromSeconds(
-            SESSION_NODE_TIME(chain).EXIT_REQUEST_TIME_SECONDS
-          ),
-          exit_time: formatLocalizedTimeFromSeconds(
-            SESSION_NODE_TIME(chain).EXIT_GRACE_TIME_SECONDS
-          ),
-          link: externalLink(URL.NODE_LIQUIDATION_LEARN_MORE),
-        })}
-        <br />
-        <br />
-        {dictionary('description4')}
-      </p>
-      <AlertDialogFooter className="mt-4 flex w-full flex-col font-medium sm:flex-row">
-        <Button
-          variant="destructive-ghost"
-          rounded="md"
-          size="lg"
-          aria-label={dictionary('buttons.submitAria', {
-            pubKey: node.pubKey,
-          })}
-          className="w-full"
-          data-testid={ButtonDataTestId.Staked_Node_Request_Exit_Dialog_Submit}
-          onClick={onSubmit}
-          type="submit"
-        >
-          {dictionary('buttons.submit')}
-        </Button>
-        <AlertDialogCancel asChild>
-          <Button
-            variant="ghost"
-            rounded="md"
-            size="lg"
-            className="w-full"
-            aria-label={dictionary('buttons.cancelAria')}
-            data-testid={ButtonDataTestId.Staked_Node_Request_Exit_Dialog_Cancel}
-          >
-            {dictionary('buttons.cancel')}
-          </Button>
-        </AlertDialogCancel>
-      </AlertDialogFooter>
-    </>
-  );
-}
-
-function RequestNodeExitContractWriteDialog({ node }: { node: StakedNode }) {
-  const dictionary = useTranslations('nodeCard.staked.requestExit.dialog.write');
-  const dictionaryStage = useTranslations('nodeCard.staked.requestExit.dialog.stage');
+function NodeExitContractWriteDialog({
+  node,
+  blsPubKey,
+  timestamp,
+  blsSignature,
+  excludedSigners,
+}: {
+  node: StakedNode;
+  blsPubKey: string;
+  timestamp: number;
+  blsSignature: string;
+  excludedSigners?: Array<number>;
+}) {
+  const dictionary = useTranslations('nodeCard.staked.exit.dialog');
+  const dictionaryStage = useTranslations('nodeCard.staked.exit.stage');
   const dictionaryActionModulesNode = useTranslations('actionModules.node');
   const sessionNodeDictionary = useTranslations('sessionNodes.general');
   const { address } = useWallet();
 
+  const removeBlsPublicKeyWithSignatureArgs = useMemo(
+    () => ({
+      blsPubKey,
+      timestamp,
+      blsSignature,
+      excludedSigners: excludedSigners?.map(BigInt),
+    }),
+    [blsPubKey, timestamp, blsSignature, excludedSigners]
+  );
+
   const {
-    initiateRemoveBLSPublicKey,
+    removeBLSPublicKeyWithSignature,
     fee,
     estimateContractWriteFee,
     simulateStatus,
@@ -194,9 +132,7 @@ function RequestNodeExitContractWriteDialog({ node }: { node: StakedNode }) {
     writeError,
     transactionError,
     simulateEnabled,
-  } = useInitiateRemoveBLSPublicKey({
-    contractId: node.contract_id,
-  });
+  } = useRemoveBLSPublicKeyWithSignature(removeBlsPublicKeyWithSignatureArgs);
 
   const feeEstimate = useMemo(
     () => (fee !== null ? formatBigIntTokenValue(fee ?? BigInt(0), ETH_DECIMALS, 18) : null),
@@ -209,10 +145,10 @@ function RequestNodeExitContractWriteDialog({ node }: { node: StakedNode }) {
   );
 
   const handleClick = () => {
-    initiateRemoveBLSPublicKey();
+    removeBLSPublicKeyWithSignature();
   };
 
-  const isDisabled = !node.contract_id;
+  const isDisabled = !blsPubKey || !timestamp || !blsSignature;
 
   const isButtonDisabled = isDisabled || simulateEnabled;
 
@@ -305,7 +241,7 @@ function RequestNodeExitContractWriteDialog({ node }: { node: StakedNode }) {
             gasAmount: feeEstimate ?? 0,
           })}
           className="w-full"
-          data-testid={ButtonDataTestId.Staked_Node_Request_Exit_Write_Dialog_Submit}
+          data-testid={ButtonDataTestId.Staked_Node_Exit_Dialog_Submit}
           disabled={isButtonDisabled}
           onClick={handleClick}
         >
@@ -348,7 +284,7 @@ function QueryStatusInformation({
   writeStatus: WriteContractStatus;
   transactionStatus: GenericContractStatus;
 }) {
-  const dictionary = useTranslations('nodeCard.staked.requestExit.dialog.stage');
+  const dictionary = useTranslations('nodeCard.staked.exit.stage');
   const stage = useMemo(() => {
     if (simulateStatus === 'error' || writeStatus === 'error' || transactionStatus === 'error') {
       return QUERY_STAGE.ERROR;
