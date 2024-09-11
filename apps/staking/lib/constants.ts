@@ -51,7 +51,7 @@ export const SOCIALS = {
 
 export enum FAUCET {
   MIN_ETH_BALANCE = 0.001,
-  DRIP = 20_000,
+  DRIP = 40_000,
 }
 
 export enum FAUCET_ERROR {
