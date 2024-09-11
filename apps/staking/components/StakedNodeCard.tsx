@@ -440,28 +440,6 @@ const StakedNodeCard = forwardRef<
 
   const isSoloNode = contributors.length === 1;
 
-  const button = useMemo(() => {
-    if (state === NODE_STATE.RUNNING) {
-      if (!isRequestingToExit(node)) {
-        return <NodeRequestExitButton node={node} />;
-      } else {
-        return (
-          <Tooltip
-            tooltipContent={dictionary('exit.disabledButtonTooltipContent', {
-              relative_time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, {
-                addSuffix: true,
-              }),
-              date: formatDate(node.unlockDate, { dateStyle: 'full', timeStyle: 'long' }),
-            })}
-          >
-            <NodeExitButton disabled />
-          </Tooltip>
-        );
-      }
-    }
-    return null;
-  }, [node, state]);
-
   return (
     <NodeCard
       ref={ref}
@@ -536,7 +514,22 @@ const StakedNodeCard = forwardRef<
           {formatPercentage(operatorFee)}
         </CollapsableContent>
       ) : null}
-      {button}
+      {state === NODE_STATE.RUNNING ? (
+        !isRequestingToExit(node) ? (
+          <NodeRequestExitButton node={node} />
+        ) : (
+          <Tooltip
+            tooltipContent={dictionary('exit.disabledButtonTooltipContent', {
+              relative_time: formatLocalizedRelativeTimeToNowClient(node.unlockDate, {
+                addSuffix: true,
+              }),
+              date: formatDate(node.unlockDate, { dateStyle: 'full', timeStyle: 'long' }),
+            })}
+          >
+            <NodeExitButton disabled />
+          </Tooltip>
+        )
+      ) : null}
     </NodeCard>
   );
 });
