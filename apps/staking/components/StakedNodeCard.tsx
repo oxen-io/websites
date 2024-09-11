@@ -135,12 +135,12 @@ const hasUnlockDate = (
 const isRequestingToExit = (
   node: StakedNode
 ): node is (RunningStakedNode | DecommissionedStakedNode) & { unlockDate: Date } =>
-  !!(hasUnlockDate(node) && node.unlockDate.getTime() >= Date.now());
+  hasUnlockDate(node) && node.unlockDate.getTime() >= Date.now();
 
 const isReadyToExit = (
   node: StakedNode
 ): node is (RunningStakedNode | DecommissionedStakedNode) & { unlockDate: Date } =>
-  !!(hasUnlockDate(node) && node.unlockDate.getTime() < Date.now());
+  hasUnlockDate(node) && node.unlockDate.getTime() < Date.now();
 
 /**
  * Checks if a given node is awaiting liquidation.
@@ -166,8 +166,8 @@ const isNodeOperator = (node: StakedNode, operatorAddress: string): boolean =>
  * @param contributorAddress - The address of the contributor to check.
  * @returns `true` if the contributor address is a contributor of the session node, `false` otherwise.
  */
-const isNodeContributor = (node: StakedNode, contributorAddress: string): boolean =>
-  node.contributors.some(({ address }) => areHexesEqual(address, contributorAddress));
+// const isNodeContributor = (node: StakedNode, contributorAddress: string): boolean =>
+//   node.contributors.some(({ address }) => areHexesEqual(address, contributorAddress));
 
 function getNodeStatus(state: NODE_STATE): VariantProps<typeof statusVariants>['status'] {
   switch (state) {
@@ -397,7 +397,7 @@ const NodeSummary = ({ node }: { node: StakedNode }) => {
           contributors={node.contributors}
           data-testid={StakedNodeDataTestId.Contributor_List}
         />
-        <RequestingExitNotification node={node} />
+        <ReadyForExitNotification node={node} />
       </>
     );
   }
