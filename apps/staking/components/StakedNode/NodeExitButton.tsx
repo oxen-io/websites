@@ -3,18 +3,20 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@session/ui/ui/button';
 import { CollapsableContent } from '@/components/StakedNodeCard';
 import { forwardRef, type HTMLAttributes } from 'react';
+import { cn } from '@session/ui/lib/utils';
 
 export const NodeExitButton = forwardRef<
   HTMLSpanElement,
   HTMLAttributes<HTMLSpanElement> & {
     disabled?: boolean;
   }
->(({ disabled, ...props }, ref) => {
+>(({ disabled, className, ...props }, ref) => {
   const dictionary = useTranslations('nodeCard.staked.exit');
   return (
     <CollapsableContent
-      className="absolute bottom-4 right-6 flex w-max items-end"
+      className={cn('absolute bottom-4 right-6 flex items-end', className)}
       size="buttonMd"
+      width="w-max"
       {...props}
       ref={ref}
     >
