@@ -210,3 +210,29 @@ export function useAddBLSPubKey({
     ...rest,
   };
 }
+
+export type UseInitiateRemoveBLSPublicKeyReturn = ContractWriteQueryProps & {
+  initiateRemoveBLSPublicKey: () => void;
+};
+
+export function useInitiateRemoveBLSPublicKey({
+  contractId,
+}: {
+  contractId: number;
+}): UseInitiateRemoveBLSPublicKeyReturn {
+  const chain = useChain();
+
+  const defaultArgs = useMemo(() => [BigInt(contractId ?? 0)] as [bigint], [contractId]);
+
+  const { simulateAndWriteContract, ...rest } = useContractWriteQuery({
+    contract: 'ServiceNodeRewards',
+    functionName: 'initiateRemoveBLSPublicKey',
+    chain,
+    defaultArgs,
+  });
+
+  return {
+    initiateRemoveBLSPublicKey: simulateAndWriteContract,
+    ...rest,
+  };
+}

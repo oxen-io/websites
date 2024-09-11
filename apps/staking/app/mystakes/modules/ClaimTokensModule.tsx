@@ -31,11 +31,20 @@ import type { VariantProps } from 'class-variance-authority';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import type { Address } from 'viem';
 import { Loading } from '@session/ui/components/loading';
+import { useRemoteFeatureFlagQuery } from '@/lib/feature-flags-client';
+import { REMOTE_FEATURE_FLAG } from '@/lib/feature-flags';
+import { toast } from '@session/ui/lib/sonner';
+import { ClaimRewardsDisabledInfo } from '@/components/ClaimRewardsDisabledInfo';
 
 export default function ClaimTokensModule() {
   const { address } = useWallet();
   const dictionary = useTranslations('modules.claim');
   const { canClaim, unclaimedRewards, formattedUnclaimedRewardsAmount } = useUnclaimedTokens();
+  const { enabled: isClaimRewardsDisabled, isLoading: isRemoteFlagLoading } =
+    useRemoteFeatureFlagQuery(REMOTE_FEATURE_FLAG.DISABLE_CLAIM_REWARDS);
+
+  const isDisabled =
+    !(address && canClaim && unclaimedRewards) || isRemoteFlagLoading || isClaimRewardsDisabled;
 
   const {
     data: rewardsClaimData,
@@ -45,12 +54,15 @@ export default function ClaimTokensModule() {
     getRewardsClaimSignature,
     { address: address! },
     {
-      enabled: !!address,
+      enabled: !isDisabled,
       staleTime: QUERY.STALE_TIME_CLAIM_REWARDS,
     }
   );
 
   const handleClick = () => {
+    if (!isRemoteFlagLoading && isClaimRewardsDisabled) {
+      toast.error(<ClaimRewardsDisabledInfo />);
+    }
     if (!canClaim) return;
     if (isStale) {
       void refetch();
@@ -64,7 +76,6 @@ export default function ClaimTokensModule() {
     return [BigInt(amount), signature, non_signer_indices.map(BigInt)];
   }, [rewardsClaimData]);
 
-  const isDisabled = !(address && canClaim && unclaimedRewards);
   const isReady = !!(!isDisabled && rewards && excludedSigners && blsSignature);
 
   return (
@@ -96,7 +107,7 @@ export default function ClaimTokensModule() {
           </ModuleContent>
         </ButtonModule>
       </AlertDialogTrigger>
-      <AlertDialogContent title={dictionary('title')}>
+      <AlertDialogContent dialogTitle={dictionary('title')}>
         {isReady ? (
           <ClaimTokensDialog
             formattedUnclaimedRewardsAmount={formattedUnclaimedRewardsAmount}
@@ -260,6 +271,16 @@ function ClaimTokensDialog({
 }) {
   const dictionary = useTranslations('modules.claim.dialog');
 
+  const claimRewardsArgs = useMemo(
+    () => ({
+      address,
+      rewards,
+      blsSignature,
+      excludedSigners,
+    }),
+    [address, rewards, blsSignature, excludedSigners]
+  );
+
   const {
     updateBalanceAndClaimRewards,
     claimFee,
@@ -269,12 +290,7 @@ function ClaimTokensDialog({
     subStage,
     enabled,
     skipUpdateBalance,
-  } = useClaimRewards({
-    address,
-    rewards,
-    blsSignature,
-    excludedSigners,
-  });
+  } = useClaimRewards(claimRewardsArgs);
 
   const feeEstimate = useMemo(
     () =>

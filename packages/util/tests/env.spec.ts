@@ -16,7 +16,7 @@ describe('getEnvironment', () => {
     const result = getEnvironment();
     expect(result).toBe(Environment.PRD);
     expect(mockConsoleWarn).not.toHaveBeenCalled();
-    expect(mockConsoleLog).toHaveBeenCalled();
+    expect(mockConsoleLog).not.toHaveBeenCalled();
   });
 
   test('getEnvironment should return the default environment (DEV) when an invalid environment flag is provided', () => {
@@ -24,7 +24,7 @@ describe('getEnvironment', () => {
     const result = getEnvironment();
     expect(result).toBe(Environment.DEV);
     expect(mockConsoleWarn).toHaveBeenCalled();
-    expect(mockConsoleLog).toHaveBeenCalled();
+    expect(mockConsoleLog).not.toHaveBeenCalled();
   });
 
   test('getEnvironment should return the default environment (DEV) when no environment flag is provided', () => {
@@ -33,7 +33,7 @@ describe('getEnvironment', () => {
     const result = getEnvironment();
     expect(result).toBe(Environment.DEV);
     expect(mockConsoleWarn).toHaveBeenCalled();
-    expect(mockConsoleLog).toHaveBeenCalled();
+    expect(mockConsoleLog).not.toHaveBeenCalled();
   });
 });
 
@@ -45,7 +45,7 @@ describe('isProduction', () => {
     process.env.NEXT_PUBLIC_ENV_FLAG = Environment.PRD;
     const result = isProduction();
     expect(result).toBe(true);
-    expect(mockConsoleLog).toHaveBeenCalled();
+    expect(mockConsoleLog).not.toHaveBeenCalled();
   });
 
   test('isProduction should return false when the environment is not PRD', () => {

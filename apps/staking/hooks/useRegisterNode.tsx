@@ -8,7 +8,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { toast } from '@session/ui/lib/sonner';
 import { collapseString } from '@session/util/string';
 import type { SimulateContractErrorType, WriteContractErrorType } from 'viem';
-import { isProduction } from '@/lib/env';
 import { useTranslations } from 'next-intl';
 import type {
   GenericContractStatus,
@@ -158,7 +157,7 @@ export default function useRegisterNode({
 
   const handleError = (error: Error | SimulateContractErrorType | WriteContractErrorType) => {
     console.error(error);
-    if (error.message && !isProduction) {
+    if (error.message) {
       toast.error(
         collapseString(error.message, TOAST.ERROR_COLLAPSE_LENGTH, TOAST.ERROR_COLLAPSE_LENGTH)
       );

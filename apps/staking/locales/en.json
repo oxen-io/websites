@@ -163,6 +163,7 @@
   },
   "banner": {
     "registrationPaused": "Stagenet node registration is temporarily paused. Apologies for any inconvenience, we expect to be able to re-enable registrations soon. For updates, visit the <link>Session Token discord</link>.",
+    "claimRewardsDisabled": "Stagenet rewards claim is temporarily paused. Apologies for any inconvenience, we expect to be able to re-enable rewards claiming soon. For updates, visit the <link>Session Token discord</link>.",
     "newTokenContract": "The Session Token contract has been updated. <remove-token-link>Remove the old token</remove-token-link> and <watch-token>add the new token contract</watch-token> to your wallet watch list to continue using the Staking Portal. If you have any questions, visit the <link>Session Token Discord</link>."
   },
   "modules": {
@@ -405,6 +406,7 @@
     },
     "staked": {
       "operator": "Operator",
+      "operatorTooltip": "You are the operator of this node",
       "labelExpand": "Expand",
       "ariaExpand": "Expand node details",
       "labelCollapse": "Collapse",
@@ -413,12 +415,55 @@
       "lastUptimeDescription": "The last time the node provided a proof of availability.",
       "lastRewardHeight": "Last Reward Height: {height}",
       "lastRewardHeightDescription": "Last block height the node received rewards.",
-      "unlockingTimerNotification": "Unlocking {time}",
-      "unlockingTimerDescription": "Time left until the node is unlocked. After unlocking, you can withdraw your stake.",
+      "requestingExitTimerNotification": "Exit available {time}",
+      "requestingExitDescription": "Time left until the node is available for exit. Return {relative_time} ({date}) to exit the node.",
       "deregistrationTimerNotification": "Deregistration {time}",
-      "deregistrationTimerDescription": "Time left until the node is deregistered and funds are locked for {time}.",
+      "deregistrationTimerDescription": "Time left until the node is deregistered and funds are locked for {deregistration_locked_stake_time}. Node will be deregistered {relative_time} ({date})",
       "liquidationNotification": "Awaiting liquidation",
-      "liquidationDescription": "The node is inactive and waiting to be removed by the network."
+      "liquidationDescription": "The node is inactive and waiting to be removed by the network.",
+      "exit": {
+        "buttonText": "Exit",
+        "buttonAria": "Exit the node from the network",
+        "disabledButtonTooltipContent": "Return {relative_time} ({date}) to exit the node."
+      },
+      "requestExit": {
+        "buttonText": "Request Exit",
+        "buttonAria": "Request for the node to be exited",
+        "disabledInfo": "Stagenet node exit requests are temporarily paused. Apologies for any inconvenience, we expect to be re-enable exit requests soon. For updates , visit the <link>Session Token discord</link>.",
+        "dialog": {
+          "title": "Request Exit",
+          "submitAria": "Request exit for the node {pubKey}",
+          "description1": "Are you sure?",
+          "description2": "Your node will be ready to exit the network {request_time}.",
+          "description3": "You'll need to confirm the exit after {request_time}. If you don't confirm within {exit_time}, you may be subject to a small penalty. <link>Learn more</link>",
+          "description4": "Once the node has exited the network, you can claim your stake on the staking portal.",
+          "buttons": {
+            "submit": "Request Exit",
+            "submitAria": "Request exit for {pubKey}",
+            "cancel": "Cancel",
+            "cancelAria": "Cancel exit request"
+          },
+          "write": {
+            "requestFee": "Exit request Fee",
+            "requestFeeTooltip": "The amount of {gasTokenSymbol} this transaction will use. <link>Learn more</link>",
+            "amountStaked": "Amount Staked",
+            "amountStakedTooltip": "Amount of {tokenSymbol} staked by you in this node.",
+            "buttons": {
+              "submit": "Request Exit",
+              "submitAria": "Request node exit with a gas fee of {gasAmount} {gasTokenSymbol}"
+            },
+            "alert": {
+              "gasFetchFailed": "Failed to fetch fee estimate for requesting node exit. Fee estimate may be inaccurate.",
+              "highGas": "The price of Gas is higher than usual."
+            }
+          },
+          "stage": {
+            "submit": "Submitting node exit request to Arbitrum",
+            "error": "Failed to send node exit request. Please try again later.",
+            "errorTooltip": "Failed to send node exit request. Please try again later."
+          }
+        }
+      }
     }
   }
 }

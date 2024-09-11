@@ -53,6 +53,8 @@ export type ContractWriteQueryProps = {
   estimateFeeStatus: WriteContractStatus;
   /** Estimate fee error */
   estimateFeeError: Error | null;
+  /** If the simulation is enabled */
+  simulateEnabled: boolean;
 };
 
 export type UseContractWrite<Args> = ContractWriteQueryProps & {
@@ -169,5 +171,6 @@ export function useContractWriteQuery<
     transactionError,
     estimateFeeStatus,
     estimateFeeError,
+    simulateEnabled,
   };
 }
