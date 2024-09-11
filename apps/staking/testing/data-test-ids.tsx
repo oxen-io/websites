@@ -19,9 +19,10 @@ export enum ButtonDataTestId {
   Hide_Prepared_Registration = 'button:hide-prepared-registration',
   Staked_Node_Request_Exit = 'button:staked-node-request-exit',
   Staked_Node_Exit = 'button:staked-node-exit',
+  Staked_Node_Request_Exit_Dialog_Submit = 'button:staked-node-request-exit-dialog-submit',
+  Staked_Node_Request_Exit_Dialog_Cancel = 'button:staked-node-request-exit-dialog-cancel',
+  Staked_Node_Request_Exit_Write_Dialog_Submit = 'button:staked-node-request-exit-write-dialog-submit',
   Staked_Node_Exit_Dialog_Submit = 'button:staked-node-exit-dialog-submit',
-  Staked_Node_Exit_Dialog_Cancel = 'button:staked-node-exit-dialog-cancel',
-  Staked_Node_Exit_Write_Dialog_Submit = 'button:staked-node-exit-write-dialog-submit',
 }
 
 export enum SpecialDataTestId {
