@@ -62,7 +62,7 @@ export function DevSheet({ buildInfo }: { buildInfo: BuildInfo }) {
 
   const textToCopy = useMemo(() => {
     const enabledFeatureFlags = Object.entries(featureFlags)
-      .filter(([_, enabled]) => enabled)
+      .filter(([, enabled]) => enabled)
       .map(([flag]) => flag);
     const sections = [
       `Commit Hash: ${COMMIT_HASH}`,
