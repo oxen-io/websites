@@ -445,6 +445,7 @@
         },
         "stage": {
           "submit": "Submitting node exit to Arbitrum",
+          "success": "Node exit request submitted",
           "error": "Failed to exit the node. Please try again later.",
           "errorTooltip": "Failed to exit the node. Please try again later."
         }
@@ -482,6 +483,7 @@
           },
           "stage": {
             "submit": "Submitting node exit request to Arbitrum",
+            "success": "Node exit request submitted",
             "error": "Failed to send node exit request. Please try again later.",
             "errorTooltip": "Failed to send node exit request. Please try again later."
           }
