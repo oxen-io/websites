@@ -9,7 +9,8 @@ You can follow the generic instructions in the root [README.md](../../README.md#
 
 ## Development
 
-Running the app requires several environment variables to be set. See the [.env.example](.env.example) file for a list
+Running the app requires several environment variables to be set. See the [.env.local.template](.env.local.template)
+file for a list
 of required variables.
 
 We recommend running the [Session Token Staking Backend](https://github.com/oxen-io/sent-staking-backend/) and
