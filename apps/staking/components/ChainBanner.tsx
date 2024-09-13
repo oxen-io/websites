@@ -8,7 +8,7 @@ import { useWallet, useWalletChain } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { SwitchChainErrorType } from 'viem';
-import { toast } from '@session/ui/lib/sonner';
+import { toast } from '@session/ui/lib/toast';
 
 export default function ChainBanner() {
   const { isConnected } = useWallet();

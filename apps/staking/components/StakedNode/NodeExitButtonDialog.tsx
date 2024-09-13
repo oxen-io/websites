@@ -12,22 +12,20 @@ import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { Loading } from '@session/ui/components/loading';
 import { type ReactNode, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { SOCIALS, TICKER, TOAST, URL } from '@/lib/constants';
+import { SOCIALS, TICKER, URL } from '@/lib/constants';
 import { Social } from '@session/ui/components/SocialLinkList';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useRemoveBLSPublicKeyWithSignature } from '@session/contracts/hooks/ServiceNodeRewards';
 import { formatBigIntTokenValue } from '@session/util/maths';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { getTotalStakedAmountForAddress, NodeContributorList } from '@/components/NodeCard';
-import { toast } from '@session/ui/lib/sonner';
+import { toast } from '@session/ui/lib/toast';
 import { ActionModuleRow } from '@/components/ActionModule';
 import { PubKey } from '@session/ui/components/PubKey';
 import { externalLink } from '@/lib/locale-defaults';
 import { LoadingText } from '@session/ui/components/loading-text';
 import { SENT_SYMBOL } from '@session/contracts';
 import { Button } from '@session/ui/ui/button';
-import type { SimulateContractErrorType, WriteContractErrorType } from 'viem';
-import { collapseString } from '@session/util/string';
 import type {
   GenericContractStatus,
   WriteContractStatus,
@@ -160,27 +158,27 @@ function NodeExitContractWriteDialog({
 
   useEffect(() => {
     if (estimateFeeError) {
-      handleError(estimateFeeError);
+      toast.handleError(estimateFeeError);
     }
   }, [simulateError]);
 
   useEffect(() => {
     if (simulateError) {
-      handleError(simulateError);
+      toast.handleError(simulateError);
       toast.error(dictionaryStage('errorTooltip'));
     }
   }, [simulateError]);
 
   useEffect(() => {
     if (writeError) {
-      handleError(writeError);
+      toast.handleError(writeError);
       toast.error(dictionaryStage('errorTooltip'));
     }
   }, [writeError]);
 
   useEffect(() => {
     if (transactionError) {
-      handleError(transactionError);
+      toast.handleError(transactionError);
       toast.error(dictionaryStage('errorTooltip'));
     }
   }, [transactionError]);
@@ -258,15 +256,6 @@ function NodeExitContractWriteDialog({
     </>
   );
 }
-
-const handleError = (error: Error | SimulateContractErrorType | WriteContractErrorType) => {
-  console.error(error);
-  if (error.message) {
-    toast.error(
-      collapseString(error.message, TOAST.ERROR_COLLAPSE_LENGTH, TOAST.ERROR_COLLAPSE_LENGTH)
-    );
-  }
-};
 
 enum QUERY_STAGE {
   IDLE,

@@ -24,7 +24,7 @@ import {
   FormLabel,
   FormSubmitButton,
 } from '@session/ui/components/ui/form';
-import { toast } from '@session/ui/lib/sonner';
+import { toast } from '@session/ui/lib/toast';
 import { XIcon } from '@session/ui/icons/XIcon';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { FEATURE_FLAG } from '@/lib/feature-flags';

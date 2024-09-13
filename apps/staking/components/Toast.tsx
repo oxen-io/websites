@@ -1,4 +1,4 @@
-import { toast } from '@session/ui/lib/sonner';
+import { toast } from '@session/ui/lib/toast';
 import { useId } from 'react';
 
 export type ToastErrorRefetchProps = {

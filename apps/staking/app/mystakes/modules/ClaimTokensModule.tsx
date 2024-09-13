@@ -33,7 +33,7 @@ import type { Address } from 'viem';
 import { Loading } from '@session/ui/components/loading';
 import { useRemoteFeatureFlagQuery } from '@/lib/feature-flags-client';
 import { REMOTE_FEATURE_FLAG } from '@/lib/feature-flags';
-import { toast } from '@session/ui/lib/sonner';
+import { toast } from '@session/ui/lib/toast';
 import { ClaimRewardsDisabledInfo } from '@/components/ClaimRewardsDisabledInfo';
 
 export default function ClaimTokensModule() {

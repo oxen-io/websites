@@ -1,16 +1,12 @@
 'use client';
 
-import { TOAST } from '@/lib/constants';
 import {
   useClaimRewardsQuery,
   useUpdateRewardsBalanceQuery,
   type UseUpdateRewardsBalanceQueryParams,
 } from '@session/contracts/hooks/ServiceNodeRewards';
 import { useEffect, useMemo, useState } from 'react';
-import { toast } from '@session/ui/lib/sonner';
-import { collapseString } from '@session/util/string';
-import type { SimulateContractErrorType, WriteContractErrorType } from 'viem';
-import { isProduction } from '@/lib/env';
+import { toast } from '@session/ui/lib/toast';
 import { useTranslations } from 'next-intl';
 import type {
   GenericContractStatus,
@@ -246,15 +242,6 @@ export default function useClaimRewards({
     }
   }, [enabled, skipUpdateBalance, updateBalanceTransactionStatus]);
 
-  const handleError = (error: Error | SimulateContractErrorType | WriteContractErrorType) => {
-    console.error(error);
-    if (error.message && !isProduction) {
-      toast.error(
-        collapseString(error.message, TOAST.ERROR_COLLAPSE_LENGTH, TOAST.ERROR_COLLAPSE_LENGTH)
-      );
-    }
-  };
-
   /**
    * NOTE: All of these useEffects are required to inform the user of errors via the toaster
    */
@@ -265,7 +252,7 @@ export default function useClaimRewards({
       if (updateBalanceEstimateFeeError?.cause?.data?.abiItem?.name === 'RecipientRewardsTooLow') {
         setSkipUpdateBalance(true);
       } else {
-        handleError(updateBalanceEstimateFeeError);
+        toast.handleError(updateBalanceEstimateFeeError);
         toast.error(dictionaryFee('gasFetchFailedUpdateBalance'));
       }
     }
@@ -273,49 +260,49 @@ export default function useClaimRewards({
 
   useEffect(() => {
     if (updateBalanceSimulateError) {
-      handleError(updateBalanceSimulateError);
+      toast.handleError(updateBalanceSimulateError);
       toast.error(dictionary('updateBalance.simulate.errorTooltip'));
     }
   }, [updateBalanceSimulateError]);
 
   useEffect(() => {
     if (updateBalanceWriteError) {
-      handleError(updateBalanceWriteError);
+      toast.handleError(updateBalanceWriteError);
       toast.error(dictionary('updateBalance.write.errorTooltip'));
     }
   }, [updateBalanceWriteError]);
 
   useEffect(() => {
     if (updateBalanceTransactionError) {
-      handleError(updateBalanceTransactionError);
+      toast.handleError(updateBalanceTransactionError);
       toast.error(dictionary('updateBalance.transaction.errorTooltip'));
     }
   }, [updateBalanceTransactionError]);
 
   useEffect(() => {
     if (claimEstimateFeeError) {
-      handleError(claimEstimateFeeError);
+      toast.handleError(claimEstimateFeeError);
       toast.error(dictionaryFee('gasFetchFailedClaimRewards'));
     }
   }, [claimEstimateFeeError]);
 
   useEffect(() => {
     if (claimSimulateError) {
-      handleError(claimSimulateError);
+      toast.handleError(claimSimulateError);
       toast.error(dictionary('claimRewards.simulate.errorTooltip'));
     }
   }, [claimSimulateError]);
 
   useEffect(() => {
     if (claimWriteError) {
-      handleError(claimWriteError);
+      toast.handleError(claimWriteError);
       toast.error(dictionary('claimRewards.write.errorTooltip'));
     }
   }, [claimWriteError]);
 
   useEffect(() => {
     if (claimTransactionError) {
-      handleError(claimTransactionError);
+      toast.handleError(claimTransactionError);
       toast.error(dictionary('claimRewards.transaction.errorTooltip'));
     }
   }, [claimTransactionError]);

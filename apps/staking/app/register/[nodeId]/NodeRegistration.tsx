@@ -28,7 +28,7 @@ import { Tooltip } from '@session/ui/ui/tooltip';
 import { areHexesEqual } from '@session/util/string';
 import { isProduction } from '@/lib/env';
 import type { WriteContractStatus } from '@session/contracts/hooks/useContractWriteQuery';
-import { toast } from '@session/ui/lib/sonner';
+import { toast } from '@session/ui/lib/toast';
 import { RegistrationPausedInfo } from '@/components/RegistrationPausedInfo';
 
 import { useFeatureFlag, useRemoteFeatureFlagQuery } from '@/lib/feature-flags-client';

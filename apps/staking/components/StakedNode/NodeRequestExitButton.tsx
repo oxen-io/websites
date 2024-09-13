@@ -21,7 +21,7 @@ import type {
 } from '@session/contracts/hooks/useContractWriteQuery';
 import { StatusIndicator } from '@session/ui/components/StatusIndicator';
 import type { SimulateContractErrorType, WriteContractErrorType } from 'viem';
-import { toast } from '@session/ui/lib/sonner';
+import { toast } from '@session/ui/lib/toast';
 import { collapseString } from '@session/util/string';
 import { useChain } from '@session/contracts/hooks/useChain';
 import { useInitiateRemoveBLSPublicKey } from '@session/contracts/hooks/ServiceNodeRewards';
@@ -224,27 +224,27 @@ function RequestNodeExitContractWriteDialog({ node }: { node: StakedNode }) {
 
   useEffect(() => {
     if (estimateFeeError) {
-      handleError(estimateFeeError);
+      toast.handleError(estimateFeeError);
     }
   }, [simulateError]);
 
   useEffect(() => {
     if (simulateError) {
-      handleError(simulateError);
+      toast.handleError(simulateError);
       toast.error(dictionaryStage('errorTooltip'));
     }
   }, [simulateError]);
 
   useEffect(() => {
     if (writeError) {
-      handleError(writeError);
+      toast.handleError(writeError);
       toast.error(dictionaryStage('errorTooltip'));
     }
   }, [writeError]);
 
   useEffect(() => {
     if (transactionError) {
-      handleError(transactionError);
+      toast.handleError(transactionError);
       toast.error(dictionaryStage('errorTooltip'));
     }
   }, [transactionError]);
