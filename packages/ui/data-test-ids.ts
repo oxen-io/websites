@@ -40,4 +40,5 @@ export const createDataTestId = genericCreateDataTestId<BaseDataTestId>;
 
 export enum ButtonDataTestId {
   Copy_Pub_Key_To_Clipboard = 'button:copy-pub-key-to-clipboard',
+  Copy_Error_To_Clipboard = 'button:copy-error-to-clipboard',
 }
