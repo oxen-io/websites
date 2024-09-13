@@ -36,7 +36,7 @@ import { areHexesEqual } from '@session/util/string';
 import { Button } from '@session/ui/ui/button';
 import { NodeRequestExitButton } from '@/components/StakedNode/NodeRequestExitButton';
 import { Tooltip } from '@session/ui/ui/tooltip';
-import { SESSION_NODE_TIME, URL } from '@/lib/constants';
+import { SESSION_NODE, SESSION_NODE_TIME, URL } from '@/lib/constants';
 import { useChain } from '@session/contracts/hooks/useChain';
 import { NodeExitButton } from '@/components/StakedNode/NodeExitButton';
 import { NodeExitButtonDialog } from '@/components/StakedNode/NodeExitButtonDialog';
@@ -422,7 +422,7 @@ const collapsableContentVariants = cva(
       size: {
         xs: 'text-xs md:text-xs peer-checked:max-h-4',
         base: cn('text-sm peer-checked:max-h-5', 'md:text-base md:peer-checked:max-h-6'),
-        buttonMd: cn('peer-checked:max-h-8', 'md:peer-checked:max-h-10'),
+        buttonMd: cn('peer-checked:max-h-10'),
       },
       width: {
         'w-full': 'w-full',
@@ -459,9 +459,13 @@ export const CollapsableButton = forwardRef<
     ariaLabel: string;
     dataTestId: ButtonDataTestId;
     disabled?: boolean;
+    mobileChildren?: ReactNode;
   }
 >(({ ariaLabel, dataTestId, disabled, children, ...props }, ref) => (
-  <CollapsableContent className="absolute bottom-4 right-6 flex w-max items-end" size="buttonMd">
+  <CollapsableContent
+    className="bottom-4 right-6 flex w-max items-end min-[500px]:absolute"
+    size="buttonMd"
+  >
     <Button
       data-testid={dataTestId}
       aria-label={ariaLabel}
@@ -490,7 +494,15 @@ const StakedNodeCard = forwardRef<
 
   const id = useId();
   const { address } = useWallet();
-  const { state, pubKey, operatorFee, lastRewardHeight, lastUptime, contributors } = node;
+  const {
+    state,
+    pubKey,
+    operatorFee,
+    lastRewardHeight,
+    lastUptime,
+    contributors,
+    operator_address,
+  } = node;
 
   const formattedTotalStakedAmount = useMemo(() => {
     if (!contributors || contributors.length === 0 || !address) return '0';
@@ -525,16 +537,39 @@ const StakedNodeCard = forwardRef<
       ) : null}
       {state === NODE_STATE.DECOMMISSIONED ||
       state === NODE_STATE.DEREGISTERED ||
-      state === NODE_STATE.UNLOCKED ? (
-        <CollapsableContent className="font-medium opacity-75" size="xs">
-          {dictionary('lastRewardHeight', {
-            height: lastRewardHeight ? lastRewardHeight : generalDictionary('notFound'),
-          })}
+      state === NODE_STATE.UNLOCKED ||
+      state === NODE_STATE.RUNNING ? (
+        <CollapsableContent size="xs">
+          <Tooltip
+            tooltipContent={
+              lastRewardHeight
+                ? formatDate(new Date(Date.now() + lastRewardHeight * SESSION_NODE.MS_PER_BLOCK), {
+                    dateStyle: 'full',
+                    timeStyle: 'long',
+                  })
+                : generalDictionary('notFound')
+            }
+          >
+            <span className="font-medium opacity-60">
+              {dictionary('lastRewardHeight', {
+                height: lastRewardHeight ? lastRewardHeight : generalDictionary('notFound'),
+              })}
+            </span>
+          </Tooltip>
         </CollapsableContent>
       ) : null}
-      <CollapsableContent className="font-medium" size="xs">
-        <Tooltip tooltipContent={formatDate(lastUptime, { dateStyle: 'full', timeStyle: 'long' })}>
-          <span className="opacity-75">
+      <CollapsableContent size="xs">
+        <Tooltip
+          tooltipContent={
+            lastUptime.getTime()
+              ? formatDate(lastUptime, {
+                  dateStyle: 'full',
+                  timeStyle: 'long',
+                })
+              : generalDictionary('notFound')
+          }
+        >
+          <span className="font-medium opacity-60">
             {dictionary('lastUptime', {
               time: lastUptime.getTime()
                 ? formatLocalizedRelativeTimeToNowClient(lastUptime, { addSuffix: true })
@@ -550,14 +585,14 @@ const StakedNodeCard = forwardRef<
           <RowLabel>
             {titleFormat('format', { title: generalNodeDictionary('publicKeyShort') })}
           </RowLabel>
-          <PubKey pubKey={pubKey} expandOnHover={true} />
+          <PubKey pubKey={pubKey} expandOnHover />
         </span>
       </NodeCardText>
       <CollapsableContent className="inline-flex gap-1">
         <RowLabel>
           {titleFormat('format', { title: generalNodeDictionary('operatorAddress') })}
         </RowLabel>
-        <PubKey pubKey={node.operator_address} expandOnHover={true} />
+        <PubKey pubKey={operator_address} expandOnHoverDesktopOnly />
       </CollapsableContent>
       <CollapsableContent>
         <RowLabel>
