@@ -16,7 +16,6 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
     "lint-staged": "lint-staged",
-    "component:generate": "turbo gen react-component",
     "ui:add": "npx shadcn-ui@latest add"
   },
   "devDependencies": {
