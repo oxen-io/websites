@@ -13,7 +13,6 @@ import {
 } from '@/testing/data-test-ids';
 import { SENT_SYMBOL } from '@session/contracts';
 import { NODE_STATE } from '@session/sent-staking-js/client';
-import { TextSeparator } from '@session/ui/components/Separator';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import { ArrowDownIcon } from '@session/ui/icons/ArrowDownIcon';
 import { SpannerAndScrewdriverIcon } from '@session/ui/icons/SpannerAndScrewdriverIcon';
@@ -41,6 +40,7 @@ import { useChain } from '@session/contracts/hooks/useChain';
 import { NodeExitButton } from '@/components/StakedNode/NodeExitButton';
 import { NodeExitButtonDialog } from '@/components/StakedNode/NodeExitButtonDialog';
 import { externalLink } from '@/lib/locale-defaults';
+import { TextSeparator } from '@session/ui/components/Separator';
 
 export const NODE_STATE_VALUES = Object.values(NODE_STATE);
 
@@ -269,8 +269,6 @@ const NodeOperatorIndicator = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivE
             {dictionary('operator')}
           </div>
         </Tooltip>
-
-        <TextSeparator className="mx-1 font-medium" />
       </>
     );
   }
@@ -579,16 +577,17 @@ const StakedNodeCard = forwardRef<
         </Tooltip>
       </CollapsableContent>
       {/** NOTE - ensure any changes here still work with the pubkey component */}
-      <NodeCardText className="flex w-full flex-row flex-wrap gap-1 peer-checked:mt-1 peer-checked:[&>span>span>button]:opacity-100 peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">
+      <NodeCardText className="flex w-full flex-row flex-wrap gap-1 peer-checked:mt-1 peer-checked:[&>.separator]:opacity-0 md:peer-checked:[&>.separator]:opacity-100 peer-checked:[&>span>span>button]:opacity-100 peer-checked:[&>span>span>div]:block peer-checked:[&>span>span>span]:hidden">
         {address && isNodeOperator(node, address) ? <NodeOperatorIndicator /> : null}
+        <TextSeparator className="separator mx-1 font-medium" />
         <span className="inline-flex flex-nowrap gap-1">
           <RowLabel>
             {titleFormat('format', { title: generalNodeDictionary('publicKeyShort') })}
           </RowLabel>
-          <PubKey pubKey={pubKey} expandOnHover />
+          <PubKey pubKey={pubKey} alwaysShowCopyButton />
         </span>
       </NodeCardText>
-      <CollapsableContent className="inline-flex gap-1">
+      <CollapsableContent className="inline-flex flex-wrap peer-checked:max-h-12 sm:gap-1 sm:peer-checked:max-h-5">
         <RowLabel>
           {titleFormat('format', { title: generalNodeDictionary('operatorAddress') })}
         </RowLabel>
