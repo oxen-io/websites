@@ -313,7 +313,11 @@ function QueryStatusInformation({
           }
         />
         <span className="mt-0.5">
-          {stage === QUERY_STAGE.ERROR ? dictionary('error') : dictionary('submit')}
+          {stage === QUERY_STAGE.ERROR
+            ? dictionary('error')
+            : stage === QUERY_STAGE.SUCCESS
+              ? dictionary('success')
+              : dictionary('submit')}
         </span>
       </span>
     </div>
