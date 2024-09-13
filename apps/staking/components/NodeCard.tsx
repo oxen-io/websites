@@ -6,9 +6,10 @@ import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { forwardRef, type HTMLAttributes, useMemo } from 'react';
 import { bigIntToNumber } from '@session/util/maths';
-import { formatSENT, SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
+import { SENT_DECIMALS } from '@session/contracts';
 import { useTranslations } from 'next-intl';
 import { areHexesEqual } from '@session/util/string';
+import { formatSENTBigInt } from '@session/contracts/hooks/SENT';
 
 export interface Contributor {
   address: string;
@@ -128,7 +129,7 @@ const ContributorIcon = ({
       tooltipContent={
         <p>
           {contributor
-            ? `${isUser ? dictionary('you') : contributor.address} | ${formatSENT(contributor.amount)} ${SENT_SYMBOL}`
+            ? `${isUser ? dictionary('you') : contributor.address} | ${formatSENTBigInt(contributor.amount)}`
             : dictionary('emptySlot')}
         </p>
       }
