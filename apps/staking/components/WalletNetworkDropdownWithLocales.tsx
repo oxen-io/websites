@@ -5,7 +5,7 @@ import WalletNetworkDropdown from '@session/wallet/components/WalletNetworkDropd
 import { useTranslations } from 'next-intl';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { SwitchChainErrorType } from 'viem';
-import { toast } from '@session/ui/lib/sonner';
+import { toast } from '@session/ui/lib/toast';
 
 export function WalletNetworkDropdownWithLocales({ className }: { className?: string }) {
   const { isConnected } = useWallet();

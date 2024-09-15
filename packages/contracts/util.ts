@@ -3,7 +3,7 @@ import { SENT_DECIMALS } from './constants';
 
 /**
  * Formats a value of type `bigint` as a string, using the {@link formatUnits} function and the {@link SENT_DECIMALS} constant.
- *
+ * @deprecated - Use {@link formatSENTBigInt} instead.
  * @param value - The value to be formatted.
  * @returns The formatted value as a string.
  */

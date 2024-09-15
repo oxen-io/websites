@@ -18,7 +18,7 @@ import { WalletAddTokenWithLocales } from '@/components/WalletAddTokenWithLocale
 import { WalletModalButtonWithLocales } from '@/components/WalletModalButtonWithLocales';
 import { URL } from '@/lib/constants';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
-import { toast } from '@session/ui/lib/sonner';
+import { toast } from '@session/ui/lib/toast';
 import {
   Form,
   FormControl,

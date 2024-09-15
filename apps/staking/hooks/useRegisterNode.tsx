@@ -2,17 +2,15 @@
 
 import { addresses } from '@session/contracts';
 import { useProxyApproval } from '@session/contracts/hooks/SENT';
-import { SESSION_NODE, TOAST } from '@/lib/constants';
+import { SESSION_NODE } from '@/lib/constants';
 import { useAddBLSPubKey } from '@session/contracts/hooks/ServiceNodeRewards';
 import { useEffect, useMemo, useState } from 'react';
-import { toast } from '@session/ui/lib/sonner';
-import { collapseString } from '@session/util/string';
-import type { SimulateContractErrorType, WriteContractErrorType } from 'viem';
 import { useTranslations } from 'next-intl';
 import type {
   GenericContractStatus,
   WriteContractStatus,
 } from '@session/contracts/hooks/useContractWriteQuery';
+import { toast } from '@session/ui/lib/toast';
 
 export enum REGISTER_STAGE {
   APPROVE,
@@ -155,35 +153,26 @@ export default function useRegisterNode({
     }
   }, [enabled, approveWriteStatus]);
 
-  const handleError = (error: Error | SimulateContractErrorType | WriteContractErrorType) => {
-    console.error(error);
-    if (error.message) {
-      toast.error(
-        collapseString(error.message, TOAST.ERROR_COLLAPSE_LENGTH, TOAST.ERROR_COLLAPSE_LENGTH)
-      );
-    }
-  };
-
   /**
    * NOTE: All of these useEffects are required to inform the user of errors via the toaster
    */
   useEffect(() => {
     if (simulateError) {
-      handleError(simulateError);
+      toast.handleError(simulateError);
       toast.error(dictionary('simulate.errorTooltip'));
     }
   }, [simulateError]);
 
   useEffect(() => {
     if (approveWriteError) {
-      handleError(approveWriteError);
+      toast.handleError(approveWriteError);
       toast.error(dictionary('approve.errorTooltip'));
     }
   }, [approveWriteError]);
 
   useEffect(() => {
     if (writeError) {
-      handleError(writeError);
+      toast.handleError(writeError);
       toast.error(dictionary('write.errorTooltip'));
     }
   }, [writeError]);

@@ -40,7 +40,7 @@ const innerModuleVariants = cva(
           '[&>span]:text-3xl [&>*>span]:text-3xl [&>h3]:font-normal [&>*>h3]:font-normal'
         ),
         hero: cn(
-          'gap-5 hover:brightness-125',
+          'gap-3 sm:gap-5 hover:brightness-125',
           '[&>h3]:text-3xl [&>h3]:font-normal [&>*>h3]:text-2xl [&>*>h3]:font-normal [&>h3]:text-session-white',
           '[&>span]:text-8xl [&>*>span]:text-8xl [&>span]:text-session-white [&>*>span]:text-session-white'
         ),
@@ -72,7 +72,7 @@ const Module = forwardRef<HTMLDivElement, ModuleProps>(
           className={cn(
             'relative',
             innerModuleVariants({ size, variant, className }),
-            noPadding && 'p-0',
+            noPadding && 'p-0 sm:p-0',
             props.onClick && 'hover:bg-session-green hover:text-session-black hover:cursor-pointer'
           )}
           ref={ref}
@@ -83,7 +83,7 @@ const Module = forwardRef<HTMLDivElement, ModuleProps>(
                   background: 'url(/images/module-hero.png)',
                   backgroundPositionX: '35%',
                   backgroundPositionY: '35%',
-                  backgroundSize: '135%',
+                  backgroundSize: '150%',
                 }
               : undefined
           }
