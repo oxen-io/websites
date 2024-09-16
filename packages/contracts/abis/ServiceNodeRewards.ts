@@ -83,6 +83,11 @@ export const ServiceNodeRewardsAbi = [
   },
   {
     inputs: [],
+    name: 'ClaimThresholdExceeded',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'ContractAlreadyStarted',
     type: 'error',
   },
@@ -121,7 +126,7 @@ export const ServiceNodeRewardsAbi = [
       },
       {
         internalType: 'address',
-        name: 'recipient',
+        name: 'contributor',
         type: 'address',
       },
     ],
@@ -177,6 +182,16 @@ export const ServiceNodeRewardsAbi = [
   },
   {
     inputs: [],
+    name: 'InsufficientContributors',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'InsufficientNodes',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'InvalidBLSProofOfPossession',
     type: 'error',
   },
@@ -213,7 +228,22 @@ export const ServiceNodeRewardsAbi = [
   },
   {
     inputs: [],
+    name: 'LiquidatorRewardsTooLow',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'MaxClaimExceeded',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'MaxContributorsExceeded',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'MaxPubkeyAggregationsExceeded',
     type: 'error',
   },
   {
@@ -223,7 +253,12 @@ export const ServiceNodeRewardsAbi = [
   },
   {
     inputs: [],
-    name: 'NullRecipient',
+    name: 'NullAddress',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'NullPublicKey',
     type: 'error',
   },
   {
@@ -246,6 +281,11 @@ export const ServiceNodeRewardsAbi = [
       },
     ],
     name: 'OwnableUnauthorizedAccount',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'PositiveNumberRequirement',
     type: 'error',
   },
   {
@@ -326,7 +366,7 @@ export const ServiceNodeRewardsAbi = [
       },
       {
         internalType: 'address',
-        name: 'recipient',
+        name: 'contributor',
         type: 'address',
       },
     ],
@@ -351,12 +391,51 @@ export const ServiceNodeRewardsAbi = [
     inputs: [
       {
         indexed: false,
+        internalType: 'uint256',
+        name: 'newValue',
+        type: 'uint256',
+      },
+    ],
+    name: 'ClaimCycleUpdated',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'newThreshold',
+        type: 'uint256',
+      },
+    ],
+    name: 'ClaimThresholdUpdated',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
         internalType: 'uint64',
         name: 'version',
         type: 'uint64',
       },
     ],
     name: 'Initialized',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'newValue',
+        type: 'uint256',
+      },
+    ],
+    name: 'LiquidatorRewardRatioUpdated',
     type: 'event',
   },
   {
@@ -402,7 +481,7 @@ export const ServiceNodeRewardsAbi = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'recipient',
+        name: 'initiator',
         type: 'address',
       },
       {
@@ -528,6 +607,32 @@ export const ServiceNodeRewardsAbi = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'newValue',
+        type: 'uint256',
+      },
+    ],
+    name: 'PoolShareOfLiquidationRatioUpdated',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'newValue',
+        type: 'uint256',
+      },
+    ],
+    name: 'RecipientRatioUpdated',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: 'address',
         name: 'recipientAddress',
@@ -580,7 +685,7 @@ export const ServiceNodeRewardsAbi = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'recipient',
+        name: 'operator',
         type: 'address',
       },
       {
@@ -617,7 +722,7 @@ export const ServiceNodeRewardsAbi = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'recipient',
+        name: 'operator',
         type: 'address',
       },
       {
@@ -660,7 +765,7 @@ export const ServiceNodeRewardsAbi = [
       {
         indexed: false,
         internalType: 'address',
-        name: 'recipient',
+        name: 'contributor',
         type: 'address',
       },
       {
@@ -937,122 +1042,6 @@ export const ServiceNodeRewardsAbi = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: 'uint256',
-            name: 'X',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'Y',
-            type: 'uint256',
-          },
-        ],
-        internalType: 'struct BN256G1.G1Point',
-        name: 'blsPubkey',
-        type: 'tuple',
-      },
-      {
-        components: [
-          {
-            internalType: 'uint256',
-            name: 'sigs0',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'sigs1',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'sigs2',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'sigs3',
-            type: 'uint256',
-          },
-        ],
-        internalType: 'struct IServiceNodeRewards.BLSSignatureParams',
-        name: 'blsSignature',
-        type: 'tuple',
-      },
-      {
-        components: [
-          {
-            internalType: 'uint256',
-            name: 'serviceNodePubkey',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'serviceNodeSignature1',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint256',
-            name: 'serviceNodeSignature2',
-            type: 'uint256',
-          },
-          {
-            internalType: 'uint16',
-            name: 'fee',
-            type: 'uint16',
-          },
-        ],
-        internalType: 'struct IServiceNodeRewards.ServiceNodeParams',
-        name: 'serviceNodeParams',
-        type: 'tuple',
-      },
-      {
-        components: [
-          {
-            internalType: 'address',
-            name: 'addr',
-            type: 'address',
-          },
-          {
-            internalType: 'uint256',
-            name: 'stakedAmount',
-            type: 'uint256',
-          },
-        ],
-        internalType: 'struct IServiceNodeRewards.Contributor[]',
-        name: 'contributors',
-        type: 'tuple[]',
-      },
-      {
-        internalType: 'uint256',
-        name: 'deadline',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint8',
-        name: 'v',
-        type: 'uint8',
-      },
-      {
-        internalType: 'bytes32',
-        name: 'r',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'bytes32',
-        name: 's',
-        type: 'bytes32',
-      },
-    ],
-    name: 'addBLSPublicKeyWithPermit',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
     inputs: [],
     name: 'aggregatePubkey',
     outputs: [
@@ -1160,9 +1149,74 @@ export const ServiceNodeRewardsAbi = [
   },
   {
     inputs: [],
+    name: 'claimCycle',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
     name: 'claimRewards',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'claimRewards',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'claimThreshold',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'currentClaimCycle',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'currentClaimTotal',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -1598,19 +1652,6 @@ export const ServiceNodeRewardsAbi = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint64[]',
-        name: 'ids',
-        type: 'uint64[]',
-      },
-    ],
-    name: 'removeNodeBySNID',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
     inputs: [],
     name: 'renounceOwnership',
     outputs: [],
@@ -1805,6 +1846,71 @@ export const ServiceNodeRewardsAbi = [
       },
     ],
     name: 'setBLSNonSignerThresholdMax',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'newValue',
+        type: 'uint256',
+      },
+    ],
+    name: 'setClaimCycle',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'newMax',
+        type: 'uint256',
+      },
+    ],
+    name: 'setClaimThreshold',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'newValue',
+        type: 'uint256',
+      },
+    ],
+    name: 'setLiquidatorRewardRatio',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'newValue',
+        type: 'uint256',
+      },
+    ],
+    name: 'setPoolShareOfLiquidationRatio',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'newValue',
+        type: 'uint256',
+      },
+    ],
+    name: 'setRecipientRatio',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',

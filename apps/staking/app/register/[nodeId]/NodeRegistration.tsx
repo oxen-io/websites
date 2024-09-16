@@ -1,18 +1,16 @@
 'use client';
 
-import { PubKey } from '@/components/PubKey';
+import { PubKey } from '@session/ui/components/PubKey';
 import { formatDate, formatLocalizedRelativeTimeToNowClient } from '@/lib/locale-client';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { Loading } from '@session/ui/components/loading';
 import { Button, ButtonSkeleton } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
-import { ActionModuleRow, ActionModuleRowSkeleton } from '../../../components/ActionModule';
+import { ActionModuleRow, ActionModuleRowSkeleton } from '@/components/ActionModule';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import type { LoadRegistrationsResponse } from '@session/sent-staking-js/client';
 import { getPendingNodes } from '@/lib/queries/getPendingNodes';
-import { useWallet } from '@session/wallet/hooks/wallet-hooks';
-import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import { QUERY, SESSION_NODE } from '@/lib/constants';
 import { formatBigIntTokenValue } from '@session/util/maths';
 import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
@@ -30,6 +28,12 @@ import { Tooltip } from '@session/ui/ui/tooltip';
 import { areHexesEqual } from '@session/util/string';
 import { isProduction } from '@/lib/env';
 import type { WriteContractStatus } from '@session/contracts/hooks/useContractWriteQuery';
+import { toast } from '@session/ui/lib/toast';
+import { RegistrationPausedInfo } from '@/components/RegistrationPausedInfo';
+
+import { useFeatureFlag, useRemoteFeatureFlagQuery } from '@/lib/feature-flags-client';
+import { FEATURE_FLAG, REMOTE_FEATURE_FLAG } from '@/lib/feature-flags';
+import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 
 export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showMockRegistration = useFeatureFlag(FEATURE_FLAG.MOCK_REGISTRATION);
@@ -209,6 +213,7 @@ function RegisterButton({
   stakeAmount,
   stakeAmountString,
   disabled,
+  isRegistrationPausedFlagEnabled,
 }: {
   blsPubKey: string;
   blsSignature: string;
@@ -217,6 +222,7 @@ function RegisterButton({
   stakeAmount: bigint;
   stakeAmountString: string;
   disabled?: boolean;
+  isRegistrationPausedFlagEnabled?: boolean;
 }) {
   const dictionary = useTranslations('actionModules.register');
   const { registerAndStake, stage, subStage, enabled } = useRegisterNode({
@@ -226,13 +232,21 @@ function RegisterButton({
     userSignature,
   });
 
+  const handleClick = () => {
+    if (isRegistrationPausedFlagEnabled) {
+      toast.error(<RegistrationPausedInfo />);
+    } else {
+      registerAndStake();
+    }
+  };
+
   return (
     <>
       <Button
         data-testid={ButtonDataTestId.Register_Submit}
         rounded="lg"
         size="lg"
-        onClick={registerAndStake}
+        onClick={handleClick}
         disabled={disabled}
       >
         {dictionary('button.submit', { amount: stakeAmountString })}
@@ -254,6 +268,9 @@ export function NodeRegistrationForm({
   const sessionNodeDictionary = useTranslations('sessionNodes.general');
   const actionModuleSharedDictionary = useTranslations('actionModules.shared');
 
+  const { enabled: isRegistrationPausedFlagEnabled, isLoading: isRemoteFlagLoading } =
+    useRemoteFeatureFlagQuery(REMOTE_FEATURE_FLAG.DISABLE_NODE_REGISTRATION);
+
   const stakeAmount = BigInt(SESSION_NODE.FULL_STAKE_AMOUNT);
   const stakeAmountString = formatBigIntTokenValue(stakeAmount, SENT_DECIMALS);
   const preparationDate = getDateFromUnixTimestampSeconds(node.timestamp);
@@ -261,6 +278,7 @@ export function NodeRegistrationForm({
   const { data: runningNode, isLoading } = useQuery({
     queryKey: ['getNode', node.pubkey_ed25519],
     queryFn: () => getNode({ address: node.pubkey_ed25519 }),
+    enabled: !isRegistrationPausedFlagEnabled,
   });
 
   const nodeAlreadyRunning = useMemo(
@@ -270,6 +288,9 @@ export function NodeRegistrationForm({
 
   return (
     <div className="flex flex-col gap-4">
+      {!isRemoteFlagLoading && isRegistrationPausedFlagEnabled ? (
+        <span>Registrations are disabled</span>
+      ) : null}
       {nodeAlreadyRunning ? (
         <>
           <span className="mb-4 text-lg font-medium">
@@ -321,7 +342,8 @@ export function NodeRegistrationForm({
         userSignature={node.sig_ed25519}
         stakeAmount={stakeAmount}
         stakeAmountString={stakeAmountString}
-        disabled={nodeAlreadyRunning}
+        disabled={nodeAlreadyRunning || isRegistrationPausedFlagEnabled || isRemoteFlagLoading}
+        isRegistrationPausedFlagEnabled={isRegistrationPausedFlagEnabled}
       />
     </div>
   );

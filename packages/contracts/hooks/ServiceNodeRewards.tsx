@@ -128,6 +128,12 @@ const encodeBlsPubKey = (hex: string) => {
   if (chunks.length !== 2) {
     throw new Error(`BLS Pubkey improperly chunked. Expected 2 chunks, got ${chunks.length}`);
   }
+  if (typeof X === 'undefined') {
+    throw new Error(`BLS Pubkey improperly chunked. X is undefined, got ${X}`);
+  }
+  if (typeof Y === 'undefined') {
+    throw new Error(`BLS Pubkey improperly chunked. Y is undefined, got ${Y}`);
+  }
   return { X, Y };
 };
 
@@ -137,6 +143,19 @@ const encodeBlsSignature = (hex: string) => {
   if (chunks.length !== 4) {
     throw new Error(`BLS Signature improperly chunked. Expected 4 chunks, got ${chunks.length}`);
   }
+  if (typeof sigs0 === 'undefined') {
+    throw new Error(`BLS Signature improperly chunked. sigs0 is undefined, got ${sigs0}`);
+  }
+  if (typeof sigs1 === 'undefined') {
+    throw new Error(`BLS Signature improperly chunked. sigs0 is undefined, got ${sigs1}`);
+  }
+  if (typeof sigs2 === 'undefined') {
+    throw new Error(`BLS Signature improperly chunked. sigs0 is undefined, got ${sigs2}`);
+  }
+  if (typeof sigs3 === 'undefined') {
+    throw new Error(`BLS Signature improperly chunked. sigs0 is undefined, got ${sigs3}`);
+  }
+
   return { sigs0, sigs1, sigs2, sigs3 };
 };
 
@@ -148,6 +167,9 @@ const encodeED25519PubKey = (hex: string) => {
       `ED 25519 Public Key improperly chunked. Expected 1 chunk, got ${chunks.length}`
     );
   }
+  if (typeof pubKey === 'undefined') {
+    throw new Error(`ED 25519 Public Key improperly chunked. pubKey is undefined, got ${pubKey}`);
+  }
   return { pubKey };
 };
 
@@ -158,6 +180,12 @@ const encodeED25519Signature = (hex: string) => {
     throw new Error(
       `ED 25519 Signature improperly chunked. Expected 2 chunks, got ${chunks.length}`
     );
+  }
+  if (typeof sigs0 === 'undefined') {
+    throw new Error(`ED 25519 Signature improperly chunked. sigs0 is undefined, got ${sigs0}`);
+  }
+  if (typeof sigs1 === 'undefined') {
+    throw new Error(`ED 25519 Signature improperly chunked. sigs0 is undefined, got ${sigs1}`);
   }
   return { sigs0, sigs1 };
 };
@@ -200,13 +228,74 @@ export function useAddBLSPubKey({
     contract: 'ServiceNodeRewards',
     functionName: 'addBLSPublicKey',
     chain,
-    // TODO: update the types to better reflect optional args as default
-    // @ts-expect-error -- This is fine as the args change once the query is ready to execute.
     defaultArgs,
   });
 
   return {
     addBLSPubKey: simulateAndWriteContract,
+    ...rest,
+  };
+}
+
+export type UseInitiateRemoveBLSPublicKeyReturn = ContractWriteQueryProps & {
+  initiateRemoveBLSPublicKey: () => void;
+};
+
+export function useInitiateRemoveBLSPublicKey({
+  contractId,
+}: {
+  contractId: number;
+}): UseInitiateRemoveBLSPublicKeyReturn {
+  const chain = useChain();
+
+  const defaultArgs = useMemo(() => [BigInt(contractId ?? 0)] as [bigint], [contractId]);
+
+  const { simulateAndWriteContract, ...rest } = useContractWriteQuery({
+    contract: 'ServiceNodeRewards',
+    functionName: 'initiateRemoveBLSPublicKey',
+    chain,
+    defaultArgs,
+  });
+
+  return {
+    initiateRemoveBLSPublicKey: simulateAndWriteContract,
+    ...rest,
+  };
+}
+
+export type UseRemoveBLSPublicKeyWithSignatureReturn = ContractWriteQueryProps & {
+  removeBLSPublicKeyWithSignature: () => void;
+};
+
+export function useRemoveBLSPublicKeyWithSignature({
+  blsPubKey,
+  timestamp,
+  blsSignature,
+  excludedSigners = [],
+}: {
+  blsPubKey: string;
+  timestamp: number;
+  blsSignature: string;
+  excludedSigners?: Array<bigint>;
+}): UseRemoveBLSPublicKeyWithSignatureReturn {
+  const chain = useChain();
+  const defaultArgs = useMemo(() => {
+    const encodedBlsPubKey = encodeBlsPubKey(blsPubKey);
+    const encodedBlsSignature = encodeBlsSignature(blsSignature);
+    const encodedTimestamp = BigInt(timestamp);
+
+    return [encodedBlsPubKey, encodedTimestamp, encodedBlsSignature, excludedSigners] as const;
+  }, [blsPubKey, timestamp, blsSignature, excludedSigners]);
+
+  const { simulateAndWriteContract, ...rest } = useContractWriteQuery({
+    contract: 'ServiceNodeRewards',
+    functionName: 'removeBLSPublicKeyWithSignature',
+    chain,
+    defaultArgs,
+  });
+
+  return {
+    removeBLSPublicKeyWithSignature: simulateAndWriteContract,
     ...rest,
   };
 }

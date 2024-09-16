@@ -1,16 +1,12 @@
 'use client';
 
-import { TOAST } from '@/lib/constants';
 import {
   useClaimRewardsQuery,
   useUpdateRewardsBalanceQuery,
   type UseUpdateRewardsBalanceQueryParams,
 } from '@session/contracts/hooks/ServiceNodeRewards';
 import { useEffect, useMemo, useState } from 'react';
-import { toast } from '@session/ui/lib/sonner';
-import { collapseString } from '@session/util/string';
-import type { SimulateContractErrorType, WriteContractErrorType } from 'viem';
-import { isProduction } from '@/lib/env';
+import { toast } from '@session/ui/lib/toast';
 import { useTranslations } from 'next-intl';
 import type {
   GenericContractStatus,
@@ -33,6 +29,7 @@ const useClaimRewardsStage = ({
   claimSimulateStatus,
   claimWriteStatus,
   claimTransactionStatus,
+  skipUpdateBalance,
 }: {
   updateBalanceSimulateStatus: GenericContractStatus;
   updateBalanceWriteStatus: WriteContractStatus;
@@ -40,12 +37,14 @@ const useClaimRewardsStage = ({
   claimSimulateStatus: GenericContractStatus;
   claimWriteStatus: WriteContractStatus;
   claimTransactionStatus: GenericContractStatus;
+  skipUpdateBalance: boolean;
 }) => {
   const stage = useMemo(() => {
     if (
-      updateBalanceSimulateStatus === 'success' &&
-      updateBalanceWriteStatus === 'success' &&
-      updateBalanceTransactionStatus === 'success' &&
+      (skipUpdateBalance ||
+        (updateBalanceSimulateStatus === 'success' &&
+          updateBalanceWriteStatus === 'success' &&
+          updateBalanceTransactionStatus === 'success')) &&
       claimSimulateStatus === 'success' &&
       claimWriteStatus === 'success' &&
       claimTransactionStatus === 'success'
@@ -54,9 +53,10 @@ const useClaimRewardsStage = ({
     }
 
     if (
-      updateBalanceSimulateStatus === 'success' &&
-      updateBalanceWriteStatus === 'success' &&
-      updateBalanceTransactionStatus === 'success' &&
+      (skipUpdateBalance ||
+        (updateBalanceSimulateStatus === 'success' &&
+          updateBalanceWriteStatus === 'success' &&
+          updateBalanceTransactionStatus === 'success')) &&
       claimSimulateStatus === 'success' &&
       claimWriteStatus === 'success' &&
       claimTransactionStatus !== 'success'
@@ -65,9 +65,10 @@ const useClaimRewardsStage = ({
     }
 
     if (
-      updateBalanceSimulateStatus === 'success' &&
-      updateBalanceWriteStatus === 'success' &&
-      updateBalanceTransactionStatus === 'success' &&
+      (skipUpdateBalance ||
+        (updateBalanceSimulateStatus === 'success' &&
+          updateBalanceWriteStatus === 'success' &&
+          updateBalanceTransactionStatus === 'success')) &&
       claimSimulateStatus === 'success' &&
       claimWriteStatus !== 'success' &&
       claimTransactionStatus !== 'success'
@@ -76,9 +77,10 @@ const useClaimRewardsStage = ({
     }
 
     if (
-      updateBalanceSimulateStatus === 'success' &&
-      updateBalanceWriteStatus === 'success' &&
-      updateBalanceTransactionStatus === 'success' &&
+      (skipUpdateBalance ||
+        (updateBalanceSimulateStatus === 'success' &&
+          updateBalanceWriteStatus === 'success' &&
+          updateBalanceTransactionStatus === 'success')) &&
       claimSimulateStatus !== 'success' &&
       claimWriteStatus !== 'success' &&
       claimTransactionStatus !== 'success'
@@ -126,6 +128,7 @@ const useClaimRewardsStage = ({
     claimSimulateStatus,
     claimWriteStatus,
     claimTransactionStatus,
+    skipUpdateBalance,
   ]);
 
   const subStage = useMemo(() => {
@@ -167,6 +170,8 @@ export default function useClaimRewards({
   excludedSigners,
 }: UseClaimRewardsParams) {
   const [enabled, setEnabled] = useState<boolean>(false);
+  const [skipUpdateBalance, setSkipUpdateBalance] = useState<boolean>(false);
+
   const dictionary = useTranslations('modules.claim.stage');
   const dictionaryFee = useTranslations('modules.claim.dialog.alert');
 
@@ -211,6 +216,7 @@ export default function useClaimRewards({
     claimSimulateStatus,
     claimWriteStatus,
     claimTransactionStatus,
+    skipUpdateBalance,
   });
 
   const estimateFee = () => {
@@ -225,79 +231,78 @@ export default function useClaimRewards({
 
   const updateBalanceAndClaimRewards = () => {
     setEnabled(true);
-    updateRewardsBalance();
+    if (!skipUpdateBalance) {
+      updateRewardsBalance();
+    }
   };
 
   useEffect(() => {
-    if (enabled && updateBalanceTransactionStatus === 'success') {
+    if (enabled && (skipUpdateBalance || updateBalanceTransactionStatus === 'success')) {
       claimRewards();
     }
-  }, [enabled, updateBalanceTransactionStatus]);
-
-  const handleError = (error: Error | SimulateContractErrorType | WriteContractErrorType) => {
-    console.error(error);
-    if (error.message && !isProduction) {
-      toast.error(
-        collapseString(error.message, TOAST.ERROR_COLLAPSE_LENGTH, TOAST.ERROR_COLLAPSE_LENGTH)
-      );
-    }
-  };
+  }, [enabled, skipUpdateBalance, updateBalanceTransactionStatus]);
 
   /**
    * NOTE: All of these useEffects are required to inform the user of errors via the toaster
    */
   useEffect(() => {
     if (updateBalanceEstimateFeeError) {
-      handleError(updateBalanceEstimateFeeError);
-      toast.error(dictionaryFee('gasFetchFailedUpdateBalance'));
+      // If the gas estimation fails with the RecipientRewardsTooLow error, we can skip the update balance step
+      // @ts-expect-error -- TODO: Properly type this error
+      if (updateBalanceEstimateFeeError?.cause?.data?.abiItem?.name === 'RecipientRewardsTooLow') {
+        setSkipUpdateBalance(true);
+      } else {
+        toast.handleError(updateBalanceEstimateFeeError);
+        toast.error(dictionaryFee('gasFetchFailedUpdateBalance'));
+      }
     }
   }, [updateBalanceEstimateFeeError]);
 
   useEffect(() => {
     if (updateBalanceSimulateError) {
-      handleError(updateBalanceSimulateError);
+      toast.handleError(updateBalanceSimulateError);
       toast.error(dictionary('updateBalance.simulate.errorTooltip'));
     }
   }, [updateBalanceSimulateError]);
 
   useEffect(() => {
     if (updateBalanceWriteError) {
-      handleError(updateBalanceWriteError);
+      toast.handleError(updateBalanceWriteError);
       toast.error(dictionary('updateBalance.write.errorTooltip'));
     }
   }, [updateBalanceWriteError]);
 
   useEffect(() => {
     if (updateBalanceTransactionError) {
-      handleError(updateBalanceTransactionError);
+      toast.handleError(updateBalanceTransactionError);
       toast.error(dictionary('updateBalance.transaction.errorTooltip'));
     }
   }, [updateBalanceTransactionError]);
 
   useEffect(() => {
     if (claimEstimateFeeError) {
-      handleError(claimEstimateFeeError);
+      toast.handleError(claimEstimateFeeError);
       toast.error(dictionaryFee('gasFetchFailedClaimRewards'));
     }
   }, [claimEstimateFeeError]);
 
   useEffect(() => {
     if (claimSimulateError) {
-      handleError(claimSimulateError);
+      toast.handleError(claimSimulateError);
       toast.error(dictionary('claimRewards.simulate.errorTooltip'));
     }
   }, [claimSimulateError]);
 
   useEffect(() => {
     if (claimWriteError) {
-      handleError(claimWriteError);
+      toast.handleError(claimWriteError);
       toast.error(dictionary('claimRewards.write.errorTooltip'));
     }
   }, [claimWriteError]);
 
   useEffect(() => {
     if (claimTransactionError) {
-      handleError(claimTransactionError);
+      toast.handleError(claimTransactionError);
       toast.error(dictionary('claimRewards.transaction.errorTooltip'));
     }
   }, [claimTransactionError]);
@@ -317,5 +322,6 @@ export default function useClaimRewards({
     enabled,
     updateBalanceEstimateFeeStatus,
     claimEstimateFeeStatus,
+    skipUpdateBalance,
   };
 }

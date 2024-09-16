@@ -15,11 +15,64 @@ const NodeRegistrationCard = forwardRef<
 
   const { pubkey_ed25519: pubKey, type: nodeType } = node;
 
+  // TODO - Include feature when we have user preference support
+  /*const hideRegistrationsEnabled = useExperimentalFeatureFlag(
+    EXPERIMENTAL_FEATURE_FLAG.HIDE_REGISTRATIONS
+  );
+  const hiddenPreparedRegistrations = useUserPreference('hiddenPreparedRegistrations');
+  const { setUserPreference } = useSetUserPreference();
+  const [toggleHiddenButtonFocused, setToggleHiddenButtonFocused] = useState<boolean>(false);
+
+
+  const hidden = useMemo(
+    () => hiddenPreparedRegistrations?.includes(pubKey),
+    [hiddenPreparedRegistrations?.length, pubKey]
+  );
+
+  const handleHideButtonClick = () => {
+    if (toggleHiddenButtonFocused) {
+      if (hidden) {
+        const newHiddenList = hiddenPreparedRegistrations?.filter((key) => key !== pubKey) ?? [];
+        setUserPreference('hiddenPreparedRegistrations', newHiddenList);
+      } else {
+        const newHiddenList = new Set([...(hiddenPreparedRegistrations ?? []), pubKey]);
+        setUserPreference('hiddenPreparedRegistrations', [...newHiddenList]);
+      }
+      setToggleHiddenButtonFocused(false);
+    } else {
+      setToggleHiddenButtonFocused(true);
+    }
+  };*/
+
   return (
     <InfoNodeCard
       ref={ref}
       className={className}
       pubKey={pubKey}
+      /*buttonSiblings={
+        hideRegistrationsEnabled ? (
+          <Button
+            variant={hidden ? 'outline' : 'destructive-outline'}
+            size="sm"
+            rounded="md"
+            onClick={handleHideButtonClick}
+            onBlur={() => setToggleHiddenButtonFocused(false)}
+            data-testid={ButtonDataTestId.Hide_Prepared_Registration}
+            className="group inline-flex gap-1 align-middle"
+          >
+            {hidden ? (
+              <EyeIcon className="stroke-session-green group-hover:stroke-session-black h-5 w-5" />
+            ) : (
+              <EyeOffIcon className="stroke-destructive group-hover:stroke-session-black h-5 w-5" />
+            )}
+            {toggleHiddenButtonFocused ? (
+              <span className="group-hover:text-session-black mt-0.5">
+                {hidden ? 'Show' : 'Hide'}
+              </span>
+            ) : null}
+          </Button>
+        ) : null
+      }*/
       button={{
         ariaLabel: dictionary('registerButton.ariaLabel'),
         text: dictionary('registerButton.text'),

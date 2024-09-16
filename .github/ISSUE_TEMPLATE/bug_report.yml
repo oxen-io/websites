@@ -1,0 +1,140 @@
+name: 🐞 Bug Report
+description: Create a report to help us improve.
+title: "[Bug]: "
+labels: [ "bug" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search through [existing issues](https://github.com/oxen-io/websites/issues?q=sort%3Aupdated-desc+is%3Aissue+label%3Abug) to see if an issue already exists for the bug you encountered.
+      options:
+        - label: I have searched the [existing issues](https://github.com/oxen-io/websites/issues?q=sort%3Aupdated-desc+is%3Aissue+label%3Abug)
+          required: true
+  - type: checkboxes
+    attributes:
+      label: Self-training on how to write a bug report
+      description: High quality bug report can help the team save time and improve the chance of getting fixed. Please read [how to write a bug report](https://www.browserstack.com/guide/how-to-write-a-bug-report) before submitting your issue.
+      options:
+        - label: I have learned [how to write a bug report](https://www.browserstack.com/guide/how-to-write-a-bug-report)
+          required: true
+  - type: checkboxes
+    attributes:
+      label: Code of conduct
+      options:
+        - label: I have read and agree to adhere to the [Code of Conduct](https://github.com/oxen-io/websites/blob/main/CODE_OF_CONDUCT.md)
+          required: true
+  - type: dropdown
+    id: project
+    attributes:
+      label: Project
+      description: What project does this relate to?
+      options:
+        - Staking Portal
+        - Other
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: device
+    attributes:
+      label: Device Type
+      description: What device type are you seeing this issue on?
+      options:
+        - Desktop
+        - Mobile
+        - Tablet
+        - Other
+      default: 0
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Browser
+      description: What browser are you seeing this issue on?
+      placeholder: eg. Chrome 126
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Browser Resolution
+      description: What browser resolution does this issue occur on? You can find this easily using tools like https://mdigi.tools/browser-resolution/
+      placeholder: eg. 1280 x 795
+    validations:
+      required: false
+  - type: input
+    attributes:
+      label: Operating System
+      description: What operating system are you seeing this issue on?
+      placeholder: eg. Fedora Linux 40
+    validations:
+      required: true
+  - type: dropdown
+    id: wallet-type
+    attributes:
+      label: Wallet Type
+      description: What wallet type are you using?
+      options:
+        - Browser Extension
+        - Mobile Wallet App
+        - Desktop Wallet App
+        - Other
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: wallet-connection
+    attributes:
+      label: Are you using "Wallet Connect" to connect your wallet?
+      options:
+        - "Yes"
+        - "No"
+      default: 1
+  - type: input
+    attributes:
+      label: What wallet are you using and how are you connecting your wallet? (if applicable)
+      description: If your issue relates to any wallet functionality, please provide the wallet name and how you are connecting your wallet.
+      placeholder: eg. Metamask Browser Extension
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Current Behavior
+      description: A concise description of what you're experiencing. Please include screenshots and recordings if applicable. See [how to record your screen](https://www.howtogeek.com/205742/how-to-record-your-windows-mac-linux-android-or-ios-screen/).
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what you expected to happen.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Steps To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. In this environment...
+        2. With this config...
+        3. Run '...'
+        4. See error...
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks. See [how to save browser logs](https://support.shortpoint.com/support/solutions/articles/1000222881-save-browser-console-file).
+      render: shell
+  - type: textarea
+    attributes:
+      label: Anything else?
+      description: |
+        Links? References? Anything that will give us more context about the issue you are encountering!
+        
+        Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false

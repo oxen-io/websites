@@ -54,6 +54,7 @@ export interface GetNodesForWalletResponse {
 export interface ServiceNode {
   state: NODE_STATE;
   service_node_pubkey: string;
+  contract_id: number;
   requested_unlock_height: number;
   active: boolean;
   funded: boolean;
@@ -141,6 +142,18 @@ interface ValidateRegistrationResponse {
   remaining_min_contribution?: number;
 }
 
+/** GET /exit/<32 byte pubkey> */
+export interface GetNodeExitSignaturesResponse {
+  network: NetworkInfo;
+  bls_exit_response: BlsExitResponse;
+}
+
+/** GET /liquidation/<32 byte pubkey> */
+export interface GetNodeLiquidationResponse {
+  network: NetworkInfo;
+  bls_liquidation_response: BlsLiquidationResponse;
+}
+
 /** POST /rewards */
 
 export interface GetRewardsClaimSignatureResponse {
@@ -155,6 +168,16 @@ export type BlsRewardsResponse = {
   non_signer_indices: Array<number>;
   signature: string;
 };
+
+export type BlsExitResponse = {
+  bls_pubkey: string;
+  msg_to_sign: string;
+  non_signer_indices: Array<number>;
+  signature: string;
+  timestamp: number;
+};
+
+export type BlsLiquidationResponse = BlsExitResponse;
 
 /** Client types */
 type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -289,6 +312,30 @@ export class SessionStakingClient {
       method: 'POST',
     };
     return this.request<GetRewardsClaimSignatureResponse>(options);
+  }
+
+  public async getNodeExitSignatures({
+    nodePubKey,
+  }: {
+    nodePubKey: string;
+  }): Promise<StakingBackendResponse<GetNodeExitSignaturesResponse>> {
+    const options: RequestOptions = {
+      endpoint: `/exit/${nodePubKey}`,
+      method: 'POST',
+    };
+    return this.request<GetNodeExitSignaturesResponse>(options);
+  }
+
+  public async getNodeLiquidation({
+    nodePubKey,
+  }: {
+    nodePubKey: string;
+  }): Promise<StakingBackendResponse<GetNodeLiquidationResponse>> {
+    const options: RequestOptions = {
+      endpoint: `/liquidation/${nodePubKey}`,
+      method: 'POST',
+    };
+    return this.request<GetNodeLiquidationResponse>(options);
   }
 
   /**

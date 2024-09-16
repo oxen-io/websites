@@ -7,8 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@session/ui/ui/dialog';
-import { useSetTOS, useTOS } from '@/providers/tos-provider';
-import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import * as React from 'react';
 import { useEffect } from 'react';
 import Link from 'next/link';
@@ -26,9 +24,12 @@ import {
   FormLabel,
   FormSubmitButton,
 } from '@session/ui/components/ui/form';
-import { toast } from '@session/ui/lib/sonner';
+import { toast } from '@session/ui/lib/toast';
 import { XIcon } from '@session/ui/icons/XIcon';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
+import { FEATURE_FLAG } from '@/lib/feature-flags';
+import { useFeatureFlag } from '@/lib/feature-flags-client';
+import { useSetTOS, useTOS } from '@/providers/tos-provider';
 
 const FormSchema = z.object({
   accept: z
@@ -41,7 +42,7 @@ type FormSchemaType = z.infer<typeof FormSchema>;
 
 export function TOSHandler() {
   const pathname = usePathname();
-  const clearAcceptTOSFlag = useFeatureFlag(FEATURE_FLAG.CLEAR_ACCEPT_TOS);
+  const clearAcceptTOSFlag = useFeatureFlag(FEATURE_FLAG.CLEAR_ACCEPT_BUG_BOUNTY);
   const accepted = useTOS();
   const { acceptTOS } = useSetTOS();
 

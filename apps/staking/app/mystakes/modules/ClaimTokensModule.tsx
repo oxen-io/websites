@@ -31,27 +31,38 @@ import type { VariantProps } from 'class-variance-authority';
 import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIndicator';
 import type { Address } from 'viem';
 import { Loading } from '@session/ui/components/loading';
+import { useRemoteFeatureFlagQuery } from '@/lib/feature-flags-client';
+import { REMOTE_FEATURE_FLAG } from '@/lib/feature-flags';
+import { toast } from '@session/ui/lib/toast';
+import { ClaimRewardsDisabledInfo } from '@/components/ClaimRewardsDisabledInfo';
 
 export default function ClaimTokensModule() {
   const { address } = useWallet();
   const dictionary = useTranslations('modules.claim');
   const { canClaim, unclaimedRewards, formattedUnclaimedRewardsAmount } = useUnclaimedTokens();
+  const { enabled: isClaimRewardsDisabled, isLoading: isRemoteFlagLoading } =
+    useRemoteFeatureFlagQuery(REMOTE_FEATURE_FLAG.DISABLE_CLAIM_REWARDS);
+
+  const isDisabled =
+    !(address && canClaim && unclaimedRewards) || isRemoteFlagLoading || isClaimRewardsDisabled;
 
   const {
     data: rewardsClaimData,
-    status: rewardsClaimDataStatus,
     refetch,
     isStale,
   } = useStakingBackendQueryWithParams(
     getRewardsClaimSignature,
     { address: address! },
     {
-      enabled: !!address,
+      enabled: !isDisabled,
       staleTime: QUERY.STALE_TIME_CLAIM_REWARDS,
     }
   );
 
   const handleClick = () => {
+    if (!isRemoteFlagLoading && isClaimRewardsDisabled) {
+      toast.error(<ClaimRewardsDisabledInfo />);
+    }
     if (!canClaim) return;
     if (isStale) {
       void refetch();
@@ -63,9 +74,8 @@ export default function ClaimTokensModule() {
     const { amount, signature, non_signer_indices } = rewardsClaimData.bls_rewards_response;
 
     return [BigInt(amount), signature, non_signer_indices.map(BigInt)];
-  }, [rewardsClaimData, rewardsClaimDataStatus]);
+  }, [rewardsClaimData]);
 
-  const isDisabled = !(address && canClaim && unclaimedRewards);
   const isReady = !!(!isDisabled && rewards && excludedSigners && blsSignature);
 
   return (
@@ -97,7 +107,7 @@ export default function ClaimTokensModule() {
           </ModuleContent>
         </ButtonModule>
       </AlertDialogTrigger>
-      <AlertDialogContent title={dictionary('title')}>
+      <AlertDialogContent dialogTitle={dictionary('title')}>
         {isReady ? (
           <ClaimTokensDialog
             formattedUnclaimedRewardsAmount={formattedUnclaimedRewardsAmount}
@@ -130,7 +140,7 @@ function getStatusFromSubStage(
   }
 }
 
-const stageDictionaryMap: Record<CLAIM_REWARDS_STATE, string> = {
+const dictionaryKey: Record<CLAIM_REWARDS_STATE, string> = {
   [CLAIM_REWARDS_STATE.SIMULATE_UPDATE_BALANCE]: 'updateBalance.simulate',
   [CLAIM_REWARDS_STATE.WRITE_UPDATE_BALANCE]: 'updateBalance.write',
   [CLAIM_REWARDS_STATE.TRANSACTION_UPDATE_BALANCE]: 'updateBalance.transaction',
@@ -151,7 +161,7 @@ function getDictionaryKeyFromStageAndSubStage<
   stage: Stage;
   subStage: SubStage;
 }) {
-  return `${stageDictionaryMap[stage]}.${stage > currentStage || subStage === 'idle' ? 'pending' : subStage}`;
+  return `${dictionaryKey[stage]}.${stage > currentStage || subStage === 'idle' ? 'pending' : subStage}`;
 }
 
 function StageRow({
@@ -238,7 +248,7 @@ function QueryStatusInformation({
   );
 }
 
-const GasAlertTooltip = ({ tooltipContent }: { tooltipContent: ReactNode }) => {
+const AlertTooltip = ({ tooltipContent }: { tooltipContent: ReactNode }) => {
   return (
     <Tooltip tooltipContent={tooltipContent}>
       <TriangleAlertIcon className="stroke-warning mb-0.5 h-4 w-4" />
@@ -261,6 +271,16 @@ function ClaimTokensDialog({
 }) {
   const dictionary = useTranslations('modules.claim.dialog');
 
+  const claimRewardsArgs = useMemo(
+    () => ({
+      address,
+      rewards,
+      blsSignature,
+      excludedSigners,
+    }),
+    [address, rewards, blsSignature, excludedSigners]
+  );
+
   const {
     updateBalanceAndClaimRewards,
     claimFee,
@@ -269,12 +289,8 @@ function ClaimTokensDialog({
     stage,
     subStage,
     enabled,
-  } = useClaimRewards({
-    address,
-    rewards,
-    blsSignature,
-    excludedSigners,
-  });
+    skipUpdateBalance,
+  } = useClaimRewards(claimRewardsArgs);
 
   const feeEstimate = useMemo(
     () =>
@@ -294,6 +310,13 @@ function ClaimTokensDialog({
 
   const isDisabled = !(address && rewards && blsSignature);
 
+  const isButtonDisabled =
+    isDisabled ||
+    (!skipUpdateBalance &&
+      stage !== CLAIM_REWARDS_STATE.SIMULATE_UPDATE_BALANCE &&
+      subStage !== 'idle') ||
+    (skipUpdateBalance && stage !== CLAIM_REWARDS_STATE.SIMULATE_CLAIM && subStage !== 'idle');
+
   useEffect(() => {
     if (!isDisabled) {
       estimateFee();
@@ -311,10 +334,10 @@ function ClaimTokensDialog({
         >
           <span className="inline-flex flex-row items-center gap-1.5 align-middle">
             {feeEstimate && !updateBalanceFee ? (
-              <GasAlertTooltip tooltipContent={dictionary('alert.gasFetchFailedUpdateBalance')} />
+              <AlertTooltip tooltipContent={dictionary('alert.gasFetchFailedUpdateBalance')} />
             ) : null}
             {feeEstimate && !claimFee ? (
-              <GasAlertTooltip tooltipContent={dictionary('alert.gasFetchFailedClaimRewards')} />
+              <AlertTooltip tooltipContent={dictionary('alert.gasFetchFailedClaimRewards')} />
             ) : null}
             {feeEstimate ? (
               `${feeEstimate} ${TICKER.ETH}`
@@ -341,10 +364,7 @@ function ClaimTokensDialog({
           })}
           className="w-full"
           data-testid={ButtonDataTestId.Claim_Tokens_Submit}
-          disabled={
-            isDisabled ||
-            (stage !== CLAIM_REWARDS_STATE.SIMULATE_UPDATE_BALANCE && subStage !== 'idle')
-          }
+          disabled={isButtonDisabled}
           onClick={handleClick}
         >
           {dictionary('buttons.submit')}

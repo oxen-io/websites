@@ -1,14 +1,7 @@
 'use server';
 
 import { COMMUNITY_DATE, FAUCET, FAUCET_ERROR, TICKER } from '@/lib/constants';
-import {
-  addresses,
-  CHAIN,
-  formatSENT,
-  isChain,
-  SENT_DECIMALS,
-  SENT_SYMBOL,
-} from '@session/contracts';
+import { addresses, CHAIN, chains, SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import { SENTAbi } from '@session/contracts/abis';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { createPublicWalletClient, createServerWallet } from '@session/wallet/lib/server-wallet';
@@ -25,6 +18,7 @@ import {
   TABLE,
   TransactionHistory,
 } from './utils';
+import { formatSENTBigInt } from '@session/contracts/hooks/SENT';
 
 class FaucetError extends Error {
   faucetError: FAUCET_ERROR;
@@ -153,16 +147,9 @@ export async function transferTestTokens({
       );
     }
 
-    /**
-     * NOTE: This enforces a set chain but its locked to {@see CHAIN.TESTNET} for now this should be changed to allow for multiple chains.
-     */
-    const chain = process.env.FAUCET_CHAIN;
-    if (!chain || !isChain(chain) || chain !== CHAIN.TESTNET) {
-      throw new FaucetError(FAUCET_ERROR.INCORRECT_CHAIN, dictionary('incorrectChain'));
-    }
-
     const { faucetAddress, faucetWallet } = await connectFaucetWallet();
 
+    const chain = CHAIN.TESTNET;
     const [targetEthBalance, faucetEthBalance, faucetTokenBalance] = await Promise.all([
       getEthBalance({ address: targetAddress, chain }),
       getEthBalance({ address: faucetAddress, chain }),
@@ -193,7 +180,7 @@ export async function transferTestTokens({
      */
     if (faucetTokenBalance < faucetTokenWarning) {
       console.warn(
-        `Faucet wallet ${SENT_SYMBOL} balance (${formatSENT(faucetTokenBalance)} ${SENT_SYMBOL}) is below the warning threshold (${formatSENT(faucetTokenWarning)})`
+        `Faucet wallet ${SENT_SYMBOL} balance (${formatSENTBigInt(faucetTokenBalance)}) is below the warning threshold (${formatSENTBigInt(faucetTokenWarning)})`
       );
     }
 
@@ -329,6 +316,7 @@ export async function transferTestTokens({
       const request = await faucetWallet.prepareTransactionRequest({
         to: targetAddress,
         value: ethTopupValue,
+        chain: chains[chain],
       });
 
       const serializedTransaction = await faucetWallet.signTransaction(request);

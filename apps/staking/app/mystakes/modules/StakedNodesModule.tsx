@@ -4,7 +4,6 @@ import Loading from '@/app/loading';
 import { GenericStakedNode, StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
 import { WalletModalButtonWithLocales } from '@/components/WalletModalButtonWithLocales';
 import { internalLink } from '@/lib/locale-defaults';
-import { FEATURE_FLAG, useFeatureFlag } from '@/providers/feature-flag-provider';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import type { ServiceNode } from '@session/sent-staking-js/client';
 import { generateMockNodeData } from '@session/sent-staking-js/test';
@@ -22,12 +21,10 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { getStakedNodes } from '@/lib/queries/getStakedNodes';
-import {
-  getDateFromUnixTimestampSeconds,
-  getUnixTimestampNowSeconds,
-  timeBetweenEvents,
-} from '@session/util/date';
+import { getDateFromUnixTimestampSeconds, getUnixTimestampNowSeconds } from '@session/util/date';
 import { SESSION_NODE } from '@/lib/constants';
+import { EXPERIMENTAL_FEATURE_FLAG, FEATURE_FLAG } from '@/lib/feature-flags';
+import { useExperimentalFeatureFlag, useFeatureFlag } from '@/lib/feature-flags-client';
 
 function StakedNodesWithAddress({ address }: { address: string }) {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_STAKED_NODES);
@@ -75,14 +72,23 @@ function StakedNodesWithAddress({ address }: { address: string }) {
 }
 
 export default function StakedNodesModule() {
+  const hideStakedNodesFlagEnabled = useExperimentalFeatureFlag(
+    EXPERIMENTAL_FEATURE_FLAG.HIDE_STAKED_NODES
+  );
   const dictionary = useTranslations('modules.stakedNodes');
   const { address } = useWallet();
+
   return (
     <>
       <ModuleGridHeader>
         <ModuleGridTitle>{dictionary('title')}</ModuleGridTitle>
         <div className="flex flex-row gap-2 align-middle">
-          <span className="hidden sm:block">{dictionary('showHiddenText')}</span> <Switch />
+          {hideStakedNodesFlagEnabled ? (
+            <>
+              <span className="hidden sm:block">{dictionary('showHiddenText')}</span>
+              <Switch />
+            </>
+          ) : null}
         </div>
       </ModuleGridHeader>
       {address ? <StakedNodesWithAddress address={address} /> : <NoWallet />}
@@ -135,6 +141,7 @@ export const parseSessionNodeData = (
     balance: node.total_contributed,
     operatorFee: node.operator_fee,
     operator_address: node.operator_address,
+    contract_id: node.contract_id,
     ...(node.awaiting_liquidation ? { awaitingLiquidation: true } : {}),
     ...(node.decomm_blocks_remaining
       ? {
@@ -147,11 +154,7 @@ export const parseSessionNodeData = (
       ? {
           unlockDate: new Date(
             networkTime * 1000 +
-              timeBetweenEvents(
-                node.requested_unlock_height,
-                currentBlock,
-                SESSION_NODE.BLOCK_VELOCITY
-              )
+              (node.requested_unlock_height - currentBlock) * SESSION_NODE.MS_PER_BLOCK
           ),
         }
       : {}),

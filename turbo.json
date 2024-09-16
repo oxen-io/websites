@@ -54,6 +54,9 @@
         "^lint"
       ]
     },
+    "check-telemetry": {
+      "cache": false
+    },
     "test": {}
   }
 }

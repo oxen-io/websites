@@ -7,13 +7,14 @@
     "build": "next build",
     "start": "next start",
     "check-types": "tsc --noEmit",
-    "build:test": "source ./scripts/mock-build-env.sh && pnpm build",
+    "check-telemetry": "next telemetry",
     "lint": "eslint ."
   },
   "dependencies": {
     "@hookform/resolvers": "^3.5.0",
     "@session/auth": "workspace:*",
     "@session/contracts": "workspace:*",
+    "@session/feature-flags": "workspace:*",
     "@session/sent-staking-js": "workspace:*",
     "@session/ui": "workspace:*",
     "@session/util": "workspace:*",
@@ -23,17 +24,17 @@
     "better-sqlite3-multiple-ciphers": "11.1.2",
     "class-variance-authority": "^0.7.0",
     "date-fns": "^3.6.0",
-    "next": "^14.2.3",
+    "next": "14.2.5",
     "next-intl": "^3.14.1",
     "pino": "^9.2.0",
     "pino-pretty": "^11.2.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "react-hook-form": "^7.51.5",
     "rtl-detect": "^1.1.2",
     "server-only": "^0.0.1",
     "sharp": "0.32.6",
-    "wagmi": "2.9.10",
+    "wagmi": "2.12.8",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -46,7 +47,7 @@
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
-    "viem": "2.17.3"
+    "viem": "2.21.1"
   },
   "engines": {
     "node": ">=22",

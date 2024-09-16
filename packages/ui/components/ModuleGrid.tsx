@@ -9,6 +9,8 @@ const moduleGridVariants = cva('module-grid', {
       grid: 'grid auto-rows-min',
       section:
         'from-[#0A0C0C] to-[#081512] bg-gradient-to-b bg-blend-lighten shadow-md border-[2px] rounded-3xl border-[#54797241] flex flex-col',
+      action:
+        'shadow-md border-[2px] rounded-3xl border-[#668C83] border-opacity-80 flex flex-col overflow-hidden',
     },
     size: {
       md: 'gap-2 md:gap-4 grid-cols-1 sm:grid-cols-2',

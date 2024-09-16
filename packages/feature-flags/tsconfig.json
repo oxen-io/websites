@@ -1,0 +1,17 @@
+{
+  "extends": "@session/typescript-config/react-library.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist"
+  },
+  "include": [
+    "./**/*.ts",
+    "./**/*.tsx",
+    "jest.config.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "turbo",
+    "dist"
+  ]
+}

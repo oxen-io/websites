@@ -12,6 +12,7 @@ import { formatBigIntTokenValue, formatNumber } from '@session/util/maths';
 import { SENT_DECIMALS, SENT_SYMBOL } from '../constants';
 import { useContractWriteQuery, type WriteContractStatus } from './useContractWriteQuery';
 import { useChain } from './useChain';
+import type { CHAIN } from '../chains';
 
 export const formatSENTBigInt = (value?: bigint, decimals?: number, hideSymbol?: boolean) =>
   `${value ? formatBigIntTokenValue(value, SENT_DECIMALS, decimals) : 0}${hideSymbol ? '' : ` ${SENT_SYMBOL}`}`;
@@ -28,7 +29,13 @@ export type SENTBalanceQuery = ContractReadQueryProps & {
   balance: SENTBalance;
 };
 
-export function useSENTBalanceQuery({ address }: { address?: Address }): SENTBalanceQuery {
+export function useSENTBalanceQuery({
+  address,
+  overrideChain,
+}: {
+  address?: Address;
+  overrideChain?: CHAIN;
+}): SENTBalanceQuery {
   const chain = useChain();
   const {
     data: balance,
@@ -39,7 +46,7 @@ export function useSENTBalanceQuery({ address }: { address?: Address }): SENTBal
     functionName: 'balanceOf',
     defaultArgs: [address!],
     startEnabled: !!address,
-    chain,
+    chain: overrideChain ?? chain,
   });
 
   return {
