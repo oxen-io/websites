@@ -2,131 +2,54 @@
 
 import { addresses } from '@session/contracts';
 import { useProxyApproval } from '@session/contracts/hooks/SENT';
-import { SESSION_NODE } from '@/lib/constants';
 import { useAddBLSPubKey } from '@session/contracts/hooks/ServiceNodeRewards';
 import { useEffect, useMemo, useState } from 'react';
+import {
+  formatAndHandleLocalizedContractErrorMessages,
+  parseContractStatusToProgressStatus,
+} from '@/lib/contracts';
 import { useTranslations } from 'next-intl';
-import type {
-  GenericContractStatus,
-  WriteContractStatus,
-} from '@session/contracts/hooks/useContractWriteQuery';
-import { toast } from '@session/ui/lib/toast';
-
-export enum REGISTER_STAGE {
-  APPROVE,
-  SIMULATE,
-  WRITE,
-  TRANSACTION,
-  JOIN,
-}
-
-const useRegisterStage = ({
-  approveWriteStatus,
-  addBLSSimulateStatus,
-  addBLSWriteStatus,
-  addBLSTransactionStatus,
-}: {
-  approveWriteStatus: WriteContractStatus;
-  addBLSSimulateStatus: GenericContractStatus;
-  addBLSWriteStatus: WriteContractStatus;
-  addBLSTransactionStatus: GenericContractStatus;
-}) => {
-  const stage = useMemo(() => {
-    if (
-      approveWriteStatus === 'success' &&
-      addBLSSimulateStatus === 'success' &&
-      addBLSWriteStatus === 'success' &&
-      addBLSTransactionStatus === 'success'
-    ) {
-      return REGISTER_STAGE.JOIN;
-    }
-
-    if (
-      approveWriteStatus === 'success' &&
-      addBLSSimulateStatus === 'success' &&
-      addBLSWriteStatus === 'success' &&
-      addBLSTransactionStatus !== 'success'
-    ) {
-      return REGISTER_STAGE.TRANSACTION;
-    }
-
-    if (
-      approveWriteStatus === 'success' &&
-      addBLSSimulateStatus === 'success' &&
-      addBLSWriteStatus !== 'success' &&
-      addBLSTransactionStatus !== 'success'
-    ) {
-      return REGISTER_STAGE.WRITE;
-    }
-
-    if (
-      approveWriteStatus === 'success' &&
-      addBLSSimulateStatus !== 'success' &&
-      addBLSWriteStatus !== 'success' &&
-      addBLSTransactionStatus !== 'success'
-    ) {
-      return REGISTER_STAGE.SIMULATE;
-    }
-
-    if (
-      approveWriteStatus !== 'success' &&
-      addBLSSimulateStatus !== 'success' &&
-      addBLSWriteStatus !== 'success' &&
-      addBLSTransactionStatus !== 'success'
-    ) {
-      return REGISTER_STAGE.APPROVE;
-    }
-    return REGISTER_STAGE.APPROVE;
-  }, [approveWriteStatus, addBLSSimulateStatus, addBLSWriteStatus, addBLSTransactionStatus]);
-
-  const subStage = useMemo(() => {
-    switch (stage) {
-      case REGISTER_STAGE.APPROVE:
-        return approveWriteStatus;
-      case REGISTER_STAGE.SIMULATE:
-        return addBLSSimulateStatus;
-      case REGISTER_STAGE.WRITE:
-        return addBLSWriteStatus;
-      case REGISTER_STAGE.TRANSACTION:
-        return addBLSTransactionStatus;
-      default:
-        return 'pending';
-    }
-  }, [stage, approveWriteStatus, addBLSSimulateStatus, addBLSWriteStatus, addBLSTransactionStatus]);
-
-  return { stage, subStage };
-};
 
 export default function useRegisterNode({
   blsPubKey,
   blsSignature,
   nodePubKey,
   userSignature,
+  stakeAmount,
 }: {
   blsPubKey: string;
   blsSignature: string;
   nodePubKey: string;
   userSignature: string;
+  stakeAmount: bigint;
 }) {
   const [enabled, setEnabled] = useState<boolean>(false);
-  const dictionary = useTranslations('actionModules.register.stage');
+
+  const stageDictKey = 'actionModules.register.stage' as const;
+  const dictionary = useTranslations(stageDictKey);
+  const dictionaryGeneral = useTranslations('general');
+
   const {
     approve,
-    status: approveWriteStatus,
-    error: approveWriteError,
+    approveWrite,
+    resetApprove,
+    status: approveWriteStatusRaw,
+    readStatus,
+    writeError: approveWriteError,
+    simulateError: approveSimulateError,
+    transactionError: approveTransactionError,
   } = useProxyApproval({
     // TODO: Create network provider to handle network specific logic
     contractAddress: addresses.ServiceNodeRewards.testnet,
-    tokenAmount: BigInt(SESSION_NODE.FULL_STAKE_AMOUNT),
+    tokenAmount: stakeAmount,
   });
 
   const {
     addBLSPubKey,
-    writeStatus: addBLSWriteStatus,
-    transactionStatus: addBLSTransactionStatus,
-    simulateStatus: addBLSSimulateStatus,
-    simulateError,
-    writeError,
+    contractCallStatus: addBLSStatusRaw,
+    simulateError: addBLSSimulateError,
+    writeError: addBLSWriteError,
+    transactionError: addBLSTransactionError,
   } = useAddBLSPubKey({
     blsPubKey,
     blsSignature,
@@ -134,53 +57,76 @@ export default function useRegisterNode({
     userSignature,
   });
 
-  const { stage, subStage } = useRegisterStage({
-    approveWriteStatus,
-    addBLSSimulateStatus,
-    addBLSWriteStatus,
-    addBLSTransactionStatus,
-  });
-
   const registerAndStake = () => {
     setEnabled(true);
     approve();
   };
 
+  const resetRegisterAndStake = () => {
+    if (addBLSStatusRaw !== 'idle') return;
+    setEnabled(false);
+    resetApprove();
+    approveWrite();
+  };
+
+  const approveErrorMessage = useMemo(
+    () =>
+      formatAndHandleLocalizedContractErrorMessages({
+        parentDictKey: stageDictKey,
+        errorGroupDictKey: 'approve',
+        dictionary,
+        dictionaryGeneral,
+        simulateError: approveSimulateError,
+        writeError: approveWriteError,
+        transactionError: approveTransactionError,
+      }),
+    [approveSimulateError, approveWriteError, approveTransactionError]
+  );
+
+  const addBLSErrorMessage = useMemo(
+    () =>
+      formatAndHandleLocalizedContractErrorMessages({
+        parentDictKey: stageDictKey,
+        errorGroupDictKey: 'arbitrum',
+        dictionary,
+        dictionaryGeneral,
+        simulateError: addBLSSimulateError,
+        writeError: addBLSWriteError,
+        transactionError: addBLSTransactionError,
+      }),
+    [addBLSSimulateError, addBLSWriteError, addBLSTransactionError]
+  );
+
+  const allowanceReadStatus = useMemo(
+    () => parseContractStatusToProgressStatus(readStatus),
+    [readStatus]
+  );
+
+  const approveWriteStatus = useMemo(
+    () => parseContractStatusToProgressStatus(approveWriteStatusRaw),
+    [approveWriteStatusRaw]
+  );
+
+  const addBLSStatus = useMemo(
+    () => parseContractStatusToProgressStatus(addBLSStatusRaw),
+    [addBLSStatusRaw]
+  );
+
   // NOTE: Automatically triggers the write stage once the approval has succeeded
   useEffect(() => {
-    if (enabled && approveWriteStatus === 'success') {
+    if (enabled && approveWriteStatusRaw === 'success') {
       addBLSPubKey();
     }
-  }, [enabled, approveWriteStatus]);
-
-  /**
-   * NOTE: All of these useEffects are required to inform the user of errors via the toaster
-   */
-  useEffect(() => {
-    if (simulateError) {
-      toast.handleError(simulateError);
-      toast.error(dictionary('simulate.errorTooltip'));
-    }
-  }, [simulateError]);
-
-  useEffect(() => {
-    if (approveWriteError) {
-      toast.handleError(approveWriteError);
-      toast.error(dictionary('approve.errorTooltip'));
-    }
-  }, [approveWriteError]);
-
-  useEffect(() => {
-    if (writeError) {
-      toast.handleError(writeError);
-      toast.error(dictionary('write.errorTooltip'));
-    }
-  }, [writeError]);
+  }, [enabled, approveWriteStatusRaw]);
 
   return {
     registerAndStake,
-    stage,
-    subStage,
+    resetRegisterAndStake,
+    allowanceReadStatus,
+    approveWriteStatus,
+    approveErrorMessage,
+    addBLSErrorMessage,
+    addBLSStatus,
     enabled,
   };
 }
