@@ -4,11 +4,11 @@ import { cn } from '@session/ui/lib/utils';
 import { RichTranslationValues } from 'next-intl';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { FAUCET, NETWORK, SOCIALS, TICKER, URL } from './constants';
+import { FAUCET, NETWORK, SESSION_NODE_TIME_STATIC, SOCIALS, TICKER, URL } from './constants';
 
 export const internalLink = (href: string, prefetch?: boolean) => {
   return (children: ReactNode) => (
-    <Link href={href} prefetch={prefetch}>
+    <Link href={href} prefetch={prefetch} className="text-session-green cursor-pointer underline">
       {children}
     </Link>
   );
@@ -77,6 +77,7 @@ export const defaultTranslationElements = {
     'Snapshot',
     'text-session-green'
   ),
+  'my-stakes-link': internalLink('/mystakes'),
 } satisfies RichTranslationValues;
 
 export const defaultTranslationVariables = {
@@ -91,6 +92,8 @@ export const defaultTranslationVariables = {
   faucetDrip: FAUCET.DRIP,
   oxenProgram: 'Oxen Service Node Bonus program',
   notFoundContentType: 'page',
+  smallContributorLeaveRequestDelay:
+    SESSION_NODE_TIME_STATIC.SMALL_CONTRIBUTOR_EXIT_REQUEST_WAIT_TIME_DAYS,
 } satisfies RichTranslationValues;
 
 export const defaultTranslationValues: RichTranslationValues = {
