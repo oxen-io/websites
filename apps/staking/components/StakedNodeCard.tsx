@@ -17,7 +17,6 @@ import { StatusIndicator, statusVariants } from '@session/ui/components/StatusIn
 import { ArrowDownIcon } from '@session/ui/icons/ArrowDownIcon';
 import { SpannerAndScrewdriverIcon } from '@session/ui/icons/SpannerAndScrewdriverIcon';
 import { cn } from '@session/ui/lib/utils';
-import { formatNumber } from '@session/util/maths';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { useTranslations } from 'next-intl';
@@ -482,8 +481,8 @@ export const CollapsableButton = forwardRef<
 
 const StakedNodeCard = forwardRef<
   HTMLDivElement,
-  HTMLAttributes<HTMLDivElement> & { node: StakedNode }
->(({ className, node, ...props }, ref) => {
+  HTMLAttributes<HTMLDivElement> & { node: StakedNode; hideButton?: boolean }
+>(({ className, node, hideButton, ...props }, ref) => {
   const dictionary = useTranslations('nodeCard.staked');
   const generalDictionary = useTranslations('general');
   const generalNodeDictionary = useTranslations('sessionNodes.general');
@@ -503,8 +502,8 @@ const StakedNodeCard = forwardRef<
   } = node;
 
   const formattedTotalStakedAmount = useMemo(() => {
-    if (!contributors || contributors.length === 0 || !address) return '0';
-    return formatNumber(getTotalStakedAmountForAddress(contributors, address));
+    if (!contributors || contributors.length === 0 || !address) return `0 ${SENT_SYMBOL}`;
+    return getTotalStakedAmountForAddress(contributors, address);
   }, [contributors, address]);
 
   const isSoloNode = contributors.length === 1;
@@ -535,8 +534,7 @@ const StakedNodeCard = forwardRef<
       ) : null}
       {state === NODE_STATE.DECOMMISSIONED ||
       state === NODE_STATE.DEREGISTERED ||
-      state === NODE_STATE.UNLOCKED ||
-      state === NODE_STATE.RUNNING ? (
+      state === NODE_STATE.UNLOCKED ? (
         <CollapsableContent size="xs">
           <Tooltip
             tooltipContent={
@@ -597,7 +595,7 @@ const StakedNodeCard = forwardRef<
         <RowLabel>
           {titleFormat('format', { title: stakingNodeDictionary('stakedBalance') })}
         </RowLabel>
-        {formattedTotalStakedAmount} {SENT_SYMBOL}
+        {formattedTotalStakedAmount}
       </CollapsableContent>
       {!isSoloNode ? (
         <CollapsableContent>
@@ -607,7 +605,7 @@ const StakedNodeCard = forwardRef<
           {formatPercentage(operatorFee)}
         </CollapsableContent>
       ) : null}
-      {state === NODE_STATE.RUNNING ? (
+      {state === NODE_STATE.RUNNING && !hideButton ? (
         isReadyToExit(node) ? (
           <NodeExitButtonDialog node={node} />
         ) : isRequestingToExit(node) ? (

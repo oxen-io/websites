@@ -4,19 +4,18 @@ import {
   getVariableFontSizeForLargeModule,
   ModuleDynamicQueryText,
 } from '@/components/ModuleDynamic';
-import { getTotalStakedAmountForAddress } from '@/components/NodeCard';
+import { getTotalStakedAmountForAddressBigInt } from '@/components/NodeCard';
 import type { ServiceNode } from '@session/sent-staking-js/client';
 import { Module, ModuleTitle } from '@session/ui/components/Module';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
-import { Address } from 'viem';
+import type { Address } from 'viem';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { getStakedNodes } from '@/lib/queries/getStakedNodes';
 import { generateMockNodeData } from '@session/sent-staking-js/test';
 import type { QUERY_STATUS } from '@/lib/query';
-import { formatSENTNumber } from '@session/contracts/hooks/SENT';
-import { DYNAMIC_MODULE } from '@/lib/constants';
+import { formatSENTBigInt } from '@session/contracts/hooks/SENT';
 import { FEATURE_FLAG } from '@/lib/feature-flags';
 import { useFeatureFlag } from '@/lib/feature-flags-client';
 
@@ -27,9 +26,11 @@ const getTotalStakedAmount = ({
   nodes: Array<ServiceNode>;
   address: Address;
 }) => {
-  return nodes.reduce(
-    (acc, node) => acc + getTotalStakedAmountForAddress(node.contributors, address),
-    0
+  return formatSENTBigInt(
+    nodes.reduce(
+      (acc, node) => acc + getTotalStakedAmountForAddressBigInt(node.contributors, address),
+      BigInt(0)
+    )
   );
 };
 
@@ -75,10 +76,6 @@ export default function BalanceModule() {
   const titleFormat = useTranslations('modules.title');
   const title = dictionary('title');
 
-  const formattedTotalStakedAmount = useMemo(() => {
-    return `${formatSENTNumber(totalStakedAmount ?? 0, DYNAMIC_MODULE.SENT_ROUNDED_DECIMALS)}`;
-  }, [totalStakedAmount]);
-
   return (
     <Module size="lg" variant="hero">
       <ModuleTitle>{titleFormat('format', { title })}</ModuleTitle>
@@ -94,10 +91,10 @@ export default function BalanceModule() {
           refetch,
         }}
         style={{
-          fontSize: getVariableFontSizeForLargeModule(formattedTotalStakedAmount.length),
+          fontSize: getVariableFontSizeForLargeModule(totalStakedAmount?.length ?? 5),
         }}
       >
-        {formattedTotalStakedAmount}
+        {totalStakedAmount}
       </ModuleDynamicQueryText>
     </Module>
   );
