@@ -30,6 +30,15 @@ import {
   useSetFeatureFlag,
 } from '@/lib/feature-flags-client';
 import { CopyToClipboardButton } from '@session/ui/components/CopyToClipboardButton';
+import {
+  formatSENTBigInt,
+  useAllowanceQuery,
+  useProxyApproval,
+} from '@session/contracts/hooks/SENT';
+import { addresses, SENT_DECIMALS } from '@session/contracts';
+import { LoadingText } from '@session/ui/components/loading-text';
+import { Button } from '@session/ui/ui/button';
+import { Input } from '@session/ui/ui/input';
 
 export function DevSheet({ buildInfo }: { buildInfo: BuildInfo }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -132,6 +141,8 @@ export function DevSheet({ buildInfo }: { buildInfo: BuildInfo }) {
             ))}
           </SheetDescription>
           <PageSpecificFeatureFlags />
+          <SheetTitle>Contract Actions</SheetTitle>
+          <ContractActions />
         </SheetHeader>
       </SheetContent>
     </Sheet>
@@ -186,5 +197,64 @@ function FeatureFlagToggle({
         <span className="cursor-pointer">{FEATURE_FLAG_DESCRIPTION[flag]}</span>
       </Tooltip>
     </span>
+  );
+}
+
+function ContractActions() {
+  const [value, setValue] = useState<string>('0');
+  const serviceNodeRewardsAddress = addresses.ServiceNodeRewards.testnet;
+
+  const tokenAmount = useMemo(() => BigInt(value) * BigInt(10 ** SENT_DECIMALS), [value]);
+
+  const {
+    allowance,
+    getAllowance,
+    refetch,
+    status: allowanceStatus,
+  } = useAllowanceQuery({
+    contractAddress: serviceNodeRewardsAddress,
+  });
+
+  const { approveWrite, resetApprove, status } = useProxyApproval({
+    contractAddress: serviceNodeRewardsAddress,
+    tokenAmount,
+  });
+
+  const handleClick = () => {
+    if (status !== 'idle') {
+      resetApprove();
+    }
+    approveWrite();
+  };
+
+  useEffect(() => {
+    if (!allowance) getAllowance();
+  }, [allowance]);
+
+  useEffect(() => {
+    if (status === 'success') refetch().then(() => getAllowance());
+  }, [status]);
+
+  return (
+    <>
+      <span className="inline-flex justify-start gap-1 align-middle">
+        <span className="inline-flex justify-start gap-1 align-middle">
+          {'Allowance:'}
+          <span className="text-session-green">
+            {allowanceStatus === 'success' ? formatSENTBigInt(allowance) : <LoadingText />}
+          </span>
+        </span>
+      </span>
+      <Input type="number" value={value} onChange={(e) => setValue(e.target.value)} />
+      <Button
+        data-testid="button:reset-allowance"
+        onClick={handleClick}
+        size="sm"
+        rounded="md"
+        disabled={status === 'pending' || tokenAmount === allowance}
+      >
+        {tokenAmount > BigInt(0) ? 'Set Allowance' : 'Reset Allowance'}
+      </Button>
+    </>
   );
 }
