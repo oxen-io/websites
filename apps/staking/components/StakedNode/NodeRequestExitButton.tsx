@@ -11,24 +11,11 @@ import {
 import { Button } from '@session/ui/ui/button';
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { formatLocalizedTimeFromSeconds } from '@/lib/locale-client';
-import { SESSION_NODE_TIME, SOCIALS, TICKER, TOAST, URL } from '@/lib/constants';
-import { ActionModuleRow } from '@/components/ActionModule';
+import { SESSION_NODE_TIME, SOCIALS, URL } from '@/lib/constants';
 import { externalLink } from '@/lib/locale-defaults';
-import { SENT_SYMBOL } from '@session/contracts';
-import type {
-  GenericContractStatus,
-  WriteContractStatus,
-} from '@session/contracts/hooks/useContractWriteQuery';
-import { StatusIndicator } from '@session/ui/components/StatusIndicator';
-import type { SimulateContractErrorType, WriteContractErrorType } from 'viem';
-import { toast } from '@session/ui/lib/toast';
-import { collapseString } from '@session/util/string';
 import { useChain } from '@session/contracts/hooks/useChain';
-import { useInitiateRemoveBLSPublicKey } from '@session/contracts/hooks/ServiceNodeRewards';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
-import { getTotalStakedAmountForAddress, NodeContributorList } from '@/components/NodeCard';
-import { PubKey } from '@session/ui/components/PubKey';
-import { LoadingText } from '@session/ui/components/loading-text';
+import { getTotalStakedAmountForAddress } from '@/components/NodeCard';
 import { formatBigIntTokenValue } from '@session/util/maths';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { useRemoteFeatureFlagQuery } from '@/lib/feature-flags-client';
@@ -37,6 +24,10 @@ import { Loading } from '@session/ui/components/loading';
 import Link from 'next/link';
 import { Social } from '@session/ui/components/SocialLinkList';
 import { ChevronsDownIcon } from '@session/ui/icons/ChevronsDownIcon';
+import { Progress, PROGRESS_STATUS } from '@session/ui/motion/progress';
+import useRequestNodeExit from '@/hooks/useRequestNodeExit';
+import NodeActionModuleInfo from '@/components/StakedNode/NodeInfoActionModuleBody';
+import { SENT_SYMBOL } from '@session/contracts';
 
 enum EXIT_REQUEST_STATE {
   ALERT,
@@ -176,25 +167,20 @@ function RequestNodeExitDialog({ node, onSubmit }: { node: StakedNode; onSubmit:
 }
 
 function RequestNodeExitContractWriteDialog({ node }: { node: StakedNode }) {
+  const stageDictKey = 'nodeCard.staked.requestExit.dialog.stage' as const;
   const dictionary = useTranslations('nodeCard.staked.requestExit.dialog.write');
-  const dictionaryStage = useTranslations('nodeCard.staked.requestExit.dialog.stage');
-  const dictionaryActionModulesNode = useTranslations('actionModules.node');
-  const sessionNodeDictionary = useTranslations('sessionNodes.general');
+  const dictionaryStage = useTranslations(stageDictKey);
   const { address } = useWallet();
 
   const {
     initiateRemoveBLSPublicKey,
     fee,
     estimateContractWriteFee,
-    simulateStatus,
-    writeStatus,
-    transactionStatus,
-    estimateFeeError,
-    simulateError,
-    writeError,
-    transactionError,
     simulateEnabled,
-  } = useInitiateRemoveBLSPublicKey({
+    resetContract,
+    status,
+    errorMessage,
+  } = useRequestNodeExit({
     contractId: node.contract_id,
   });
 
@@ -204,17 +190,19 @@ function RequestNodeExitContractWriteDialog({ node }: { node: StakedNode }) {
   );
 
   const stakedAmount = useMemo(
-    () => (address ? getTotalStakedAmountForAddress(node.contributors, address) : 0),
+    () =>
+      address ? getTotalStakedAmountForAddress(node.contributors, address) : `0 ${SENT_SYMBOL}`,
     [node.contributors, address]
   );
 
   const handleClick = () => {
+    if (simulateEnabled) {
+      resetContract();
+    }
     initiateRemoveBLSPublicKey();
   };
 
   const isDisabled = !node.contract_id;
-
-  const isButtonDisabled = isDisabled || simulateEnabled;
 
   useEffect(() => {
     if (!isDisabled) {
@@ -222,79 +210,13 @@ function RequestNodeExitContractWriteDialog({ node }: { node: StakedNode }) {
     }
   }, [node.contract_id]);
 
-  useEffect(() => {
-    if (estimateFeeError) {
-      toast.handleError(estimateFeeError);
-    }
-  }, [simulateError]);
-
-  useEffect(() => {
-    if (simulateError) {
-      toast.handleError(simulateError);
-      toast.error(dictionaryStage('errorTooltip'));
-    }
-  }, [simulateError]);
-
-  useEffect(() => {
-    if (writeError) {
-      toast.handleError(writeError);
-      toast.error(dictionaryStage('errorTooltip'));
-    }
-  }, [writeError]);
-
-  useEffect(() => {
-    if (transactionError) {
-      toast.handleError(transactionError);
-      toast.error(dictionaryStage('errorTooltip'));
-    }
-  }, [transactionError]);
-
   return (
     <>
-      <div className="flex flex-col gap-4">
-        <ActionModuleRow
-          label={dictionaryActionModulesNode('contributors')}
-          tooltip={dictionaryActionModulesNode('contributorsTooltip')}
-        >
-          <span className="flex flex-row flex-wrap items-center gap-2 align-middle">
-            <NodeContributorList contributors={node.contributors} forceExpand showEmptySlots />
-          </span>
-        </ActionModuleRow>
-        <ActionModuleRow
-          label={sessionNodeDictionary('publicKeyShort')}
-          tooltip={sessionNodeDictionary('publicKeyDescription')}
-        >
-          <PubKey pubKey={node.pubKey} force="collapse" alwaysShowCopyButton />
-        </ActionModuleRow>
-        <ActionModuleRow
-          label={sessionNodeDictionary('operatorAddress')}
-          tooltip={sessionNodeDictionary('operatorAddressTooltip')}
-        >
-          {node.contributors[0]?.address ? (
-            <PubKey pubKey={node.contributors[0]?.address} force="collapse" alwaysShowCopyButton />
-          ) : null}
-        </ActionModuleRow>
-        <ActionModuleRow
-          label={dictionary('requestFee')}
-          tooltip={dictionary.rich('requestFeeTooltip', {
-            link: externalLink(URL.GAS_INFO),
-          })}
-        >
-          <span className="inline-flex flex-row items-center gap-1.5 align-middle">
-            {feeEstimate ? (
-              `${feeEstimate} ${TICKER.ETH}`
-            ) : (
-              <LoadingText className="mr-8 scale-x-75 scale-y-50" />
-            )}
-          </span>
-        </ActionModuleRow>
-        <ActionModuleRow
-          label={dictionary('amountStaked')}
-          tooltip={dictionary('amountStakedTooltip')}
-        >
-          {stakedAmount} {SENT_SYMBOL}
-        </ActionModuleRow>
-      </div>
+      <NodeActionModuleInfo
+        node={node}
+        feeEstimate={feeEstimate}
+        feeEstimateText={dictionary('requestFee')}
+      />
       <AlertDialogFooter className="mt-4 flex flex-col gap-8 sm:flex-col">
         <Button
           variant="destructive"
@@ -306,91 +228,39 @@ function RequestNodeExitContractWriteDialog({ node }: { node: StakedNode }) {
           })}
           className="w-full"
           data-testid={ButtonDataTestId.Staked_Node_Request_Exit_Write_Dialog_Submit}
-          disabled={isButtonDisabled}
+          disabled={isDisabled || (simulateEnabled && status !== PROGRESS_STATUS.ERROR)}
           onClick={handleClick}
         >
           {dictionary('buttons.submit')}
         </Button>
         {simulateEnabled ? (
-          <QueryStatusInformation
-            simulateStatus={simulateStatus}
-            writeStatus={writeStatus}
-            transactionStatus={transactionStatus}
+          <Progress
+            steps={[
+              {
+                text: {
+                  [PROGRESS_STATUS.IDLE]: dictionaryStage('arbitrum.idle'),
+                  [PROGRESS_STATUS.PENDING]: dictionaryStage('arbitrum.pending'),
+                  [PROGRESS_STATUS.SUCCESS]: dictionaryStage('arbitrum.success'),
+                  [PROGRESS_STATUS.ERROR]: errorMessage,
+                },
+                status,
+              },
+              {
+                text: {
+                  [PROGRESS_STATUS.IDLE]: dictionaryStage('network.idle'),
+                  [PROGRESS_STATUS.PENDING]: dictionaryStage('network.pending'),
+                  [PROGRESS_STATUS.SUCCESS]: dictionaryStage('network.success'),
+                  [PROGRESS_STATUS.ERROR]: errorMessage,
+                },
+                status:
+                  status === PROGRESS_STATUS.SUCCESS
+                    ? PROGRESS_STATUS.SUCCESS
+                    : PROGRESS_STATUS.IDLE,
+              },
+            ]}
           />
         ) : null}
       </AlertDialogFooter>
     </>
-  );
-}
-
-const handleError = (error: Error | SimulateContractErrorType | WriteContractErrorType) => {
-  console.error(error);
-  if (error.message) {
-    toast.error(
-      collapseString(error.message, TOAST.ERROR_COLLAPSE_LENGTH, TOAST.ERROR_COLLAPSE_LENGTH)
-    );
-  }
-};
-
-enum QUERY_STAGE {
-  IDLE,
-  PENDING,
-  SUCCESS,
-  ERROR,
-}
-
-function QueryStatusInformation({
-  simulateStatus,
-  writeStatus,
-  transactionStatus,
-}: {
-  simulateStatus: GenericContractStatus;
-  writeStatus: WriteContractStatus;
-  transactionStatus: GenericContractStatus;
-}) {
-  const dictionary = useTranslations('nodeCard.staked.requestExit.dialog.stage');
-  const stage = useMemo(() => {
-    if (simulateStatus === 'error' || writeStatus === 'error' || transactionStatus === 'error') {
-      return QUERY_STAGE.ERROR;
-    }
-
-    if (
-      simulateStatus === 'success' &&
-      writeStatus === 'success' &&
-      transactionStatus === 'success'
-    ) {
-      return QUERY_STAGE.SUCCESS;
-    }
-
-    if (
-      simulateStatus === 'pending' ||
-      writeStatus === 'pending' ||
-      transactionStatus === 'pending'
-    ) {
-      return QUERY_STAGE.PENDING;
-    }
-    return QUERY_STAGE.IDLE;
-  }, [simulateStatus, writeStatus, transactionStatus]);
-
-  return (
-    <div className="flex w-full flex-col gap-8">
-      <span className="inline-flex items-center gap-4 align-middle">
-        <StatusIndicator
-          className="h-4 w-4"
-          status={
-            stage === QUERY_STAGE.SUCCESS
-              ? 'green'
-              : stage === QUERY_STAGE.PENDING
-                ? 'pending'
-                : stage === QUERY_STAGE.ERROR
-                  ? 'red'
-                  : 'grey'
-          }
-        />
-        <span className="mt-0.5">
-          {stage === QUERY_STAGE.ERROR ? dictionary('error') : dictionary('submit')}
-        </span>
-      </span>
-    </div>
   );
 }

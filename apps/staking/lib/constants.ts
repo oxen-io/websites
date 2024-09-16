@@ -118,6 +118,11 @@ export enum SESSION_NODE {
   MS_PER_BLOCK = 2 * 60 * 1000,
 }
 
+export enum SESSION_NODE_TIME_STATIC {
+  /** 2 days in days */
+  SMALL_CONTRIBUTOR_EXIT_REQUEST_WAIT_TIME_DAYS = 2,
+}
+
 enum SESSION_NODE_TIME_TESTNET {
   /** 1 day in seconds */
   EXIT_REQUEST_TIME_SECONDS = 24 * 60 * 60,
