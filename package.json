@@ -4,12 +4,12 @@
   "scripts": {
     "turbo": "DO_NOT_TRACK=1 NEXT_TELEMETRY_DISABLED=1 turbo",
     "build": "pnpm turbo build",
-    "build:test": "pnpm turbo build:test",
     "start": "pnpm turbo start",
     "dev": "pnpm turbo dev",
     "check-types": "pnpm turbo check-types",
     "lint": "pnpm turbo lint",
     "test": "pnpm turbo test",
+    "gh": "pnpm turbo gh",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "engines": "./scripts/engines.sh",
     "clean:nm": "./scripts/clean-node-modules.sh",

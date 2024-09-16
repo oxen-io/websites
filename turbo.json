@@ -4,11 +4,6 @@
     "NEXT_PUBLIC_ENV_FLAG"
   ],
   "tasks": {
-    "build:test": {
-      "dependsOn": [
-        "^build:test"
-      ]
-    },
     "build": {
       "dependsOn": [
         "^build"
@@ -57,6 +52,14 @@
     "check-telemetry": {
       "cache": false
     },
-    "test": {}
+    "test": {},
+    "gh": {
+      "dependsOn": [
+        "^check-types",
+        "^lint",
+        "^test",
+        "^build"
+      ]
+    }
   }
 }
