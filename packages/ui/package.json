@@ -7,6 +7,7 @@
     "./ui/*": "./components/ui/*.tsx",
     "./components/*": "./components/*.tsx",
     "./lib/*": "./lib/*.ts",
+    "./lib/toast": "./lib/toast.tsx",
     "./icons/*": "./icons/*.tsx",
     "./icons/types": "./icons/types.ts",
     "./taiwind": "./tailwind.config.ts",
