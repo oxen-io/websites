@@ -3,7 +3,7 @@ on:
   - pull_request
 
 jobs:
-  unit-tests:
+  builds:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,5 +37,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Set environment variables
+        run: |
+          grep '^export ' ./apps/staking/scripts/mock-build-env.sh | sed 's/export //' >> $GITHUB_ENV
+
       - name: Run builds
-        run: pnpm build:test
+        run: pnpm build
