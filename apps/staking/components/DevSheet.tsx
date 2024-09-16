@@ -208,7 +208,6 @@ function ContractActions() {
 
   const {
     allowance,
-    getAllowance,
     refetch,
     status: allowanceStatus,
   } = useAllowanceQuery({
@@ -228,11 +227,7 @@ function ContractActions() {
   };
 
   useEffect(() => {
-    if (!allowance) getAllowance();
-  }, [allowance]);
-
-  useEffect(() => {
-    if (status === 'success') refetch().then(() => getAllowance());
+    if (status === 'success') refetch();
   }, [status]);
 
   return (
@@ -253,7 +248,13 @@ function ContractActions() {
         rounded="md"
         disabled={status === 'pending' || tokenAmount === allowance}
       >
-        {tokenAmount > BigInt(0) ? 'Set Allowance' : 'Reset Allowance'}
+        {status === 'pending' ? (
+          <LoadingText />
+        ) : tokenAmount > BigInt(0) ? (
+          'Set Allowance'
+        ) : (
+          'Reset Allowance'
+        )}
       </Button>
     </>
   );

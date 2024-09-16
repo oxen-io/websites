@@ -1,13 +1,13 @@
-import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
+import { SENT_SYMBOL } from '@session/contracts';
 import { Button } from '@session/ui/components/ui/button';
 import { SessionTokenIcon } from '@session/ui/icons/SessionTokenIcon';
 import { cn } from '@session/ui/lib/utils';
-import { formatBigIntTokenValue } from '@session/util/maths';
 import { collapseString } from '@session/util/string';
 import { useMemo } from 'react';
 import { ButtonDataTestId } from '../testing/data-test-ids';
 import { ConnectedWalletAvatar } from './WalletAvatar';
 import { WalletButtonProps } from './WalletModalButton';
+import { formatSENTBigInt } from '@session/contracts/hooks/SENT';
 
 export function WalletButton({
   labels,
@@ -29,6 +29,11 @@ export function WalletButton({
   const name = useMemo(
     () => collapseString(arbName ?? ensName ?? address ?? fallbackName, 6, 4),
     [ensName, arbName, address, fallbackName]
+  );
+
+  const formattedBalance = useMemo(
+    () => (tokenBalance ? formatSENTBigInt(tokenBalance) : `0 ${SENT_SYMBOL}`),
+    [tokenBalance]
   );
 
   return (
@@ -58,7 +63,7 @@ export function WalletButton({
               )}
             >
               <SessionTokenIcon className="h-4 w-4" />
-              {tokenBalance ? formatBigIntTokenValue(tokenBalance, SENT_DECIMALS) : 0} {SENT_SYMBOL}
+              {formattedBalance}
             </div>
           ) : null}
           <div

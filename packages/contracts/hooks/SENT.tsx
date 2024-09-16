@@ -27,8 +27,6 @@ export const formatSENTNumber = (value?: number, decimals?: number, hideSymbol?:
 type SENTBalance = ReadContractData<typeof SENTAbi, 'balanceOf', [Address]>;
 
 export type SENTBalanceQuery = ContractReadQueryProps & {
-  /** Get the session token balance */
-  getBalance: () => void;
   /** The session token balance */
   balance: SENTBalance;
 };
@@ -41,21 +39,17 @@ export function useSENTBalanceQuery({
   overrideChain?: CHAIN;
 }): SENTBalanceQuery {
   const chain = useChain();
-  const {
-    data: balance,
-    readContract,
-    ...rest
-  } = useContractReadQuery({
+
+  const { data: balance, ...rest } = useContractReadQuery({
     contract: 'SENT',
     functionName: 'balanceOf',
-    defaultArgs: [address!],
-    startEnabled: !!address,
+    args: [address!],
+    enabled: !!address,
     chain: overrideChain ?? chain,
   });
 
   return {
     balance,
-    getBalance: readContract,
     ...rest,
   };
 }
@@ -63,8 +57,6 @@ export function useSENTBalanceQuery({
 type SENTAllowance = ReadContractData<typeof SENTAbi, 'allowance', [Address, Address]>;
 
 export type SENTAllowanceQuery = ContractReadQueryProps & {
-  /** Get the session token allowance */
-  getAllowance: () => void;
   /** The session token allowance for a contract */
   allowance: SENTAllowance;
 };
@@ -76,20 +68,16 @@ export function useAllowanceQuery({
 }): SENTAllowanceQuery {
   const { address } = useAccount();
   const chain = useChain();
-  const {
-    data: allowance,
-    readContract,
-    ...rest
-  } = useContractReadQuery({
+  const { data: allowance, ...rest } = useContractReadQuery({
     contract: 'SENT',
     functionName: 'allowance',
-    defaultArgs: [address!, contractAddress],
+    args: [address!, contractAddress],
+    enabled: !!address,
     chain,
   });
 
   return {
     allowance,
-    getAllowance: readContract,
     ...rest,
   };
 }
@@ -120,7 +108,6 @@ export function useProxyApproval({
   const { address } = useAccount();
   const {
     allowance,
-    getAllowance,
     status: readStatusRaw,
     refetch: refetchRaw,
   } = useAllowanceQuery({
@@ -154,8 +141,6 @@ export function useProxyApproval({
   const approve = () => {
     if (allowance) {
       void refetchAllowance();
-    } else {
-      getAllowance();
     }
   };
 
