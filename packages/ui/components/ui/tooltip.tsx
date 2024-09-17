@@ -9,6 +9,7 @@ import {
   type ReactNode,
   useState,
 } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 /** @ts-ignore TS doesnt know what its talking about */
 import { useDebounce } from '@uidotdev/usehooks';
 import { cn } from '../../lib/utils';

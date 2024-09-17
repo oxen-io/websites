@@ -52,6 +52,14 @@
     "check-telemetry": {
       "cache": false
     },
-    "test": {}
+    "test": {},
+    "gh": {
+      "dependsOn": [
+        "^check-types",
+        "^lint",
+        "^test",
+        "^build"
+      ]
+    }
   }
 }

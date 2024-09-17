@@ -33,6 +33,16 @@ You can run all tests at once with the following command:
 pnpm test
 ```
 
+## GitHub Actions
+
+You can mock all the GitHub actions by running the following command:
+
+```shell
+pnpm gh
+```
+
+This will run the linting, type checking, unit tests, and build scripts for all apps and packages.
+
 ## Committing your changes
 
 Before a commit is accepted the staged changes will be formatted using [prettier](https://prettier.io/) and linted

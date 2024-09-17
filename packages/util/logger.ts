@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { pino } from 'pino';
 import { LOG_LEVEL, SessionLogger, type SessionLoggerOptions } from '@session/logger';
 import { isProduction } from './env';

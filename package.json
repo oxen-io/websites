@@ -9,6 +9,7 @@
     "check-types": "pnpm turbo check-types",
     "lint": "pnpm turbo lint",
     "test": "pnpm turbo test",
+    "gh": "pnpm turbo gh",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "engines": "./scripts/engines.sh",
     "clean:nm": "./scripts/clean-node-modules.sh",

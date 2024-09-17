@@ -1,6 +1,6 @@
-/* eslint-disable  @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { type InitialLog, TimedLog } from './timedLog';
+import { TimedLog, type InitialLog } from './timedLog';
 
 export enum LOG_LEVEL {
   DEBUG = 'debug',
