@@ -22,7 +22,7 @@ import { Button } from '@session/ui/ui/button';
 import { NodeExitButton } from '@/components/StakedNode/NodeExitButton';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { getNodeExitSignatures } from '@/lib/queries/getNodeExitSignatures';
-import NodeActionModuleInfo from '@/components/StakedNode/NodeInfoActionModuleBody';
+import NodeActionModuleInfo from '@/components/StakedNode/NodeActionModuleInfo';
 import { SENT_SYMBOL } from '@session/contracts';
 import { Progress, PROGRESS_STATUS } from '@session/ui/motion/progress';
 import useExitNode from '@/hooks/useExitNode';

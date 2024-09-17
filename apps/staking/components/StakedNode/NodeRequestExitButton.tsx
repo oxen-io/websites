@@ -26,7 +26,7 @@ import { Social } from '@session/ui/components/SocialLinkList';
 import { ChevronsDownIcon } from '@session/ui/icons/ChevronsDownIcon';
 import { Progress, PROGRESS_STATUS } from '@session/ui/motion/progress';
 import useRequestNodeExit from '@/hooks/useRequestNodeExit';
-import NodeActionModuleInfo from '@/components/StakedNode/NodeInfoActionModuleBody';
+import NodeActionModuleInfo from '@/components/StakedNode/NodeActionModuleInfo';
 import { SENT_SYMBOL } from '@session/contracts';
 
 enum EXIT_REQUEST_STATE {
