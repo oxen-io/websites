@@ -1,4 +1,11 @@
-import { motion, type MotionStyle, Variants } from 'framer-motion';
+import {
+  AnimationControls,
+  motion,
+  type MotionStyle,
+  TargetAndTransition,
+  VariantLabels,
+  Variants,
+} from 'framer-motion';
 import { forwardRef } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../../lib/utils';
@@ -51,13 +58,27 @@ type CircleProps = CircleVariantProps & {
   strokeWidth?: number;
   className?: string;
   variants?: Variants;
-  animate?: any;
+  animate?: AnimationControls | TargetAndTransition | VariantLabels;
   style?: MotionStyle;
 };
 
 export const Circle = forwardRef<SVGCircleElement, CircleProps>(
   (
-    { cx, cy, r, strokeWidth, className, style, variant, strokeVariant, partial, glow, ...props },
+    {
+      cx,
+      cy,
+      r,
+      strokeWidth,
+      className,
+      style,
+      variant,
+      strokeVariant,
+      partial,
+      glow,
+      animate,
+      variants,
+      ...props
+    },
     ref
   ) => (
     <motion.circle
@@ -68,6 +89,8 @@ export const Circle = forwardRef<SVGCircleElement, CircleProps>(
       className={cn(circleVariants({ variant, strokeVariant, partial, glow, className }))}
       style={style}
       ref={ref}
+      variants={variants}
+      animate={animate}
       {...props}
     />
   )
