@@ -37,7 +37,7 @@ export default function ActionModule({
           {title ? (
             <>
               <ModuleGridTitle>{title}</ModuleGridTitle>
-              {headerAction}
+              <div className="me-4">{headerAction}</div>
             </>
           ) : null}
         </ModuleGridHeader>

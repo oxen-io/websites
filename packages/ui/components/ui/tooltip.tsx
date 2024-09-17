@@ -13,6 +13,7 @@ import {
 /** @ts-ignore TS doesnt know what its talking about */
 import { useDebounce } from '@uidotdev/usehooks';
 import { cn } from '../../lib/utils';
+import { TriangleAlertIcon } from '../../icons/TriangleAlertIcon';
 
 const TooltipRoot = PopoverPrimitive.Root;
 
@@ -32,7 +33,7 @@ const TooltipContent = forwardRef<
     sideOffset={sideOffset}
     side="top"
     className={cn(
-      'text-session-white animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-session-black border-px z-50 max-w-[90svw] overflow-hidden rounded-xl border border-[#1C2624] bg-opacity-50 px-4 py-2 text-sm shadow-xl outline-none sm:max-w-lg',
+      'text-session-white animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-session-black border-px z-50 max-w-[90svw] overflow-hidden rounded-xl border border-[#1C2624] bg-opacity-50 px-4 py-2 text-sm shadow-xl outline-none md:max-w-lg',
       className
     )}
     {...props}
@@ -93,4 +94,13 @@ const Tooltip = forwardRef<ElementRef<typeof PopoverPrimitive.Content>, TooltipP
   }
 );
 
-export { Tooltip, TooltipRoot, TooltipContent, TooltipTrigger };
+const AlertTooltip = forwardRef<
+  ElementRef<typeof PopoverPrimitive.Content>,
+  Omit<TooltipProps, 'children'>
+>((props, ref) => (
+  <Tooltip {...props} ref={ref}>
+    <TriangleAlertIcon className="stroke-warning mb-0.5 h-4 w-4" />
+  </Tooltip>
+));
+
+export { Tooltip, TooltipRoot, TooltipContent, TooltipTrigger, AlertTooltip };

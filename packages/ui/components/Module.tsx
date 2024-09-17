@@ -46,8 +46,8 @@ const innerModuleVariants = cva(
         ),
       },
       size: {
-        default: 'p-6',
-        lg: 'p-10 py-12',
+        default: 'p-4 sm:p-6',
+        lg: 'px-6 sm:px-10 py-8 sm:py-10',
       },
     },
     defaultVariants: {

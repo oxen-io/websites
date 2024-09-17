@@ -142,7 +142,14 @@ const ContributorIcon = ({
   );
 };
 
-export const getTotalStakedAmountForAddress = (
+/**
+ * @deprecated Use {@link getTotalStakedAmountForAddress} instead.
+ * Returns the total staked amount for a given address.
+ * @param contributors - The list of contributors.
+ * @param address - The address to check.
+ * @returns The total staked amount for the given address.
+ */
+export const getTotalStakedAmountForAddressNumber = (
   contributors: Contributor[],
   address: string
 ): number => {
@@ -151,6 +158,34 @@ export const getTotalStakedAmountForAddress = (
       ? acc + bigIntToNumber(amount, SENT_DECIMALS)
       : acc;
   }, 0);
+};
+
+export const getTotalStakedAmountForAddressBigInt = (
+  contributors: Contributor[],
+  address: string
+): bigint => {
+  contributors = contributors.map(({ amount, address: contributorAddress }) => {
+    return {
+      amount: typeof amount === 'bigint' ? amount : BigInt(`${amount}`),
+      address: contributorAddress,
+    };
+  });
+  return contributors.reduce((acc, { amount, address: contributorAddress }) => {
+    return areHexesEqual(contributorAddress, address) ? acc + amount : acc;
+  }, BigInt(0));
+};
+
+export const getTotalStakedAmountForAddress = (
+  contributors: Contributor[],
+  address: string,
+  decimals?: number,
+  hideSymbol?: boolean
+): string => {
+  return formatSENTBigInt(
+    getTotalStakedAmountForAddressBigInt(contributors, address),
+    decimals,
+    hideSymbol
+  );
 };
 
 type StakedNodeContributorListProps = HTMLAttributes<HTMLDivElement> & {

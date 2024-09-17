@@ -69,28 +69,20 @@ export function useUpdateRewardsBalanceQuery({
 }
 
 export type TotalNodesQuery = ContractReadQueryProps & {
-  /** Update rewards balance */
-  getTotalNodes: () => void;
   /** The total number of nodes */
   totalNodes: ReadContractData<typeof ServiceNodeRewardsAbi, 'totalNodes', []>;
 };
 
 export function useTotalNodesQuery(): TotalNodesQuery {
   const chain = useChain();
-  const {
-    data: totalNodes,
-    readContract,
-    ...rest
-  } = useContractReadQuery({
+  const { data: totalNodes, ...rest } = useContractReadQuery({
     contract: 'ServiceNodeRewards',
     functionName: 'totalNodes',
-    startEnabled: true,
     chain,
   });
 
   return {
     totalNodes,
-    getTotalNodes: readContract,
     ...rest,
   };
 }

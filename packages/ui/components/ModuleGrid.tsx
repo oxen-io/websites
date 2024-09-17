@@ -57,7 +57,7 @@ const ModuleGridTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadin
     <h2
       ref={ref}
       className={cn(
-        'my-2 text-lg font-medium leading-none tracking-tight md:block md:text-3xl',
+        'mx-4 my-2 text-lg font-medium leading-none tracking-tight md:block md:text-3xl',
         className
       )}
       {...props}
@@ -75,7 +75,7 @@ const ModuleGridHeader = forwardRef<HTMLDivElement, ModuleGridHeaderProps>(
     <div
       ref={ref}
       className={cn(
-        'flex w-full flex-row items-center justify-between px-8 pt-6',
+        'flex w-full flex-row items-center justify-between px-4 pt-6',
         keepDesktopHeaderOnMobile ? 'relative top-0' : 'absolute -top-16 md:relative md:top-0',
         className
       )}
