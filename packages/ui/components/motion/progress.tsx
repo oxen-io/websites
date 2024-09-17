@@ -1,5 +1,4 @@
 import { forwardRef, type HTMLAttributes, useMemo } from 'react';
-import { clsx } from 'clsx';
 import { motion } from 'framer-motion';
 import { Circle } from './shapes/circle';
 import { cn } from '../../lib/utils';
@@ -80,6 +79,7 @@ function ProgressStep({
   return (
     <div className={cn('relative -ml-4 w-full')} style={{ height }}>
       <svg
+        /** The +1 ensures the lines overlap and prevents rendering gaps */
         height={height + 1}
         width={height}
         xmlns="http://www.w3.org/2000/svg"
@@ -144,7 +144,7 @@ function ProgressStep({
 export const Progress = forwardRef<HTMLDivElement, ProgressProps>(
   ({ steps, className, ...props }, ref) => {
     return (
-      <div ref={ref} className={clsx('flex w-full flex-col items-start', className)} {...props}>
+      <div ref={ref} className={cn('flex w-full flex-col items-start', className)} {...props}>
         {steps.map(({ text, status }, i) => (
           <ProgressStep
             key={i}

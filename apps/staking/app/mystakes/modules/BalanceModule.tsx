@@ -91,7 +91,7 @@ export default function BalanceModule() {
           refetch,
         }}
         style={{
-          fontSize: getVariableFontSizeForLargeModule(totalStakedAmount?.length ?? 5),
+          fontSize: getVariableFontSizeForLargeModule(totalStakedAmount?.length ?? 6),
         }}
       >
         {totalStakedAmount}
