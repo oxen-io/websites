@@ -55,7 +55,7 @@ export const initWeb3Modal = ({
     },
     projectId,
     enableAnalytics: false,
-    enableOnramp: true,
+    enableOnramp: false,
     featuredWalletIds: [
       Wallet.MetaMask,
       Wallet.Ledger,

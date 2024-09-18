@@ -78,10 +78,12 @@ export function useWallet(): UseWalletType {
   const { balance: tokenBalanceData } = useSENTBalanceQuery({
     address,
   });
+
   const { data: ethBalanceData } = useBalance({
     address,
     query: { enabled: isConnected },
   });
+
   const { ensName, ensAvatar } = useEns({
     address,
     enabled: isConnected,

@@ -4,7 +4,7 @@ import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { useMemo } from 'react';
 import { useAddSessionTokenToWallet, useWalletChain } from '../hooks/wallet-hooks';
 import { ButtonDataTestId } from '../testing/data-test-ids';
-import { toast } from '@session/ui/lib/sonner';
+import { toast } from '@session/ui/lib/toast';
 
 export type WalletAddTokenButtonProps = ButtonVariantProps & {
   tokenIcon: string;
@@ -20,7 +20,7 @@ export type WalletAddTokenButtonProps = ButtonVariantProps & {
   };
   errors: {
     fail: string;
-  }
+  };
 };
 
 export default function WalletAddTokenButton(props: WalletAddTokenButtonProps) {
@@ -40,7 +40,7 @@ export default function WalletAddTokenButton(props: WalletAddTokenButtonProps) {
 
   if (error) {
     console.error(error);
-    toast.error(props.errors.fail)
+    toast.error(props.errors.fail);
   }
 
   return (

@@ -15,7 +15,7 @@ import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CHAIN } from '@session/contracts';
 import { ArrowDownIcon } from '@session/ui/icons/ArrowDownIcon';
-import { toast } from '@session/ui/lib/sonner';
+import { toast } from '@session/ui/lib/toast';
 import {
   Form,
   FormControl,

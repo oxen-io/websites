@@ -22,7 +22,7 @@ export const getEnvironment = (): Environment => {
     console.warn(`Invalid environment flag (NEXT_PUBLIC_ENV_FLAG): ${environment}`);
     return Environment.DEV;
   }
-  console.log(`Environment: ${environment}`);
+  if (environment !== Environment.PRD) console.log(`Environment: ${environment}`);
   return environment as Environment;
 };
 

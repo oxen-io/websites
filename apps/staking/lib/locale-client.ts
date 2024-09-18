@@ -1,13 +1,14 @@
 'use client';
 
 import {
-  FormatDistanceStrictOptions,
-  FormatDistanceToNowStrictOptions,
   formatDistanceStrict,
+  FormatDistanceStrictOptions,
   formatDistanceToNowStrict,
+  FormatDistanceToNowStrictOptions,
 } from 'date-fns';
 import { useLocale as _useLocale } from 'next-intl';
 import { getDateFnsLocale, type Locale } from './locale-util';
+import { getDateFromUnixTimestampSeconds } from '@session/util/date';
 
 const useLocale = (): Locale => _useLocale() as Locale;
 
@@ -33,6 +34,12 @@ export const formatLocalizedRelativeTimeToNowClient = (
     ...options,
   });
 };
+
+export const formatLocalizedTimeFromSeconds = (
+  seconds: number,
+  options?: Omit<FormatDistanceStrictOptions, 'locale'>
+) =>
+  formatLocalizedRelativeTimeClient(getDateFromUnixTimestampSeconds(seconds), new Date(0), options);
 
 export const formatNumber = (num: number, options: Intl.NumberFormatOptions) => {
   const locale = useLocale();

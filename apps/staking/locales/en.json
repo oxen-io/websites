@@ -4,11 +4,11 @@
     "loading": "Loading...",
     "or": "or",
     "and": "and",
-    "unknownError": "An unknown error occurred.",
+    "unknownError": "unknown error",
     "viewOnExplorer": "View on Explorer",
     "viewOnExplorerShort": "View",
     "you": "You",
-    "emptySlot": "EmptyContributorSlot",
+    "emptySlot": "Empty Contributor Slot",
     "notFound": "Not Found",
     "soon": "Soon"
   },
@@ -163,6 +163,7 @@
   },
   "banner": {
     "registrationPaused": "Stagenet node registration is temporarily paused. Apologies for any inconvenience, we expect to be able to re-enable registrations soon. For updates, visit the <link>Session Token discord</link>.",
+    "claimRewardsDisabled": "Stagenet rewards claim is temporarily paused. Apologies for any inconvenience, we expect to be able to re-enable rewards claiming soon. For updates, visit the <link>Session Token discord</link>.",
     "newTokenContract": "The Session Token contract has been updated. <remove-token-link>Remove the old token</remove-token-link> and <watch-token>add the new token contract</watch-token> to your wallet watch list to continue using the Staking Portal. If you have any questions, visit the <link>Session Token Discord</link>."
   },
   "modules": {
@@ -233,59 +234,38 @@
         "amountClaimable": "Amount Claimable",
         "amountClaimableTooltip": "Amount of {tokenSymbol} rewards able to be claimed.",
         "buttons": {
-          "submit": "Claim",
-          "submitAria": "Claim {tokenAmount} {tokenSymbol} with a claim gas fee of {gasAmount} {gasTokenSymbol}"
+          "submit": "Claim {tokenAmount}",
+          "submitAria": "Claim {tokenAmount} with a claim gas fee of {gasAmount} {gasTokenSymbol}"
         },
         "alert": {
           "gasFetchFailedUpdateBalance": "Failed to fetch fee estimate for updating rewards balance. Fee estimate may be inaccurate.",
           "gasFetchFailedClaimRewards": "Failed to fetch fee estimate for claiming rewards. Fee estimate may be inaccurate.",
           "highGas": "The price of Gas is higher than usual."
-        }
+        },
+        "successToast": "Claimed {tokenAmount} on Arbitrum"
       },
       "stage": {
-        "updateBalance": {
-          "simulate": {
-            "pending": "Validating rewards update parameters",
-            "success": "Validating rewards update parameters",
-            "error": "Validating rewards update parameters",
-            "errorTooltip": "Rewards update parameters were malformed, please refresh the page and try again"
-          },
-          "write": {
-            "pending": "Updating rewards amount on Arbitrum",
-            "success": "Updating rewards amount on Arbitrum",
-            "error": "Updating rewards amount on Arbitrum",
-            "errorTooltip": "Rewards update was not successful on Arbitrum"
-          },
-          "transaction": {
-            "pending": "Waiting for confirmation of rewards amount on Arbitrum",
-            "success": "Waiting for confirmation of rewards amount on Arbitrum",
-            "error": "Waiting for confirmation of rewards amount on Arbitrum",
-            "errorTooltip": "Rewards update was not successful on Arbitrum"
+        "balance": {
+          "idle": "Updating rewards amount on Arbitrum",
+          "pending": "Updating rewards amount on Arbitrum",
+          "success": "Updated rewards amount on Arbitrum",
+          "errorTemplate": "Failed to update rewards amount on Arbitrum, {reason}",
+          "errors": {
+            "UserRejectedRequest": "user rejected the request",
+            "NullAddress": "recipient address is invalid",
+            "RecipientRewardsTooLow": "rewards balance already updated",
+            "InvalidBLSSignature": "invalid BLS signature, try again later",
+            "InsufficientBLSSignatures": "insufficient BLS signatures, try again later"
           }
         },
-        "claimRewards": {
-          "simulate": {
-            "pending": "Validating rewards claim",
-            "success": "Validating rewards claim",
-            "error": "Validating rewards claim",
-            "errorTooltip": "Rewards claim validation failed"
-          },
-          "write": {
-            "pending": "Submitting rewards claim on Arbitrum",
-            "success": "Submitting rewards claim on Arbitrum",
-            "error": "Submitting rewards claim on Arbitrum",
-            "errorTooltip": "Rewards claim was not successful on Arbitrum"
-          },
-          "transaction": {
-            "pending": "Waiting for confirmation of rewards claim",
-            "success": "Waiting for confirmation of rewards claim",
-            "error": "Waiting for confirmation of rewards claim",
-            "errorTooltip": "Rewards claim was not successful on Arbitrum"
+        "claim": {
+          "idle": "Claiming {tokenAmount} on Arbitrum",
+          "pending": "Claiming {tokenAmount} on Arbitrum",
+          "success": "Claimed {tokenAmount} on Arbitrum",
+          "errorTemplate": "Failed to claim rewards on Arbitrum, {reason}",
+          "errors": {
+            "UserRejectedRequest": "user rejected the request"
           }
-        },
-        "done": {
-          "pending": "Claim Completed",
-          "success": "Claim Completed"
         }
       }
     },
@@ -328,45 +308,57 @@
       "preparedAtTimestamp": "Registration Prepared",
       "preparedAtTimestampDescription": "When the node was prepared for registration",
       "button": {
-        "submit": "Register and Stake {amount} {tokenSymbol}"
+        "submit": "Register and Stake {amount}"
       },
       "description": "Please start the registration process from your client or select from the list of open Session Node.",
       "notFound": {
         "description": "The registration you are looking for could not be found.",
         "foundOpenNode": "It looks like this node is already registered and open for staking:",
-        "foundRunningNode": "It looks like this node is already registered and running:"
+        "foundRunningNode": "It looks like this node is already registered and running, go to <my-stakes-link>My Stakes</my-stakes-link> to see your stakes:",
+        "foundRunningNodeOtherOperator": "It looks like this node is already registered and running for another operator:"
       },
+      "notEnoughTokensAlert": "It looks like you don't have enough {tokenSymbol} to stake to this node. It looks like your wallet has {walletAmount}, please make sure you have at least {tokenAmount} in your wallet before registering.",
       "goToMyStakes": "The Session Node has been successfully registered and joined the network. It will appear on <link></link> soon",
       "stage": {
+        "validate": {
+          "idle": "Validating registration",
+          "pending": "Validating registration",
+          "success": "Registration validated",
+          "errorTemplate": "Failed to validate registration, {reason}",
+          "errors": {
+            "InvalidBLSSignature": "invalid BLS signature, try again later"
+          }
+        },
         "approve": {
-          "pending": "Requesting wallet permission to stake {tokenSymbol}",
-          "success": "Requesting wallet permission to stake {tokenSymbol}",
-          "error": "Requesting wallet permission to stake {tokenSymbol}",
-          "errorTooltip": "Wallet permission was not granted"
+          "idle": "Requesting permission to stake {tokenAmount}",
+          "pending": "Requesting permission to stake {tokenAmount} waiting for user approval",
+          "success": "Permission to stake {tokenSymbol} granted",
+          "errorTemplate": "Wallet permission to stake {tokenSymbol} failed, {reason}, please try again",
+          "errors": {
+            "UserRejectedRequest": "user rejected the request"
+          }
         },
-        "simulate": {
-          "pending": "Validating Session node registration parameters",
-          "success": "Validating Session node registration parameters",
-          "error": "Validating Session node registration parameters",
-          "errorTooltip": "Registration was malformed, please regenerate the registration"
+        "arbitrum": {
+          "idle": "Registering Session node on Arbitrum",
+          "pending": "Registering Session node on Arbitrum",
+          "success": "Registered Session node on Arbitrum",
+          "errorTemplate": "Arbitrum registration failed, {reason}",
+          "errors": {
+            "MaxContributorsExceeded": "max contributors exceeded",
+            "ContributionTotalMismatch": "stake does not match required amount",
+            "BLSPubkeyAlreadyExists": "node already registered with the same SN Key",
+            "InvalidBLSProofOfPossession": "BLS proof of possession is invalid",
+            "MaxPubkeyAggregationsExceeded": "block registration limit exceeded, please try again later",
+            "SafeERC20FailedOperation": "failed to stake {tokenSymbol}, please try again later"
+          }
         },
-        "write": {
-          "pending": "Requesting Session node registration stake from wallet",
-          "success": "Requesting Session node registration stake from wallet",
-          "error": "Requesting Session node registration stake from wallet",
-          "errorTooltip": "Session node registration stake was not approved"
-        },
-        "transaction": {
-          "pending": "Submitting Session node registration to Arbitrum",
-          "success": "Submitting Session node registration to Arbitrum",
-          "error": "Submitting Session node registration to Arbitrum",
-          "errorTooltip": "Session node registration was not sent to Arbitrum"
-        },
-        "join": {
-          "pending": "Waiting for Session node to join the network",
-          "success": "Waiting for Session node to join the network",
-          "error": "Waiting for Session node to join the network",
-          "error_tooltip": "Session node was not able to join the network"
+        "network": {
+          "idle": "Adding Session node to the Session network",
+          "pending": "Adding Session node to the Session network waiting for confirmation",
+          "success": "Adding Session node to the Session network confirmed",
+          "errors": {
+            "template": "Session node failed to join the network, {reason}, please try again later"
+          }
         }
       }
     },
@@ -374,9 +366,11 @@
       "title": "Stake to a Node",
       "contributors": "Shared Contributors",
       "contributorsTooltip": "The contributors currently staking to this node.",
+      "feeEstimate": "Fee Estimate",
+      "feeEstimateTooltip": "The amount of {gasTokenSymbol} this transaction will use. <link>Learn more</link>",
       "button": {
-        "submit": "Stake {amount} {tokenSymbol}",
-        "submitting": "Staking {amount} {tokenSymbol}...",
+        "submit": "Stake {amount}",
+        "submitting": "Staking {amount}...",
         "waitingForWallet": "Waiting for wallet authorization...",
         "submittingToArbitrum": "Submitting request to Arbitrum...",
         "success": "Successfully staked {amount} {tokenSymbol}."
@@ -405,6 +399,7 @@
     },
     "staked": {
       "operator": "Operator",
+      "operatorTooltip": "You are the operator of this node",
       "labelExpand": "Expand",
       "ariaExpand": "Expand node details",
       "labelCollapse": "Collapse",
@@ -413,12 +408,114 @@
       "lastUptimeDescription": "The last time the node provided a proof of availability.",
       "lastRewardHeight": "Last Reward Height: {height}",
       "lastRewardHeightDescription": "Last block height the node received rewards.",
-      "unlockingTimerNotification": "Unlocking {time}",
-      "unlockingTimerDescription": "Time left until the node is unlocked. After unlocking, you can withdraw your stake.",
+      "requestingExitTimerNotification": "Exit available {time}",
+      "requestingExitDescription": "Time left until the node is available for exit. Return {relative_time} ({date}) to exit the node.",
+      "exitTimerNotification": "Exit available. Exit {time} to avoid penalty.",
+      "exitTimerDescription": "Node is ready for exit. If you don't exit within {time}, you may be subject to a small penalty. <link>Learn more</link>",
       "deregistrationTimerNotification": "Deregistration {time}",
-      "deregistrationTimerDescription": "Time left until the node is deregistered and funds are locked for {time}.",
+      "deregistrationTimerDescription": "Time left until the node is deregistered and funds are locked for {deregistration_locked_stake_time}. Node will be deregistered {relative_time} ({date})",
       "liquidationNotification": "Awaiting liquidation",
-      "liquidationDescription": "The node is inactive and waiting to be removed by the network."
+      "liquidationDescription": "The node is inactive and waiting to be removed by the network.",
+      "exit": {
+        "buttonText": "Exit",
+        "buttonAria": "Exit the node from the network",
+        "disabledButtonTooltipContent": "Return {relative_time} ({date}) to exit the node.",
+        "disabledInfo": "Stagenet node exits are temporarily paused. Apologies for any inconvenience, we expect to be re-enable exits soon. For updates, visit the <link>Session Token discord</link>.",
+        "dialog": {
+          "title": "Exit Node",
+          "requestFee": "Exit Fee",
+          "requestFeeTooltip": "The amount of {gasTokenSymbol} this transaction will use. <link>Learn more</link>",
+          "amountStaked": "Amount Staked",
+          "amountStakedTooltip": "Amount of {tokenSymbol} staked by you in this node.",
+          "buttons": {
+            "submit": "Exit Node",
+            "submitAria": "Exit the node from the network with a gas fee of {gasAmount} {gasTokenSymbol}"
+          },
+          "alert": {
+            "gasFetchFailed": "Failed to fetch fee estimate exiting the node. Fee estimate may be inaccurate.",
+            "highGas": "The price of Gas is higher than usual."
+          }
+        },
+        "stage": {
+          "arbitrum": {
+            "idle": "Session node exit on Arbitrum submitting",
+            "pending": "Session node exit on Arbitrum submitting",
+            "success": "Session node exit on Arbitrum submitted",
+            "errorTemplate": "Failed to submit node exit on Arbitrum, {reason}",
+            "errors": {
+              "UserRejectedRequest": "user rejected the request",
+              "SignatureExpired": "signature expired, try again later",
+              "BLSPubkeyDoesNotMatch": "BLS public key does not match",
+              "InvalidBLSSignature": "invalid BLS signature"
+            }
+          },
+          "network": {
+            "idle": "Session node network exit confirming",
+            "pending": "Session node network exit confirming",
+            "success": "Session node network exit confirmed",
+            "errorTemplate": "Failed to confirm the node exit with the Session network, {reason}",
+            "errors": {
+              "UnableToReachNetwork": "unable to reach the Session network"
+            }
+          }
+        }
+      },
+      "requestExit": {
+        "buttonText": "Request Exit",
+        "buttonAria": "Request for the node to be exited",
+        "disabledInfo": "Stagenet node exit requests are temporarily paused. Apologies for any inconvenience, we expect to be re-enable exit requests soon. For updates, visit the <link>Session Token discord</link>.",
+        "dialog": {
+          "title": "Request Exit",
+          "submitAria": "Request exit for the node {pubKey}",
+          "description1": "Are you sure?",
+          "description2": "Your node will be ready to exit the network {request_time}.",
+          "description3": "You'll need to confirm the exit after {request_time}. If you don't confirm within {exit_time}, you may be subject to a small penalty. <link>Learn more</link>",
+          "description4": "Once the node has exited the network, you can claim your stake on the staking portal.",
+          "buttons": {
+            "submit": "Request Exit",
+            "submitAria": "Request exit for {pubKey}",
+            "cancel": "Cancel",
+            "cancelAria": "Cancel exit request"
+          },
+          "write": {
+            "requestFee": "Exit request Fee",
+            "requestFeeTooltip": "The amount of {gasTokenSymbol} this transaction will use. <link>Learn more</link>",
+            "amountStaked": "Amount Staked",
+            "amountStakedTooltip": "Amount of {tokenSymbol} staked by you in this node.",
+            "buttons": {
+              "submit": "Request Exit",
+              "submitAria": "Request node exit with a gas fee of {gasAmount} {gasTokenSymbol}"
+            },
+            "alert": {
+              "gasFetchFailed": "Failed to fetch fee estimate for requesting node exit. Fee estimate may be inaccurate.",
+              "highGas": "The price of Gas is higher than usual."
+            }
+          },
+          "stage": {
+            "arbitrum": {
+              "idle": "Session node exit request on Arbitrum submitting",
+              "pending": "Session node exit request on Arbitrum submitting",
+              "success": "Session node exit request on Arbitrum submitted",
+              "errorTemplate": "Failed to submit node exit request on Arbitrum, {reason}",
+              "errors": {
+                "UserRejectedRequest": "user rejected the request",
+                "CallerNotContributor": "caller not a node contributor",
+                "EarlierLeaveRequestMade": "leave request already made for this node",
+                "SmallContributorLeaveTooEarly": "small contributors can only initiate exit requests after the node has been running for {smallContributorLeaveRequestDelay} days"
+              }
+            },
+            "network": {
+              "idle": "Session node exit request confirming",
+              "pending": "Session node exit request confirming",
+              "success": "Session node exit request confirmed",
+              "errorTemplate": "Failed to confirm the submission of the node exit request to the Session network, {reason}",
+              "errors": {
+                "UnableToReachNetwork": "unable to reach the Session network"
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

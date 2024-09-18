@@ -7,7 +7,9 @@
     "./ui/*": "./components/ui/*.tsx",
     "./components/*": "./components/*.tsx",
     "./lib/*": "./lib/*.ts",
+    "./lib/toast": "./lib/toast.tsx",
     "./icons/*": "./icons/*.tsx",
+    "./motion/*": "./components/motion/*.tsx",
     "./icons/types": "./icons/types.ts",
     "./taiwind": "./tailwind.config.ts",
     "./postcss": "./postcss.config.js"
@@ -16,7 +18,6 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
     "lint-staged": "lint-staged",
-    "component:generate": "turbo gen react-component",
     "ui:add": "npx shadcn-ui@latest add"
   },
   "devDependencies": {
@@ -48,6 +49,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "framer-motion": "^11.5.4",
     "lucide-react": "^0.376.0",
     "next": "14.2.5",
     "next-themes": "^0.3.0",

@@ -2,6 +2,7 @@ import {
   ModuleGrid,
   ModuleGridContent,
   ModuleGridHeader,
+  ModuleGridInfoContent,
   ModuleGridTitle,
 } from '@session/ui/components/ModuleGrid';
 import { QuestionIcon } from '@session/ui/icons/QuestionIcon';
@@ -17,6 +18,7 @@ type ActionModuleProps = {
   background?: keyof typeof actionModuleBackground;
   className?: string;
   contentClassName?: string;
+  noHeader?: boolean;
 };
 
 export default function ActionModule({
@@ -26,25 +28,29 @@ export default function ActionModule({
   children,
   className,
   contentClassName,
+  noHeader,
 }: ActionModuleProps) {
   return (
-    <ModuleGrid
-      variant="section"
-      colSpan={1}
-      className={cn('h-full w-full', className)}
-      style={background ? actionModuleBackground[background] : undefined}
-    >
-      <ModuleGridHeader keepDesktopHeaderOnMobile>
-        {title ? (
-          <>
-            <ModuleGridTitle>{title}</ModuleGridTitle>
-            {headerAction}
-          </>
-        ) : null}
-      </ModuleGridHeader>
+    <ModuleGrid variant="action" colSpan={1} className={cn('h-full w-full', className)}>
+      {!noHeader ? (
+        <ModuleGridHeader keepDesktopHeaderOnMobile>
+          {title ? (
+            <>
+              <ModuleGridTitle>{title}</ModuleGridTitle>
+              <div className="me-4">{headerAction}</div>
+            </>
+          ) : null}
+        </ModuleGridHeader>
+      ) : null}
       <ModuleGridContent className={cn('overflow-y-auto p-8', contentClassName)}>
         {children}
       </ModuleGridContent>
+      <div
+        className={cn(
+          'absolute -z-10 h-full w-full bg-gradient-to-b from-[#0A0C0C] to-[#081512] opacity-70 bg-blend-lighten blur-lg xl:opacity-100 xl:blur-0'
+        )}
+        style={background ? actionModuleBackground[background] : undefined}
+      />
     </ModuleGrid>
   );
 }
@@ -116,3 +122,11 @@ export const ActionModuleRowSkeleton = () => (
 );
 
 export const ActionModuleDivider = () => <div className="bg-gray-dark h-px w-full" />;
+
+export const ActionModulePage = ({ children, ...props }: ActionModuleProps) => (
+  <ActionModule background={1} noHeader {...props}>
+    <div className="flex h-full w-full flex-col text-lg md:py-40">
+      <ModuleGridInfoContent className="w-full xl:w-3/4">{children}</ModuleGridInfoContent>
+    </div>
+  </ActionModule>
+);

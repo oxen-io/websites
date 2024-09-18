@@ -3,6 +3,7 @@ import { REMOTE_FEATURE_FLAG } from '@/lib/feature-flags';
 import { Banner } from '@session/ui/components/Banner';
 import { RegistrationPausedInfo } from '@/components/RegistrationPausedInfo';
 import { NewTokenContractInfo } from '@/components/NewTokenContractInfo';
+import { ClaimRewardsDisabledInfo } from '@/components/ClaimRewardsDisabledInfo';
 
 export default async function RemoteBanner() {
   /**
@@ -26,6 +27,11 @@ export default async function RemoteBanner() {
       {enabledFlags.has(REMOTE_FEATURE_FLAG.NEW_TOKEN_CONTRACT) ? (
         <Banner>
           <NewTokenContractInfo />
+        </Banner>
+      ) : null}
+      {enabledFlags.has(REMOTE_FEATURE_FLAG.DISABLE_CLAIM_REWARDS) ? (
+        <Banner>
+          <ClaimRewardsDisabledInfo />
         </Banner>
       ) : null}
       {enabledFlags.has(REMOTE_FEATURE_FLAG.DISABLE_NODE_REGISTRATION) ? (

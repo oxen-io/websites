@@ -8,28 +8,20 @@ import { useChain } from './useChain';
 type RewardRate = ReadContractData<typeof RewardRatePoolAbi, 'rewardRate', []>;
 
 export type RewardRateQuery = ContractReadQueryProps & {
-  /** Get the reward rate */
-  getRewardRate: () => void;
   /** The reward rate */
   rewardRate: RewardRate;
 };
 
 export function useRewardRateQuery(): RewardRateQuery {
   const chain = useChain();
-  const {
-    data: rewardRate,
-    readContract,
-    ...rest
-  } = useContractReadQuery({
+  const { data: rewardRate, ...rest } = useContractReadQuery({
     contract: 'RewardRatePool',
     functionName: 'rewardRate',
-    startEnabled: true,
     chain,
   });
 
   return {
     rewardRate,
-    getRewardRate: readContract,
     ...rest,
   };
 }

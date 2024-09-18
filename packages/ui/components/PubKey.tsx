@@ -14,6 +14,7 @@ type PubKeyType = HTMLAttributes<HTMLDivElement> & {
   leadingChars?: CollapseStringsParams[1];
   trailingChars?: CollapseStringsParams[2];
   expandOnHover?: boolean;
+  expandOnHoverDesktopOnly?: boolean;
   alwaysShowCopyButton?: boolean;
   force?: 'expand' | 'collapse';
   copyToClipboardAriaLabel?: string;
@@ -27,6 +28,7 @@ export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
     leadingChars,
     trailingChars,
     expandOnHover,
+    expandOnHoverDesktopOnly,
     alwaysShowCopyButton,
     copyToClipboardAriaLabel,
     copyToClipboardToastMessage,
@@ -68,7 +70,11 @@ export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
             className={cn(
               'select-all break-all',
               force !== 'collapse' && expandOnHover && 'group-hover:hidden',
-              force !== 'collapse' && expandOnHover && isExpanded ? 'hidden' : 'block'
+              force !== 'collapse' && expandOnHover && isExpanded ? 'hidden' : 'block',
+              force !== 'collapse' && expandOnHoverDesktopOnly && 'md:group-hover:hidden',
+              force !== 'collapse' && expandOnHoverDesktopOnly && isExpanded
+                ? 'md:hidden'
+                : 'md:block'
             )}
           >
             {collapsedPubKey}
@@ -79,7 +85,11 @@ export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
         className={cn(
           'select-all break-all',
           force !== 'collapse' && expandOnHover && 'group-hover:block',
-          (force !== 'collapse' && expandOnHover && isExpanded) || isExpanded ? 'block' : 'hidden'
+          (force !== 'collapse' && expandOnHover && isExpanded) || isExpanded ? 'block' : 'hidden',
+          force !== 'collapse' && expandOnHoverDesktopOnly && 'md:group-hover:block',
+          (force !== 'collapse' && expandOnHoverDesktopOnly && isExpanded) || isExpanded
+            ? 'md:block'
+            : 'md:hidden'
         )}
       >
         {pubKey}

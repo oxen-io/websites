@@ -9,6 +9,8 @@ const moduleGridVariants = cva('module-grid', {
       grid: 'grid auto-rows-min',
       section:
         'from-[#0A0C0C] to-[#081512] bg-gradient-to-b bg-blend-lighten shadow-md border-[2px] rounded-3xl border-[#54797241] flex flex-col',
+      action:
+        'shadow-md border-[2px] rounded-3xl border-[#668C83] border-opacity-80 flex flex-col overflow-hidden',
     },
     size: {
       md: 'gap-2 md:gap-4 grid-cols-1 sm:grid-cols-2',
@@ -55,7 +57,7 @@ const ModuleGridTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadin
     <h2
       ref={ref}
       className={cn(
-        'my-2 text-lg font-medium leading-none tracking-tight md:block md:text-3xl',
+        'mx-4 my-2 text-lg font-medium leading-none tracking-tight md:block md:text-3xl',
         className
       )}
       {...props}
@@ -73,7 +75,7 @@ const ModuleGridHeader = forwardRef<HTMLDivElement, ModuleGridHeaderProps>(
     <div
       ref={ref}
       className={cn(
-        'flex w-full flex-row items-center justify-between px-8 pt-6',
+        'flex w-full flex-row items-center justify-between px-4 pt-6',
         keepDesktopHeaderOnMobile ? 'relative top-0' : 'absolute -top-16 md:relative md:top-0',
         className
       )}

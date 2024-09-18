@@ -1,5 +1,6 @@
 import { parseSessionNodeData } from '@/app/mystakes/modules/StakedNodesModule';
 import { type Contributor, NODE_STATE, type ServiceNode } from '@session/sent-staking-js/client';
+import { StakedNode } from '@/components/StakedNodeCard';
 
 type ExplorerResponse<Result extends Record<string, unknown>> = {
   id: string;
@@ -97,10 +98,11 @@ export async function getNode({ address }: { address: string }) {
     const node = res.result.service_node_states[0] as ServiceNode | undefined;
 
     return node
-      ? {
+      ? ({
           ...parseSessionNodeData(node, res.result.height),
+          pubKey: node.service_node_pubkey,
           state: NODE_STATE.RUNNING,
-        }
+        } satisfies StakedNode)
       : {};
   } catch (error) {
     console.error('Error fetching service nodes:', error);

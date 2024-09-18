@@ -1,3 +1,5 @@
+'use client';
+
 import WalletModalButton, {
   WalletModalButtonProps,
 } from '@session/wallet/components/WalletModalButton';
@@ -17,7 +19,7 @@ export function WalletModalButtonWithLocales({
           disconnected: dictionary('connect'),
           connected: dictionary('connected'),
           connecting: dictionary('connecting'),
-          reconnecting: dictionary('reconnecting'),
+          reconnecting: dictionary('connecting'),
         }
       }
       ariaLabels={

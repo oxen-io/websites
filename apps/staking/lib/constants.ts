@@ -25,6 +25,7 @@ export enum URL {
   BUG_BOUNTY_TOS = 'https://token.getsession.org/bug-bounty-terms',
   SESSION_NODE_SOLO_SETUP_DOCS = 'https://docs.getsession.org/class-is-in-session/session-stagenet-single-contributor-node-setup',
   REMOVE_TOKEN_FROM_WATCH_LIST = 'https://support.metamask.io/managing-my-tokens/custom-tokens/how-to-remove-a-token/',
+  NODE_LIQUIDATION_LEARN_MORE = 'https://docs.getsession.org/class-is-in-session/session-stagenet-single-contributor-node-setup#unlocking-your-stake',
 }
 
 export const LANDING_BUTTON_URL = {
@@ -32,7 +33,7 @@ export const LANDING_BUTTON_URL = {
   SECONDARY: URL.BUG_BOUNTY_PROGRAM,
 };
 
-export const TOS_LOCKED_PATHS = ['/stake', '/mystakes'];
+export const TOS_LOCKED_PATHS = ['/stake', '/mystakes', '/register', '/faucet'];
 
 export enum COMMUNITY_DATE {
   SESSION_TOKEN_COMMUNITY_SNAPSHOT = '2024-06-12',
@@ -50,7 +51,7 @@ export const SOCIALS = {
 
 export enum FAUCET {
   MIN_ETH_BALANCE = 0.001,
-  DRIP = 240,
+  DRIP = 40_000,
 }
 
 export enum FAUCET_ERROR {
@@ -111,13 +112,45 @@ export enum QUERY {
 }
 
 export enum SESSION_NODE {
-  /** 120 SENT  */
-  FULL_STAKE_AMOUNT = '120000000000',
-  /** Average blocks per millisecond (~2 minutes per block) */
-  MS_PER_BLOCK = 2 * 60 * 1000,
+  /** 20,000 SENT  */
+  FULL_STAKE_AMOUNT = '20000000000000',
   /** Average millisecond per block (~2 minutes per block) */
-  BLOCK_VELOCITY = 2 / 60 / 4 / 1000,
+  MS_PER_BLOCK = 2 * 60 * 1000,
 }
+
+export enum SESSION_NODE_TIME_STATIC {
+  /** 2 days in days */
+  SMALL_CONTRIBUTOR_EXIT_REQUEST_WAIT_TIME_DAYS = 2,
+}
+
+enum SESSION_NODE_TIME_TESTNET {
+  /** 1 day in seconds */
+  EXIT_REQUEST_TIME_SECONDS = 24 * 60 * 60,
+  /** 2 hours in seconds (time between exit being available and liquidation being available) */
+  EXIT_GRACE_TIME_SECONDS = 2 * 60 * 60,
+  /** 2 days in seconds */
+  DEREGISTRATION_LOCKED_STAKE_SECONDS = 2 * 24 * 60 * 60,
+}
+
+enum SESSION_NODE_TIME_MAINNET {
+  /** 14 days in seconds */
+  EXIT_REQUEST_TIME_SECONDS = 14 * 24 * 60 * 60,
+  /** 7 days in seconds (time between exit being available and liquidation being available) */
+  EXIT_GRACE_TIME_SECONDS = 7 * 24 * 60 * 60,
+  /** 30 days in seconds */
+  DEREGISTRATION_LOCKED_STAKE_SECONDS = 30 * 24 * 60 * 60,
+}
+
+export const SESSION_NODE_TIME = (chain: CHAIN) => {
+  switch (chain) {
+    case CHAIN.TESTNET:
+      return SESSION_NODE_TIME_TESTNET;
+
+    default:
+    case CHAIN.MAINNET:
+      return SESSION_NODE_TIME_MAINNET;
+  }
+};
 
 export enum TOAST {
   ERROR_COLLAPSE_LENGTH = 128,

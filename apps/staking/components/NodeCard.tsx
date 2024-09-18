@@ -6,9 +6,10 @@ import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { forwardRef, type HTMLAttributes, useMemo } from 'react';
 import { bigIntToNumber } from '@session/util/maths';
-import { formatSENT, SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
+import { SENT_DECIMALS } from '@session/contracts';
 import { useTranslations } from 'next-intl';
 import { areHexesEqual } from '@session/util/string';
+import { formatSENTBigInt } from '@session/contracts/hooks/SENT';
 
 export interface Contributor {
   address: string;
@@ -128,7 +129,7 @@ const ContributorIcon = ({
       tooltipContent={
         <p>
           {contributor
-            ? `${isUser ? dictionary('you') : contributor.address} | ${formatSENT(contributor.amount)} ${SENT_SYMBOL}`
+            ? `${isUser ? dictionary('you') : contributor.address} | ${formatSENTBigInt(contributor.amount)}`
             : dictionary('emptySlot')}
         </p>
       }
@@ -141,7 +142,14 @@ const ContributorIcon = ({
   );
 };
 
-export const getTotalStakedAmountForAddress = (
+/**
+ * @deprecated Use {@link getTotalStakedAmountForAddress} instead.
+ * Returns the total staked amount for a given address.
+ * @param contributors - The list of contributors.
+ * @param address - The address to check.
+ * @returns The total staked amount for the given address.
+ */
+export const getTotalStakedAmountForAddressNumber = (
   contributors: Contributor[],
   address: string
 ): number => {
@@ -150,6 +158,34 @@ export const getTotalStakedAmountForAddress = (
       ? acc + bigIntToNumber(amount, SENT_DECIMALS)
       : acc;
   }, 0);
+};
+
+export const getTotalStakedAmountForAddressBigInt = (
+  contributors: Contributor[],
+  address: string
+): bigint => {
+  contributors = contributors.map(({ amount, address: contributorAddress }) => {
+    return {
+      amount: typeof amount === 'bigint' ? amount : BigInt(`${amount}`),
+      address: contributorAddress,
+    };
+  });
+  return contributors.reduce((acc, { amount, address: contributorAddress }) => {
+    return areHexesEqual(contributorAddress, address) ? acc + amount : acc;
+  }, BigInt(0));
+};
+
+export const getTotalStakedAmountForAddress = (
+  contributors: Contributor[],
+  address: string,
+  decimals?: number,
+  hideSymbol?: boolean
+): string => {
+  return formatSENTBigInt(
+    getTotalStakedAmountForAddressBigInt(contributors, address),
+    decimals,
+    hideSymbol
+  );
 };
 
 type StakedNodeContributorListProps = HTMLAttributes<HTMLDivElement> & {

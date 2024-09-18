@@ -31,6 +31,8 @@ export type ContractWriteQueryProps = {
   estimateContractWriteFee: () => void;
   /** Re-fetch the gas price and units of gas needed to write the contract */
   refetchContractWriteFeeEstimate: () => void;
+  /** Reset the contract write query */
+  resetContract: () => void;
   /** Estimate gas the amount of gas to make the contract write */
   gasAmountEstimate: bigint | null;
   /** The current price of gas */
@@ -43,6 +45,8 @@ export type ContractWriteQueryProps = {
   writeStatus: WriteContractStatus;
   /** Status of the contract transaction */
   transactionStatus: TransactionContractStatus;
+  /** Status of the whole contract call */
+  contractCallStatus: WriteContractStatus;
   /** Contract simulation error */
   simulateError: Error | SimulateContractErrorType | null;
   /** Contract write error */
@@ -53,6 +57,8 @@ export type ContractWriteQueryProps = {
   estimateFeeStatus: WriteContractStatus;
   /** Estimate fee error */
   estimateFeeError: Error | null;
+  /** If the simulation is enabled */
+  simulateEnabled: boolean;
 };
 
 export type UseContractWrite<Args> = ContractWriteQueryProps & {
@@ -84,8 +90,16 @@ export function useContractWriteQuery<
   const [estimateGasEnabled, setEstimateGasEnabled] = useState<boolean>(false);
   const [simulateEnabled, setSimulateEnabled] = useState<boolean>(false);
   const [contractArgs, setContractArgs] = useState<Args | undefined>(defaultArgs);
+  const [simulateStatusOverride, setSimulateStatusOverride] =
+    useState<GenericContractStatus | null>(null);
 
-  const { data: hash, error: writeError, status: writeStatus, writeContract } = useWriteContract();
+  const {
+    data: hash,
+    error: writeError,
+    status: writeStatus,
+    writeContract,
+    reset,
+  } = useWriteContract();
   const { error: transactionError, status: transactionStatus } = useWaitForTransactionReceipt({
     hash,
   });
@@ -101,14 +115,25 @@ export function useContractWriteQuery<
 
   const {
     data,
-    status: simulateStatus,
+    status: simulateStatusRaw,
     error: simulateError,
-    refetch,
+    refetch: refetchRaw,
   } = useSimulateContract({
     ...contractDetails,
     query: { enabled: simulateEnabled },
     chainId: chains[chain].id,
   });
+
+  const refetchSimulate = async () => {
+    setSimulateStatusOverride('pending');
+    await refetchRaw();
+    setSimulateStatusOverride(null);
+  };
+
+  const simulateStatus = useMemo(
+    () => simulateStatusOverride ?? simulateStatusRaw,
+    [simulateStatusOverride, simulateStatusRaw]
+  );
 
   const {
     estimateGasAmount,
@@ -137,8 +162,27 @@ export function useContractWriteQuery<
 
     setSimulateEnabled(true);
 
-    void refetch();
+    void refetchSimulate();
   };
+
+  const resetContract = () => {
+    setSimulateEnabled(false);
+    reset();
+  };
+
+  const contractCallStatus = useMemo(() => {
+    if (!simulateEnabled) return 'idle';
+    if (simulateStatus === 'error' || writeStatus === 'error' || transactionStatus === 'error') {
+      return 'error';
+    } else if (
+      simulateStatus === 'success' &&
+      writeStatus === 'success' &&
+      transactionStatus === 'success'
+    ) {
+      return 'success';
+    }
+    return 'pending';
+  }, [simulateEnabled, simulateStatus, writeStatus, transactionStatus]);
 
   useEffect(() => {
     if (simulateStatus === 'success' && data?.request) {
@@ -158,16 +202,19 @@ export function useContractWriteQuery<
     simulateAndWriteContract,
     estimateContractWriteFee,
     refetchContractWriteFeeEstimate,
+    resetContract,
     fee,
     gasAmountEstimate,
     gasPrice,
     simulateStatus,
     writeStatus,
     transactionStatus,
+    contractCallStatus,
     simulateError,
     writeError,
     transactionError,
     estimateFeeStatus,
     estimateFeeError,
+    simulateEnabled,
   };
 }

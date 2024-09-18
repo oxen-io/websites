@@ -1,6 +1,6 @@
 'use client';
 
-import { Address } from 'viem';
+import { Address, SimulateContractErrorType, TransactionExecutionErrorType } from 'viem';
 import { useAccount } from 'wagmi';
 import { ReadContractData } from 'wagmi/query';
 import { SENTAbi } from '../abis';
@@ -10,7 +10,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { isProduction } from '@session/util/env';
 import { formatBigIntTokenValue, formatNumber } from '@session/util/maths';
 import { SENT_DECIMALS, SENT_SYMBOL } from '../constants';
-import { useContractWriteQuery, type WriteContractStatus } from './useContractWriteQuery';
+import {
+  GenericContractStatus,
+  useContractWriteQuery,
+  type WriteContractStatus,
+} from './useContractWriteQuery';
 import { useChain } from './useChain';
 import type { CHAIN } from '../chains';
 
@@ -23,8 +27,6 @@ export const formatSENTNumber = (value?: number, decimals?: number, hideSymbol?:
 type SENTBalance = ReadContractData<typeof SENTAbi, 'balanceOf', [Address]>;
 
 export type SENTBalanceQuery = ContractReadQueryProps & {
-  /** Get the session token balance */
-  getBalance: () => void;
   /** The session token balance */
   balance: SENTBalance;
 };
@@ -37,21 +39,17 @@ export function useSENTBalanceQuery({
   overrideChain?: CHAIN;
 }): SENTBalanceQuery {
   const chain = useChain();
-  const {
-    data: balance,
-    readContract,
-    ...rest
-  } = useContractReadQuery({
+
+  const { data: balance, ...rest } = useContractReadQuery({
     contract: 'SENT',
     functionName: 'balanceOf',
-    defaultArgs: [address!],
-    startEnabled: !!address,
+    args: [address!],
+    enabled: !!address,
     chain: overrideChain ?? chain,
   });
 
   return {
     balance,
-    getBalance: readContract,
     ...rest,
   };
 }
@@ -59,8 +57,6 @@ export function useSENTBalanceQuery({
 type SENTAllowance = ReadContractData<typeof SENTAbi, 'allowance', [Address, Address]>;
 
 export type SENTAllowanceQuery = ContractReadQueryProps & {
-  /** Get the session token allowance */
-  getAllowance: () => void;
   /** The session token allowance for a contract */
   allowance: SENTAllowance;
 };
@@ -72,28 +68,29 @@ export function useAllowanceQuery({
 }): SENTAllowanceQuery {
   const { address } = useAccount();
   const chain = useChain();
-  const {
-    data: allowance,
-    readContract,
-    ...rest
-  } = useContractReadQuery({
+  const { data: allowance, ...rest } = useContractReadQuery({
     contract: 'SENT',
     functionName: 'allowance',
-    defaultArgs: [address!, contractAddress],
+    args: [address!, contractAddress],
+    enabled: !!address,
     chain,
   });
 
   return {
     allowance,
-    getAllowance: readContract,
     ...rest,
   };
 }
 
 export type UseProxyApprovalReturn = {
   approve: () => void;
+  approveWrite: () => void;
+  resetApprove: () => void;
   status: WriteContractStatus;
-  error: WriteContractErrorType | Error | null;
+  readStatus: GenericContractStatus;
+  simulateError: SimulateContractErrorType | Error | null;
+  writeError: WriteContractErrorType | Error | null;
+  transactionError: TransactionExecutionErrorType | Error | null;
 };
 
 export function useProxyApproval({
@@ -104,25 +101,51 @@ export function useProxyApproval({
   tokenAmount: bigint;
 }): UseProxyApprovalReturn {
   const [hasEnoughAllowance, setHasEnoughAllowance] = useState<boolean>(false);
+  const [allowanceReadStatusOverride, setAllowanceReadStatusOverride] =
+    useState<GenericContractStatus | null>(null);
+
   const chain = useChain();
   const { address } = useAccount();
   const {
     allowance,
-    getAllowance,
-    status: readStatus,
+    status: readStatusRaw,
+    refetch: refetchRaw,
   } = useAllowanceQuery({
     contractAddress,
   });
 
-  const { simulateAndWriteContract, writeStatus, simulateError, writeError } =
-    useContractWriteQuery({
-      contract: 'SENT',
-      functionName: 'approve',
-      chain,
-    });
+  const refetchAllowance = async () => {
+    setAllowanceReadStatusOverride('pending');
+    await refetchRaw();
+    setAllowanceReadStatusOverride(null);
+  };
+
+  const readStatus = useMemo(
+    () => allowanceReadStatusOverride ?? readStatusRaw,
+    [allowanceReadStatusOverride, readStatusRaw]
+  );
+
+  const {
+    simulateAndWriteContract,
+    resetContract,
+    contractCallStatus,
+    simulateError,
+    writeError,
+    transactionError,
+  } = useContractWriteQuery({
+    contract: 'SENT',
+    functionName: 'approve',
+    chain,
+  });
 
   const approve = () => {
-    getAllowance();
+    if (allowance) {
+      void refetchAllowance();
+    }
+  };
+
+  const resetApprove = () => {
+    resetContract();
   };
 
   const approveWrite = () => {
@@ -130,7 +153,7 @@ export function useProxyApproval({
       throw new Error('Checking if current allowance is sufficient');
     }
 
-    if (allowance >= tokenAmount) {
+    if (tokenAmount > BigInt(0) && allowance >= tokenAmount) {
       setHasEnoughAllowance(true);
       if (!isProduction()) {
         console.debug(
@@ -149,23 +172,30 @@ export function useProxyApproval({
     }
 
     if (!hasEnoughAllowance) {
-      return writeStatus;
+      return contractCallStatus;
     }
 
     if (readStatus === 'pending') {
-      return 'idle';
+      return 'pending';
     } else {
-      return writeStatus;
+      return contractCallStatus;
     }
-  }, [readStatus, writeStatus, hasEnoughAllowance]);
-
-  const error = useMemo(() => simulateError ?? writeError, [simulateError, writeError]);
+  }, [readStatus, contractCallStatus, hasEnoughAllowance]);
 
   useEffect(() => {
-    if (readStatus === 'success') {
+    if (readStatus === 'success' && tokenAmount > BigInt(0)) {
       approveWrite();
     }
-  }, [allowance, readStatus]);
+  }, [readStatus]);
 
-  return { approve, status, error };
+  return {
+    approve,
+    approveWrite,
+    resetApprove,
+    status,
+    readStatus,
+    simulateError,
+    writeError,
+    transactionError,
+  };
 }

@@ -5,9 +5,12 @@ export enum EXPERIMENTAL_FEATURE_FLAG {
 }
 
 export enum REMOTE_FEATURE_FLAG {
-  DISABLE_NODE_REGISTRATION = 'remote_disableNodeRegistration',
   CUSTOM_BANNER = 'remote_customBanner',
   NEW_TOKEN_CONTRACT = 'remote_newTokenContract',
+  DISABLE_NODE_REGISTRATION = 'remote_disableNodeRegistration',
+  DISABLE_CLAIM_REWARDS = 'remote_disableClaimRewards',
+  DISABLE_REQUEST_NODE_EXIT = 'remote_disableRequestNodeExit',
+  DISABLE_NODE_EXIT = 'remote_disableNodeExit',
 }
 
 export const remoteFeatureFlagsInfo: Record<
@@ -17,6 +20,18 @@ export const remoteFeatureFlagsInfo: Record<
   [REMOTE_FEATURE_FLAG.DISABLE_NODE_REGISTRATION]: {
     name: 'Disable Node Registration',
     description: 'Disable the ability to register a node.',
+  },
+  [REMOTE_FEATURE_FLAG.DISABLE_CLAIM_REWARDS]: {
+    name: 'Disable Claim Rewards',
+    description: 'Disable the ability to claim rewards.',
+  },
+  [REMOTE_FEATURE_FLAG.DISABLE_REQUEST_NODE_EXIT]: {
+    name: 'Disable Node Exit Request',
+    description: 'Disable the ability to request a nodes exit.',
+  },
+  [REMOTE_FEATURE_FLAG.DISABLE_NODE_EXIT]: {
+    name: 'Disable Node Exit',
+    description: 'Disable the ability to exit a node from the network.',
   },
   [REMOTE_FEATURE_FLAG.CUSTOM_BANNER]: {
     name: 'Custom Banner',

@@ -82,6 +82,13 @@
     --header-vertical-padding: 2rem;
     --header-displacement: calc(var(--header-height) + var(--header-vertical-padding) * 2);
     --screen-without-header: calc(100vh - var(--header-displacement));
+
+    --indicator-black: var(--session-black);
+    --indicator-grey: rgb(74, 74, 74);
+    --indicator-green: var(--session-green);
+    --indicator-blue: rgb(0, 163, 247);
+    --indicator-yellow: rgb(247, 222, 0);
+    --indicator-red: rgb(239 68 68);
   }
 }
 
