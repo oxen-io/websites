@@ -33,7 +33,7 @@ export const LANDING_BUTTON_URL = {
   SECONDARY: URL.BUG_BOUNTY_PROGRAM,
 };
 
-export const TOS_LOCKED_PATHS = ['/stake', '/mystakes'];
+export const TOS_LOCKED_PATHS = ['/stake', '/mystakes', '/register', '/faucet'];
 
 export enum COMMUNITY_DATE {
   SESSION_TOKEN_COMMUNITY_SNAPSHOT = '2024-06-12',
