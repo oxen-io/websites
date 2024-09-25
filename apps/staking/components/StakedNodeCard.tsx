@@ -349,7 +349,7 @@ const ExitUnlockTimerNotification = ({
     <Tooltip
       tooltipContent={dictionary('exitUnlockTimerDescription', {
         relativeTime,
-        date: date ? formatDate(date, { dateStyle: 'full', timeStyle: 'long' }) : notFoundString,
+        date: date ? formatDate(date, { dateStyle: 'full', timeStyle: 'short' }) : notFoundString,
       })}
     >
       <NodeNotification level="warning" className={className}>
@@ -383,7 +383,7 @@ const DeregisteringNotification = ({
           { unit: 'day' }
         ),
         relativeTime,
-        date: date ? formatDate(date, { dateStyle: 'full', timeStyle: 'long' }) : notFoundString,
+        date: date ? formatDate(date, { dateStyle: 'full', timeStyle: 'short' }) : notFoundString,
       })}
     >
       <NodeNotification level="error">
@@ -780,11 +780,11 @@ const StakedNodeCard = forwardRef<
               tooltipContent={dictionary('lastRewardDescription', {
                 blockNumber: lastRewardBlock ? formatNumber(lastRewardBlock) : notFoundString,
                 date: lastRewardDate
-                  ? formatDate(lastRewardDate, { dateStyle: 'full', timeStyle: 'long' })
+                  ? formatDate(lastRewardDate, { dateStyle: 'full', timeStyle: 'short' })
                   : notFoundString,
               })}
             >
-              <span className="font-medium opacity-60">
+              <span className="text-gray-lightest font-normal">
                 {dictionary('lastReward', {
                   relativeTime: lastRewardTime ?? notFoundString,
                 })}
@@ -802,11 +802,11 @@ const StakedNodeCard = forwardRef<
                     )
                   : notFoundString,
                 date: lastUptimeDate
-                  ? formatDate(lastUptimeDate, { dateStyle: 'full', timeStyle: 'long' })
+                  ? formatDate(lastUptimeDate, { dateStyle: 'full', timeStyle: 'short' })
                   : notFoundString,
               })}
             >
-              <span className="font-medium opacity-60">
+              <span className="text-gray-lightest font-normal">
                 {dictionary('lastUptime', { relativeTime: lastUptimeTime ?? notFoundString })}
               </span>
             </Tooltip>
@@ -884,9 +884,9 @@ const StakedNodeCard = forwardRef<
               tooltipContent={dictionary('exit.disabledButtonTooltipContent', {
                 relativeTime: deregistrationUnlockTime ?? requestedUnlockTime ?? notFoundString,
                 date: deregistrationUnlockDate
-                  ? formatDate(deregistrationUnlockDate, { dateStyle: 'full', timeStyle: 'long' })
+                  ? formatDate(deregistrationUnlockDate, { dateStyle: 'full', timeStyle: 'short' })
                   : requestedUnlockDate
-                    ? formatDate(requestedUnlockDate, { dateStyle: 'full', timeStyle: 'long' })
+                    ? formatDate(requestedUnlockDate, { dateStyle: 'full', timeStyle: 'short' })
                     : notFoundString,
               })}
             >
