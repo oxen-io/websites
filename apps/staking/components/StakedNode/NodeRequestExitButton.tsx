@@ -1,6 +1,6 @@
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { useTranslations } from 'next-intl';
-import { CollapsableButton, type StakedNode } from '@/components/StakedNodeCard';
+import { CollapsableButton } from '@/components/StakedNodeCard';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -15,7 +15,6 @@ import { SESSION_NODE_TIME, SOCIALS, URL } from '@/lib/constants';
 import { externalLink } from '@/lib/locale-defaults';
 import { useChain } from '@session/contracts/hooks/useChain';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
-import { getTotalStakedAmountForAddress } from '@/components/NodeCard';
 import { formatBigIntTokenValue } from '@session/util/maths';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { useRemoteFeatureFlagQuery } from '@/lib/feature-flags-client';
@@ -28,13 +27,15 @@ import { Progress, PROGRESS_STATUS } from '@session/ui/motion/progress';
 import useRequestNodeExit from '@/hooks/useRequestNodeExit';
 import NodeActionModuleInfo from '@/components/StakedNode/NodeActionModuleInfo';
 import { SENT_SYMBOL } from '@session/contracts';
+import { Stake } from '@session/sent-staking-js/client';
+import { formatSENTNumber } from '@session/contracts/hooks/SENT';
 
 enum EXIT_REQUEST_STATE {
   ALERT,
   PENDING,
 }
 
-export function NodeRequestExitButton({ node }: { node: StakedNode }) {
+export function NodeRequestExitButton({ node }: { node: Stake }) {
   const [exitRequestState, setExitRequestState] = useState<EXIT_REQUEST_STATE>(
     EXIT_REQUEST_STATE.ALERT
   );
@@ -103,7 +104,7 @@ function RequestNodeExitDisabled() {
   );
 }
 
-function RequestNodeExitDialog({ node, onSubmit }: { node: StakedNode; onSubmit: () => void }) {
+function RequestNodeExitDialog({ node, onSubmit }: { node: Stake; onSubmit: () => void }) {
   const chain = useChain();
   const dictionary = useTranslations('nodeCard.staked.requestExit.dialog');
 
@@ -140,7 +141,7 @@ function RequestNodeExitDialog({ node, onSubmit }: { node: StakedNode; onSubmit:
           rounded="md"
           size="lg"
           aria-label={dictionary('buttons.submitAria', {
-            pubKey: node.pubKey,
+            pubKey: node.service_node_pubkey,
           })}
           className="w-full"
           data-testid={ButtonDataTestId.Staked_Node_Request_Exit_Dialog_Submit}
@@ -166,7 +167,7 @@ function RequestNodeExitDialog({ node, onSubmit }: { node: StakedNode; onSubmit:
   );
 }
 
-function RequestNodeExitContractWriteDialog({ node }: { node: StakedNode }) {
+function RequestNodeExitContractWriteDialog({ node }: { node: Stake }) {
   const stageDictKey = 'nodeCard.staked.requestExit.dialog.stage' as const;
   const dictionary = useTranslations('nodeCard.staked.requestExit.dialog.write');
   const dictionaryStage = useTranslations(stageDictKey);
@@ -190,9 +191,8 @@ function RequestNodeExitContractWriteDialog({ node }: { node: StakedNode }) {
   );
 
   const stakedAmount = useMemo(
-    () =>
-      address ? getTotalStakedAmountForAddress(node.contributors, address) : `0 ${SENT_SYMBOL}`,
-    [node.contributors, address]
+    () => (node.staked_balance ? formatSENTNumber(node.staked_balance) : `0 ${SENT_SYMBOL}`),
+    [node.staked_balance]
   );
 
   const handleClick = () => {
