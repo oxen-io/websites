@@ -271,7 +271,7 @@ const NodeOperatorIndicator = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivE
             )}
             {...props}
           >
-            <SpannerAndScrewdriverIcon className="fill-session-green mb-1 h-3.5 w-3.5" />
+            <SpannerAndScrewdriverIcon className="fill-session-green h-3.5 w-3.5" />
             {dictionary('operator')}
           </div>
         </Tooltip>
@@ -731,7 +731,6 @@ const StakedNodeCard = forwardRef<
         <input id={toggleId} type="checkbox" className="peer hidden appearance-none" />
         <StatusIndicator
           status={getNodeStatus(state)}
-          className="mb-1"
           data-testid={StakedNodeDataTestId.Indicator}
         />
         <NodeCardTitle data-testid={StakedNodeDataTestId.Title}>{state}</NodeCardTitle>
