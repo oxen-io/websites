@@ -2,9 +2,10 @@
 
 import { ButtonDataTestId } from '@/testing/data-test-ids';
 import { useTranslations } from 'next-intl';
-import { forwardRef, type HTMLAttributes } from 'react';
+import { forwardRef, type HTMLAttributes, useMemo } from 'react';
 import type { Registration } from '@session/sent-staking-js/client';
 import { InfoNodeCard, NodeItem, NodeItemLabel, NodeItemValue } from '@/components/InfoNodeCard';
+import { usePathname } from 'next/navigation';
 
 const NodeRegistrationCard = forwardRef<
   HTMLDivElement,
@@ -12,8 +13,11 @@ const NodeRegistrationCard = forwardRef<
 >(({ className, node, ...props }, ref) => {
   const dictionary = useTranslations('nodeCard.pending');
   const titleFormat = useTranslations('modules.title');
+  const pathname = usePathname();
 
   const { pubkey_ed25519: pubKey, type: nodeType } = node;
+
+  const isRegistrationFormOpen = useMemo(() => pathname === `/register/${pubKey}`, [pathname]);
 
   // TODO - Include feature when we have user preference support
   /*const hideRegistrationsEnabled = useExperimentalFeatureFlag(
@@ -49,6 +53,7 @@ const NodeRegistrationCard = forwardRef<
       ref={ref}
       className={className}
       pubKey={pubKey}
+      isActive={isRegistrationFormOpen}
       /*buttonSiblings={
         hideRegistrationsEnabled ? (
           <Button
