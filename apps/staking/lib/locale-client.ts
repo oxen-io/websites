@@ -10,7 +10,7 @@ import { useLocale as _useLocale } from 'next-intl';
 import { getDateFnsLocale, type Locale } from './locale-util';
 import { getDateFromUnixTimestampSeconds } from '@session/util/date';
 
-const useLocale = (): Locale => _useLocale() as Locale;
+export const useLocale = _useLocale as () => Locale;
 
 export const formatLocalizedRelativeTimeClient = (
   date: Date,
@@ -41,7 +41,7 @@ export const formatLocalizedTimeFromSeconds = (
 ) =>
   formatLocalizedRelativeTimeClient(getDateFromUnixTimestampSeconds(seconds), new Date(0), options);
 
-export const formatNumber = (num: number, options: Intl.NumberFormatOptions) => {
+export const formatNumber = (num: number, options?: Intl.NumberFormatOptions) => {
   const locale = useLocale();
   return new Intl.NumberFormat(locale, options).format(num);
 };
