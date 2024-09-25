@@ -13,7 +13,6 @@ import { type ReactNode, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { SOCIALS } from '@/lib/constants';
 import { Social } from '@session/ui/components/SocialLinkList';
-import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { formatBigIntTokenValue } from '@session/util/maths';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { Button } from '@session/ui/ui/button';
@@ -97,7 +96,6 @@ function NodeExitContractWriteDialog({
   const dictionary = useTranslations('nodeCard.staked.exit.dialog');
   const stageDictKey = 'nodeCard.staked.exit.stage' as const;
   const dictionaryStage = useTranslations(stageDictKey);
-  const { address } = useWallet();
 
   const removeBlsPublicKeyWithSignatureArgs = useMemo(
     () => ({

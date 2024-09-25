@@ -14,7 +14,6 @@ import { formatLocalizedTimeFromSeconds } from '@/lib/locale-client';
 import { SESSION_NODE_TIME, SOCIALS, URL } from '@/lib/constants';
 import { externalLink } from '@/lib/locale-defaults';
 import { useChain } from '@session/contracts/hooks/useChain';
-import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { formatBigIntTokenValue } from '@session/util/maths';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { useRemoteFeatureFlagQuery } from '@/lib/feature-flags-client';
@@ -171,7 +170,6 @@ function RequestNodeExitContractWriteDialog({ node }: { node: Stake }) {
   const stageDictKey = 'nodeCard.staked.requestExit.dialog.stage' as const;
   const dictionary = useTranslations('nodeCard.staked.requestExit.dialog.write');
   const dictionaryStage = useTranslations(stageDictKey);
-  const { address } = useWallet();
 
   const {
     initiateRemoveBLSPublicKey,
