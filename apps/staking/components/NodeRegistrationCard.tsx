@@ -17,7 +17,10 @@ const NodeRegistrationCard = forwardRef<
 
   const { pubkey_ed25519: pubKey, type: nodeType } = node;
 
-  const isRegistrationFormOpen = useMemo(() => pathname === `/register/${pubKey}`, [pathname]);
+  const isRegistrationFormOpen = useMemo(
+    () => pathname === `/register/${pubKey}`,
+    [pathname, pubKey]
+  );
 
   // TODO - Include feature when we have user preference support
   /*const hideRegistrationsEnabled = useExperimentalFeatureFlag(
