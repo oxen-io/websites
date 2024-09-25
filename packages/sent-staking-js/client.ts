@@ -16,14 +16,14 @@ interface NetworkInfoResponse {
   t: number;
 }
 
-/** /nodes */
 export enum NODE_STATE {
   RUNNING = 'Running',
   AWAITING_CONTRIBUTORS = 'Awaiting Contributors',
   CANCELLED = 'Cancelled',
   DECOMMISSIONED = 'Decommissioned',
   DEREGISTERED = 'Deregistered',
-  UNLOCKED = 'Unlocked',
+  AWAITING_EXIT = 'Awaiting Exit',
+  EXITED = 'Exited',
 }
 
 export interface LockedContribution {
@@ -45,42 +45,6 @@ export interface WalletInfo {
   rewards: bigint;
 }
 
-export interface GetNodesForWalletResponse {
-  network: NetworkInfo;
-  nodes: ServiceNode[];
-  wallet: WalletInfo;
-}
-
-export interface ServiceNode {
-  state: NODE_STATE;
-  service_node_pubkey: string;
-  contract_id: number;
-  requested_unlock_height: number;
-  active: boolean;
-  funded: boolean;
-  earned_downtime_blocks: number;
-  service_node_version: [number, number, number];
-  contributors: Contributor[];
-  total_contributed: number;
-  total_reserved: number;
-  staking_requirement: number;
-  portions_for_operator: number;
-  operator_address: string;
-  pubkey_ed25519: string;
-  last_uptime_proof: number;
-  state_height: number;
-  swarm_id: number;
-  contribution_open: number;
-  contribution_required: number;
-  num_contributions: number;
-  decomm_blocks_remaining?: number;
-  decomm_blocks?: number;
-  operator_fee: number;
-  /** TODO - Add this to the backend api */
-  awaiting_liquidation?: boolean;
-  //can_restake?: boolean;
-}
-
 export interface OpenNode {
   bls_pubkey: string;
   cancelled: boolean;
@@ -97,6 +61,38 @@ export interface GetOpenNodesResponse {
   nodes: OpenNode[];
 }
 
+/** GET /stakes/<32 byte address> */
+export type StakeContributor = {
+  address: string;
+  amount: number;
+  reserved: number;
+};
+
+export type Stake = {
+  contract_id: number;
+  contributors: Array<StakeContributor>;
+  deregistration_unlock_height: number | null;
+  earned_downtime_blocks: number;
+  exited: boolean;
+  last_reward_block_height: number | null;
+  last_uptime_proof: number | null;
+  liquidation_height: number | null;
+  operator_address: string;
+  operator_fee: number | null;
+  requested_unlock_height: number | null;
+  service_node_pubkey: string;
+  staked_balance: number | null;
+  state: NODE_STATE;
+};
+
+export interface GetStakesResponse {
+  network: NetworkInfo;
+  stakes: Array<Stake>;
+  historical_stakes: Array<Stake>;
+  wallet: WalletInfo;
+  error_stakes: Array<{ contract_id: number; error: string }>;
+}
+
 /** /store */
 interface StoreRegistrationResponse {
   success: boolean;
@@ -109,6 +105,12 @@ interface StoreRegistrationResponse {
     sig_ed25519: string;
     sig_bls: string;
   };
+}
+
+/** GET /nodes */
+export interface GetNodesResponse {
+  network: NetworkInfo;
+  nodes: Stake[];
 }
 
 /** /registrations */
@@ -145,20 +147,26 @@ interface ValidateRegistrationResponse {
 /** GET /exit/<32 byte pubkey> */
 export interface GetNodeExitSignaturesResponse {
   network: NetworkInfo;
-  bls_exit_response: BlsExitResponse;
+  result: BlsExitResponse;
 }
 
 /** GET /liquidation/<32 byte pubkey> */
 export interface GetNodeLiquidationResponse {
   network: NetworkInfo;
-  bls_liquidation_response: BlsLiquidationResponse;
+  result: BlsLiquidationResponse;
+}
+
+/** GET /exit_liquidation_list */
+export interface GetExitLiquidationListResponse {
+  network: NetworkInfo;
+  result: Array<Stake>;
 }
 
 /** POST /rewards */
 
 export interface GetRewardsClaimSignatureResponse {
   network: NetworkInfo;
-  bls_rewards_response: BlsRewardsResponse;
+  result: BlsRewardsResponse;
 }
 
 export type BlsRewardsResponse = {
@@ -286,20 +294,20 @@ export class SessionStakingClient {
   }
 
   /**
-   * Retrieves service nodes associated with the given Ethereum wallet address.
-   * @param address Ethereum wallet address.
-   * @returns Service nodes.
+   * Retrieves service nodes associated with the given wallet address.
+   * @param address Wallet address.
+   * @returns stakes, historical stakes, and wallet information.
    */
-  public async getNodesForEthWallet({
+  public async getStakesForWalletAddress({
     address,
   }: {
     address: string;
-  }): Promise<StakingBackendResponse<GetNodesForWalletResponse>> {
+  }): Promise<StakingBackendResponse<GetStakesResponse>> {
     const options: RequestOptions = {
-      endpoint: `/nodes/${address}`,
+      endpoint: `/stakes/${address}`,
       method: 'GET',
     };
-    return this.request<GetNodesForWalletResponse>(options);
+    return this.request<GetStakesResponse>(options);
   }
 
   public async getRewardsClaimSignature({
@@ -321,7 +329,7 @@ export class SessionStakingClient {
   }): Promise<StakingBackendResponse<GetNodeExitSignaturesResponse>> {
     const options: RequestOptions = {
       endpoint: `/exit/${nodePubKey}`,
-      method: 'POST',
+      method: 'GET',
     };
     return this.request<GetNodeExitSignaturesResponse>(options);
   }
@@ -333,24 +341,26 @@ export class SessionStakingClient {
   }): Promise<StakingBackendResponse<GetNodeLiquidationResponse>> {
     const options: RequestOptions = {
       endpoint: `/liquidation/${nodePubKey}`,
-      method: 'POST',
+      method: 'GET',
     };
     return this.request<GetNodeLiquidationResponse>(options);
   }
 
-  /**
-   * Retrieves service nodes associated with the given Oxen wallet address.
-   * @param address Oxen wallet address.
-   * @returns Service nodes.
-   *
-   * @deprecated Use {@link getNodesForEthWallet} instead.
-   */
-  public getNodesForOxenWallet = async ({
-    address,
-  }: {
-    address: string;
-  }): Promise<StakingBackendResponse<GetNodesForWalletResponse>> =>
-    this.getNodesForEthWallet({ address });
+  public async exitLiquidationList() {
+    const options: RequestOptions = {
+      endpoint: `/exit_liquidation_list`,
+      method: 'GET',
+    };
+    return this.request<GetExitLiquidationListResponse>(options);
+  }
+
+  public async getNodes(): Promise<StakingBackendResponse<GetNodesResponse>> {
+    const options: RequestOptions = {
+      endpoint: `/nodes`,
+      method: 'GET',
+    };
+    return this.request<GetNodesResponse>(options);
+  }
 
   /**
    * Stores or replaces the registration details for a service node.
@@ -425,17 +435,6 @@ export class SessionStakingClient {
     return this.request<ValidateRegistrationResponse>(options);
   }
 }
-
-export type SessionStakingClientMethodResponseMap = {
-  getNetworkInfo: NetworkInfoResponse;
-  getNodesForEthWallet: GetNodesForWalletResponse;
-  getNodesForOxenWallet: GetNodesForWalletResponse;
-  getOpenNodes: GetOpenNodesResponse;
-  storeRegistration: StoreRegistrationResponse;
-  loadRegistrations: LoadRegistrationsResponse;
-  getOperatorRegistrations: LoadRegistrationsResponse;
-  validateRegistration: ValidateRegistrationResponse;
-};
 
 /**
  * Creates a new instance of the SessionStakingClient.
