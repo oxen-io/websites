@@ -41,6 +41,7 @@ export default function useRelativeTime(
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
+    // TODO: investigate moving this outside the function and using a useCallback hook
     function updateRelativeTime() {
       let diffInMs: number | undefined;
       if (targetDate) {
