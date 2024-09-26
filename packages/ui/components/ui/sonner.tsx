@@ -33,7 +33,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         },
         classNames: {
           toast:
-            'group toast group-[.toaster]:bg-session-black group-[.toaster]:shadow-lg group-[.toaster]:font-atyp-display group-[.toaster]:text-[15px] group-[.toaster]:px-8 group-[.toaster]:py-5 group-[.toast-action]:bg-session-green',
+            'group toast group-[.toaster]:bg-session-black group-[.toaster]:shadow-lg group-[.toaster]:font-roboto-flex group-[.toaster]:text-[15px] group-[.toaster]:px-8 group-[.toaster]:py-5 group-[.toast-action]:bg-session-green',
           description: 'text-muted-foreground',
           icon: 'inline w-6 h-6 *:w-6 *:h-6',
           success: 'toast-success bg-session-black text-session-green border border-session-green',

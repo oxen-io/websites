@@ -99,7 +99,7 @@ const AlertTooltip = forwardRef<
   Omit<TooltipProps, 'children'>
 >((props, ref) => (
   <Tooltip {...props} ref={ref}>
-    <TriangleAlertIcon className="stroke-warning mb-0.5 h-4 w-4" />
+    <TriangleAlertIcon className="stroke-warning h-4 w-4" />
   </Tooltip>
 ));
 
