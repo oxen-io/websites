@@ -380,7 +380,10 @@ const DeregisteringNotification = ({
   const soonString = generalDictionary('soon');
 
   const isDeregistrationSoon = isDateSoonOrPast(date);
-  const relativeTime = (!isDeregistrationSoon ? timeString : soonString) ?? notFoundString;
+  const relativeTime = useMemo(
+    () => (!isDeregistrationSoon ? timeString : soonString) ?? notFoundString,
+    [isDeregistrationSoon, timeString, soonString, notFoundString]
+  );
 
   return (
     <Tooltip
@@ -400,6 +403,20 @@ const DeregisteringNotification = ({
   );
 };
 
+type NodeSummaryProps = {
+  node: Stake;
+  blockHeight: number;
+  deregistrationDate: Date | null;
+  deregistrationTime: string | null;
+  requestedUnlockDate: Date | null;
+  requestedUnlockTime: string | null;
+  deregistrationUnlockDate: Date | null;
+  deregistrationUnlockTime: string | null;
+  liquidationDate: Date | null;
+  liquidationTime: string | null;
+  showAllTimers?: boolean;
+};
+
 const NodeSummary = ({
   node,
   blockHeight,
@@ -412,19 +429,7 @@ const NodeSummary = ({
   liquidationDate,
   liquidationTime,
   showAllTimers,
-}: {
-  node: Stake;
-  blockHeight: number;
-  deregistrationDate: Date | null;
-  deregistrationTime: string | null;
-  requestedUnlockDate: Date | null;
-  requestedUnlockTime: string | null;
-  deregistrationUnlockDate: Date | null;
-  deregistrationUnlockTime: string | null;
-  liquidationDate: Date | null;
-  liquidationTime: string | null;
-  showAllTimers?: boolean;
-}) => {
+}: NodeSummaryProps) => {
   const allTimers = [];
   if (isReadyToExit(node, blockHeight)) {
     const readyToExitTimer = (
