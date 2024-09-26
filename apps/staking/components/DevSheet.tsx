@@ -279,7 +279,7 @@ function ExitNodes() {
   const { data, status } = useStakingBackendSuspenseQuery(getExitLiquidationList);
 
   const nodes = useMemo(() => {
-    if (status === 'success') {
+    if (status === 'success' && data) {
       return data.result
         .map((node) => ({ contractId: node.contract_id, pubKey: node.service_node_pubkey }))
         .filter(({ contractId }) => contractId)

@@ -197,7 +197,7 @@ export interface RequestOptions {
 }
 
 export interface StakingBackendResponse<T> {
-  data: T;
+  data: T | null;
   status: number;
   statusText: string;
 }
@@ -205,6 +205,8 @@ export interface StakingBackendResponse<T> {
 export type Logger = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TODO: resolve proper type
   debug: (data: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TODO: resolve proper type
+  error: (data: any) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TODO: resolve proper type
   time: (data: any) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TODO: resolve proper type
@@ -214,6 +216,7 @@ export type Logger = {
 export interface SSBClientConfig {
   baseUrl: string;
   logger?: Logger;
+  errorOn404?: boolean;
   debug?: boolean;
 }
 
@@ -224,9 +227,10 @@ export class SessionStakingClient {
   private readonly baseUrl: string;
   private readonly debug?: boolean;
   private readonly logger: Logger = console;
+  private readonly errorOn404: boolean = false;
 
   constructor(config: SSBClientConfig) {
-    const { baseUrl, debug, logger } = config;
+    const { baseUrl, debug, logger, errorOn404 } = config;
     this.debug = debug;
 
     if (this.debug) {
@@ -241,6 +245,10 @@ export class SessionStakingClient {
 
     if (!this.baseUrl) {
       throw new Error('baseUrl is required');
+    }
+
+    if (errorOn404) {
+      this.errorOn404 = errorOn404;
     }
   }
 
@@ -261,11 +269,18 @@ export class SessionStakingClient {
         body,
       });
 
+      let data: T | null = null;
       if (!res.ok) {
-        throw new Error(`Staking Backend request failed (${res.status}): ${res.statusText}`);
+        const errorMessage = `Staking Backend request failed (${res.status}): ${res.statusText}`;
+        if (this.errorOn404) {
+          throw new Error(errorMessage);
+        } else {
+          this.logger.error(errorMessage);
+          data = null;
+        }
+      } else {
+        data = await res.json();
       }
-
-      const data = await res.json();
 
       return { data, status: res.status, statusText: res.statusText };
     } finally {
