@@ -16,9 +16,7 @@ import { getDateFromUnixTimestampSeconds } from '@session/util/date';
 import { notFound } from 'next/navigation';
 import { generateMockRegistrations } from '@session/sent-staking-js/test';
 import useRegisterNode from '@/hooks/useRegisterNode';
-import { useQuery } from '@tanstack/react-query';
-import { getNode } from '@/lib/queries/getNode';
-import { type StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
+import { StakedNodeCard } from '@/components/StakedNodeCard';
 import { AlertTooltip, Tooltip } from '@session/ui/ui/tooltip';
 import { areHexesEqual } from '@session/util/string';
 import { toast } from '@session/ui/lib/toast';
@@ -28,6 +26,8 @@ import { FEATURE_FLAG, REMOTE_FEATURE_FLAG } from '@/lib/feature-flags';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { Progress, PROGRESS_STATUS } from '@session/ui/motion/progress';
 import { formatSENTBigInt } from '@session/contracts/hooks/SENT';
+import { useRegisteredNode } from '@/hooks/useRegisteredNode';
+import { NodeStakingForm } from '@/app/stake/[nodeId]/NodeStaking';
 
 export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showMockRegistration = useFeatureFlag(FEATURE_FLAG.MOCK_REGISTRATION);
@@ -213,29 +213,38 @@ export function NodeRegistrationForm({
   const stakeAmountString = formatSENTBigInt(stakeAmount);
   const preparationDate = getDateFromUnixTimestampSeconds(node.timestamp);
 
-  const { data: runningNode, isLoading } = useQuery({
-    queryKey: ['getNode', node.pubkey_ed25519],
-    queryFn: () => getNode({ address: node.pubkey_ed25519 }),
-    enabled: !isRegistrationPausedFlagEnabled,
+  const { found, openNode, stakedNode, runningNode, networkTime, blockHeight } = useRegisteredNode({
+    nodeId: node.pubkey_ed25519,
   });
-
-  const nodeAlreadyRunning = useMemo(
-    () => Boolean(runningNode && 'state' in runningNode && runningNode.state),
-    [isLoading, runningNode]
-  );
 
   return (
     <div className="flex flex-col gap-4">
       {!isRemoteFlagLoading && isRegistrationPausedFlagEnabled ? (
         <span>Registrations are disabled</span>
       ) : null}
-      {nodeAlreadyRunning ? (
+      {stakedNode ? (
         <>
           <span className="mb-4 text-lg font-medium">
-            {dictionary('notFound.foundRunningNode')}
+            {dictionary.rich('notFound.foundRunningNode')}
           </span>
-          <StakedNodeCard node={runningNode as StakedNode} />
-          <br />
+          <StakedNodeCard node={stakedNode} networkTime={networkTime} blockHeight={blockHeight} />
+        </>
+      ) : runningNode ? (
+        <>
+          <span className="mb-4 text-lg font-medium">
+            {dictionary('notFound.foundRunningNodeOtherOperator')}
+          </span>
+          <StakedNodeCard
+            node={runningNode}
+            networkTime={networkTime}
+            blockHeight={blockHeight}
+            hideButton
+          />
+        </>
+      ) : openNode ? (
+        <>
+          <span className="mb-4 text-lg font-medium">{dictionary('notFound.foundOpenNode')}</span>
+          <NodeStakingForm node={openNode} />
         </>
       ) : null}
       <ActionModuleRow
@@ -290,7 +299,7 @@ export function NodeRegistrationForm({
         userSignature={node.sig_ed25519}
         stakeAmount={stakeAmount}
         stakeAmountString={stakeAmountString}
-        disabled={nodeAlreadyRunning || isRegistrationPausedFlagEnabled || isRemoteFlagLoading}
+        disabled={found || isRegistrationPausedFlagEnabled || isRemoteFlagLoading}
         isRegistrationPausedFlagEnabled={isRegistrationPausedFlagEnabled}
       />
     </div>

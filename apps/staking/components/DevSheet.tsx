@@ -35,10 +35,19 @@ import {
   useAllowanceQuery,
   useProxyApproval,
 } from '@session/contracts/hooks/SENT';
-import { addresses, SENT_DECIMALS } from '@session/contracts';
+import { addresses, CHAIN, chains, SENT_DECIMALS } from '@session/contracts';
 import { LoadingText } from '@session/ui/components/loading-text';
 import { Button } from '@session/ui/ui/button';
 import { Input } from '@session/ui/ui/input';
+import { nonceManager, privateKeyToAccount } from 'viem/accounts';
+import { Address, createWalletClient, http } from 'viem';
+import { TestnetServiceNodeRewardsAbi } from '@session/contracts/abis';
+import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-client';
+import { SessionStakingClient } from '@session/sent-staking-js/client';
+import { Loading } from '@session/ui/components/loading';
+import { Checkbox } from '@session/ui/ui/checkbox';
+import { PubKey } from '@session/ui/components/PubKey';
+import { toast } from '@session/ui/lib/toast';
 
 export function DevSheet({ buildInfo }: { buildInfo: BuildInfo }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -120,9 +129,9 @@ export function DevSheet({ buildInfo }: { buildInfo: BuildInfo }) {
             {'Is Production:'}
             <span className="text-session-green">{isProduction ? 'True' : 'False'}</span>
           </span>
-          <SheetTitle>Remote Feature Flags</SheetTitle>
+          <SheetTitle>Remote Feature Flags 🧑‍💻</SheetTitle>
           <SheetDescription className="flex flex-col gap-2">
-            {data
+            {remoteFeatureFlagArray.length > 0
               ? remoteFeatureFlagArray.map((flag) => (
                   <div key={flag}>
                     <span className="font-medium">{'• '}</span>
@@ -133,15 +142,13 @@ export function DevSheet({ buildInfo }: { buildInfo: BuildInfo }) {
                 ))
               : 'No remote feature flags enabled'}
           </SheetDescription>
-          <SheetTitle>Global Feature Flags</SheetTitle>
+          <SheetTitle>Global Feature Flags 🌏</SheetTitle>
           <SheetDescription className="flex flex-col gap-2">
-            🧑‍🔬
             {globalFeatureFlags.map((flag) => (
               <FeatureFlagToggle flag={flag} key={flag} initialState={featureFlags[flag]} />
             ))}
           </SheetDescription>
           <PageSpecificFeatureFlags />
-          <SheetTitle>Contract Actions</SheetTitle>
           <ContractActions />
         </SheetHeader>
       </SheetContent>
@@ -162,7 +169,7 @@ function PageSpecificFeatureFlags() {
 
   return (
     <>
-      <SheetTitle>Page Specific Feature Flags</SheetTitle>
+      <SheetTitle>Page Specific Feature Flags 📄</SheetTitle>
       <SheetDescription className="flex flex-col gap-2">
         {pageFlags.map((flag) => (
           <FeatureFlagToggle flag={flag} key={flag} initialState={featureFlags[flag]} />
@@ -232,6 +239,7 @@ function ContractActions() {
 
   return (
     <>
+      <SheetTitle>Contract Actions 🚀</SheetTitle>
       <span className="inline-flex justify-start gap-1 align-middle">
         <span className="inline-flex justify-start gap-1 align-middle">
           {'Allowance:'}
@@ -256,6 +264,151 @@ function ContractActions() {
           'Reset Allowance'
         )}
       </Button>
+      <ExitNodes />
     </>
   );
+}
+
+export function getExitLiquidationList(client: SessionStakingClient) {
+  return client.exitLiquidationList();
+}
+
+function ExitNodes() {
+  const [value, setValue] = useState<string>('0x');
+  const [selectedContractIds, setSelectedContractIds] = useState<Array<number>>([]);
+  const { data, status } = useStakingBackendSuspenseQuery(getExitLiquidationList);
+
+  const nodes = useMemo(() => {
+    if (status === 'success') {
+      return data.result
+        .map((node) => ({ contractId: node.contract_id, pubKey: node.service_node_pubkey }))
+        .filter(({ contractId }) => contractId)
+        .sort((a, b) => a.contractId! - b.contractId!) as Array<{
+        contractId: number;
+        pubKey: string;
+      }>;
+    }
+    return [];
+  }, [data?.result, status]);
+
+  const handleEjectNodes = async () => {
+    if (selectedContractIds.length === 0) return;
+    try {
+      if (!value.startsWith('0x')) setValue((v) => '0x' + v);
+      const wallet = createWallet({ privateKey: value as Address });
+      await ejectNodes({
+        wallet,
+        idsToBoot: selectedContractIds,
+        batchSize: 10,
+      });
+    } catch (e) {
+      if (e instanceof Error) toast.handleError(e);
+      else console.error(e);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <SheetTitle>Exit Liquidation List 🔫</SheetTitle>
+      <span>
+        Private Key
+        <Input value={value} onChange={(e) => setValue(e.target.value)} />
+      </span>
+      {nodes ? (
+        <>
+          <Button
+            data-testid="button:eject-nodes"
+            disabled={selectedContractIds.length === 0}
+            onClick={handleEjectNodes}
+            size="sm"
+            rounded="md"
+          >
+            Execute {selectedContractIds.length} Nodes
+          </Button>
+          <div>
+            <Checkbox
+              checked={selectedContractIds.length === nodes.length}
+              onCheckedChange={() =>
+                setSelectedContractIds((ids) =>
+                  ids.length === nodes.length ? [] : nodes.map(({ contractId }) => contractId)
+                )
+              }
+            />{' '}
+            {'Select All'}
+          </div>
+          <ul className="flex max-h-40 flex-col overflow-y-auto">
+            {nodes.map(({ contractId, pubKey }) => (
+              <li key={contractId} className="flex flex-row gap-1 align-middle">
+                <Checkbox
+                  checked={selectedContractIds.includes(contractId)}
+                  onCheckedChange={() =>
+                    setSelectedContractIds((ids) =>
+                      ids.includes(contractId)
+                        ? ids.filter((i) => i !== contractId)
+                        : [...ids, contractId]
+                    )
+                  }
+                />
+                {contractId} <PubKey pubKey={pubKey} />
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <Loading />
+      )}
+    </div>
+  );
+}
+
+function createWallet({ privateKey }: { privateKey: Address }) {
+  const account = privateKeyToAccount(privateKey, { nonceManager });
+  return createWalletClient({
+    account,
+    chain: chains[CHAIN.TESTNET],
+    transport: http(),
+  });
+}
+
+async function ejectNodes({
+  wallet,
+  idsToBoot,
+  batchSize,
+}: {
+  wallet: ReturnType<typeof createWallet>;
+  idsToBoot: number[];
+  batchSize: number;
+}) {
+  let total = 0;
+  let batchIndex = 0;
+
+  for (let i = 0; i < idsToBoot.length; i += batchSize) {
+    const array: number[] = [];
+    for (let offset = 0; offset < batchSize; offset++) {
+      const index = i + offset;
+      if (index >= idsToBoot.length) break;
+      total++;
+      const id = idsToBoot[index];
+      if (!id) {
+        throw `ID IS UNDEFINED index:${i}`;
+      }
+      array.push(id);
+    }
+
+    const arrBigInted = array.map(BigInt);
+
+    const hash = await wallet.writeContract({
+      address: '0xb691e7C159369475D0a3d4694639ae0144c7bAB2',
+      abi: TestnetServiceNodeRewardsAbi,
+      functionName: 'requestRemoveNodeBySNID',
+      args: [arrBigInted],
+    });
+    console.log(`Hash: ${hash}`);
+    console.log(`Batch ${batchIndex} exited: ${array}`);
+    toast.success(`Batch ${batchIndex} exited: ${array}`);
+    batchIndex++;
+  }
+
+  console.log(`Total: ${total}`);
+  console.log(`Actual: ${idsToBoot.length}`);
 }

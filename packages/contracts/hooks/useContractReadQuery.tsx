@@ -57,7 +57,10 @@ export function useContractReadQuery<
     functionName: functionName,
     args: args as ContractFunctionArgs,
     chainId: chains[chain].id,
-    query: { enabled },
+    query: {
+      enabled,
+      refetchOnWindowFocus: false,
+    },
   });
 
   return {

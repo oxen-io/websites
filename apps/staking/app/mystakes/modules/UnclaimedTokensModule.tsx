@@ -14,9 +14,14 @@ import {
   ModuleDynamicQueryText,
 } from '@/components/ModuleDynamic';
 import { formatSENTBigInt } from '@session/contracts/hooks/SENT';
+import { Address } from 'viem';
 
-export const useUnclaimedTokens = () => {
-  const { address } = useWallet();
+export const useUnclaimedTokens = (params?: { addressOverride?: Address }) => {
+  const { address: connectedAddress } = useWallet();
+  const address = useMemo(
+    () => params?.addressOverride ?? connectedAddress,
+    [params?.addressOverride, connectedAddress]
+  );
 
   const { data, status, refetch } = useStakingBackendQueryWithParams(
     getStakedNodes,
@@ -47,13 +52,15 @@ export const useUnclaimedTokens = () => {
   return { status, refetch, unclaimedRewards, formattedUnclaimedRewardsAmount, canClaim };
 };
 
-export default function UnclaimedTokensModule() {
+export default function UnclaimedTokensModule({ addressOverride }: { addressOverride?: Address }) {
   const dictionary = useTranslations('modules.unclaimedTokens');
   const toastDictionary = useTranslations('modules.toast');
   const titleFormat = useTranslations('modules.title');
   const title = dictionary('title');
 
-  const { formattedUnclaimedRewardsAmount, status, refetch } = useUnclaimedTokens();
+  const { formattedUnclaimedRewardsAmount, status, refetch } = useUnclaimedTokens({
+    addressOverride,
+  });
 
   return (
     <Module>

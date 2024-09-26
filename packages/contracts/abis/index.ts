@@ -12,6 +12,7 @@ import { SharedAbi } from './Shared';
 import { TokenConverterAbi } from './TokenConverter';
 import { TokenVestingNoStakingAbi } from './TokenVestingNoStaking';
 import { TokenVestingStakingAbi } from './TokenVestingStaking';
+import { TestnetServiceNodeRewardsAbi } from './TestnetServiceNodeRewards';
 
 export const Contracts = {
   RewardRatePool: RewardRatePoolAbi,
@@ -19,6 +20,7 @@ export const Contracts = {
   ServiceNodeContribution: ServiceNodeContributionAbi,
   ServiceNodeContributionFactory: ServiceNodeContributionFactoryAbi,
   ServiceNodeRewards: ServiceNodeRewardsAbi,
+  TestnetServiceNodeRewards: TestnetServiceNodeRewardsAbi,
   BN256G1: BN256G1Abi,
   BN256G2: BN256G2Abi,
   Pairing: PairingAbi,
@@ -42,4 +44,5 @@ export {
   TokenConverterAbi,
   TokenVestingNoStakingAbi,
   TokenVestingStakingAbi,
+  TestnetServiceNodeRewardsAbi,
 };

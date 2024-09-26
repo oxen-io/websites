@@ -4,8 +4,6 @@ import { useRewardRateQuery } from '@session/contracts/hooks/RewardRatePool';
 import { useTotalNodesQuery } from '@session/contracts/hooks/ServiceNodeRewards';
 import { mergeContractReadStatuses } from '@session/contracts/hooks/useContractReadQuery';
 import { useMemo } from 'react';
-import { formatBigIntTokenValue } from '@session/util/maths';
-import { SENT_DECIMALS } from '@session/contracts';
 
 /**
  * Calculate the daily node reward of a node on the network based on the total number of nodes and the last block reward rate.
@@ -26,7 +24,7 @@ import { SENT_DECIMALS } from '@session/contracts';
  * @returns The daily node reward.
  */
 function calculateDailyNodeReward(totalNodes: bigint, rewardRate: bigint) {
-  return (Number(formatBigIntTokenValue(rewardRate, SENT_DECIMALS)) / Number(totalNodes)) * 720;
+  return (rewardRate / totalNodes) * BigInt(720);
 }
 
 export default function useDailyNodeReward() {

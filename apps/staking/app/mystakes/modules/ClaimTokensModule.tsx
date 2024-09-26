@@ -68,7 +68,7 @@ export default function ClaimTokensModule() {
 
   const [rewards, blsSignature, excludedSigners] = useMemo(() => {
     if (!rewardsClaimData) return [null, null, null];
-    const { amount, signature, non_signer_indices } = rewardsClaimData.bls_rewards_response;
+    const { amount, signature, non_signer_indices } = rewardsClaimData.result;
 
     return [BigInt(amount), signature, non_signer_indices.map(BigInt)];
   }, [rewardsClaimData]);
