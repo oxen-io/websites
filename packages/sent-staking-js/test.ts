@@ -1,5 +1,7 @@
 import { GetStakesResponse, NODE_STATE, type Registration, Stake, StakeContributor } from './client';
 
+// NOTE: this file will be refactored at some point, it doesnt work very well
+
 /**
  * Generates a random mock node public key.
  * @returns The generated node public key.
