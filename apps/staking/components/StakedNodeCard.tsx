@@ -109,6 +109,13 @@ const hasRequestedUnlockHeight = (node: Stake): node is NodeRequestingExit =>
  * @see {@link ExitedNode}
  * @see {@link DeregisteredNode}
  * @param stake - The stake to check.
+ *
+ * @note The `contract_id` check here is for and edge case. If a node has exited the smart contract
+ * and the network hasn't confirmed the event yet then the `contract_id` is `null`. BUT this should
+ * not happen as the node info should be stored in the database and the backend should use that data,
+ * which includes the contract_id. So it's a technically possible edge case but not likely to happen
+ * as long as the backend is doing its job well. BUT if people host their own backend there is no
+ * guarantee the database has the node in it so the `contract_id` might be `null`.
  */
 const hasExited = (stake: Stake): stake is ExitedNode =>
   stake.exited || ('contract_id' in stake && stake.contract_id === null);
@@ -373,7 +380,10 @@ const DeregisteringNotification = ({
   const soonString = generalDictionary('soon');
 
   const isDeregistrationSoon = isDateSoonOrPast(date);
-  const relativeTime = (!isDeregistrationSoon ? timeString : soonString) ?? notFoundString;
+  const relativeTime = useMemo(
+    () => (!isDeregistrationSoon ? timeString : soonString) ?? notFoundString,
+    [isDeregistrationSoon, timeString, soonString, notFoundString]
+  );
 
   return (
     <Tooltip
@@ -393,6 +403,20 @@ const DeregisteringNotification = ({
   );
 };
 
+type NodeSummaryProps = {
+  node: Stake;
+  blockHeight: number;
+  deregistrationDate: Date | null;
+  deregistrationTime: string | null;
+  requestedUnlockDate: Date | null;
+  requestedUnlockTime: string | null;
+  deregistrationUnlockDate: Date | null;
+  deregistrationUnlockTime: string | null;
+  liquidationDate: Date | null;
+  liquidationTime: string | null;
+  showAllTimers?: boolean;
+};
+
 const NodeSummary = ({
   node,
   blockHeight,
@@ -405,19 +429,7 @@ const NodeSummary = ({
   liquidationDate,
   liquidationTime,
   showAllTimers,
-}: {
-  node: Stake;
-  blockHeight: number;
-  deregistrationDate: Date | null;
-  deregistrationTime: string | null;
-  requestedUnlockDate: Date | null;
-  requestedUnlockTime: string | null;
-  deregistrationUnlockDate: Date | null;
-  deregistrationUnlockTime: string | null;
-  liquidationDate: Date | null;
-  liquidationTime: string | null;
-  showAllTimers?: boolean;
-}) => {
+}: NodeSummaryProps) => {
   const allTimers = [];
   if (isReadyToExit(node, blockHeight)) {
     const readyToExitTimer = (

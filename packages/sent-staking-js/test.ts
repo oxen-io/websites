@@ -1,5 +1,7 @@
 import { GetStakesResponse, NODE_STATE, type Registration, Stake, StakeContributor } from './client';
 
+// NOTE: this file will be refactored at some point, it doesnt work very well
+
 /**
  * Generates a random mock node public key.
  * @returns The generated node public key.
@@ -81,26 +83,26 @@ type GenerateBasicNodeDataProps = {
  */
 function generateBasicNodeData({
   userAddress,
-  operatorAddress,
+  operatorAddress = generateWalletAddress(),
   minContributors,
 }: GenerateBasicNodeDataProps): Omit<Stake, 'state'> {
   const num_contributions = Math.max(minContributors ?? 0, Math.ceil(Math.random() * 10));
   const contributors = generateContributors(num_contributions, userAddress);
-  const staked_balance = contributors.find(({ address }) => address === userAddress)?.amount;
+  const staked_balance = contributors.find(({ address }) => address === userAddress)?.amount ?? 0;
   return {
     service_node_pubkey: generateNodePubKey(),
     requested_unlock_height: 0,
     last_reward_block_height: 0,
     contract_id: 0,
     contributors: generateContributors(num_contributions, userAddress),
-    operator_address: operatorAddress ?? generateWalletAddress(),
+    operator_address: operatorAddress,
     last_uptime_proof: generatePastBlockHeight(),
     operator_fee: 0,
     exited: false,
     earned_downtime_blocks: 20,
     deregistration_unlock_height: null,
     liquidation_height: null,
-    staked_balance: staked_balance ?? 0,
+    staked_balance: staked_balance,
   };
 }
 
