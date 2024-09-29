@@ -4,8 +4,7 @@ import {
   getVariableFontSizeForLargeModule,
   ModuleDynamicQueryText,
 } from '@/components/ModuleDynamic';
-import { getTotalStakedAmountForAddressBigInt } from '@/components/NodeCard';
-import type { ServiceNode } from '@session/sent-staking-js/client';
+import type { Stake } from '@session/sent-staking-js/client';
 import { Module, ModuleTitle } from '@session/ui/components/Module';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { useTranslations } from 'next-intl';
@@ -13,28 +12,21 @@ import { useMemo } from 'react';
 import type { Address } from 'viem';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { getStakedNodes } from '@/lib/queries/getStakedNodes';
-import { generateMockNodeData } from '@session/sent-staking-js/test';
 import type { QUERY_STATUS } from '@/lib/query';
 import { formatSENTBigInt } from '@session/contracts/hooks/SENT';
 import { FEATURE_FLAG } from '@/lib/feature-flags';
 import { useFeatureFlag } from '@/lib/feature-flags-client';
+import { generateMockNodeData } from '@session/sent-staking-js/test';
 
-const getTotalStakedAmount = ({
-  nodes,
-  address,
-}: {
-  nodes: Array<ServiceNode>;
-  address: Address;
-}) => {
-  return formatSENTBigInt(
-    nodes.reduce(
-      (acc, node) => acc + getTotalStakedAmountForAddressBigInt(node.contributors, address),
-      BigInt(0)
-    )
+const getTotalStakedAmount = ({ stakes }: { stakes: Array<Stake> }) =>
+  formatSENTBigInt(
+    stakes.reduce((acc, stake) => {
+      const stakedBalance = stake.staked_balance ?? BigInt(0);
+      return typeof stakedBalance !== 'bigint' ? acc + BigInt(stakedBalance) : acc + stakedBalance;
+    }, BigInt(0))
   );
-};
 
-function useTotalStakedAmount() {
+function useTotalStakedAmount(params?: { addressOverride?: Address }) {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_STAKED_NODES);
   const showNoNodes = useFeatureFlag(FEATURE_FLAG.MOCK_NO_STAKED_NODES);
 
@@ -42,7 +34,11 @@ function useTotalStakedAmount() {
     console.error('Cannot show mock nodes and no nodes at the same time');
   }
 
-  const { address } = useWallet();
+  const { address: connectedAddress } = useWallet();
+  const address = useMemo(
+    () => params?.addressOverride ?? connectedAddress,
+    [params?.addressOverride, connectedAddress]
+  );
 
   const { data, refetch, status } = useStakingBackendQueryWithParams(
     getStakedNodes,
@@ -52,25 +48,25 @@ function useTotalStakedAmount() {
     { enabled: !!address }
   );
 
-  const nodes = useMemo(() => {
+  const stakes = useMemo(() => {
     if (!address || showNoNodes) {
       return [];
     } else if (showMockNodes) {
-      return generateMockNodeData({ userAddress: address }).nodes;
+      return generateMockNodeData({ userAddress: address }).stakes;
     }
-    return data?.nodes ?? [];
+    return data?.stakes ?? [];
   }, [data, showMockNodes, showNoNodes]);
 
-  const totalStakedAmount = useMemo(() => {
-    if (!address || !nodes.length) return null;
-    return getTotalStakedAmount({ nodes, address });
-  }, [nodes.length, address]);
+  const totalStakedAmount = useMemo(
+    () => (stakes ? getTotalStakedAmount({ stakes }) : null),
+    [stakes]
+  );
 
   return { totalStakedAmount, status, refetch };
 }
 
-export default function BalanceModule() {
-  const { totalStakedAmount, status, refetch } = useTotalStakedAmount();
+export default function BalanceModule({ addressOverride }: { addressOverride?: Address }) {
+  const { totalStakedAmount, status, refetch } = useTotalStakedAmount({ addressOverride });
   const dictionary = useTranslations('modules.balance');
   const toastDictionary = useTranslations('modules.toast');
   const titleFormat = useTranslations('modules.title');

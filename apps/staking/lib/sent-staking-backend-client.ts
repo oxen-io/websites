@@ -22,6 +22,7 @@ function getStakingBackendBrowserClient() {
   client = createSessionStakingClient({
     baseUrl: '/api/ssb',
     debug: !isProduction,
+    errorOn404: !isProduction,
   });
 
   return client;

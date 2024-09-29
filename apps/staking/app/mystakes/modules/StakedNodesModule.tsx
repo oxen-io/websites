@@ -1,12 +1,10 @@
 'use client';
 
 import Loading from '@/app/loading';
-import { GenericStakedNode, StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
+import { generateStakeId, StakedNodeCard } from '@/components/StakedNodeCard';
 import { WalletModalButtonWithLocales } from '@/components/WalletModalButtonWithLocales';
 import { internalLink } from '@/lib/locale-defaults';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
-import type { ServiceNode } from '@session/sent-staking-js/client';
-import { generateMockNodeData } from '@session/sent-staking-js/test';
 import {
   ModuleGridContent,
   ModuleGridHeader,
@@ -21,12 +19,12 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { getStakedNodes } from '@/lib/queries/getStakedNodes';
-import { getDateFromUnixTimestampSeconds, getUnixTimestampNowSeconds } from '@session/util/date';
-import { SESSION_NODE } from '@/lib/constants';
 import { EXPERIMENTAL_FEATURE_FLAG, FEATURE_FLAG } from '@/lib/feature-flags';
 import { useExperimentalFeatureFlag, useFeatureFlag } from '@/lib/feature-flags-client';
+import { Address } from 'viem';
+import { generateMockNodeData } from '@session/sent-staking-js/test';
 
-function StakedNodesWithAddress({ address }: { address: string }) {
+export function StakedNodesWithAddress({ address }: { address: Address }) {
   const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_STAKED_NODES);
   const showNoNodes = useFeatureFlag(FEATURE_FLAG.MOCK_NO_STAKED_NODES);
 
@@ -38,32 +36,43 @@ function StakedNodesWithAddress({ address }: { address: string }) {
     address,
   });
 
-  const nodes = useMemo(() => {
+  const [stakes, blockHeight, networkTime] = useMemo(() => {
     if (showMockNodes) {
-      return generateMockNodeData({ userAddress: address }).nodes;
-    } else if (showNoNodes) {
-      return [];
+      const mockResponse = generateMockNodeData({ userAddress: address });
+      return [
+        mockResponse.stakes,
+        mockResponse.network.block_height,
+        mockResponse.network.block_timestamp,
+      ];
+    } else if (!data || showNoNodes) {
+      return [[], null, null];
     }
-    return data?.nodes ?? [];
+    
+    return [
+      data.stakes.concat(data.historical_stakes),
+      data.network.block_height,
+      data.network.block_timestamp,
+    ];
   }, [data, showMockNodes, showNoNodes]);
 
   return (
     <ModuleGridContent className="h-full md:overflow-y-auto">
       {isLoading ? (
         <Loading />
-      ) : nodes.length ? (
-        nodes.map((node) => (
-          <StakedNodeCard
-            key={node.service_node_pubkey}
-            node={
-              parseSessionNodeData(
-                node,
-                data?.network?.block_height,
-                data?.network?.block_timestamp
-              ) as StakedNode
-            }
-          />
-        ))
+      ) : stakes?.length && blockHeight && networkTime ? (
+        stakes.map((node) => {
+          const key = generateStakeId(node);
+          return (
+            <StakedNodeCard
+              key={key}
+              uniqueId={key}
+              node={node}
+              blockHeight={blockHeight}
+              networkTime={networkTime}
+              targetWalletAddress={address}
+            />
+          );
+        })
       ) : (
         <NoNodes />
       )}
@@ -126,37 +135,3 @@ function NoNodes() {
     </ModuleGridInfoContent>
   );
 }
-
-export const parseSessionNodeData = (
-  node: ServiceNode,
-  currentBlock: number = 0,
-  networkTime: number = getUnixTimestampNowSeconds()
-): GenericStakedNode => {
-  return {
-    state: node.state,
-    contributors: node.contributors,
-    lastRewardHeight: 0,
-    lastUptime: getDateFromUnixTimestampSeconds(node.last_uptime_proof),
-    pubKey: node.service_node_pubkey,
-    balance: node.total_contributed,
-    operatorFee: node.operator_fee,
-    operator_address: node.operator_address,
-    contract_id: node.contract_id,
-    ...(node.awaiting_liquidation ? { awaitingLiquidation: true } : {}),
-    ...(node.decomm_blocks_remaining
-      ? {
-          deregistrationDate: new Date(
-            networkTime * 1000 + node.decomm_blocks_remaining * SESSION_NODE.MS_PER_BLOCK
-          ),
-        }
-      : {}),
-    ...(node.requested_unlock_height
-      ? {
-          unlockDate: new Date(
-            networkTime * 1000 +
-              (node.requested_unlock_height - currentBlock) * SESSION_NODE.MS_PER_BLOCK
-          ),
-        }
-      : {}),
-  };
-};

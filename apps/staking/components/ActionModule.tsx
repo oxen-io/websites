@@ -121,7 +121,9 @@ export const ActionModuleRowSkeleton = () => (
   </>
 );
 
-export const ActionModuleDivider = () => <div className="bg-gray-dark h-px w-full" />;
+export const ActionModuleDivider = ({ className }: { className?: string }) => (
+  <div className={cn('bg-gray-dark h-px w-full', className)} />
+);
 
 export const ActionModulePage = ({ children, ...props }: ActionModuleProps) => (
   <ActionModule background={1} noHeader {...props}>

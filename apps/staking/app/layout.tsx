@@ -1,7 +1,7 @@
 import { isProduction, NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID } from '@/lib/env';
 import { getLocalizationData } from '@/lib/locale-server';
 import { Toaster } from '@session/ui/components/ui/sonner';
-import { AtypDisplay, AtypText, MonumentExtended } from '@session/ui/fonts';
+import { MonumentExtended, RobotoFlex } from '@session/ui/fonts';
 
 import { DevSheet } from '@/components/DevSheet';
 import { siteMetadata, wagmiMetadata } from '@/lib/metadata';
@@ -17,6 +17,7 @@ import { FeatureFlagProvider } from '@/lib/feature-flags-client';
 import RemoteBanner from '@/components/RemoteBanner';
 import Header from '@/components/Header';
 import { Suspense } from 'react';
+import { cn } from '@session/ui/lib/utils';
 
 const wagmiConfig = createWagmiConfig({
   projectId: NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
@@ -37,7 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html
       lang={locale}
       dir={direction}
-      className={`${AtypDisplay.variable} ${AtypText.variable} ${MonumentExtended.variable}`}
+      className={cn(RobotoFlex.variable, MonumentExtended.variable)}
     >
       <FeatureFlagProvider>
         <GlobalProvider
@@ -46,7 +47,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           initialState={initialWagmiState}
           wagmiMetadata={wagmiMetadata}
         >
-          <body className="bg-session-black text-session-text font-atyp-text overflow-x-hidden">
+          <body className="bg-session-black font-roboto-flex text-session-text overflow-x-hidden">
             <ChainBanner />
             <Suspense>
               <RemoteBanner />

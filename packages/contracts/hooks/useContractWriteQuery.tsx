@@ -120,7 +120,10 @@ export function useContractWriteQuery<
     refetch: refetchRaw,
   } = useSimulateContract({
     ...contractDetails,
-    query: { enabled: simulateEnabled },
+    query: {
+      enabled: simulateEnabled,
+      refetchOnWindowFocus: false,
+    },
     chainId: chains[chain].id,
   });
 

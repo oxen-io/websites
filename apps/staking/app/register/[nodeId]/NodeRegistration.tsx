@@ -3,22 +3,19 @@
 import { PubKey } from '@session/ui/components/PubKey';
 import { formatDate, formatLocalizedRelativeTimeToNowClient } from '@/lib/locale-client';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
-import { Loading } from '@session/ui/components/loading';
 import { Button, ButtonSkeleton } from '@session/ui/ui/button';
 import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ActionModuleRow, ActionModuleRowSkeleton } from '@/components/ActionModule';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import type { LoadRegistrationsResponse } from '@session/sent-staking-js/client';
-import { getPendingNodes } from '@/lib/queries/getPendingNodes';
+import { getNodeRegistrations } from '@/lib/queries/getNodeRegistrations';
 import { QUERY, SESSION_NODE } from '@/lib/constants';
 import { getDateFromUnixTimestampSeconds } from '@session/util/date';
 import { notFound } from 'next/navigation';
 import { generateMockRegistrations } from '@session/sent-staking-js/test';
 import useRegisterNode from '@/hooks/useRegisterNode';
-import { useQuery } from '@tanstack/react-query';
-import { getNode } from '@/lib/queries/getNode';
-import { type StakedNode, StakedNodeCard } from '@/components/StakedNodeCard';
+import { StakedNodeCard } from '@/components/StakedNodeCard';
 import { AlertTooltip, Tooltip } from '@session/ui/ui/tooltip';
 import { areHexesEqual } from '@session/util/string';
 import { toast } from '@session/ui/lib/toast';
@@ -28,6 +25,11 @@ import { FEATURE_FLAG, REMOTE_FEATURE_FLAG } from '@/lib/feature-flags';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { Progress, PROGRESS_STATUS } from '@session/ui/motion/progress';
 import { formatSENTBigInt } from '@session/contracts/hooks/SENT';
+import { useRegisteredNode } from '@/hooks/useRegisteredNode';
+import { NodeStakingForm } from '@/app/stake/[nodeId]/NodeStaking';
+import { isProduction } from '@/lib/env';
+import { getStakedNodes } from '@/lib/queries/getStakedNodes';
+import { useWalletButton } from '@session/wallet/providers/wallet-button-provider';
 
 export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showMockRegistration = useFeatureFlag(FEATURE_FLAG.MOCK_REGISTRATION);
@@ -37,12 +39,26 @@ export default function NodeRegistration({ nodeId }: { nodeId: string }) {
   const showManyMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_PENDING_NODES_MANY);
   const { address, isConnected } = useWallet();
 
-  const { data, isLoading } = useStakingBackendQueryWithParams(
-    getPendingNodes,
+  const { data: registrationsData, isLoading: isLoadingRegistrations } =
+    useStakingBackendQueryWithParams(
+      getNodeRegistrations,
+      { address: address! },
+      {
+        enabled: isConnected,
+        staleTime: isProduction
+          ? QUERY.STALE_TIME_REGISTRATIONS_LIST
+          : QUERY.STALE_TIME_REGISTRATIONS_LIST_DEV,
+      }
+    );
+
+  const { data: stakesData, isLoading: isLoadingStakes } = useStakingBackendQueryWithParams(
+    getStakedNodes,
     { address: address! },
     {
       enabled: isConnected,
-      staleTime: QUERY.STALE_TIME_REGISTRATIONS_PAGE,
+      staleTime: isProduction
+        ? QUERY.STALE_TIME_REGISTRATIONS_LIST
+        : QUERY.STALE_TIME_REGISTRATIONS_LIST_DEV,
     }
   );
 
@@ -56,9 +72,23 @@ export default function NodeRegistration({ nodeId }: { nodeId: string }) {
     ) {
       return generateMockRegistrations({ userAddress: address!, numberOfNodes: 1 })[0];
     }
-    return data?.registrations?.find((node) => areHexesEqual(node.pubkey_ed25519, nodeId));
+
+    if (isLoadingRegistrations || isLoadingStakes) {
+      return null;
+    }
+
+    const stakedNodeEd25519Pubkeys = stakesData?.stakes.map(
+      ({ service_node_pubkey }) => service_node_pubkey
+    );
+
+    return registrationsData?.registrations
+      .filter(({ pubkey_ed25519 }) => !stakedNodeEd25519Pubkeys?.includes(pubkey_ed25519))
+      .find((node) => areHexesEqual(node.pubkey_ed25519, nodeId));
   }, [
-    data?.registrations,
+    isLoadingRegistrations,
+    isLoadingStakes,
+    registrationsData?.registrations,
+    stakesData?.stakes,
     showMockRegistration,
     showOneMockNode,
     showTwoMockNodes,
@@ -67,7 +97,13 @@ export default function NodeRegistration({ nodeId }: { nodeId: string }) {
     nodeId,
   ]);
 
-  return isLoading ? <Loading /> : node ? <NodeRegistrationForm node={node} /> : notFound();
+  return isLoadingRegistrations || isLoadingStakes ? (
+    <NodeRegistrationFormSkeleton />
+  ) : node ? (
+    <NodeRegistrationForm node={node} />
+  ) : (
+    notFound()
+  );
 }
 
 function RegisterButton({
@@ -205,6 +241,7 @@ export function NodeRegistrationForm({
   const sessionNodeDictionary = useTranslations('sessionNodes.general');
   const actionModuleSharedDictionary = useTranslations('actionModules.shared');
   const { tokenBalance } = useWallet();
+  const { setIsBalanceVisible } = useWalletButton();
 
   const { enabled: isRegistrationPausedFlagEnabled, isLoading: isRemoteFlagLoading } =
     useRemoteFeatureFlagQuery(REMOTE_FEATURE_FLAG.DISABLE_NODE_REGISTRATION);
@@ -213,29 +250,46 @@ export function NodeRegistrationForm({
   const stakeAmountString = formatSENTBigInt(stakeAmount);
   const preparationDate = getDateFromUnixTimestampSeconds(node.timestamp);
 
-  const { data: runningNode, isLoading } = useQuery({
-    queryKey: ['getNode', node.pubkey_ed25519],
-    queryFn: () => getNode({ address: node.pubkey_ed25519 }),
-    enabled: !isRegistrationPausedFlagEnabled,
+  const { found, openNode, stakedNode, runningNode, networkTime, blockHeight } = useRegisteredNode({
+    nodeId: node.pubkey_ed25519,
   });
 
-  const nodeAlreadyRunning = useMemo(
-    () => Boolean(runningNode && 'state' in runningNode && runningNode.state),
-    [isLoading, runningNode]
-  );
+  /** While the component is mounted, show the balance */
+  useEffect(() => {
+    setIsBalanceVisible(true);
+    return () => {
+      setIsBalanceVisible(false);
+    };
+  }, [setIsBalanceVisible]);
 
   return (
     <div className="flex flex-col gap-4">
       {!isRemoteFlagLoading && isRegistrationPausedFlagEnabled ? (
         <span>Registrations are disabled</span>
       ) : null}
-      {nodeAlreadyRunning ? (
+      {stakedNode ? (
         <>
           <span className="mb-4 text-lg font-medium">
-            {dictionary('notFound.foundRunningNode')}
+            {dictionary.rich('notFound.foundRunningNode')}
           </span>
-          <StakedNodeCard node={runningNode as StakedNode} />
-          <br />
+          <StakedNodeCard node={stakedNode} networkTime={networkTime} blockHeight={blockHeight} />
+        </>
+      ) : runningNode ? (
+        <>
+          <span className="mb-4 text-lg font-medium">
+            {dictionary('notFound.foundRunningNodeOtherOperator')}
+          </span>
+          <StakedNodeCard
+            node={runningNode}
+            networkTime={networkTime}
+            blockHeight={blockHeight}
+            hideButton
+          />
+        </>
+      ) : openNode ? (
+        <>
+          <span className="mb-4 text-lg font-medium">{dictionary('notFound.foundOpenNode')}</span>
+          <NodeStakingForm node={openNode} />
         </>
       ) : null}
       <ActionModuleRow
@@ -290,7 +344,7 @@ export function NodeRegistrationForm({
         userSignature={node.sig_ed25519}
         stakeAmount={stakeAmount}
         stakeAmountString={stakeAmountString}
-        disabled={nodeAlreadyRunning || isRegistrationPausedFlagEnabled || isRemoteFlagLoading}
+        disabled={found || isRegistrationPausedFlagEnabled || isRemoteFlagLoading}
         isRegistrationPausedFlagEnabled={isRegistrationPausedFlagEnabled}
       />
     </div>

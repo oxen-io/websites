@@ -9,6 +9,7 @@ export const createSessionStakingServerClient = () =>
   createSessionStakingClient({
     baseUrl: NEXT_PUBLIC_SENT_STAKING_API_URL,
     debug: !isProduction,
+    errorOn404: !isProduction,
   });
 
 export function stakingBackendPrefetchQuery<Q extends StakingBackendQuery>(query: Q) {

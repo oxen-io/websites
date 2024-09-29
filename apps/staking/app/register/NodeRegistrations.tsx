@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
-import { getPendingNodes } from '@/lib/queries/getPendingNodes';
+import { getNodeRegistrations } from '@/lib/queries/getNodeRegistrations';
 import { NodeRegistrationCard } from '@/components/NodeRegistrationCard';
 import { useTranslations } from 'next-intl';
 import { generateMockRegistrations } from '@session/sent-staking-js/test';
@@ -15,6 +15,7 @@ import { externalLink } from '@/lib/locale-defaults';
 import { WalletModalButtonWithLocales } from '@/components/WalletModalButtonWithLocales';
 import { useFeatureFlag } from '@/lib/feature-flags-client';
 import { FEATURE_FLAG } from '@/lib/feature-flags';
+import { getStakedNodes } from '@/lib/queries/getStakedNodes';
 
 export default function NodeRegistrations() {
   const showOneMockNode = useFeatureFlag(FEATURE_FLAG.MOCK_PENDING_NODES_ONE);
@@ -50,8 +51,20 @@ export default function NodeRegistrations() {
 
   const { address, isConnected } = useWallet();
 
-  const { data, isLoading } = useStakingBackendQueryWithParams(
-    getPendingNodes,
+  const { data: registrationsData, isLoading: isLoadingRegistrations } =
+    useStakingBackendQueryWithParams(
+      getNodeRegistrations,
+      { address: address! },
+      {
+        enabled: isConnected,
+        staleTime: isProduction
+          ? QUERY.STALE_TIME_REGISTRATIONS_LIST
+          : QUERY.STALE_TIME_REGISTRATIONS_LIST_DEV,
+      }
+    );
+
+  const { data: stakesData, isLoading: isLoadingStakes } = useStakingBackendQueryWithParams(
+    getStakedNodes,
     { address: address! },
     {
       enabled: isConnected,
@@ -76,9 +89,27 @@ export default function NodeRegistrations() {
         return generateMockRegistrations({ userAddress: address, numberOfNodes: 1 });
       }
     }
-    return data?.registrations ?? [];
+
+    if (isLoadingRegistrations || isLoadingStakes) {
+      return [];
+    }
+
+    if (!stakesData || stakesData.stakes.length === 0) {
+      return registrationsData?.registrations ?? [];
+    }
+
+    const stakedNodeEd25519Pubkeys = stakesData.stakes.map(
+      ({ service_node_pubkey }) => service_node_pubkey
+    );
+
+    return registrationsData?.registrations.filter(
+      ({ pubkey_ed25519 }) => !stakedNodeEd25519Pubkeys.includes(pubkey_ed25519)
+    );
   }, [
-    data?.registrations,
+    isLoadingRegistrations,
+    isLoadingStakes,
+    registrationsData?.registrations,
+    stakesData?.stakes,
     address,
     showNoNodes,
     showOneMockNode,
@@ -88,9 +119,9 @@ export default function NodeRegistrations() {
   ]);
 
   return address ? (
-    isLoading ? (
+    isLoadingStakes || isLoadingRegistrations ? (
       <NodesListSkeleton />
-    ) : nodes.length ? (
+    ) : nodes?.length ? (
       nodes.map((node) => <NodeRegistrationCard key={node.pubkey_ed25519} node={node} />)
     ) : (
       <NoNodes />

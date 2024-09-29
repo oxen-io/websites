@@ -1,6 +1,5 @@
 'use client';
 
-import { NodeContributorList } from '@/components/NodeCard';
 import { PubKey } from '@session/ui/components/PubKey';
 import { formatPercentage } from '@/lib/locale-client';
 import { ButtonDataTestId } from '@/testing/data-test-ids';
@@ -14,19 +13,14 @@ import { useMemo } from 'react';
 import { ActionModuleRow, ActionModuleRowSkeleton } from '@/components/ActionModule';
 import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-client';
 import { getOpenNodes } from '@/lib/queries/getOpenNodes';
-import { generateOpenNodes } from '@session/sent-staking-js/test';
 import { areHexesEqual } from '@session/util/string';
-import { FEATURE_FLAG } from '@/lib/feature-flags';
-import { useFeatureFlag } from '@/lib/feature-flags-client';
 
 export default function NodeStaking({ nodeId }: { nodeId: string }) {
-  const showMockNodes = useFeatureFlag(FEATURE_FLAG.MOCK_OPEN_NODES);
   const { data, isLoading } = useStakingBackendSuspenseQuery(getOpenNodes);
 
   const node = useMemo(() => {
-    if (showMockNodes) return generateOpenNodes()[0];
     return data?.nodes?.find((node) => areHexesEqual(node.service_node_pubkey, nodeId));
-  }, [data, showMockNodes]);
+  }, [data]);
 
   return isLoading ? (
     <Loading />
@@ -38,7 +32,7 @@ export default function NodeStaking({ nodeId }: { nodeId: string }) {
 }
 
 export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][number] }) {
-  const dictionary = useTranslations('actionModules.node');
+  // const dictionary = useTranslations('actionModules.node');
   const generalDictionary = useTranslations('general');
   const sessionNodeDictionary = useTranslations('sessionNodes.general');
   const sessionNodeStakingDictionary = useTranslations('sessionNodes.staking');
@@ -54,14 +48,14 @@ export function NodeStakingForm({ node }: { node: GetOpenNodesResponse['nodes'][
 
   return (
     <div className="flex flex-col gap-4">
-      <ActionModuleRow
-        label={dictionary('contributors')}
-        tooltip={dictionary('contributorsTooltip')}
-      >
-        <span className="flex flex-row flex-wrap items-center gap-2 align-middle">
-          <NodeContributorList contributors={node.contributions} forceExpand showEmptySlots />
-        </span>
-      </ActionModuleRow>
+      {/*<ActionModuleRow*/}
+      {/*  label={dictionary('contributors')}*/}
+      {/*  tooltip={dictionary('contributorsTooltip')}*/}
+      {/*>*/}
+      {/*  <span className="flex flex-row flex-wrap items-center gap-2 align-middle">*/}
+      {/*    <NodeContributorList contributors={node.contributions} forceExpand showEmptySlots />*/}
+      {/*  </span>*/}
+      {/*</ActionModuleRow>*/}
       <ActionModuleRow
         label={sessionNodeStakingDictionary('stakedAmount')}
         tooltip={sessionNodeStakingDictionary('stakedAmountDescription')}

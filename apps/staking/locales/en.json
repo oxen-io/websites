@@ -10,7 +10,8 @@
     "you": "You",
     "emptySlot": "Empty Contributor Slot",
     "notFound": "Not Found",
-    "soon": "Soon"
+    "soon": "Soon",
+    "now": "now"
   },
   "maths": {
     "outOf": "{count}/{max}"
@@ -283,7 +284,8 @@
       "operatorAddressTooltip": "The wallet address of the node operator.",
       "operatorFee": "Operator Fee",
       "operatorFeeShort": "Fee",
-      "operatorFeeDescription": "The percentage of rewards the operator takes before splitting the rest with contributors."
+      "operatorFeeDescription": "The percentage of rewards the operator takes before splitting the rest with contributors.",
+      "rawData": "Raw Data"
     },
     "staking": {
       "stakedBalance": "Staked Balance",
@@ -393,7 +395,7 @@
       "solo": "Single Contributor Node",
       "multi": "Multi Contributor Node",
       "registerButton": {
-        "text": "Register",
+        "text": "View",
         "ariaLabel": "View the node registration details in the side panel"
       }
     },
@@ -404,22 +406,23 @@
       "ariaExpand": "Expand node details",
       "labelCollapse": "Collapse",
       "ariaCollapse": "Collapse node details",
-      "lastUptime": "Last Uptime: {time}",
-      "lastUptimeDescription": "The last time the node provided a proof of availability.",
-      "lastRewardHeight": "Last Reward Height: {height}",
-      "lastRewardHeightDescription": "Last block height the node received rewards.",
-      "requestingExitTimerNotification": "Exit available {time}",
-      "requestingExitDescription": "Time left until the node is available for exit. Return {relative_time} ({date}) to exit the node.",
-      "exitTimerNotification": "Exit available. Exit {time} to avoid penalty.",
-      "exitTimerDescription": "Node is ready for exit. If you don't exit within {time}, you may be subject to a small penalty. <link>Learn more</link>",
-      "deregistrationTimerNotification": "Deregistration {time}",
-      "deregistrationTimerDescription": "Time left until the node is deregistered and funds are locked for {deregistration_locked_stake_time}. Node will be deregistered {relative_time} ({date})",
+      "lastUptime": "Last Uptime: {relativeTime}",
+      "lastUptimeDescription": "The last time the node provided a proof of availability. Block {blockNumber} ({date})",
+      "lastReward": "Last Reward: {relativeTime}",
+      "lastRewardDescription": "The last time the node received rewards. Block {blockNumber} ({date})",
+      "exitUnlockTimerNotification": "Exit available {relativeTime}",
+      "exitUnlockTimerDescription": "Time left until the node is available for exit. Return {relativeTime} ({date}) to exit the node.",
+      "exitTimerNotification": "Exit available. Exit {relativeTime} to avoid penalty.",
+      "exitTimerNotificationNow": "Exit now to avoid penalty.",
+      "exitTimerDescription": "Node is ready for exit. If you don't exit within {relativeTime}, you may be subject to a small penalty. <link>Learn more</link>",
+      "deregistrationTimerNotification": "Deregistration {relativeTime}",
+      "deregistrationTimerDescription": "Time left until the node is deregistered and funds are locked for {lockedStakeTime}. Node will be deregistered {relativeTime} ({date})",
       "liquidationNotification": "Awaiting liquidation",
       "liquidationDescription": "The node is inactive and waiting to be removed by the network.",
       "exit": {
         "buttonText": "Exit",
         "buttonAria": "Exit the node from the network",
-        "disabledButtonTooltipContent": "Return {relative_time} ({date}) to exit the node.",
+        "disabledButtonTooltipContent": "Return {relativeTime} ({date}) to exit the node.",
         "disabledInfo": "Stagenet node exits are temporarily paused. Apologies for any inconvenience, we expect to be re-enable exits soon. For updates, visit the <link>Session Token discord</link>.",
         "dialog": {
           "title": "Exit Node",

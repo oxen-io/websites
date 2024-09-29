@@ -14,14 +14,19 @@ import {
 import type { QUERY_STATUS } from '@/lib/query';
 import { useMemo } from 'react';
 import { formatSENTBigInt } from '@session/contracts/hooks/SENT';
+import { Address } from 'viem';
 
-export default function TotalRewardsModule() {
+export default function TotalRewardsModule(params?: { addressOverride?: Address }) {
   const dictionary = useTranslations('modules.totalRewards');
   const toastDictionary = useTranslations('modules.toast');
   const titleFormat = useTranslations('modules.title');
   const title = dictionary('title');
 
-  const { address } = useWallet();
+  const { address: connectedAddress } = useWallet();
+  const address = useMemo(
+    () => params?.addressOverride ?? connectedAddress,
+    [params?.addressOverride, connectedAddress]
+  );
 
   const { data, status, refetch } = useStakingBackendQueryWithParams(
     getStakedNodes,

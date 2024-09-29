@@ -26,8 +26,7 @@ export default {
       '3xl': '1920px',
     },
     fontFamily: {
-      'atyp-display': ['var(--font-atyp-display)'],
-      'atyp-text': ['var(--font-atyp-text)'],
+      'roboto-flex': ['var(--font-roboto-flex)'],
       'monument-extended': ['var(--font-monument-extended)'],
     },
     extend: {

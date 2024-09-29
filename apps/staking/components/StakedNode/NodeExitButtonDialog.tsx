@@ -1,4 +1,3 @@
-import { type StakedNode } from '@/components/StakedNodeCard';
 import { useTranslations } from 'next-intl';
 import { useRemoteFeatureFlagQuery } from '@/lib/feature-flags-client';
 import { REMOTE_FEATURE_FLAG } from '@/lib/feature-flags';
@@ -14,10 +13,8 @@ import { type ReactNode, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { SOCIALS } from '@/lib/constants';
 import { Social } from '@session/ui/components/SocialLinkList';
-import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { formatBigIntTokenValue } from '@session/util/maths';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
-import { getTotalStakedAmountForAddress } from '@/components/NodeCard';
 import { Button } from '@session/ui/ui/button';
 import { NodeExitButton } from '@/components/StakedNode/NodeExitButton';
 import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-client';
@@ -26,15 +23,17 @@ import NodeActionModuleInfo from '@/components/StakedNode/NodeActionModuleInfo';
 import { SENT_SYMBOL } from '@session/contracts';
 import { Progress, PROGRESS_STATUS } from '@session/ui/motion/progress';
 import useExitNode from '@/hooks/useExitNode';
+import { Stake } from '@session/sent-staking-js/client';
+import { formatSENTNumber } from '@session/contracts/hooks/SENT';
 
-export function NodeExitButtonDialog({ node }: { node: StakedNode }) {
+export function NodeExitButtonDialog({ node }: { node: Stake }) {
   const dictionary = useTranslations('nodeCard.staked.exit');
   const { enabled: isNodeExitDisabled, isLoading: isRemoteFlagLoading } = useRemoteFeatureFlagQuery(
     REMOTE_FEATURE_FLAG.DISABLE_NODE_EXIT
   );
 
   const { data, status } = useStakingBackendQueryWithParams(getNodeExitSignatures, {
-    nodePubKey: node.pubKey,
+    nodePubKey: node.service_node_pubkey,
   });
 
   return (
@@ -50,10 +49,10 @@ export function NodeExitButtonDialog({ node }: { node: StakedNode }) {
         ) : (
           <NodeExitContractWriteDialog
             node={node}
-            blsPubKey={data.bls_exit_response.bls_pubkey}
-            timestamp={data.bls_exit_response.timestamp}
-            blsSignature={data.bls_exit_response.signature}
-            excludedSigners={data.bls_exit_response.non_signer_indices}
+            blsPubKey={data.result.bls_pubkey}
+            timestamp={data.result.timestamp}
+            blsSignature={data.result.signature}
+            excludedSigners={data.result.non_signer_indices}
           />
         )}
       </AlertDialogContent>
@@ -88,7 +87,7 @@ function NodeExitContractWriteDialog({
   blsSignature,
   excludedSigners,
 }: {
-  node: StakedNode;
+  node: Stake;
   blsPubKey: string;
   timestamp: number;
   blsSignature: string;
@@ -97,7 +96,6 @@ function NodeExitContractWriteDialog({
   const dictionary = useTranslations('nodeCard.staked.exit.dialog');
   const stageDictKey = 'nodeCard.staked.exit.stage' as const;
   const dictionaryStage = useTranslations(stageDictKey);
-  const { address } = useWallet();
 
   const removeBlsPublicKeyWithSignatureArgs = useMemo(
     () => ({
@@ -125,9 +123,8 @@ function NodeExitContractWriteDialog({
   );
 
   const stakedAmount = useMemo(
-    () =>
-      address ? getTotalStakedAmountForAddress(node.contributors, address) : `0 ${SENT_SYMBOL}`,
-    [node.contributors, address]
+    () => (node.staked_balance ? formatSENTNumber(node.staked_balance) : `0 ${SENT_SYMBOL}`),
+    [node.staked_balance]
   );
 
   const handleClick = () => {

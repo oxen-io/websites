@@ -84,6 +84,8 @@ export enum FEATURE_FLAG {
   MOCK_REGISTRATION = 'mockRegistration',
   CLEAR_ACCEPT_BUG_BOUNTY = 'clearAcceptTOS',
   CLEAR_ACCEPT_EXPERIMENTAL = 'clearAcceptExperimental',
+  SHOW_ALL_TIMERS = 'showAllTimers',
+  SHOW_NODE_RAW_DATA = 'showNodeRawData',
 }
 
 export const FEATURE_FLAG_DESCRIPTION = {
@@ -99,12 +101,25 @@ export const FEATURE_FLAG_DESCRIPTION = {
   [FEATURE_FLAG.MOCK_REGISTRATION]: 'Use a mock node for the registration form',
   [FEATURE_FLAG.CLEAR_ACCEPT_BUG_BOUNTY]: 'Clear the accepted bug bounty conditions',
   [FEATURE_FLAG.CLEAR_ACCEPT_EXPERIMENTAL]: 'Clear the accepted experimental features conditions',
+  [FEATURE_FLAG.SHOW_ALL_TIMERS]: 'Show all staked node timers',
+  [FEATURE_FLAG.SHOW_NODE_RAW_DATA]: 'Show raw data for staked nodes',
 };
 
 export const validFeatureFlags = Object.values(FEATURE_FLAG);
 
 export const pageFeatureFlags: Record<string, Array<FEATURE_FLAG>> = {
-  mystakes: [FEATURE_FLAG.MOCK_STAKED_NODES, FEATURE_FLAG.MOCK_NO_STAKED_NODES],
+  mystakes: [
+    FEATURE_FLAG.MOCK_STAKED_NODES,
+    FEATURE_FLAG.MOCK_NO_STAKED_NODES,
+    FEATURE_FLAG.SHOW_ALL_TIMERS,
+    FEATURE_FLAG.SHOW_NODE_RAW_DATA,
+  ],
+  address: [
+    FEATURE_FLAG.MOCK_STAKED_NODES,
+    FEATURE_FLAG.MOCK_NO_STAKED_NODES,
+    FEATURE_FLAG.SHOW_ALL_TIMERS,
+    FEATURE_FLAG.SHOW_NODE_RAW_DATA,
+  ],
   stake: [
     FEATURE_FLAG.MOCK_OPEN_NODES,
     FEATURE_FLAG.MOCK_NO_OPEN_NODES,

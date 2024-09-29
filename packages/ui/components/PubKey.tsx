@@ -43,14 +43,8 @@ export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
 
   const handleSelectionChange = useCallback(() => {
     if (force === 'expand' || force === 'collapse') return;
-
-    const selection = window.getSelection();
-    if (selection?.toString().includes(pubKey) || selection?.toString().includes(collapsedPubKey)) {
-      setIsExpanded(true);
-    } else {
-      setIsExpanded(false);
-    }
-  }, [pubKey, collapsedPubKey, force]);
+    setIsExpanded(window.getSelection()?.toString() === pubKey);
+  }, [pubKey, force]);
 
   useEffect(() => {
     /**
@@ -65,7 +59,7 @@ export const PubKey = forwardRef<HTMLDivElement, PubKeyType>((props, ref) => {
   return (
     <span ref={ref} className={cn('group flex select-all items-center', className)} {...rest}>
       {!isExpanded ? (
-        <Tooltip tooltipContent={<p>{pubKey}</p>} triggerProps={{ disabled: expandOnHover }}>
+        <Tooltip tooltipContent={pubKey} triggerProps={{ disabled: expandOnHover }}>
           <span
             className={cn(
               'select-all break-all',

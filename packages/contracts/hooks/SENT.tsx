@@ -8,7 +8,7 @@ import { type ContractReadQueryProps, useContractReadQuery } from './useContract
 import type { WriteContractErrorType } from 'wagmi/actions';
 import { useEffect, useMemo, useState } from 'react';
 import { isProduction } from '@session/util/env';
-import { formatBigIntTokenValue, formatNumber } from '@session/util/maths';
+import { formatBigIntTokenValue } from '@session/util/maths';
 import { SENT_DECIMALS, SENT_SYMBOL } from '../constants';
 import {
   GenericContractStatus,
@@ -18,11 +18,11 @@ import {
 import { useChain } from './useChain';
 import type { CHAIN } from '../chains';
 
-export const formatSENTBigInt = (value?: bigint, decimals?: number, hideSymbol?: boolean) =>
+export const formatSENTBigInt = (value?: bigint | null, decimals?: number, hideSymbol?: boolean) =>
   `${value ? formatBigIntTokenValue(value, SENT_DECIMALS, decimals) : 0}${hideSymbol ? '' : ` ${SENT_SYMBOL}`}`;
 
-export const formatSENTNumber = (value?: number, decimals?: number, hideSymbol?: boolean) =>
-  `${value ? formatNumber(value, decimals) : 0}${hideSymbol ? '' : ` ${SENT_SYMBOL}`}`;
+export const formatSENTNumber = (value?: number | null, decimals?: number, hideSymbol?: boolean) =>
+  formatSENTBigInt(value ? BigInt(value) : null, decimals, hideSymbol);
 
 type SENTBalance = ReadContractData<typeof SENTAbi, 'balanceOf', [Address]>;
 

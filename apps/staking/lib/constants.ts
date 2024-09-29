@@ -121,6 +121,8 @@ export enum SESSION_NODE {
 export enum SESSION_NODE_TIME_STATIC {
   /** 2 days in days */
   SMALL_CONTRIBUTOR_EXIT_REQUEST_WAIT_TIME_DAYS = 2,
+  /** isSoon amount in seconds for time based notifications (2 minutes) */
+  SOON_TIME = 120_000,
 }
 
 enum SESSION_NODE_TIME_TESTNET {

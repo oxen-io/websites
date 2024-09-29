@@ -1,11 +1,6 @@
-import {
-  type Contributor,
-  type GetNodesForWalletResponse,
-  NODE_STATE,
-  OpenNode,
-  type Registration,
-  type ServiceNode,
-} from './client';
+import { GetStakesResponse, NODE_STATE, type Registration, Stake, StakeContributor } from './client';
+
+// NOTE: this file will be refactored at some point, it doesnt work very well
 
 /**
  * Generates a random mock node public key.
@@ -21,22 +16,17 @@ const generateNodePubKey = (): string =>
  * Generates a random mock wallet address.
  * @returns The generated wallet address.
  */
-const generateWalletAddress = (): string =>
-  Math.random().toString(36).substring(2, 15) +
-  Math.random().toString(36).substring(2, 15) +
-  Math.random().toString(36).substring(2, 15) +
-  Math.random().toString(36).substring(2, 15);
+const generateWalletAddress = generateNodePubKey;
 
 /**
  * Generates a contributor object.
  * @returns The generated contributor object.
  */
-const generateContributor = (address?: string): Contributor => {
+const generateContributor = (address?: string): StakeContributor => {
   return {
     address: address ?? generateWalletAddress(),
-    amount: BigInt(Math.round(Math.random() * 1000)),
-    reserved: BigInt(Math.round(Math.random() * 1000)),
-    locked_contributions: [],
+    amount: Math.round(Math.random() * 1000),
+    reserved: Math.round(Math.random() * 1000),
   };
 };
 
@@ -47,14 +37,13 @@ const generateContributor = (address?: string): Contributor => {
  * @param userAddress The address of the user.
  * @returns An array of contributors.
  */
-const generateContributors = (maxN = 10, userAddress?: string): Contributor[] => {
+const generateContributors = (maxN = 10, userAddress?: string): StakeContributor[] => {
   const contributors = Array.from(
     { length: Math.ceil(Math.random() * (userAddress ? maxN - 1 : maxN)) },
     () => generateContributor()
   );
-  if (userAddress) {
-    contributors.unshift(generateContributor(userAddress));
-  }
+
+  contributors.unshift(generateContributor(userAddress));
   return contributors;
 };
 
@@ -94,32 +83,26 @@ type GenerateBasicNodeDataProps = {
  */
 function generateBasicNodeData({
   userAddress,
-  operatorAddress,
+  operatorAddress = generateWalletAddress(),
   minContributors,
-}: GenerateBasicNodeDataProps): Omit<ServiceNode, 'state'> {
+}: GenerateBasicNodeDataProps): Omit<Stake, 'state'> {
   const num_contributions = Math.max(minContributors ?? 0, Math.ceil(Math.random() * 10));
+  const contributors = generateContributors(num_contributions, userAddress);
+  const staked_balance = contributors.find(({ address }) => address === userAddress)?.amount ?? 0;
   return {
     service_node_pubkey: generateNodePubKey(),
     requested_unlock_height: 0,
-    active: true,
-    funded: true,
-    earned_downtime_blocks: 0,
+    last_reward_block_height: 0,
     contract_id: 0,
-    service_node_version: [1, 1, 1],
     contributors: generateContributors(num_contributions, userAddress),
-    total_contributed: 0,
-    total_reserved: 0,
-    staking_requirement: 0,
-    portions_for_operator: 0,
-    operator_address: operatorAddress ?? generateWalletAddress(),
-    pubkey_ed25519: '...',
+    operator_address: operatorAddress,
     last_uptime_proof: generatePastBlockHeight(),
-    state_height: 0,
-    swarm_id: 0,
     operator_fee: 0,
-    contribution_open: 0,
-    contribution_required: 0,
-    num_contributions,
+    exited: false,
+    earned_downtime_blocks: 20,
+    deregistration_unlock_height: null,
+    liquidation_height: null,
+    staked_balance: staked_balance,
   };
 }
 
@@ -133,12 +116,10 @@ function generateBasicNodeData({
 const generateAwaitingContributorsNode = ({
   userAddress,
   operatorAddress,
-}: GenerateBasicNodeDataProps): ServiceNode => {
+}: GenerateBasicNodeDataProps): Stake => {
   return {
     ...generateBasicNodeData({ userAddress, operatorAddress }),
     state: NODE_STATE.AWAITING_CONTRIBUTORS,
-    active: false,
-    funded: false,
   };
 };
 
@@ -157,11 +138,10 @@ const generateRunningNode = ({
   beingUnlocked,
 }: GenerateBasicNodeDataProps & {
   beingUnlocked?: boolean;
-}): ServiceNode => {
+}): Stake => {
   return {
     ...generateBasicNodeData({ userAddress, operatorAddress }),
     state: NODE_STATE.RUNNING,
-    active: true,
     ...(beingUnlocked ? { requested_unlock_height: generateFutureBlockHeight() } : {}),
   };
 };
@@ -177,12 +157,10 @@ const generateRunningNode = ({
 const generateCancelledNode = ({
   userAddress,
   operatorAddress,
-}: GenerateBasicNodeDataProps): ServiceNode => {
+}: GenerateBasicNodeDataProps): Stake => {
   return {
     ...generateBasicNodeData({ userAddress, operatorAddress }),
     state: NODE_STATE.CANCELLED,
-    active: false,
-    funded: false,
   };
 };
 
@@ -191,22 +169,15 @@ const generateCancelledNode = ({
  *
  * @param options The options for generating the deregistered node.
  * @param options.userAddress The user address of the node.
- * @param options.awaitingLiquidation Indicates if the node is awaiting liquidation.
  * @returns The generated deregistered service node object.
  */
 const generateDeregisteredNode = ({
   userAddress,
   operatorAddress,
-  awaitingLiquidation,
-}: GenerateBasicNodeDataProps & {
-  awaitingLiquidation?: boolean;
-}): ServiceNode => {
+}: GenerateBasicNodeDataProps): Stake => {
   return {
     ...generateBasicNodeData({ userAddress, operatorAddress }),
     state: NODE_STATE.DEREGISTERED,
-    active: false,
-    funded: false,
-    awaiting_liquidation: awaitingLiquidation,
   };
 };
 
@@ -224,13 +195,11 @@ const generateDecommissionedNode = ({
   beingUnlocked,
 }: GenerateBasicNodeDataProps & {
   beingUnlocked?: boolean;
-}): ServiceNode => {
+}): Stake => {
   return {
     ...generateBasicNodeData({ userAddress, operatorAddress }),
     state: NODE_STATE.DECOMMISSIONED,
-    decomm_blocks_remaining: generateFutureBlockHeight(),
-    active: false,
-    funded: false,
+    earned_downtime_blocks: 20,
     ...(beingUnlocked ? { requested_unlock_height: generateFutureBlockHeight() } : {}),
   };
 };
@@ -245,12 +214,10 @@ const generateDecommissionedNode = ({
 const generateUnlockedNode = ({
   userAddress,
   operatorAddress,
-}: GenerateBasicNodeDataProps): ServiceNode => {
+}: GenerateBasicNodeDataProps): Stake => {
   return {
     ...generateBasicNodeData({ userAddress, operatorAddress }),
-    state: NODE_STATE.UNLOCKED,
-    active: false,
-    funded: false,
+    state: NODE_STATE.EXITED,
   };
 };
 
@@ -264,9 +231,11 @@ export const generateMockNodeData = ({
   userAddress,
 }: {
   userAddress: string;
-}): GetNodesForWalletResponse => {
-  const mockNodeData: GetNodesForWalletResponse = {
-    nodes: [],
+}): GetStakesResponse => {
+  const mockNodeData: GetStakesResponse = {
+    stakes: [],
+    historical_stakes: [],
+    error_stakes: [],
     network: {
       block_height: 1000,
       block_timestamp: Date.now(),
@@ -280,101 +249,35 @@ export const generateMockNodeData = ({
 
   const operatorAddress = userAddress;
 
-  mockNodeData.nodes.push(generateRunningNode({ userAddress }));
-  mockNodeData.nodes.push(generateRunningNode({ userAddress, operatorAddress }));
-  mockNodeData.nodes.push(generateRunningNode({ userAddress }));
-  mockNodeData.nodes.push(generateRunningNode({ userAddress, beingUnlocked: true }));
-  mockNodeData.nodes.push(
+  mockNodeData.stakes.push(generateRunningNode({ userAddress }));
+  mockNodeData.stakes.push(generateRunningNode({ userAddress, operatorAddress }));
+  mockNodeData.stakes.push(generateRunningNode({ userAddress }));
+  mockNodeData.stakes.push(generateRunningNode({ userAddress, beingUnlocked: true }));
+  mockNodeData.stakes.push(
     generateRunningNode({ userAddress, beingUnlocked: true, operatorAddress })
   );
-  mockNodeData.nodes.push(generateAwaitingContributorsNode({ userAddress, minContributors: 1 }));
-  mockNodeData.nodes.push(generateAwaitingContributorsNode({ userAddress, minContributors: 10 }));
-  mockNodeData.nodes.push(
+  mockNodeData.stakes.push(generateAwaitingContributorsNode({ userAddress, minContributors: 1 }));
+  mockNodeData.stakes.push(generateAwaitingContributorsNode({ userAddress, minContributors: 10 }));
+  mockNodeData.stakes.push(
     generateAwaitingContributorsNode({ userAddress, minContributors: 1, operatorAddress })
   );
-  mockNodeData.nodes.push(generateCancelledNode({ userAddress }));
-  mockNodeData.nodes.push(generateCancelledNode({ userAddress }));
-  mockNodeData.nodes.push(generateCancelledNode({ userAddress, operatorAddress }));
-  mockNodeData.nodes.push(generateDecommissionedNode({ userAddress }));
-  mockNodeData.nodes.push(generateDecommissionedNode({ userAddress, beingUnlocked: true }));
-  mockNodeData.nodes.push(generateDecommissionedNode({ userAddress, operatorAddress }));
-  mockNodeData.nodes.push(
+  mockNodeData.stakes.push(generateCancelledNode({ userAddress }));
+  mockNodeData.stakes.push(generateCancelledNode({ userAddress }));
+  mockNodeData.stakes.push(generateCancelledNode({ userAddress, operatorAddress }));
+  mockNodeData.stakes.push(generateDecommissionedNode({ userAddress }));
+  mockNodeData.stakes.push(generateDecommissionedNode({ userAddress, beingUnlocked: true }));
+  mockNodeData.stakes.push(generateDecommissionedNode({ userAddress, operatorAddress }));
+  mockNodeData.stakes.push(
     generateDecommissionedNode({ userAddress, operatorAddress, beingUnlocked: true })
   );
-  mockNodeData.nodes.push(generateDeregisteredNode({ userAddress }));
-  mockNodeData.nodes.push(generateDeregisteredNode({ userAddress, awaitingLiquidation: true }));
-  mockNodeData.nodes.push(generateDeregisteredNode({ userAddress, operatorAddress }));
-  mockNodeData.nodes.push(generateDeregisteredNode({ userAddress, operatorAddress }));
-  mockNodeData.nodes.push(generateUnlockedNode({ userAddress }));
-  mockNodeData.nodes.push(generateUnlockedNode({ userAddress, operatorAddress }));
-  mockNodeData.nodes.push(generateUnlockedNode({ userAddress, operatorAddress }));
+  mockNodeData.stakes.push(generateDeregisteredNode({ userAddress }));
+  mockNodeData.stakes.push(generateDeregisteredNode({ userAddress, operatorAddress }));
+  mockNodeData.stakes.push(generateDeregisteredNode({ userAddress, operatorAddress }));
+  mockNodeData.stakes.push(generateUnlockedNode({ userAddress }));
+  mockNodeData.stakes.push(generateUnlockedNode({ userAddress, operatorAddress }));
+  mockNodeData.stakes.push(generateUnlockedNode({ userAddress, operatorAddress }));
 
   return mockNodeData;
-};
-
-export const generateMinAndMaxContribution = ({
-  contributors,
-}: {
-  contributors: Array<Contributor>;
-}): { minContribution: number; maxContribution: number } => {
-  const totalStaked =
-    contributors.reduce((acc, contributor) => acc + contributor.amount, BigInt(0)) /
-    BigInt(Math.pow(10, 9));
-  const remainingSlots = 10 - contributors.length;
-
-  if (remainingSlots === 0) {
-    return { minContribution: 0, maxContribution: 0 };
-  }
-
-  // NOTE: 120 is current stake requirement
-  const remainingStake = BigInt(120) * BigInt(Math.pow(10, 9)) - totalStaked;
-
-  return {
-    minContribution: Math.max(0, Number(remainingStake) / remainingSlots),
-    maxContribution: Number(remainingStake),
-  };
-};
-
-// TODO - Rework node generation logic
-const generateOpenNode = ({
-  userAddress,
-  maxContributors,
-}: {
-  userAddress?: string;
-  maxContributors: number;
-}): OpenNode => {
-  const contributions = generateContributors(maxContributors, userAddress);
-
-  return {
-    service_node_pubkey: generateNodePubKey(),
-    service_node_signature: generateNodePubKey(),
-    contract: generateNodePubKey(),
-    bls_pubkey: generateNodePubKey(),
-    fee: Math.random() * 1000,
-    finalized: false,
-    cancelled: false,
-    total_contributions: 0,
-    contributions,
-  };
-};
-
-export const generateOpenNodes = (args?: { userAddress?: string }): Array<OpenNode> => {
-  const userAddress = args?.userAddress;
-  return [
-    generateOpenNode({ maxContributors: 1 }),
-    generateOpenNode({ maxContributors: 9 }),
-    generateOpenNode({ userAddress, maxContributors: 5 }),
-    generateOpenNode({ userAddress, maxContributors: 1 }),
-    generateOpenNode({ userAddress, maxContributors: 1 }),
-    generateOpenNode({ userAddress, maxContributors: 5 }),
-    generateOpenNode({ maxContributors: 9 }),
-    generateOpenNode({ maxContributors: 9 }),
-    generateOpenNode({ maxContributors: 5 }),
-    generateOpenNode({ maxContributors: 5 }),
-    generateOpenNode({ userAddress, maxContributors: 5 }),
-    generateOpenNode({ userAddress, maxContributors: 10 }),
-    generateOpenNode({ userAddress, maxContributors: 10 }),
-  ];
 };
 
 export const generateNodeRegistration = ({
