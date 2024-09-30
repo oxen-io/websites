@@ -21,7 +21,7 @@ import { useTranslations } from 'next-intl';
 import { forwardRef, type HTMLAttributes, ReactNode, useMemo, useState } from 'react';
 import { NodeCard, NodeCardText, NodeCardTitle, NodeContributorList } from './NodeCard';
 import { PubKey } from '@session/ui/components/PubKey';
-import { areHexesEqual } from '@session/util/string';
+import { areHexesEqual } from '@session/util-crypto/string';
 import { Button } from '@session/ui/ui/button';
 import { NodeRequestExitButton } from '@/components/StakedNode/NodeRequestExitButton';
 import { Tooltip } from '@session/ui/ui/tooltip';
@@ -32,7 +32,7 @@ import { NodeExitButtonDialog } from '@/components/StakedNode/NodeExitButtonDial
 import { externalLink } from '@/lib/locale-defaults';
 import { TextSeparator } from '@session/ui/components/Separator';
 import useRelativeTime from '@/hooks/useRelativeTime';
-import { getDateFromUnixTimestampSeconds } from '@session/util/date';
+import { getDateFromUnixTimestampSeconds } from '@session/util-js/date';
 import { FEATURE_FLAG } from '@/lib/feature-flags';
 import { useFeatureFlag } from '@/lib/feature-flags-client';
 import { formatSENTNumber } from '@session/contracts/hooks/SENT';

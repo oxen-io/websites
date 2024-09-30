@@ -12,7 +12,7 @@ import { cookieToInitialState } from 'wagmi';
 import ChainBanner from '@/components/ChainBanner';
 import { GlobalProvider } from '@/providers/global-provider';
 import { TOSHandler } from '@/components/TOSHandler';
-import { getBuildInfo } from '@session/util/build';
+import { getBuildInfo } from '@session/util-js/build';
 import { FeatureFlagProvider } from '@/lib/feature-flags-client';
 import RemoteBanner from '@/components/RemoteBanner';
 import Header from '@/components/Header';

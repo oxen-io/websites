@@ -7,7 +7,7 @@ import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-clien
 import { getOpenNodes } from '@/lib/queries/getOpenNodes';
 import { useMemo } from 'react';
 import { Loading } from '@session/ui/components/loading';
-import { areHexesEqual } from '@session/util/string';
+import { areHexesEqual } from '@session/util-crypto/string';
 
 export const BlockExplorerLink = ({ nodeId }: { nodeId: string }) => {
   const { data, isLoading } = useStakingBackendSuspenseQuery(getOpenNodes);

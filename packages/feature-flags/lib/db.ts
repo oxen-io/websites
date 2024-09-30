@@ -1,7 +1,7 @@
 import * as BetterSql3 from 'better-sqlite3-multiple-ciphers';
 import Database from 'better-sqlite3-multiple-ciphers';
 import path from 'path';
-import { isProduction } from '@session/util/env';
+import { isProduction } from '@session/util-js/env';
 
 export enum TABLE {
   FLAGS = 'flags',

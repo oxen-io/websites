@@ -3,7 +3,7 @@
 import { CHAIN } from '@session/contracts/chains';
 import { Social, SocialLink } from '@session/ui/components/SocialLinkList';
 import { LocaleKey } from './locale-util';
-import { getEnvironmentTaggedDomain } from '@session/util/env';
+import { getEnvironmentTaggedDomain } from '@session/util-js/env';
 
 /** TODO - Change this to MAINNET when we launch mainnet */
 export const preferredChain = CHAIN.TESTNET as const;

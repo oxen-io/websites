@@ -1,4 +1,4 @@
-import { areHexesEqual, collapseString } from '../string';
+import { areHexesEqual, collapseString } from '../src/string';
 
 // #region - collapseString
 
