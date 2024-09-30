@@ -30,6 +30,8 @@ This repository contains the following apps and packages:
 - `@session/feture-flags`: Feature flags library for [Next.js](https://nextjs.org/) apps. Supporting client, server, and
   remote flags. [Read more](packages/feature-flags/README.md).
 - `@session/logger`: An opinionated logging wrapper. [Read more](packages/logger/README.md).
+- `@session/sanity-cms`: A [Sanity](https://sanity.io/) CMS integration
+  library. [Read more](packages/sanity-cms/README.md).
 - `@session/sent-staking-js`: Session Token Staking js library for interacting with the Session Token staking
   backend. [Read more](packages/sent-staking-js/README.md).
 - `@session/testing`: A testing utility library. [Read more](packages/testing/README.md).

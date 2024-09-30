@@ -1,0 +1,35 @@
+{
+  "name": "@session/sanity-cms",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./*": "./*.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "jest --passWithNoTests"
+  },
+  "devDependencies": {
+    "@session/eslint-config": "workspace:*",
+    "@session/testing": "workspace:*",
+    "@session/typescript-config": "workspace:*",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "next": "14.2.12",
+    "react": "18.3.1"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9",
+    "yarn": "use pnpm",
+    "npm": "use pnpm"
+  },
+  "dependencies": {
+    "@sanity/image-url": "^1.0.2",
+    "@session/logger": "workspace:*",
+    "@session/util-js": "workspace:*",
+    "@session/util-logger": "workspace:*",
+    "next-sanity": "^9.5.0"
+  }
+}
