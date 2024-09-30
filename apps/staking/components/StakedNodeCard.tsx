@@ -318,10 +318,13 @@ const ReadyForExitNotification = ({
 
   return (
     <Tooltip
-      tooltipContent={dictionary.rich('exitTimerDescription', {
-        relativeTime,
-        link: externalLink(URL.NODE_LIQUIDATION_LEARN_MORE),
-      })}
+      tooltipContent={dictionary.rich(
+        isLiquidationSoon ? 'exitTimerDescriptionNow' : 'exitTimerDescription',
+        {
+          relativeTime,
+          link: externalLink(URL.NODE_LIQUIDATION_LEARN_MORE),
+        }
+      )}
     >
       <NodeNotification level={isLiquidationSoon ? 'error' : 'warning'} className={className}>
         {isLiquidationSoon
