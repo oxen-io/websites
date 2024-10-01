@@ -88,7 +88,7 @@ export function createSanityConfig({
   /** Combine the singleton schemas and the regular schemas, removing duplicates. */
   const combinedSchemas = [
     ...singletonSchemas,
-    ...schemas?.filter(
+    ...schemas.filter(
       (schema) => !singletonSchemas.some((singleton) => singleton.name === schema.name)
     ),
   ];
