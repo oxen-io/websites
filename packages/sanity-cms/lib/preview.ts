@@ -1,5 +1,6 @@
 import { type DefaultDocumentNodeResolver } from 'sanity/structure';
 import { Iframe } from 'sanity-plugin-iframe-pane';
+import type { RouteFieldsSchemaType } from '../schemas/fields/groups/route';
 
 const iframeDefaultOptions = {
   url: {
