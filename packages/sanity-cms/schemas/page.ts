@@ -4,6 +4,7 @@ import { routeFields } from './fields/groups/route';
 import { copyFieldOf } from './fields/generated/copy';
 import type { DocumentFields } from '@session/sanity-types';
 import type { SchemaFieldsType } from './types';
+import { DocumentIcon } from '@sanity/icons';
 
 export const pageFields = [
   ...routeFields,
@@ -21,6 +22,7 @@ export const pageSchema = defineType({
   type: 'document',
   name: 'page',
   title: 'Page',
+  icon: DocumentIcon,
   fields: pageFields,
   preview: {
     select: {

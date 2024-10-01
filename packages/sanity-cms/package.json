@@ -31,6 +31,8 @@
     "npm": "use pnpm"
   },
   "dependencies": {
+    "@planetary/sanity-plugin-preflight": "^1.1.1",
+    "@sanity/icons": "^3.4.0",
     "@sanity/image-url": "^1.0.2",
     "@sanity/preview-kit": "^5.1.1",
     "@sanity/preview-url-secret": "^1.6.21",

@@ -21,13 +21,21 @@ const iframeDefaultOptions = {
 // Import this into the deskTool() plugin
 export const defaultDocumentNode: DefaultDocumentNodeResolver = (S) =>
   S.document().views([
-    // Default form view
-    S.view.form(),
+    S.view.form().icon(EditIcon),
     S.view
       .component(Iframe)
       .options({
         ...iframeDefaultOptions,
         defaultSize: `desktop`,
       })
-      .title('Preview'),
+      .title('Preview')
+      .icon(DesktopIcon),
+    S.view
+      .component(
+        Preflight({
+          plugins: [DeadLinks()],
+        })
+      )
+      .title('Preflight')
+      .icon(RocketIcon),
   ]);
