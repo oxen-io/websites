@@ -24,25 +24,27 @@ type SanityFieldTypeMap = {
   number: number;
   boolean: boolean;
   date: Date;
-  reference: any;
+  reference: unknown;
   object: Record<string, UnknownFieldType>;
   // TODO: add support for typing arrays
   array: Array<UnknownFieldType>;
   url: string;
 };
 
-type FieldTypeMap<CustomFieldTypeMap extends {}> = SanityFieldTypeMap &
+type FieldTypeMap<CustomFieldTypeMap extends object> = SanityFieldTypeMap &
   CustomFieldTypeMap &
   Record<string, UnknownFieldType>;
 
-type FieldType<CustomFieldTypeMap extends {}> = keyof FieldTypeMap<CustomFieldTypeMap>;
+type FieldType<CustomFieldTypeMap extends object> = keyof FieldTypeMap<CustomFieldTypeMap>;
 
-type SchemaField<CustomFieldTypeMap extends {}> = {
+type SchemaField<CustomFieldTypeMap extends object> = {
   name: string;
   type: FieldType<CustomFieldTypeMap>;
 };
 
-export type SchemaFields<CustomFieldTypeMap extends {}> = Array<SchemaField<CustomFieldTypeMap>>;
+export type SchemaFields<CustomFieldTypeMap extends object> = Array<
+  SchemaField<CustomFieldTypeMap>
+>;
 
 /**
  * Use this type to generate a type for a Sanity schema.
@@ -107,7 +109,7 @@ export type SchemaFields<CustomFieldTypeMap extends {}> = Array<SchemaField<Cust
  * ```
  */
 export type GenericSchemaType<
-  CustomFieldTypeMap extends {},
+  CustomFieldTypeMap extends object,
   Fields extends SchemaFields<CustomFieldTypeMap>,
 > = {
   [Field in Fields[number] as Field['name']]: FieldTypeMap<CustomFieldTypeMap>[Field['type']];
