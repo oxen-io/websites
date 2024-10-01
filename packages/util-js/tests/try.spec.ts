@@ -1,6 +1,8 @@
 import { safeTry, safeTrySync } from '../try';
 import { expectFunctionToCatchErrors } from '@session/testing/expectations';
 
+const testError = new Error('foo');
+
 describe('safeTry', () => {
   it('should return a tuple with the result of the promise', async () => {
     expect.assertions(5);
@@ -17,9 +19,9 @@ describe('safeTry', () => {
   it('should return a tuple with an error if the promise rejects', async () => {
     expect.assertions(5);
 
-    const result = await safeTry(Promise.reject(new Error('foo')));
+    const result = await safeTry(Promise.reject(testError));
 
-    expect(result).toEqual([new Error('foo'), null]);
+    expect(result).toEqual([testError, null]);
     expect(Array.isArray(result)).toBe(true);
     expect(result).toHaveLength(2);
     expect(result[0]).toBeInstanceOf(Error);
@@ -43,11 +45,11 @@ describe('safeTry', () => {
     expect.assertions(5);
 
     const func = async () => {
-      throw new Error('foo');
+      throw testError;
     };
     const result = await safeTry(func());
 
-    expect(result).toEqual([new Error('foo'), null]);
+    expect(result).toEqual([testError, null]);
     expect(Array.isArray(result)).toBe(true);
     expect(result).toHaveLength(2);
     expect(result[0]).toBeInstanceOf(Error);
@@ -58,7 +60,7 @@ describe('safeTry', () => {
     expect.assertions(1);
 
     const testFunc = async () => {
-      throw new Error('foo');
+      throw testError;
     };
 
     await expectFunctionToCatchErrors(() => safeTry(testFunc()));
@@ -82,10 +84,10 @@ describe('safeTrySync', () => {
     expect.assertions(5);
 
     const result = safeTrySync(() => {
-      throw new Error('foo');
+      throw testError;
     });
 
-    expect(result).toEqual([new Error('foo'), null]);
+    expect(result).toEqual([testError, null]);
     expect(Array.isArray(result)).toBe(true);
     expect(result).toHaveLength(2);
     expect(result[0]).toBeInstanceOf(Error);
@@ -119,14 +121,14 @@ describe('safeTrySync', () => {
 
       // @ts-expect-error - This should be a TS error as the function is asynchronous
       const result = safeTrySync(async () => {
-        throw new Error('foo');
+        throw testError;
       });
 
       expect(Array.isArray(result)).toBe(true);
       expect(result).toHaveLength(2);
       expect(result[0]).toBeNull();
       expect(result[1]).toBeInstanceOf(Promise);
-      await expect(result[1]).rejects.toThrow(new Error('foo'));
+      await expect(result[1]).rejects.toThrow(testError);
     });
   });
 });

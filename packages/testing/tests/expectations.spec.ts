@@ -1,14 +1,16 @@
 import { expectFunctionToCatchErrors, getThrownError } from '../expectations';
 
+const testError = new Error('foo');
+
 describe('getThrownError', () => {
   it('should fail an expectation if the given function does not catch its error', async () => {
     expect.assertions(1);
 
     const testFunc = () => {
-      throw new Error('foo');
+      throw testError;
     };
 
-    await expect(getThrownError(testFunc)).resolves.toStrictEqual(new Error('foo'));
+    await expect(getThrownError(testFunc)).resolves.toStrictEqual(testError);
   });
 
   it('should do nothing if the given function catches its own error', async () => {
@@ -16,7 +18,7 @@ describe('getThrownError', () => {
 
     const testFunc = () => {
       try {
-        throw new Error('foo');
+        throw testError;
       } catch (err) {
         // Do nothing
       }
@@ -32,7 +34,7 @@ describe('expectFunctionToCatchErrors', () => {
 
     const testFunc = () => {
       try {
-        throw new Error('foo');
+        throw testError;
       } catch (err) {
         // Do nothing
       }
