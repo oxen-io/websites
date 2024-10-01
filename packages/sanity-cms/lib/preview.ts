@@ -1,6 +1,8 @@
 import { type DefaultDocumentNodeResolver } from 'sanity/structure';
 import { Iframe } from 'sanity-plugin-iframe-pane';
 import type { RouteFieldsSchemaType } from '../schemas/fields/groups/route';
+import { DeadLinks, Preflight } from '@planetary/sanity-plugin-preflight';
+import { DesktopIcon, EditIcon, RocketIcon } from '@sanity/icons';
 
 const iframeDefaultOptions = {
   url: {
