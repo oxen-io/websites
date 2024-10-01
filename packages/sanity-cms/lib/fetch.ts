@@ -1,18 +1,15 @@
 import type { FilteredResponseQueryOptions, QueryParams, SanityClient } from 'next-sanity';
 import { isDraftModeEnabled } from './util';
 import { safeTry } from '@session/util-js/try';
+import logger from './logger';
 
-export type SanityFetchOptions<QueryString extends string> = {
+export type SanityFetchOptions<QueryString = string> = {
   query: QueryString;
   params?: QueryParams;
   revalidate?: number;
   tags?: Array<string>;
   isClient?: boolean;
 };
-
-export type SanityFetch = <QueryString extends string>(
-  options: SanityFetchOptions<QueryString>
-) => ReturnType<typeof sanityFetchGeneric<QueryString>>;
 
 /**
  * This type fixes the broken `next-sanity` types. Somebody got a little too excited using and
@@ -29,13 +26,12 @@ type FixedSanityResponseQueryOptions = Omit<FilteredResponseQueryOptions, 'next'
   };
 };
 
-export type SanityFetchGenericOptions<QueryString extends string> =
-  SanityFetchOptions<QueryString> & {
-    client: SanityClient;
-    token?: string;
-  };
+export type SanityFetchGenericOptions = SanityFetchOptions & {
+  client: SanityClient;
+  token?: string;
+};
 
-export const sanityFetchGeneric = async <const QueryString extends string>({
+export const sanityFetchGeneric = async <R = unknown>({
   client,
   token,
   query,
@@ -43,9 +39,10 @@ export const sanityFetchGeneric = async <const QueryString extends string>({
   revalidate,
   tags,
   isClient = false,
-}: SanityFetchGenericOptions<QueryString>) =>
-  safeTry(
+}: SanityFetchGenericOptions) =>
+  safeTry<R>(
     (async () => {
+      logger.info(`Fetching ${query} with params ${JSON.stringify(params)}`);
       const isDraftMode = token && isDraftModeEnabled(isClient);
 
       const options = {
@@ -57,7 +54,7 @@ export const sanityFetchGeneric = async <const QueryString extends string>({
         },
       } satisfies FixedSanityResponseQueryOptions;
 
-      return client.fetch<QueryString>(
+      return client.fetch<R>(
         query,
         params,
         /** @see {FixedSanityResponseQueryOptions} */

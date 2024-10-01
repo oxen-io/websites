@@ -1,17 +1,18 @@
 import { createClient, SanityClient } from 'next-sanity';
-import { type SanityFetch, sanityFetchGeneric, type SanityFetchOptions } from './fetch';
+import { sanityFetchGeneric, type SanityFetchOptions } from './fetch';
 import logger from './logger';
 
 export type CreateSanityClientOptions = {
   projectId: string;
   dataset: string;
   /** @see https://www.sanity.io/docs/api-versioning */
-  apiVersion: string;
+  apiVersion?: string;
   draftToken?: string;
+  studioUrl?: string;
 };
 
-export type SessionSanityClient = Omit<SanityClient, 'fetch'> & {
-  fetch: SanityFetch;
+export type SessionSanityClient = SanityClient & {
+  nextFetch: <R>(options: SanityFetchOptions) => ReturnType<typeof sanityFetchGeneric<R>>;
 };
 
 /**
@@ -20,35 +21,44 @@ export type SessionSanityClient = Omit<SanityClient, 'fetch'> & {
  * @param dataset - The dataset name of the Sanity project.
  * @param apiVersion - The API version used.
  * @param draftToken - The draft token of the Sanity project.
+ * @param studioUrl - The URL of the Sanity studio.
  */
 export function createSanityClient({
   projectId,
   dataset,
   apiVersion,
   draftToken,
+  studioUrl,
 }: CreateSanityClientOptions): SessionSanityClient {
-  const client = createClient({
-    projectId,
-    dataset,
-    apiVersion,
-    useCdn: false,
-  });
-
+  logger.info('Creating Sanity client');
   if (!draftToken) {
     logger.warn('No draft token provided, draft mode will be disabled');
   }
 
+  const client = createClient({
+    token: draftToken,
+    projectId,
+    dataset,
+    apiVersion,
+    useCdn: false,
+    perspective: 'published',
+    stega: {
+      enabled: true,
+      studioUrl,
+    },
+  });
+
   /** This is required to make TS happy about replacing the `fetch` method on the client */
   const sessionSanityClient = client as unknown as SessionSanityClient;
 
-  sessionSanityClient.fetch = async <const QueryString extends string>({
+  sessionSanityClient.nextFetch = async <R>({
     query,
-    params = {},
+    params,
     revalidate,
     tags,
     isClient = false,
-  }: SanityFetchOptions<QueryString>) =>
-    sanityFetchGeneric<QueryString>({
+  }: SanityFetchOptions) =>
+    sanityFetchGeneric<R>({
       client,
       token: draftToken,
       query,
