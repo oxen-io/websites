@@ -1,13 +1,5 @@
 import { type DefaultDocumentNodeResolver } from 'sanity/structure';
 import { Iframe } from 'sanity-plugin-iframe-pane';
-import type { RouteSchemaType } from '../schemas/fields/groups/route';
-
-// Customise this function to show the correct URL based on the current document
-function getPreviewUrl(route: RouteSchemaType) {
-  return route?.slug?.current
-    ? `${window.location.host}/${route.slug.current}`
-    : `${window.location.host}`;
-}
 
 const iframeDefaultOptions = {
   url: {
