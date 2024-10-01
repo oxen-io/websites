@@ -32,7 +32,7 @@ export const isEnvironment = (environment: string): environment is Environment =
  */
 export const setEnvironment = (environment: Environment) => {
   if (!isEnvironment(environment)) {
-    console.warn(`Invalid environment: ${environment}`);
+    console.warn(`Invalid environment: ${environment} | Defaulting to 'dev' environment.`);
     env = Environment.DEV;
   } else {
     env = environment;
