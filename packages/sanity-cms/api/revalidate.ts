@@ -1,7 +1,7 @@
 import { revalidateTag } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 import { parseBody } from 'next-sanity/webhook';
-import logger from './logger';
+import logger from '../lib/logger';
 import { safeTry } from '@session/util-js/try';
 
 type WebhookPayload = {
