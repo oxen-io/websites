@@ -1,6 +1,6 @@
 'use client';
 
-import { createSanityConfig } from '@session/sanity-cms/config';
+import { createSanityConfig } from '@session/sanity-cms/lib/config';
 import type { NextStudioProps } from 'next-sanity/studio/client-component';
 import { NextStudio } from 'next-sanity/studio';
 

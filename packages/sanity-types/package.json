@@ -4,8 +4,7 @@
   "private": true,
   "exports": "./index.ts",
   "scripts": {
-    "check-types": "tsc --noEmit",
-    "lint": "eslint ."
+    "check-types": "tsc --noEmit"
   },
   "devDependencies": {
     "@session/eslint-config": "workspace:*",
