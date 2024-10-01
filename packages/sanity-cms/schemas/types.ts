@@ -1,8 +1,8 @@
 import type { GenericSchemaType, SchemaFields } from '@session/sanity-types';
+import type { SeoType } from './fields/basic/seo';
 
 type CustomFieldTypeMap = {
-  //TODO: type this
-  seoMetaFields: 'string';
+  seoMetaFields: SeoType;
 };
 
 export type SchemaFieldsType<Fields extends SchemaFields<CustomFieldTypeMap>> = GenericSchemaType<

@@ -18,4 +18,5 @@ export const routeFields = [
     validation: (Rule) => Rule.required(),
   }),
 ];
-export type RouteSchemaType = SchemaFieldsType<typeof routeFields>;
+
+export type RouteFieldsSchemaType = SchemaFieldsType<typeof routeFields>;

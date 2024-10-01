@@ -7,7 +7,8 @@ import { DesktopIcon, EditIcon, RocketIcon } from '@sanity/icons';
 const iframeDefaultOptions = {
   url: {
     origin: 'same-origin',
-    preview: (document: RouteSchemaType) => document?.slug?.current ?? new Error('Missing slug'),
+    preview: (document: RouteFieldsSchemaType) =>
+      document?.slug?.current ?? new Error('Missing slug'),
     draftMode: '/api/draft/enable', // the route you enable draft mode, see: https://github.com/sanity-io/visual-editing/tree/main/packages/preview-url-secret#sanitypreview-url-secret
   },
   showDisplayUrl: true,
