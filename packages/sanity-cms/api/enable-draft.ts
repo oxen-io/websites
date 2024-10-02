@@ -3,6 +3,7 @@ import { draftMode } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { SessionSanityClient } from '../lib/client';
 import { SanityClient } from 'next-sanity';
+import logger from '../lib/logger';
 
 type CreateEnableDraftHandlerOptions = {
   client: SessionSanityClient;
@@ -29,6 +30,7 @@ export const createEnableDraftHandler = ({
     }
 
     draftMode().enable();
+    logger.info(`Enabled draft mode for ${req.url}`);
     return NextResponse.redirect(new URL(redirectTo, req.url));
   };
 
