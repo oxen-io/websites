@@ -31,7 +31,10 @@
     "npm": "use pnpm"
   },
   "dependencies": {
+    "@session/ui": "workspace:*",
     "@planetary/sanity-plugin-preflight": "^1.1.1",
+    "@portabletext/react": "^3.1.0",
+    "@sanity/asset-utils": "^1.3.2",
     "@sanity/icons": "^3.4.0",
     "@sanity/image-url": "^1.0.2",
     "@sanity/preview-kit": "^5.1.1",
