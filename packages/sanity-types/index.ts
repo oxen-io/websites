@@ -122,3 +122,7 @@ export type DocumentFields = {
   _updatedAt: string;
   _rev: string;
 };
+
+export type ArrayMemberFields = {
+  _key: string;
+};
