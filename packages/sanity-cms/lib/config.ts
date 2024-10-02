@@ -27,6 +27,9 @@ export type CreateSanityConfigOptions = {
   singletonSchemas?: Array<SchemaTypeDefinition>;
 };
 
+// TODO: investigate if we need to add the following actions to the singleton actions
+// const singletonActions = new Set(['publish', 'discardChanges', 'restore']);
+
 /**
  * Create a new Sanity config with all the required options.
  * @param projectId - The Sanity project ID.
@@ -101,6 +104,33 @@ export function createSanityConfig({
       seoMetaFields(),
       structureTool({
         defaultDocumentNode,
+        structure: (S) => {
+          const singletonItems = singletonSchemas.map((typeDef) => {
+            return S.listItem()
+              .title(typeDef.title ?? typeDef.name)
+              .icon(typeDef.icon)
+              .child(
+                S.editor()
+                  .id(typeDef.name)
+                  .schemaType(typeDef.name)
+                  .documentId(typeDef.name)
+                  .views([
+                    // Default form view
+                    S.view.form(),
+                    // Preview
+                  ])
+              );
+          });
+
+          // The default root list items (except custom ones)
+          const defaultListItems = S.documentTypeListItems().filter(
+            (listItem) => !singletonSchemas.find((singleton) => singleton.name === listItem.getId())
+          );
+
+          return S.list()
+            .title('Content')
+            .items([...singletonItems, S.divider(), ...defaultListItems]);
+        },
       }),
       presentationTool({
         previewUrl: {
