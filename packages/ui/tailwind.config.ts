@@ -27,6 +27,7 @@ export default {
     },
     fontFamily: {
       'roboto-flex': ['var(--font-roboto-flex)'],
+      'source-serif': ['var(--font-source-serif)'],
       'monument-extended': ['var(--font-monument-extended)'],
     },
     extend: {
@@ -51,9 +52,12 @@ export default {
       colors: {
         session: {
           green: 'var(--session-green)',
+          'green-dark': 'var(--session-green-dark)',
           black: 'var(--session-black)',
           white: 'var(--session-white)',
           text: 'var(--session-text)',
+          'text-black': 'var(--session-text-black)',
+          'text-black-secondary': 'var(--session-text-black-secondary)',
         },
         text: {
           primary: 'var(--session-text)',

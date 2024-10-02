@@ -8,6 +8,8 @@
     --session-black: #0a0a0a;
     --session-green: #00f782;
     --session-text: #dbdbdb;
+    --session-text-black: #1B1B1B;
+    --session-text-black-secondary: #6D6D6D;
     --session-white: #ffffff;
     --session-gradient-outline: linear-gradient(
             135deg,
