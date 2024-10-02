@@ -24,9 +24,15 @@ export const pageSchema = defineType({
   title: 'Page',
   icon: DocumentIcon,
   fields: pageFields,
+  groups: [
+    {
+      title: 'SEO',
+      name: 'seo',
+    },
+  ],
   preview: {
     select: {
-      title: 'title',
+      title: 'label',
     },
     prepare({ title }) {
       return {
