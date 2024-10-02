@@ -3,9 +3,9 @@ import type { SchemaFieldsType } from '../../types';
 
 export const routeFields = [
   defineField({
-    name: 'title',
+    name: 'label',
     type: 'string',
-    title: 'Title',
+    title: 'Label',
     validation: (Rule) => Rule.required(),
   }),
   defineField({
@@ -13,7 +13,7 @@ export const routeFields = [
     type: 'slug',
     title: 'Slug',
     options: {
-      source: 'title',
+      source: 'label',
     },
     validation: (Rule) => Rule.required(),
   }),
