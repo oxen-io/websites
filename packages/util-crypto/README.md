@@ -1,6 +1,6 @@
-# @session/util
+# @session/util-crypto
 
-This package is a utility library for common functions.
+This package is a crypto utility library for common crypto functions.
 
 ## Getting Started
 

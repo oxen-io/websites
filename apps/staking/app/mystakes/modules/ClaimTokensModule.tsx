@@ -14,7 +14,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { ActionModuleRow } from '@/components/ActionModule';
 import { Button } from '@session/ui/ui/button';
-import { formatBigIntTokenValue } from '@session/util/maths';
+import { formatBigIntTokenValue } from '@session/util-crypto/maths';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { LoadingText } from '@session/ui/components/loading-text';
 import { QUERY, TICKER, URL } from '@/lib/constants';

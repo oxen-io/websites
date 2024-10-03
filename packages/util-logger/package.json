@@ -1,0 +1,28 @@
+{
+  "name": "@session/util-logger",
+  "version": "0.0.0",
+  "private": true,
+  "exports": "./index.ts",
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@session/eslint-config": "workspace:*",
+    "@session/testing": "workspace:*",
+    "@session/typescript-config": "workspace:*"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9",
+    "yarn": "use pnpm",
+    "npm": "use pnpm"
+  },
+  "dependencies": {
+    "pino": "^9.2.0",
+    "pino-pretty": "^11.2.1",
+    "@session/logger": "workspace:*",
+    "@session/util-js": "workspace:*"
+  }
+}

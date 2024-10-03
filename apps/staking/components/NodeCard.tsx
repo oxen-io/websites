@@ -5,10 +5,10 @@ import { Tooltip } from '@session/ui/ui/tooltip';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { forwardRef, type HTMLAttributes, useMemo } from 'react';
-import { bigIntToNumber } from '@session/util/maths';
+import { bigIntToNumber } from '@session/util-crypto/maths';
 import { SENT_DECIMALS } from '@session/contracts';
 import { useTranslations } from 'next-intl';
-import { areHexesEqual } from '@session/util/string';
+import { areHexesEqual } from '@session/util-crypto/string';
 import { formatSENTBigInt, formatSENTNumber } from '@session/contracts/hooks/SENT';
 import { StakeContributor } from '@session/sent-staking-js/client';
 

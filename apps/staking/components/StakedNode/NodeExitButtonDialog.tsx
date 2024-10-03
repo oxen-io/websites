@@ -13,7 +13,7 @@ import { type ReactNode, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { SOCIALS } from '@/lib/constants';
 import { Social } from '@session/ui/components/SocialLinkList';
-import { formatBigIntTokenValue } from '@session/util/maths';
+import { formatBigIntTokenValue } from '@session/util-crypto/maths';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { Button } from '@session/ui/ui/button';
 import { NodeExitButton } from '@/components/StakedNode/NodeExitButton';

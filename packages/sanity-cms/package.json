@@ -1,0 +1,48 @@
+{
+  "name": "@session/sanity-cms",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./*": "./*.ts",
+    "./lib/*": "./lib/*.ts",
+    "./schemas": "./schemas/index.ts",
+    "./studio": "./studio.tsx",
+    "./components/*": "./components/*.tsx"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "jest --passWithNoTests"
+  },
+  "devDependencies": {
+    "@session/eslint-config": "workspace:*",
+    "@session/sanity-types": "workspace:*",
+    "@session/testing": "workspace:*",
+    "@session/typescript-config": "workspace:*",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "next": "14.2.12",
+    "react": "18.3.1"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9",
+    "yarn": "use pnpm",
+    "npm": "use pnpm"
+  },
+  "dependencies": {
+    "@planetary/sanity-plugin-preflight": "^1.1.1",
+    "@sanity/icons": "^3.4.0",
+    "@sanity/image-url": "^1.0.2",
+    "@sanity/preview-kit": "^5.1.1",
+    "@sanity/preview-url-secret": "^1.6.21",
+    "@sanity/vision": "^3.58.0",
+    "@session/logger": "workspace:*",
+    "@session/util-js": "workspace:*",
+    "@session/util-logger": "workspace:*",
+    "next-sanity": "^9.5.0",
+    "sanity": "^3.58.0",
+    "sanity-plugin-iframe-pane": "^3.1.6",
+    "sanity-plugin-seo": "^1.2.5"
+  }
+}

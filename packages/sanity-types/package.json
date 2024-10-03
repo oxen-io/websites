@@ -1,19 +1,14 @@
 {
-  "name": "@session/util",
+  "name": "@session/sanity-types",
   "version": "0.0.0",
   "private": true,
-  "exports": {
-    "./*": "./*.ts"
-  },
+  "exports": "./index.ts",
   "scripts": {
     "check-types": "tsc --noEmit",
-    "lint": "eslint .",
-    "lint-staged": "lint-staged",
-    "test": "jest"
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@session/eslint-config": "workspace:*",
-    "@session/testing": "workspace:*",
     "@session/typescript-config": "workspace:*"
   },
   "engines": {
@@ -21,10 +16,5 @@
     "pnpm": ">=9",
     "yarn": "use pnpm",
     "npm": "use pnpm"
-  },
-  "dependencies": {
-    "pino": "^9.2.0",
-    "pino-pretty": "^11.2.1",
-    "@session/logger": "workspace:*"
   }
 }

@@ -1,4 +1,4 @@
-import { bigIntToNumber, formatBigIntTokenValue, formatNumber, roundNumber } from '../maths';
+import { bigIntToNumber, formatBigIntTokenValue, formatNumber, roundNumber } from '../src/maths';
 
 // #region - roundNumber
 

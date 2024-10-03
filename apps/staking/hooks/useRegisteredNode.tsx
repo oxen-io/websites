@@ -6,8 +6,8 @@ import { getOpenNodes } from '@/lib/queries/getOpenNodes';
 import { getStakedNodes } from '@/lib/queries/getStakedNodes';
 import { getNodes } from '@/lib/queries/getNodes';
 import { useMemo } from 'react';
-import { areHexesEqual } from '@session/util/string';
-import { getUnixTimestampNowSeconds } from '@session/util/date';
+import { areHexesEqual } from '@session/util-crypto/string';
+import { getUnixTimestampNowSeconds } from '@session/util-js/date';
 import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 
 export const useRegisteredNode = ({ nodeId }: { nodeId?: string }) => {

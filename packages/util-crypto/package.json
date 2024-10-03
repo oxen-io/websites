@@ -1,0 +1,24 @@
+{
+  "name": "@session/util-crypto",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@session/eslint-config": "workspace:*",
+    "@session/testing": "workspace:*",
+    "@session/typescript-config": "workspace:*"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9",
+    "yarn": "use pnpm",
+    "npm": "use pnpm"
+  }
+}
