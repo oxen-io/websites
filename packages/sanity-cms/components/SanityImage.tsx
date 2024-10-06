@@ -1,29 +1,115 @@
 import urlBuilder from '@sanity/image-url';
-import { getImageDimensions, type SanityImageSource } from '@sanity/asset-utils';
 import type { SessionSanityClient } from '../lib/client';
+import Image from 'next/image';
+import logger from '../lib/logger';
+import { getPlaiceholder } from 'plaiceholder';
+import type {
+  ImageFieldsSchemaType,
+  ImageFieldsSchemaTypeWithoutAltText,
+} from '../schemas/fields/basic/image';
+import { cn } from '@session/ui/lib/utils';
+import { safeTry } from '@session/util-js/try';
 
-export const SanityImage = ({
+export type SanityImageType = ImageFieldsSchemaType | ImageFieldsSchemaTypeWithoutAltText;
+
+/**
+ * Build image data from Sanity image schema and the image source.
+ * @param client Sanity client
+ * @param value Sanity image schema
+ */
+async function buildImage(client: SessionSanityClient, value: SanityImageType) {
+  const src = urlBuilder(client).image(value).fit('max').auto('format').url();
+  const buffer = await fetch(src).then(async (res) => Buffer.from(await res.arrayBuffer()));
+
+  const {
+    metadata: { height, width },
+    base64,
+  } = await getPlaiceholder(buffer, { size: 16 });
+
+  return { src, height, width, base64 };
+}
+
+type SanityImageProps = {
+  value: SanityImageType;
+  client: SessionSanityClient;
+  isInline?: boolean;
+  cover?: boolean;
+  renderWithPriority?: boolean;
+  className?: string;
+};
+export const SanityImage = async ({
   value,
   isInline,
   client,
-}: {
-  value: SanityImageSource & { alt?: string };
-  isInline: boolean;
-  client: SessionSanityClient;
-}) => {
-  const { width, height } = getImageDimensions(value);
-  return (
-    <img
-      src={urlBuilder(client).image(value).fit('max').auto('format').url()}
-      alt={value.alt}
-      loading="lazy"
-      style={{
-        // Display alongside text if image appears inside a block text span
-        display: isInline ? 'inline-block' : 'block',
+  cover,
+  renderWithPriority,
+  className,
+}: SanityImageProps) => {
+  let imageData = {
+    src: '',
+    height: 0,
+    width: 0,
+    base64: '',
+  };
 
-        // Avoid jumping around with aspect-ratio CSS property
+  const [err, res] = await safeTry(buildImage(client, value));
+
+  if (err) {
+    logger.error(err);
+  } else {
+    imageData = res;
+  }
+
+  const { src, height, width, base64 } = imageData;
+
+  /**
+   * If the image schema has an alt text field declared and the value is not empty,
+   * use the value as the alt text, otherwise use an empty string and log a warning.
+   *
+   * If the image schema does not have an alt text field defined, use an empty string.
+   */
+  let alt = '';
+  if ('alt' in value) {
+    if (value.alt) {
+      alt = value.alt;
+    } else {
+      logger.warn(`Missing alt text for image: ${src}`);
+    }
+  }
+
+  const priority = renderWithPriority ?? value.priority ?? false;
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      className={cn(
+        value.rounded && 'rounded-2xl',
+        /** Display alongside text if image appears inside a block text span */
+        isInline ? 'inline-block' : 'block',
+        cover && 'object-cover',
+        className
+      )}
+      style={{
+        /** Avoid jumping around with aspect-ratio CSS property */
         aspectRatio: width / height,
       }}
+      /**
+       * NOTE: Blur is REQUIRED for `blurDataURL` to work.
+       * https://nextjs.org/docs/app/api-reference/components/image#blurdataurl
+       */
+      {...(base64
+        ? {
+            blurDataURL: base64,
+            placeholder: 'blur',
+          }
+        : {
+            placeholder: 'empty',
+          })}
+      priority={priority}
+      loading={priority ? undefined : 'lazy'}
     />
   );
 };
