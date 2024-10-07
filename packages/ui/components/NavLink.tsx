@@ -3,17 +3,37 @@
 import Link from 'next/link';
 import { cn } from '../lib/utils';
 import { usePathname } from 'next/navigation';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 /** TODO: This was copied from the staking portal, investigate if we can turn it into a shared library */
 
-export type NavLinkProps = {
+export const navlinkVariants = cva(
+  'hover:text-session-text-black hover:border-b-session-green border-b-2 border-b-transparent w-max',
+  {
+    variants: {
+      active: {
+        true: 'text-session-text-black border-b-session-green',
+        false: '',
+      },
+    },
+    defaultVariants: {
+      active: false,
+    },
+  }
+);
+
+export type NavlinkVariantProps = VariantProps<typeof navlinkVariants>;
+
+export type NavLinkProps = NavlinkVariantProps & {
   href: string;
   label?: string;
   children?: ReactNode;
   ariaLabel?: string;
   className?: string;
-  unstyled?: boolean;
+  unStyled?: boolean;
+  htmlFor?: string;
+  hideActiveIndicator?: boolean;
 };
 
 /**
@@ -27,19 +47,27 @@ export function isExternalLink(href: string): boolean {
   return href.startsWith('https://');
 }
 
-export function NavLink({ href, label, children, ariaLabel, unstyled }: NavLinkProps) {
+export function NavLink({
+  href,
+  label,
+  children,
+  ariaLabel,
+  className,
+  unStyled,
+  hideActiveIndicator,
+}: NavLinkProps) {
   const pathname = usePathname();
   return (
     <Link
       href={href}
-      className={
-        !unstyled
-          ? cn(
-              'hover:text-session-text-black hover:border-b-session-green border-b-2 border-b-transparent',
-              pathname.startsWith(href) && 'text-session-text-blackborder-b-session-green'
-            )
-          : undefined
-      }
+      className={cn(
+        !unStyled
+          ? navlinkVariants({
+              active: !hideActiveIndicator && pathname.startsWith(href),
+              className,
+            })
+          : className
+      )}
       aria-label={ariaLabel}
       {...(isExternalLink(href)
         ? {
