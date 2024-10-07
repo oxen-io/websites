@@ -1,5 +1,3 @@
-import { initLogger } from '@session/util-logger';
-
-const logger = initLogger();
+import { logger } from '@session/util-logger';
 
 export default logger;

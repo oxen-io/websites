@@ -17,7 +17,8 @@ const buttonVariants = cva(
           'border border-session-green text-session-green bg-background hover:bg-session-green hover:text-session-black disabled:border-gray-lightest disabled:text-gray-lightest disabled:opacity-100',
         'destructive-outline':
           'border border-destructive text-destructive bg-background hover:bg-destructive hover:text-destructive-foreground',
-        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        secondary:
+          'bg-session-black text-session-white hover:bg-session-white border border-2 border-session-black hover:text-session-black',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         'destructive-ghost':
           'text-destructive hover:bg-destructive hover:text-destructive-foreground',
