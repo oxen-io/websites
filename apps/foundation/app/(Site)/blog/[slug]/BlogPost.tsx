@@ -56,7 +56,7 @@ export default async function BlogPost({ post }: PostProps) {
         renderWithPriority
         mobileImagePosition="below"
       />
-      <div className="mt-6 flex flex-row gap-12 md:mt-12">
+      <div className="mt-6 flex flex-row justify-center gap-12 md:mt-12">
         <PortableText body={body} className="max-w-screen-md" wrapperComponent="section" />
         {headings.length ? (
           <HeadingOutline headings={headings} title={blogDictionary('inThisArticle')} />
