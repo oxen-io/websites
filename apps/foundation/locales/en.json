@@ -1,0 +1,19 @@
+{
+  "header": {
+    "mobileMenuButtonOpen": "Open navigation menu",
+    "mobileMenuButtonClose": "Close navigation menu"
+  },
+  "tile": {
+    "scrollOrTap": "SCROLL/TAP"
+  },
+  "notFound": {
+    "description": "Sorry! We couldn't find the page you were looking for.",
+    "homeButton": "Return Home"
+  },
+  "blog": {
+    "backToBlog": "Back to blog",
+    "inThisArticle": "In this article",
+    "readMore": "Read more",
+    "morePosts": "More posts"
+  }
+}
