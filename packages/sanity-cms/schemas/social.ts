@@ -1,8 +1,8 @@
 import { defineField, defineType } from 'sanity';
 import type { DocumentFields } from '@session/sanity-types';
 import type { SchemaFieldsType } from './types';
-import { linkFields } from './fields/groups/link';
 import { TwitterIcon } from '@sanity/icons';
+import { urlField } from './fields/basic/url';
 
 // TODO: look into sharing the same source as the ui. socials package? (hopefully not)
 enum Socials {
@@ -34,7 +34,7 @@ export const socialFields = [
     },
     validation: (Rule) => Rule.required(),
   }),
-  ...linkFields,
+  urlField,
 ];
 
 export const socialSchema = defineType({
@@ -45,4 +45,5 @@ export const socialSchema = defineType({
   fields: socialFields,
 });
 
-export type SocialSchemaType = SchemaFieldsType<typeof socialFields> & DocumentFields;
+export type SocialSchemaType = DocumentFields<typeof socialSchema> &
+  SchemaFieldsType<typeof socialFields>;
