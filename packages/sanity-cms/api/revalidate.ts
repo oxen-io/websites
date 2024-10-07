@@ -1,13 +1,12 @@
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 import { parseBody } from 'next-sanity/webhook';
 import logger from '../lib/logger';
 import { safeTry } from '@session/util-js/try';
-
-type WebhookPayload = {
-  /** The CMS content type that was published or updated. */
-  _type: string;
-};
+import type { PageSchemaType } from '../schemas/page';
+import type { PostSchemaType } from '../schemas/post';
+import { getSiteSettings } from '../queries/getSiteSettings';
+import type { SessionSanityClient } from '../lib/client';
 
 type RssGeneratorConfig = {
   /** The CMS content type that the generator should be run for.*/
@@ -22,6 +21,8 @@ type RssGeneratorConfig = {
 type CreateRevalidateHandlerOptions = {
   /** The secret used to verify the webhook request. */
   revalidateSecret: string;
+  client: SessionSanityClient;
+  schemaUrls: Record<string, string>;
   /** An array of RSS generator configurations. {@link RssGeneratorConfig} */
   rssGenerators?: Array<RssGeneratorConfig>;
 };
@@ -30,7 +31,9 @@ type CreateRevalidateHandlerOptions = {
  * Creates a revalidate handler for Sanity CMS content.
  *
  * @param revalidateSecret - The secret used to verify the webhook request.
+ * @param client - The Sanity client.
  * @param rssGenerators - An array of RSS generator configurations. {@link RssGeneratorConfig}
+ * @param schemaUrls - The schema URLs for the CMS content types.
  *
  * @throws {TypeError} If the `revalidateSecret` is not provided.
  * @throws {TypeError} If the `rssGenerators` is not an array.
@@ -53,6 +56,8 @@ type CreateRevalidateHandlerOptions = {
  */
 export const createRevalidateHandler = ({
   revalidateSecret,
+  client,
+  schemaUrls,
   rssGenerators,
 }: CreateRevalidateHandlerOptions) => {
   if (!revalidateSecret) {
@@ -102,20 +107,49 @@ export const createRevalidateHandler = ({
         });
       }
 
-      const { isValidSignature, body } = await parseBody<WebhookPayload>(req, revalidateSecret);
+      const { isValidSignature, body } = await parseBody<PageSchemaType | PostSchemaType>(
+        req,
+        revalidateSecret
+      );
 
       if (!isValidSignature) {
         return new NextResponse(
           JSON.stringify({ message: 'Invalid signature', isValidSignature, body }),
           { status: 401 }
         );
-      } else if (!body?._type) {
+      }
+
+      const type = body?._type;
+
+      if (!type) {
         return new NextResponse(JSON.stringify({ message: 'Bad Request', body }), { status: 400 });
       }
 
       // If the `_type` is `post`, then all `client.fetch` calls with
       // `{next: {tags: ['post']}}` will be revalidated
-      revalidateTag(body._type);
+      revalidateTag(type);
+
+      if (type === 'post' || type === 'page') {
+        const slug = body.slug.current;
+        if (slug.length > 0) {
+          revalidateTag(slug);
+          let schemaUrl = schemaUrls[type];
+          if (schemaUrl) {
+            if (!schemaUrl.startsWith('/')) {
+              schemaUrl = `/${schemaUrl}`;
+            }
+            if (!schemaUrl.endsWith('/')) {
+              schemaUrl = `${schemaUrl}/`;
+            }
+            const settings = await getSiteSettings({ client });
+            if (slug === settings?.landingPage?.slug?.current) {
+              revalidatePath(`${schemaUrl}`);
+            } else {
+              revalidatePath(`${schemaUrl}${slug}`);
+            }
+          }
+        }
+      }
 
       /**
        * If there are any RSS generators configured, then we revalidate them
