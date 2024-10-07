@@ -1,6 +1,7 @@
 import { createClient, SanityClient } from 'next-sanity';
 import { sanityFetchGeneric, type SanityFetchOptions } from './fetch';
 import logger from './logger';
+import { isProduction } from '@session/util-js/env';
 
 export type CreateSanityClientOptions = {
   projectId: string;
@@ -9,6 +10,7 @@ export type CreateSanityClientOptions = {
   apiVersion?: string;
   draftToken?: string;
   studioUrl?: string;
+  disableCaching?: boolean;
 };
 
 export type SessionSanityClient = SanityClient & {
@@ -21,7 +23,8 @@ export type SessionSanityClient = SanityClient & {
  * @param dataset - The dataset name of the Sanity project.
  * @param apiVersion - The API version used.
  * @param draftToken - The draft token of the Sanity project.
- * @param studioUrl - The URL of the Sanity studio.
+ * @param studioUrl - The SANITY_SCHEMA_URL of the Sanity studio.
+ * @param disableCaching - Whether to disable caching on all requests.
  */
 export function createSanityClient({
   projectId,
@@ -29,10 +32,14 @@ export function createSanityClient({
   apiVersion,
   draftToken,
   studioUrl,
+  disableCaching,
 }: CreateSanityClientOptions): SessionSanityClient {
-  logger.info('Creating Sanity client');
   if (!draftToken) {
     logger.warn('No draft token provided, draft mode will be disabled');
+  }
+
+  if (disableCaching) {
+    logger.warn('Disabling caching on all CMS requests');
   }
 
   const client = createClient({
@@ -43,7 +50,7 @@ export function createSanityClient({
     useCdn: false,
     perspective: 'published',
     stega: {
-      enabled: true,
+      enabled: !isProduction(),
       studioUrl,
     },
   });
@@ -59,13 +66,8 @@ export function createSanityClient({
     isClient = false,
   }: SanityFetchOptions) =>
     sanityFetchGeneric<R>({
-      client,
-      token: draftToken,
-      query,
-      params,
-      revalidate,
-      tags,
-      isClient,
+      globalOptions: { client, token: draftToken, disableCaching },
+      fetchOptions: { query, params, revalidate, tags, isClient },
     });
 
   return sessionSanityClient;
