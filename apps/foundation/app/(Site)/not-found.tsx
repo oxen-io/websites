@@ -5,9 +5,10 @@ import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
 export async function generateMetadata() {
+  const dictionary = await getTranslations('notFound');
   return {
-    title: 'Page not found',
-    description: "Sorry! We couldn't find the page you were looking for.",
+    title: dictionary('metaTitle'),
+    description: dictionary('metaDescription'),
   };
 }
 
