@@ -192,7 +192,14 @@ export async function resolveAmbiguousLink(
     });
 
     if (content) {
-      const slug = content.slug?.current;
+      let slug = content.slug?.current;
+      // CMS slugs should never start or end with a slash
+      if (slug?.startsWith('/')) {
+        slug = slug.slice(1);
+      } else if (slug?.endsWith('/')) {
+        slug = slug.slice(0, -1);
+      }
+      
       if (content._type === 'post') {
         let baseUrl = postBaseUrl?.startsWith('/') ? postBaseUrl : `/${postBaseUrl}`;
         if (!baseUrl.endsWith('/')) {
