@@ -51,7 +51,7 @@ export const basicComponents: BasicComponentsType = {
   },
   marks: {
     link: ({ children, value }) => (
-      <NavLink href={value.href} className="text-session-green-dark hover:text-session-green">
+      <NavLink href={value.href} unStyled className="text-session-green-link hover:underline">
         {children}
       </NavLink>
     ),

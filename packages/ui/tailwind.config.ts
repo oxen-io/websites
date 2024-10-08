@@ -53,6 +53,7 @@ export default {
         session: {
           green: 'var(--session-green)',
           'green-dark': 'var(--session-green-dark)',
+          'green-link': 'var(--session-green-link)',
           black: 'var(--session-black)',
           white: 'var(--session-white)',
           text: 'var(--session-text)',
