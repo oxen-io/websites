@@ -19,7 +19,7 @@ export const dynamic = 'force-static';
 async function ReadMoreText() {
   const blogDictionary = await getTranslations('blog');
   return (
-    <span className="group-hover:decoration-session-green decoration-session-black mt-1 w-max text-sm underline">
+    <span className="group-hover:decoration-session-green hover:decoration-session-green decoration-session-black mt-1 w-max text-sm underline">
       {blogDictionary('readMore')}
     </span>
   );
