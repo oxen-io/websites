@@ -63,7 +63,10 @@ export function NavLink({
       className={cn(
         !unStyled
           ? navlinkVariants({
-              active: !hideActiveIndicator && pathname.startsWith(href),
+              active:
+                !hideActiveIndicator && href.length > 1
+                  ? pathname.startsWith(href)
+                  : pathname === href,
               className,
             })
           : className
