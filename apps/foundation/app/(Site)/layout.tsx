@@ -29,7 +29,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <GlobalProvider messages={messages} locale={locale}>
-        <body className="bg-session-white font-roboto-flex text-session-text-black mx-6 flex flex-col items-center">
+        <body className="bg-session-white font-roboto-flex text-session-text-black mx-4 flex flex-col items-center overflow-x-hidden">
           <Header {...settings} />
           {children}
           <Footer {...settings} />
