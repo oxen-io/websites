@@ -4,7 +4,7 @@ import logger from '../lib/logger';
 import type { AuthorSchemaType } from '../schemas/author';
 
 type QUERY_GET_AUTHORS_RETURN_TYPE = Array<AuthorSchemaType>;
-const QUERY_GET_AUTHORS_WITH_ID = groq`*[_type == 'post' && _id == $id]`;
+const QUERY_GET_AUTHORS_WITH_ID = groq`*[_type == 'author' && _id == $id]`;
 
 export async function getAuthorById({ client, id }: { client: SessionSanityClient; id: string }) {
   if (!id || id.length === 0) {
