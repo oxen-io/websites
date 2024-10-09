@@ -24,14 +24,14 @@ export const legalFields = [
     title: 'Privacy Policy',
     group: 'legal',
     type: 'url',
-    description: 'The SANITY_SCHEMA_URL to the privacy policy for the site.',
+    description: 'The URL to the privacy policy for the site.',
   }),
   defineField({
     name: 'termsOfUse',
     title: 'Terms of Use',
     group: 'legal',
     type: 'url',
-    description: 'The SANITY_SCHEMA_URL to the terms of use for the site.',
+    description: 'The URL to the terms of use for the site.',
   }),
 ];
 

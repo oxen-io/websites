@@ -29,7 +29,7 @@ export const createValidateLinkHandler = ({
 
     if (decodingError) {
       logger.error(decodingError);
-      return new NextResponse('SANITY_SCHEMA_URL invalid', { status: 400 });
+      return new NextResponse('URL invalid', { status: 400 });
     }
 
     logger.info(`Checking URL: ${decodedURL}`);
@@ -44,7 +44,7 @@ export const createValidateLinkHandler = ({
       return new NextResponse(checkedRes.statusText, { status: checkedRes.status });
     }
 
-    return new NextResponse('SANITY_SCHEMA_URL valid', { status: 200 });
+    return new NextResponse('URL valid', { status: 200 });
   };
 
   const generateStaticParams = async () => {

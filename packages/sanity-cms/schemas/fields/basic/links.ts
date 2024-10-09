@@ -115,7 +115,7 @@ export type PickLinkSchemaType = SchemaFieldsType<typeof pickLinkFieldFields> & 
 /**
  * Resolves a Pick Link Schema to a href and label.
  * @param client - The Sanity client.
- * @param postBaseUrl - The base SANITY_SCHEMA_URL of posts (if any).
+ * @param postBaseUrl - The base URL of posts (if any).
  * @param type - The type of the link (external, internal, or social).
  * @param externalLink - The external link (if any).
  * @param internalLink - The internal link (if any).
@@ -173,7 +173,7 @@ export async function resolvePickLink(
  * Resolves an ambiguous link to a href and label.
  * @param client - The Sanity client.
  * @param link - The link to resolve.
- * @param postBaseUrl - The base SANITY_SCHEMA_URL of posts (if any).
+ * @param postBaseUrl - The base URL of posts (if any).
  * @returns The resolved href and label.
  *
  * @see {PickLinkSchemaType}
@@ -199,7 +199,7 @@ export async function resolveAmbiguousLink(
       } else if (slug?.endsWith('/')) {
         slug = slug.slice(0, -1);
       }
-      
+
       if (content._type === 'post') {
         let baseUrl = postBaseUrl?.startsWith('/') ? postBaseUrl : `/${postBaseUrl}`;
         if (!baseUrl.endsWith('/')) {

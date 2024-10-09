@@ -23,7 +23,7 @@ export type SessionSanityClient = SanityClient & {
  * @param dataset - The dataset name of the Sanity project.
  * @param apiVersion - The API version used.
  * @param draftToken - The draft token of the Sanity project.
- * @param studioUrl - The SANITY_SCHEMA_URL of the Sanity studio.
+ * @param studioUrl - The URL of the Sanity studio.
  * @param disableCaching - Whether to disable caching on all requests.
  */
 export function createSanityClient({
