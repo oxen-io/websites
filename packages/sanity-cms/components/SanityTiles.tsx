@@ -36,6 +36,7 @@ export function SanityTiles({
   }
 
   const id = `${value._key}-tiles-scrollable`;
+  const tileContainer = `${value._key}-tiles-scrollable-tile-container`;
 
   const isScrollableOnMobile =
     variant === TILES_VARIANT.TEXT_OVERLAY_IMAGE || tiles.length % 2 !== 0;
@@ -43,7 +44,7 @@ export function SanityTiles({
   return (
     <div
       id={id}
-      className="relative my-4 flex flex-col items-start overflow-x-auto pb-1 pt-8 md:pt-0"
+      className="relative my-4 flex flex-col items-start overflow-x-auto pb-1 md:pt-0"
       style={{
         maxWidth: 'calc(100vw - 24px)',
       }}
@@ -51,12 +52,14 @@ export function SanityTiles({
       {isScrollableOnMobile ? (
         <ScrollButton
           scrollText={scrollText}
-          targetId={id}
+          parentId={id}
+          tileContainerId={tileContainer}
           isRTLLocale={isRTLLocale}
           className="absolute left-0 top-0 md:hidden"
         />
       ) : null}
       <div
+        id={tileContainer}
         className={cn(
           'h-max gap-4',
           variant === TILES_VARIANT.TEXT_UNDER_IMAGE && tiles.length % 2 === 0
