@@ -11,7 +11,7 @@
     "./icons/*": "./icons/*.tsx",
     "./motion/*": "./components/motion/*.tsx",
     "./icons/types": "./icons/types.ts",
-    "./taiwind": "./tailwind.config.ts",
+    "./tailwind": "./tailwind.config.ts",
     "./postcss": "./postcss.config.js"
   },
   "scripts": {
