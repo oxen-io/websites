@@ -87,7 +87,7 @@ export function SanityPortableText({ value, className, ...props }: SanityPortabl
         continue;
       }
     } else if (blocks.length < 3 && block._type === 'image') {
-      //Prioritize images in the first 5 blocks of the content
+      // Prioritize images in the first 5 blocks of the content
       // @ts-expect-error - This is a workaround to make TS happy
       block.priority = true;
     }
