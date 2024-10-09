@@ -16,8 +16,8 @@ export const isDraftModeEnabled = () => {
   if (err) {
     /**
      * If the error is a "called outside a request scope" error, it means the function was called
-     * outside a request scope, so we can draft mode is not enabled. This happens when cms calls are
-     * made during SSR.
+     * outside a request's scope, so we can tell that draft mode is not enabled. This happens
+     * when cms calls are made during SSR.
      */
     if ('message' in err && err.message.includes('called outside a request scope')) {
       return false;
