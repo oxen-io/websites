@@ -46,7 +46,7 @@ export function SanityTiles({
       id={id}
       className="relative my-4 flex flex-col items-start overflow-x-auto pb-1 md:pt-0"
       style={{
-        maxWidth: 'calc(100vw - 24px)',
+        maxWidth: 'calc(100vw - 32px)',
       }}
     >
       {isScrollableOnMobile ? (

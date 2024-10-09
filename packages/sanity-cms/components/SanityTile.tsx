@@ -50,9 +50,9 @@ export function SanityTileTextOnTopOfImage({
       </strong>
       <p
         className={cn(
-          'hidden text-sm md:text-base',
-          'group-hover:block',
-          'group-active:block',
+          'invisible h-max max-h-0 overflow-hidden text-sm opacity-0 md:text-base',
+          'group-hover:visible group-hover:max-h-max group-hover:opacity-100',
+          'group-active:visible group-active:max-h-max group-active:opacity-100',
           'transition-all duration-300 ease-in-out motion-reduce:transition-none'
         )}
         style={{
