@@ -43,7 +43,7 @@ export default async function BlogGridPage() {
   );
 
   return (
-    <main className="mx-auto mt-4 flex max-w-screen-xl flex-col">
+    <main className="mt-4 flex max-w-screen-xl flex-col">
       <Link
         href={`${SANITY_SCHEMA_URL.POST}${latestPost.slug.current}`}
         prefetch

@@ -22,6 +22,7 @@ type FooterProps = {
   headerLinks?: SiteSchemaType['headerLinks'];
   showSocialLinksInFooter?: SiteSchemaType['showSocialLinksInFooter'];
   footerSocialLinks?: SiteSchemaType['footerSocialLinks'];
+  className?: string;
 };
 
 export async function Footer({
@@ -31,6 +32,7 @@ export async function Footer({
   headerLinks,
   showSocialLinksInFooter,
   footerSocialLinks,
+  className,
 }: FooterProps) {
   const routes: Array<NavLinkProps> = [];
 
@@ -88,7 +90,7 @@ export async function Footer({
   }
 
   return (
-    <div className="my-16 flex w-full max-w-screen-md flex-col gap-2 text-sm md:text-base">
+    <div className={cn('my-16 flex w-full flex-col gap-2 text-sm md:text-base', className)}>
       {copyright ? (
         <span className="font-source-serif inline-flex items-center gap-1.5 text-xs italic md:text-base">
           <FlagOfSwitzerlandIcon className="inline-block h-5 w-5 md:h-6 md:w-6" />

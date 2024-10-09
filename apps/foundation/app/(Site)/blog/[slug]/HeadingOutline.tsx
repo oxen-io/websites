@@ -32,7 +32,7 @@ export default function HeadingOutline({ title, headings }: HeadingOutlineProps)
               onClick={() => {
                 scrollToHeading(heading);
               }}
-              className={cn(navlinkVariants({ active: false }), 'text-start')}
+              className={cn(navlinkVariants({ active: false }), 'w-full text-wrap text-start')}
             >
               {heading}
             </button>

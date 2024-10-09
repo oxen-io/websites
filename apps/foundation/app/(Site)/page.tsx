@@ -1,5 +1,6 @@
 import { getLandingPageSlug } from '@/lib/sanity/sanity-server';
 import UniversalPage from './[slug]/page';
+import UniversalPageLayout from '@/app/(Site)/[slug]/layout';
 
 /**
  * Force static rendering and cache the data of a layout or page by forcing `cookies()`, `headers()`
@@ -15,5 +16,9 @@ export default async function LandingPage() {
     throw new Error('No landing page set in settings to statically generate');
   }
 
-  return <UniversalPage params={{ slug }} />;
+  return (
+    <UniversalPageLayout>
+      <UniversalPage params={{ slug }} />
+    </UniversalPageLayout>
+  );
 }
