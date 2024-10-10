@@ -8,7 +8,7 @@ import {
 } from 'date-fns';
 import { useLocale as _useLocale } from 'next-intl';
 import { getDateFnsLocale, type Locale } from './locale-util';
-import { getDateFromUnixTimestampSeconds } from '@session/util/date';
+import { getDateFromUnixTimestampSeconds } from '@session/util-js/date';
 
 export const useLocale = _useLocale as () => Locale;
 

@@ -7,8 +7,8 @@ import { SENTAbi } from '../abis';
 import { type ContractReadQueryProps, useContractReadQuery } from './useContractReadQuery';
 import type { WriteContractErrorType } from 'wagmi/actions';
 import { useEffect, useMemo, useState } from 'react';
-import { isProduction } from '@session/util/env';
-import { formatBigIntTokenValue } from '@session/util/maths';
+import { isProduction } from '@session/util-js/env';
+import { formatBigIntTokenValue } from '@session/util-crypto/maths';
 import { SENT_DECIMALS, SENT_SYMBOL } from '../constants';
 import {
   GenericContractStatus,

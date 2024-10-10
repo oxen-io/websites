@@ -8,7 +8,6 @@
   "scripts": {
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
-    "lint-staged": "lint-staged",
     "format": "prettier --write ."
   },
   "devDependencies": {

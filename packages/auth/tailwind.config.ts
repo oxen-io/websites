@@ -1,1 +1,1 @@
-export { default } from '@session/ui/taiwind';
+export { default } from '@session/ui/tailwind';

@@ -28,7 +28,12 @@
         "DISCORD_CLIENT_ID",
         "TELEGRAM_BOT_TOKEN",
         "NEXTAUTH_SECRET",
-        "NEXTAUTH_URL"
+        "NEXTAUTH_URL",
+        "SANITY_API_READ_TOKEN",
+        "NEXT_PUBLIC_SANITY_PROJECT_ID",
+        "NEXT_PUBLIC_SANITY_DATASET",
+        "NEXT_PUBLIC_SANITY_API_VERSION",
+        "SANITY_REVALIDATE_SECRET"
       ]
     },
     "dev": {

@@ -7,13 +7,13 @@ import { SENT_DECIMALS, SENT_SYMBOL } from '@session/contracts';
 import type { GetOpenNodesResponse } from '@session/sent-staking-js/client';
 import { Loading } from '@session/ui/components/loading';
 import { Button, ButtonSkeleton } from '@session/ui/ui/button';
-import { bigIntToNumber, formatNumber } from '@session/util/maths';
+import { bigIntToNumber, formatNumber } from '@session/util-crypto/maths';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { ActionModuleRow, ActionModuleRowSkeleton } from '@/components/ActionModule';
 import { useStakingBackendSuspenseQuery } from '@/lib/sent-staking-backend-client';
 import { getOpenNodes } from '@/lib/queries/getOpenNodes';
-import { areHexesEqual } from '@session/util/string';
+import { areHexesEqual } from '@session/util-crypto/string';
 
 export default function NodeStaking({ nodeId }: { nodeId: string }) {
   const { data, isLoading } = useStakingBackendSuspenseQuery(getOpenNodes);

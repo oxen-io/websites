@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@session/ui/ui/table';
-import { formatBigIntTokenValue } from '@session/util/maths';
+import { formatBigIntTokenValue } from '@session/util-crypto/maths';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';

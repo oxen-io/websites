@@ -11,13 +11,13 @@ import { useStakingBackendQueryWithParams } from '@/lib/sent-staking-backend-cli
 import type { LoadRegistrationsResponse } from '@session/sent-staking-js/client';
 import { getNodeRegistrations } from '@/lib/queries/getNodeRegistrations';
 import { QUERY, SESSION_NODE } from '@/lib/constants';
-import { getDateFromUnixTimestampSeconds } from '@session/util/date';
+import { getDateFromUnixTimestampSeconds } from '@session/util-js/date';
 import { notFound } from 'next/navigation';
 import { generateMockRegistrations } from '@session/sent-staking-js/test';
 import useRegisterNode from '@/hooks/useRegisterNode';
 import { StakedNodeCard } from '@/components/StakedNodeCard';
 import { AlertTooltip, Tooltip } from '@session/ui/ui/tooltip';
-import { areHexesEqual } from '@session/util/string';
+import { areHexesEqual } from '@session/util-crypto/string';
 import { toast } from '@session/ui/lib/toast';
 import { RegistrationPausedInfo } from '@/components/RegistrationPausedInfo';
 import { useFeatureFlag, useRemoteFeatureFlagQuery } from '@/lib/feature-flags-client';

@@ -8,6 +8,8 @@
     --session-black: #0a0a0a;
     --session-green: #00f782;
     --session-text: #dbdbdb;
+    --session-text-black: #1B1B1B;
+    --session-text-black-secondary: #6D6D6D;
     --session-white: #ffffff;
     --session-gradient-outline: linear-gradient(
             135deg,
@@ -29,7 +31,8 @@
             rgba(215, 222, 218, 1) 0%,
             rgba(188, 200, 193, 1) 100%
     );
-    --session-green-dark: #00b35f;
+    --session-green-dark: #00aa59;
+    --session-green-link: #008547;
     --session-disabled: #939393;
 
     /* Definitions */

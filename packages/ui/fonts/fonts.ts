@@ -1,5 +1,5 @@
 import localFont from 'next/font/local';
-import { Roboto_Flex } from 'next/font/google';
+import { Roboto_Flex, Source_Serif_4 } from 'next/font/google';
 
 type FontWeight =
   | 'Thin'
@@ -28,6 +28,12 @@ const RobotoFlex = Roboto_Flex({
   variable: '--font-roboto-flex',
 });
 
+const SourceSerif = Source_Serif_4({
+  display: 'swap',
+  subsets: ['latin'],
+  variable: '--font-source-serif',
+});
+
 const MonumentExtended = localFont({
   src: [
     {
@@ -38,4 +44,4 @@ const MonumentExtended = localFont({
   display: 'swap',
 });
 
-export { RobotoFlex, MonumentExtended };
+export { RobotoFlex, SourceSerif, MonumentExtended };

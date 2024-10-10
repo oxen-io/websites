@@ -1,4 +1,4 @@
-import { isProduction } from '@session/util/env';
+import { isProduction } from '@session/util-js/env';
 import Database, * as BetterSql3 from 'better-sqlite3-multiple-ciphers';
 import path from 'path';
 import { Address } from 'viem';

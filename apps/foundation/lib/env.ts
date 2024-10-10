@@ -1,0 +1,14 @@
+export const NEXT_PUBLIC_SANITY_PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!;
+if (!NEXT_PUBLIC_SANITY_PROJECT_ID) {
+  throw new Error('NEXT_PUBLIC_SANITY_PROJECT_ID is not defined');
+}
+
+export const NEXT_PUBLIC_SANITY_DATASET = process.env.NEXT_PUBLIC_SANITY_DATASET!;
+if (!NEXT_PUBLIC_SANITY_DATASET) {
+  throw new Error('NEXT_PUBLIC_SANITY_DATASET is not defined');
+}
+
+export const NEXT_PUBLIC_SANITY_API_VERSION = process.env.NEXT_PUBLIC_SANITY_API_VERSION!;
+if (!NEXT_PUBLIC_SANITY_API_VERSION) {
+  throw new Error('NEXT_PUBLIC_SANITY_API_VERSION is not defined');
+}

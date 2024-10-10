@@ -26,7 +26,7 @@ import {
   FormSubmitButton,
 } from '@session/ui/ui/form';
 import { Tooltip } from '@session/ui/ui/tooltip';
-import { collapseString } from '@session/util/string';
+import { collapseString } from '@session/util-crypto/string';
 import { useWallet, useWalletChain, WALLET_STATUS } from '@session/wallet/hooks/wallet-hooks';
 import { ReactNode, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
