@@ -85,7 +85,7 @@ export const SanityImage = async ({
   const hasCaption = 'caption' in value && value.caption?.length;
   const figureNumber = 'figureNumber' in value ? value.figureNumber : null;
 
-  const Comp = cover ? 'figure' : Fragment;
+  const Comp = hasCaption ? 'figure' : Fragment;
 
   return (
     <Comp>
