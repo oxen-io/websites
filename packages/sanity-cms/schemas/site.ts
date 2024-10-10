@@ -9,9 +9,16 @@ import {
   type InternalLinkArrayMember,
   internalLinkFieldDefinition,
   linksFieldDefinition,
+  type SocialLinkArrayMember,
   socialLinkFieldDefinition,
 } from './fields/basic/links';
-import { CogIcon } from '@sanity/icons';
+import {
+  BlockContentIcon,
+  CogIcon,
+  InsertAboveIcon,
+  InsertBelowIcon,
+  RobotIcon,
+} from '@sanity/icons';
 import type { PageSchemaType } from './page';
 
 const siteLinkFields = [
@@ -75,15 +82,23 @@ export const siteSchema = defineType({
   groups: [
     {
       title: 'Default Site SEO',
+      icon: RobotIcon,
       name: 'seo',
     },
     {
       title: 'Header',
       name: 'header',
+      icon: InsertBelowIcon,
     },
     {
       title: 'Footer',
       name: 'footer',
+      icon: InsertAboveIcon,
+    },
+    {
+      title: 'Legal',
+      name: 'legal',
+      icon: BlockContentIcon,
     },
   ],
   preview: {
@@ -95,11 +110,10 @@ export const siteSchema = defineType({
   },
 });
 
-export type SiteSchemaType = Omit<
-  SchemaFieldsType<typeof siteFields>,
-  'headerLinks' | 'footerLinks'
-> & {
-  landingPage?: PageSchemaType;
-  headerLinks: Array<ExternalLinkArrayMember | InternalLinkArrayMember>;
-  footerLinks: Array<ExternalLinkArrayMember | InternalLinkArrayMember>;
-} & DocumentFields;
+export type SiteSchemaType = DocumentFields<typeof siteSchema> &
+  Omit<SchemaFieldsType<typeof siteFields>, 'headerLinks' | 'footerLinks' | 'footerSocialLinks'> & {
+    landingPage?: PageSchemaType;
+    headerLinks: Array<ExternalLinkArrayMember | InternalLinkArrayMember>;
+    footerLinks: Array<ExternalLinkArrayMember | InternalLinkArrayMember>;
+    footerSocialLinks: Array<SocialLinkArrayMember>;
+  };

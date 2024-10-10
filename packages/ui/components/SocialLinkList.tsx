@@ -83,7 +83,7 @@ export default function SocialLinkList(props: SocialLinkListProps) {
           <li key={`${index}-${name}-${link}`}>
             <a
               className={cn(
-                'border-session-green fill-session-white flex h-9 w-9 items-center justify-center rounded-full border transition-colors duration-200 *:h-4 *:w-4',
+                'border-session-green bg-session-black fill-session-white flex h-9 w-9 items-center justify-center rounded-full border transition-colors duration-200 *:h-4 *:w-4',
                 'hover:bg-session-green hover:fill-session-black'
               )}
               href={link}

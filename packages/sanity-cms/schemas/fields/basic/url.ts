@@ -9,15 +9,13 @@ export const urlField = defineField({
   description:
     'An external link. If you want to link to an internal link (page or blog post), you must use a reference.',
   validation: (Rule) =>
-    Rule.required()
-      .uri({ allowRelative: false })
+    Rule.uri({ allowRelative: false })
       .custom((url) => {
         if (!url) return true;
         const cachedResult = checkedUrlResults.get(url);
-        if (cachedResult) {
-          return cachedResult;
-        }
-        return fetch(`/api/validate-url?urlToCheck=${url}`).then((res) => {
+        if (cachedResult !== undefined) return cachedResult;
+
+        return fetch(`/api/validate-url/${encodeURIComponent(url)}`).then((res) => {
           const val = res.ok ? true : res.statusText;
           checkedUrlResults.set(url, val);
           return val;

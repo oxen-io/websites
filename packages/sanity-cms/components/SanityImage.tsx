@@ -9,6 +9,7 @@ import type {
 } from '../schemas/fields/basic/image';
 import { cn } from '@session/ui/lib/utils';
 import { safeTry } from '@session/util-js/try';
+import { Fragment } from 'react';
 
 export type SanityImageType = ImageFieldsSchemaType | ImageFieldsSchemaTypeWithoutAltText;
 
@@ -35,6 +36,7 @@ type SanityImageProps = {
   isInline?: boolean;
   cover?: boolean;
   renderWithPriority?: boolean;
+  figureNumberTextTemplate?: string;
   className?: string;
 };
 export const SanityImage = async ({
@@ -43,6 +45,7 @@ export const SanityImage = async ({
   client,
   cover,
   renderWithPriority,
+  figureNumberTextTemplate = 'Figure {number}:',
   className,
 }: SanityImageProps) => {
   let imageData = {
@@ -79,37 +82,54 @@ export const SanityImage = async ({
 
   const priority = renderWithPriority ?? value.priority ?? false;
 
+  const hasCaption = 'caption' in value && value.caption?.length;
+  const figureNumber = 'figureNumber' in value ? value.figureNumber : null;
+
+  const Comp = hasCaption ? 'figure' : Fragment;
+
   return (
-    <Image
-      src={src}
-      alt={alt}
-      width={width}
-      height={height}
-      className={cn(
-        value.rounded && 'rounded-2xl',
-        /** Display alongside text if image appears inside a block text span */
-        isInline ? 'inline-block' : 'block',
-        cover && 'object-cover',
-        className
-      )}
-      style={{
-        /** Avoid jumping around with aspect-ratio CSS property */
-        aspectRatio: width / height,
-      }}
-      /**
-       * NOTE: Blur is REQUIRED for `blurDataURL` to work.
-       * https://nextjs.org/docs/app/api-reference/components/image#blurdataurl
-       */
-      {...(base64
-        ? {
-            blurDataURL: base64,
-            placeholder: 'blur',
-          }
-        : {
-            placeholder: 'empty',
-          })}
-      priority={priority}
-      loading={priority ? undefined : 'lazy'}
-    />
+    <Comp>
+      <Image
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        className={cn(
+          value.rounded && 'rounded-2xl',
+          /** Display alongside text if image appears inside a block text span */
+          isInline ? 'inline-block' : 'block',
+          cover && 'object-cover',
+          className
+        )}
+        style={{
+          /** Avoid jumping around with aspect-ratio CSS property */
+          aspectRatio: width / height,
+        }}
+        /**
+         * NOTE: Blur is REQUIRED for `blurDataURL` to work.
+         * https://nextjs.org/docs/app/api-reference/components/image#blurdataurl
+         */
+        {...(base64
+          ? {
+              blurDataURL: base64,
+              placeholder: 'blur',
+            }
+          : {
+              placeholder: 'empty',
+            })}
+        priority={priority}
+        loading={priority ? undefined : 'lazy'}
+      />
+      {hasCaption ? (
+        <figcaption className="mt-2 inline-flex gap-1 text-sm italic">
+          {figureNumber ? (
+            <strong>
+              {figureNumberTextTemplate?.replace('{number}', figureNumber.toString())}
+            </strong>
+          ) : null}
+          <p>{value.caption}</p>
+        </figcaption>
+      ) : null}
+    </Comp>
   );
 };

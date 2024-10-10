@@ -31,7 +31,8 @@
             rgba(215, 222, 218, 1) 0%,
             rgba(188, 200, 193, 1) 100%
     );
-    --session-green-dark: #00b35f;
+    --session-green-dark: #00aa59;
+    --session-green-link: #008547;
     --session-disabled: #939393;
 
     /* Definitions */

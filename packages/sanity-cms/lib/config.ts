@@ -37,7 +37,7 @@ export type CreateSanityConfigOptions = {
  * @param studioBasePath - The base path of the Sanity studio.
  * @param paths - The paths of Sanity endpoints.
  * @param schemas - The schemas.
- * @param singletonSchemas - The singletons.
+ * @param singletonSchemas - The singletons
  */
 export function createSanityConfig({
   projectId,
