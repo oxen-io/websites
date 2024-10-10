@@ -23,7 +23,7 @@ type SanityFieldTypeMap = {
   text: string;
   number: number;
   boolean: boolean;
-  date: Date;
+  date: string;
   reference: unknown;
   object: Record<string, UnknownFieldType>;
   // TODO: add support for typing arrays
@@ -115,10 +115,18 @@ export type GenericSchemaType<
   [Field in Fields[number] as Field['name']]: FieldTypeMap<CustomFieldTypeMap>[Field['type']];
 };
 
-export type DocumentFields = {
+export type DocumentSchema = {
+  name: string;
+};
+
+export type DocumentFields<Document extends DocumentSchema> = {
   _id: string;
-  _type: string;
+  _type: Document['name'];
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+};
+
+export type ArrayMemberFields = {
+  _key: string;
 };

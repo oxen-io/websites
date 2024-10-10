@@ -1,5 +1,8 @@
-import { clsx, type ClassValue } from 'clsx';
+import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+
+export { cva } from 'class-variance-authority';
+export type { VariantProps } from 'class-variance-authority';
 
 /**
  * Combines multiple class names into a single string.

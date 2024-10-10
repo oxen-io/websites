@@ -3,10 +3,36 @@ import { isDraftModeEnabled } from './util';
 import { safeTry } from '@session/util-js/try';
 import logger from './logger';
 
+/**
+ * @see {@link https://nextjs.org/docs/app/api-reference/functions/fetch#optionsnextrevalidate}
+ * - `false` - Cache the resource indefinitely. Semantically equivalent to revalidate: Infinity. The HTTP cache may evict older resources over time.
+ * - `0` - Prevent the resource from being cached.
+ * - `number` - (in seconds) Specify the resource should have a cache lifetime of at most n seconds.
+ */
+export type NextRevalidate = number | false;
+
+/**
+ * @see {@link https://nextjs.org/docs/app/api-reference/functions/fetch#optionscache}
+ *
+ * - force-cache (default): Next.js looks for a matching request in its Data Cache.
+ *   - If there is a match and it is fresh, it will be returned from the cache.
+ *   - If there is no match or a stale match, Next.js will fetch the resource from the remote server and update the cache with the downloaded resource.
+ * - no-store: Next.js fetches the resource from the remote server on every request without looking in the cache, and it will not update the cache with the downloaded resource.
+ *
+ * The native options from the Web fetch API are also supported @see {@link https://nextjs.org/docs/app/api-reference/functions/fetch#optionscache}
+ */
+export type NextCache =
+  | 'default'
+  | 'no-store'
+  | 'reload'
+  | 'no-cache'
+  | 'force-cache'
+  | 'only-if-cached';
+
 export type SanityFetchOptions<QueryString = string> = {
   query: QueryString;
   params?: QueryParams;
-  revalidate?: number;
+  revalidate?: NextRevalidate;
   tags?: Array<string>;
   isClient?: boolean;
 };
@@ -21,37 +47,48 @@ export type SanityFetchOptions<QueryString = string> = {
 type FixedSanityResponseQueryOptions = Omit<FilteredResponseQueryOptions, 'next' | 'cache'> & {
   cache?: RequestCache;
   next?: {
-    revalidate?: number | false;
+    cache?: NextCache;
+    revalidate?: NextRevalidate;
     tags?: string[];
   };
 };
 
-export type SanityFetchGenericOptions = SanityFetchOptions & {
-  client: SanityClient;
-  token?: string;
+export type SanityFetchGenericOptions = {
+  globalOptions: {
+    client: SanityClient;
+    token?: string;
+    disableCaching?: boolean;
+  };
+  fetchOptions: SanityFetchOptions;
 };
 
 export const sanityFetchGeneric = async <R = unknown>({
-  client,
-  token,
-  query,
-  params = {},
-  revalidate,
-  tags,
-  isClient = false,
+  globalOptions: { client, token, disableCaching },
+  fetchOptions: { query, params = {}, revalidate, tags, isClient },
 }: SanityFetchGenericOptions) =>
   safeTry<R>(
     (async () => {
-      logger.info(`Fetching ${query} with params ${JSON.stringify(params)}`);
-      const isDraftMode = token && isDraftModeEnabled(isClient);
+      const isDraftMode = !isClient && token && isDraftModeEnabled();
+
+      const perspective = isDraftMode ? 'previewDrafts' : 'published';
+      const next = {
+        cache: disableCaching ? 'no-store' : 'default',
+        revalidate: disableCaching ? 0 : tags?.length ? false : revalidate,
+        tags,
+      } as const;
+
+      logger.debug(
+        `Fetching ${query} with ${isDraftMode ? '(DRAFT)' : ''} ${JSON.stringify({
+          params,
+          perspective,
+          next,
+        })}`
+      );
 
       const options = {
         token,
-        perspective: isDraftMode ? 'previewDrafts' : 'published',
-        next: {
-          revalidate: tags?.length ? false : revalidate,
-          tags,
-        },
+        perspective,
+        next,
       } satisfies FixedSanityResponseQueryOptions;
 
       return client.fetch<R>(

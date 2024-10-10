@@ -1,29 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { pino } from 'pino';
-import { LOG_LEVEL, SessionLogger, type SessionLoggerOptions } from '@session/logger';
-import { isProduction } from '@session/util-js/env';
 
+// TODO: look into redoing the logger
+
+// TODO: change this to use the json logger properly
 export function constructLoggingArgs(...data: Array<any>) {
-  return [data.join(' ')];
+  if (data && typeof data[0] === 'object') {
+    return data[0];
+  }
+  return [data?.join(' ')];
 }
 
-const createSessionLoggerOptions = ({
-  isProd = isProduction(),
-}: {
-  isProd?: boolean;
-}): SessionLoggerOptions => ({
-  globalOptions: {
-    constructLoggingArgs,
-    ignoredLevels: isProd ? [LOG_LEVEL.DEBUG, LOG_LEVEL.INFO] : [],
-  },
-});
+//
+// const createSessionLoggerOptions = ({
+//   isProd = isProduction(),
+// }: {
+//   isProd?: boolean;
+// }): SessionLoggerOptions => ({
+//   globalOptions: {
+//     constructLoggingArgs,
+//     ignoredLevels: isProd ? [LOG_LEVEL.DEBUG, LOG_LEVEL.INFO] : [],
+//   },
+// });
 
-type InitLoggerOptions = {
-  isProduction?: boolean;
-};
+// type InitLoggerOptions = {
+//   isProduction?: boolean;
+// };
 
-export const initLogger = (options?: InitLoggerOptions) => {
+// export const initLogger = (options?: InitLoggerOptions) => {
+export const initLogger = () => {
   const logger = pino({
     transport: {
       target: 'pino-pretty',
@@ -33,5 +39,8 @@ export const initLogger = (options?: InitLoggerOptions) => {
     },
   });
 
-  return new SessionLogger(logger, createSessionLoggerOptions({ isProd: options?.isProduction }));
+  // return new SessionLogger(logger, createSessionLoggerOptions({ isProd: options?.isProduction }));
+  return logger;
 };
+
+export const logger = initLogger();

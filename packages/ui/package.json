@@ -11,7 +11,7 @@
     "./icons/*": "./icons/*.tsx",
     "./motion/*": "./components/motion/*.tsx",
     "./icons/types": "./icons/types.ts",
-    "./taiwind": "./tailwind.config.ts",
+    "./tailwind": "./tailwind.config.ts",
     "./postcss": "./postcss.config.js"
   },
   "scripts": {
@@ -42,8 +42,8 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.1.1",
     "@session/testing": "workspace:*",
-    "@session/util-js": "workspace:*",
     "@session/util-crypto": "workspace:*",
+    "@session/util-js": "workspace:*",
     "@uidotdev/usehooks": "^2.4.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
