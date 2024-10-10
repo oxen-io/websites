@@ -47,8 +47,7 @@ const nextConfig = {
   },
   webpack: (config) => {
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
-    const noMinify = process.env.NO_MINIFY === 'true';
-    if (noMinify) {
+    if (process.env.NO_MINIFY?.toLowerCase() === 'true') {
       config.optimization = {
         minimize: false,
       };
