@@ -25,13 +25,14 @@ export default async function NotFound() {
             404
           </span>
           <div className="bg-text-primary m-0 hidden h-full w-px p-0 lg:block" />
-          <div className="flex h-full flex-col justify-between gap-4 md:gap-0">
+          <div className="flex h-full flex-col justify-between gap-4">
             <p className="max-w-[380px] text-xl md:text-2xl">{dictionary('description')}</p>
             <Link href="/" prefetch={false}>
               <Button
                 size="lg"
                 variant="secondary"
                 className="group"
+                rounded="md"
                 data-testid={ButtonDataTestId.Not_Found_Return_Home}
               >
                 <HomeIcon className="fill-session-green group-hover:fill-session-black mr-2 h-6 w-6" />{' '}
