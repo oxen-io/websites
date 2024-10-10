@@ -49,7 +49,7 @@ export function StakedNodesWithAddress({ address }: { address: Address }) {
     }
     
     return [
-      data.stakes.concat(data.historical_stakes),
+      [...data.stakes, ...data.historical_stakes],
       data.network.block_height,
       data.network.block_timestamp,
     ];
