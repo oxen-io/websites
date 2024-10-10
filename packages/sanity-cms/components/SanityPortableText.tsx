@@ -70,6 +70,8 @@ export function SanityPortableText({ value, className, ...props }: SanityPortabl
     logger.error('SanityPortableText: value is not an array');
     return null;
   }
+
+  let figureNumber = 1;
   for (const block of value) {
     if (block._type === 'block' && 'children' in block && block.children.length === 1) {
       /**
@@ -86,10 +88,21 @@ export function SanityPortableText({ value, className, ...props }: SanityPortabl
       ) {
         continue;
       }
-    } else if (blocks.length < 3 && block._type === 'image') {
-      // Prioritize images in the first 5 blocks of the content
-      // @ts-expect-error - This is a workaround to make TS happy
-      block.priority = true;
+    } else if (block._type === 'image') {
+      if (blocks.length < 3) {
+        // Prioritize images in the first 5 blocks of the content
+        // @ts-expect-error - This is a workaround to make TS happy
+        block.priority = true;
+      }
+      if (
+        'caption' in block &&
+        block.caption?.length &&
+        'calculateFigureNumber' in block &&
+        block.calculateFigureNumber
+      ) {
+        block.figureNumber = figureNumber;
+        figureNumber++;
+      }
     }
     blocks.push(block);
   }

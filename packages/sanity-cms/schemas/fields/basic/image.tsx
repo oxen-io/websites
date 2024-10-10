@@ -32,7 +32,35 @@ const imageFields = [
   }),
 ];
 
-const imageFieldsWithAlt = [...imageFields, altField];
+const captionFields = [
+  defineField({
+    name: 'caption',
+    type: 'string' as const,
+    title: 'Caption',
+    description:
+      'The image caption, This should only be used if you want a visible figure caption below the image.',
+  }),
+  defineField({
+    name: 'calculateFigureNumber',
+    type: 'boolean' as const,
+    title: 'Display calculated Figure Number',
+    description: (
+      <p>
+        Calculate the figure number for the image. This will add a number to the start of the
+        caption. Eg:
+        <br />
+        <span>
+          <strong>Figure 2:</strong> YOUR CAPTION GOES HERE
+        </span>
+        <br />
+        This should be used in content that has multiple images.
+      </p>
+    ),
+    hidden: ({ parent }) => !parent?.caption?.length,
+  }),
+];
+
+const imageFieldsWithAltAndOptionalCaption = [...imageFields, altField, ...captionFields];
 
 export const imageFieldDefinition = {
   name: 'image',
@@ -42,7 +70,7 @@ export const imageFieldDefinition = {
   options: {
     hotspot: true,
   },
-  fields: imageFieldsWithAlt,
+  fields: imageFieldsWithAltAndOptionalCaption,
 };
 
 export const imageField = defineField(imageFieldDefinition);
@@ -52,5 +80,5 @@ export const imageFieldWithOutAltText = defineField({
   fields: imageFields,
 });
 
-export type ImageFieldsSchemaType = SchemaFieldsType<typeof imageFieldsWithAlt>;
+export type ImageFieldsSchemaType = SchemaFieldsType<typeof imageFieldsWithAltAndOptionalCaption>;
 export type ImageFieldsSchemaTypeWithoutAltText = SchemaFieldsType<typeof imageFields>;

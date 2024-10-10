@@ -15,9 +15,18 @@ export const components = {
   marks,
   block,
   types: {
-    image: ({ value, isInline }) => (
-      <SanityImage value={value} isInline={isInline} client={client} className="my-4 md:my-6" />
-    ),
+    image: async ({ value, isInline }) => {
+      const imageDictionary = await getTranslations('image');
+      return (
+        <SanityImage
+          value={value}
+          isInline={isInline}
+          client={client}
+          figureNumberTextTemplate={imageDictionary('figureLabelTemplate')}
+          className="my-4 md:my-6"
+        />
+      );
+    },
     button: (props) => (
       <SanityButton {...props} client={client} postBaseUrl={SANITY_SCHEMA_URL.POST} />
     ),
