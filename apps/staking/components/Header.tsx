@@ -10,6 +10,7 @@ import { getTranslations } from 'next-intl/server';
 
 export default async function Header() {
   const dictionary = await getTranslations('navigation');
+  const isCanary = process.env.NEXT_PUBLIC_IS_CANARY?.toLowerCase() === 'true';
 
   const routes: typeof ROUTES = [];
   ROUTES.forEach(({ dictionaryKey, href }) => {
@@ -27,7 +28,7 @@ export default async function Header() {
       <div className={cn('flex flex-row gap-10 pr-4')}>
         <Link href="/" className="relative">
           <Image src="/images/logo.png" alt="Session Token Logo" width={144} height={50} />
-          <span className="absolute -top-4 left-1 h-max w-max text-sm">🐤</span>
+          {isCanary ? <span className="absolute -top-4 left-1 h-max w-max text-sm">🐤</span> : null}
         </Link>
         <div className="hidden flex-row gap-10 lg:flex">
           {routes.map(({ dictionaryKey, href }) => (
