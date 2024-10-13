@@ -12,6 +12,7 @@ export type SeoType = {
   _type?: 'seo';
   nofollowAttributes?: boolean;
   metaDescription?: string;
+  metaImage?: CustomImageType;
   additionalMetaTags?: MetaTagType[];
   metaTitle?: string;
   seoKeywords?: string[];

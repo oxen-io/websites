@@ -71,7 +71,18 @@ const siteLinkFields = [
   }),
 ];
 
-export const siteFields = [...siteLinkFields, ...legalFields, seoField];
+export const siteFields = [
+  ...siteLinkFields,
+  ...legalFields,
+  seoField,
+  defineField({
+    title: 'Blog SEO',
+    name: 'blogSeo',
+    description: 'SEO fields for Blog grid page and default SEO for blog posts',
+    type: 'seoMetaFields',
+    group: 'blogSeo',
+  }),
+];
 
 export const siteSchema = defineType({
   type: 'document',
@@ -84,6 +95,11 @@ export const siteSchema = defineType({
       title: 'Default Site SEO',
       icon: RobotIcon,
       name: 'seo',
+    },
+    {
+      title: 'Blog SEO',
+      icon: RobotIcon,
+      name: 'blogSeo',
     },
     {
       title: 'Header',

@@ -6,6 +6,8 @@ import { getLandingPageSlug } from '@/lib/sanity/sanity-server';
 import PortableText from '@/components/PortableText';
 import logger from '@/lib/logger';
 import { NEXTJS_EXPLICIT_IGNORED_ROUTES, NEXTJS_IGNORED_PATTERNS } from '@/lib/constants';
+import type { Metadata, ResolvingMetadata } from 'next';
+import { generateSanityMetadata } from '@session/sanity-cms/lib/metadata';
 
 /**
  * Force static rendering and cache the data of a layout or page by forcing `cookies()`, `headers()`
@@ -18,6 +20,39 @@ export const dynamic = 'force-static';
  * @see {@link https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams}
  */
 export const dynamicParams = true;
+
+export async function generateMetadata(
+  { params }: PageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const slug = params.slug;
+  if (!slug) {
+    logger.warn(`No slug provided for metadata generation`);
+    return {};
+  }
+
+  if (
+    NEXTJS_EXPLICIT_IGNORED_ROUTES.includes(slug) ||
+    NEXTJS_IGNORED_PATTERNS.some((pattern) => slug.includes(pattern))
+  ) {
+    return {};
+  }
+
+  logger.info(`Generating metadata for slug ${slug}`);
+
+  const page = await getPageBySlug({ client, slug });
+
+  if (!page) {
+    logger.warn(`No page found for slug ${slug}`);
+    return {};
+  }
+  const parentMetadata = await parent;
+  return generateSanityMetadata(client, {
+    seo: page.seo,
+    parentMetadata,
+    type: 'website',
+  });
+}
 
 export async function generateStaticParams() {
   const pages = await getPagesSlugs({ client });

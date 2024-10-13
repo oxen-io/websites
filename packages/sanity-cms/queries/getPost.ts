@@ -8,6 +8,7 @@ const QUERY_GET_POSTS_WITH_SLUG = groq`*[_type == 'post' && slug.current == $slu
 export type FormattedPostType = Omit<PostSchemaType, 'author' | 'date'> & {
   author: AuthorSchemaType | undefined;
   date: Date;
+  tags: Array<string>;
 };
 type QUERY_GET_POSTS_WITH_SLUG_RETURN_TYPE = Array<FormattedPostType>;
 
