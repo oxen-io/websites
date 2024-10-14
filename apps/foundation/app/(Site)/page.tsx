@@ -10,7 +10,7 @@ import type { ResolvingMetadata } from 'next';
  */
 export const dynamic = 'force-static';
 
-export async function generateMetadata(parent: ResolvingMetadata) {
+export async function generateMetadata(_: object, parent: ResolvingMetadata) {
   const slug = await getLandingPageSlug();
 
   if (!slug) {

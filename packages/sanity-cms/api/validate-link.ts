@@ -64,7 +64,7 @@ export const createValidateLinkHandler = ({
       });
     }
 
-    const linksArray = Array.from(links);
+    const linksArray = Array.from(links).filter((link) => !link.startsWith('mailto:'));
 
     logger.info(`Generating static params for ${links.size} links`);
     logger.info(linksArray);

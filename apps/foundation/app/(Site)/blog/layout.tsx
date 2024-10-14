@@ -5,7 +5,7 @@ import type { Metadata, ResolvingMetadata } from 'next';
 import { generateSanityMetadata } from '@session/sanity-cms/lib/metadata';
 import { client } from '@/lib/sanity/sanity.client';
 
-export async function generateMetadata(parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(_: object, parent: ResolvingMetadata): Promise<Metadata> {
   const { settings } = await getInitialSiteDataForSSR();
 
   return settings.blogSeo

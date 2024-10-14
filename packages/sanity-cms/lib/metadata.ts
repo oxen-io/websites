@@ -47,16 +47,10 @@ export async function generateSanityMetadata(
   const ogDescription = seo?.openGraph?.description || parentMetadata?.openGraph?.description;
 
   const sanityOgImage = seo?.openGraph?.image
-    ? getSanityImageUrlBuilder(client, seo.openGraph.image)
-        .width(1200)
-        .height(630)
-        .fit('crop')
-        .url()
+    ? generateMetaImage(client, seo?.openGraph?.image)
     : null;
 
-  const sanityMetaImage = seo?.metaImage
-    ? getSanityImageUrlBuilder(client, seo.metaImage).width(1200).height(630).fit('crop').url()
-    : null;
+  const sanityMetaImage = seo?.metaImage ? generateMetaImage(client, seo?.metaImage) : null;
 
   const ogImage = sanityOgImage || sanityMetaImage || parentMetadata?.openGraph?.images?.[0];
 
@@ -80,4 +74,8 @@ export async function generateSanityMetadata(
           }),
     },
   };
+}
+
+function generateMetaImage(client: SessionSanityClient, image: NonNullable<SeoType['metaImage']>) {
+  return getSanityImageUrlBuilder(client, image).width(1200).height(630).fit('crop').url();
 }
