@@ -7,7 +7,16 @@ export const slugFieldDefinition = {
   options: {
     source: 'label',
   },
-  validation: (Rule: SlugRule) => Rule.required(),
+  validation: (Rule: SlugRule) =>
+    Rule.required()
+      .custom((slug) => {
+        if (!slug?.current) return true;
+        if (slug.current.startsWith('/')) {
+          return 'The slug cannot start with a "/"';
+        }
+        return true;
+      })
+      .error(),
 };
 
 export const slugField = defineField(slugFieldDefinition);

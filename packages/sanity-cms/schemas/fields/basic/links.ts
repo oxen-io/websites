@@ -36,7 +36,7 @@ export const internalLinkFieldDefinition = {
   title: 'Internal Link',
   icon: DocumentIcon,
   description: 'Link to CMS content',
-  to: [{ type: 'page' }, { type: 'post' }, { type: 'special' }],
+  to: [{ type: 'page' }, { type: 'post' }, { type: 'special' }, { type: 'cmsFile' }],
 };
 
 export type SocialLinkArrayMember = ArrayMemberFields & {

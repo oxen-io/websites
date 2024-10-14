@@ -20,5 +20,12 @@
     "inThisArticle": "In this article",
     "readMore": "Read more",
     "morePosts": "More posts"
+  },
+  "fileDownload": {
+    "fetching": "Fetching '{name'}...",
+    "clickToDownload": "Click to download",
+    "clickToDownloadAria": "Click to download file",
+    "openPdfInNewTab": "Open PDF in new tab",
+    "openPdfInNewTabAria": "Open PDF in new tab"
   }
 }

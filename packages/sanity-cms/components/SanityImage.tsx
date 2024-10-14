@@ -10,8 +10,17 @@ import type {
 import { cn } from '@session/ui/lib/utils';
 import { safeTry } from '@session/util-js/try';
 import { Fragment } from 'react';
+import type { SanityImageSource } from '@sanity/asset-utils';
+import type { CustomImageType } from '../schemas/fields/basic/seo';
 
 export type SanityImageType = ImageFieldsSchemaType | ImageFieldsSchemaTypeWithoutAltText;
+
+export const getSanityImageUrlBuilder = (
+  client: SessionSanityClient,
+  value: SanityImageType | SanityImageSource | CustomImageType
+) => {
+  return urlBuilder(client).image(value).fit('max').auto('format');
+};
 
 /**
  * Build image data from Sanity image schema and the image source.
@@ -19,7 +28,7 @@ export type SanityImageType = ImageFieldsSchemaType | ImageFieldsSchemaTypeWitho
  * @param value Sanity image schema
  */
 async function buildImage(client: SessionSanityClient, value: SanityImageType) {
-  const src = urlBuilder(client).image(value).fit('max').auto('format').url();
+  const src = getSanityImageUrlBuilder(client, value).url();
   const buffer = await fetch(src).then(async (res) => Buffer.from(await res.arrayBuffer()));
 
   const {

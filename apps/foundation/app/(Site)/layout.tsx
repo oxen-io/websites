@@ -9,6 +9,25 @@ import DevSheetServerSide from '@/components/DevSheetServerSide';
 import { getInitialSiteDataForSSR } from '@/lib/sanity/sanity-server';
 import Head from 'next/head';
 import { isProduction } from '@session/util-js/env';
+import { client } from '@/lib/sanity/sanity.client';
+import { generateSanityMetadata } from '@session/sanity-cms/lib/metadata';
+import type { Metadata } from 'next';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { settings } = await getInitialSiteDataForSSR();
+
+  const generatedMetadata = settings.seo
+    ? await generateSanityMetadata(client, {
+        seo: settings.seo,
+        type: 'website',
+      })
+    : {};
+
+  return {
+    ...generatedMetadata,
+    manifest: '/site.webmanifest',
+  };
+}
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const { locale, direction, messages } = await getLocalizationData();
@@ -25,7 +44,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <GlobalProvider messages={messages} locale={locale}>
         <body className="bg-session-white font-roboto-flex text-session-text-black mx-4 flex flex-col items-center overflow-x-hidden">
