@@ -5,7 +5,6 @@ import logger from '../lib/logger';
 import { safeTry } from '@session/util-js/try';
 import type { PageSchemaType } from '../schemas/page';
 import type { PostSchemaType } from '../schemas/post';
-import type { SessionSanityClient } from '../lib/client';
 
 type RssGeneratorConfig = {
   /** The CMS content type that the generator should be run for.*/
@@ -20,7 +19,6 @@ type RssGeneratorConfig = {
 type CreateRevalidateHandlerOptions = {
   /** The secret used to verify the webhook request. */
   revalidateSecret: string;
-  client: SessionSanityClient;
   schemaUrls: Record<string, string>;
   /** An array of RSS generator configurations. {@link RssGeneratorConfig} */
   rssGenerators?: Array<RssGeneratorConfig>;
@@ -55,7 +53,6 @@ type CreateRevalidateHandlerOptions = {
  */
 export const createRevalidateHandler = ({
   revalidateSecret,
-  client,
   schemaUrls,
   rssGenerators,
 }: CreateRevalidateHandlerOptions) => {
