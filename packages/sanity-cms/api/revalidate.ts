@@ -5,7 +5,6 @@ import logger from '../lib/logger';
 import { safeTry } from '@session/util-js/try';
 import type { PageSchemaType } from '../schemas/page';
 import type { PostSchemaType } from '../schemas/post';
-import { getSiteSettings } from '../queries/getSiteSettings';
 import type { SessionSanityClient } from '../lib/client';
 
 type RssGeneratorConfig = {
@@ -141,14 +140,8 @@ export const createRevalidateHandler = ({
             if (!schemaUrl.endsWith('/')) {
               schemaUrl = `${schemaUrl}/`;
             }
-            const settings = await getSiteSettings({ client });
-            if (slug === settings?.landingPage?.slug?.current) {
-              revalidatePath(`${schemaUrl}`);
-            } else {
-              revalidatePath(`${schemaUrl}${slug}`);
-              // Also revalidate the root schema url (if it's not the landing page) Eg: /blog
-              revalidatePath(schemaUrl.replaceAll('/', ''));
-            }
+            revalidatePath(`${schemaUrl}`);
+            revalidatePath(`${schemaUrl}${slug}`);
           }
         }
       }
