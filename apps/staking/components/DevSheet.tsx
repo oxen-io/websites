@@ -14,8 +14,8 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { SOCIALS } from '@/lib/constants';
 import { Social } from '@session/ui/components/SocialLinkList';
-import type { BuildInfo } from '@session/util/build';
-import { getEnvironment } from '@session/util/env';
+import type { BuildInfo } from '@session/util-js/build';
+import { getEnvironment } from '@session/util-js/env';
 import { isProduction } from '@/lib/env';
 import {
   type FEATURE_FLAG,

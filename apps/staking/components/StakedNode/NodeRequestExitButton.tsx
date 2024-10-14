@@ -14,7 +14,7 @@ import { formatLocalizedTimeFromSeconds } from '@/lib/locale-client';
 import { SESSION_NODE_TIME, SOCIALS, URL } from '@/lib/constants';
 import { externalLink } from '@/lib/locale-defaults';
 import { useChain } from '@session/contracts/hooks/useChain';
-import { formatBigIntTokenValue } from '@session/util/maths';
+import { formatBigIntTokenValue } from '@session/util-crypto/maths';
 import { ETH_DECIMALS } from '@session/wallet/lib/eth';
 import { useRemoteFeatureFlagQuery } from '@/lib/feature-flags-client';
 import { REMOTE_FEATURE_FLAG } from '@/lib/feature-flags';

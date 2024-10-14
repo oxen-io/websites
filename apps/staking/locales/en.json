@@ -415,6 +415,7 @@
       "exitTimerNotification": "Exit available. Exit {relativeTime} to avoid penalty.",
       "exitTimerNotificationNow": "Exit now to avoid penalty.",
       "exitTimerDescription": "Node is ready for exit. If you don't exit within {relativeTime}, you may be subject to a small penalty. <link>Learn more</link>",
+      "exitTimerDescriptionNow": "Node is ready for exit. If you don't exit now, you may be subject to a small penalty. <link>Learn more</link>",
       "deregistrationTimerNotification": "Deregistration {relativeTime}",
       "deregistrationTimerDescription": "Time left until the node is deregistered and funds are locked for {lockedStakeTime}. Node will be deregistered {relativeTime} ({date})",
       "liquidationNotification": "Awaiting liquidation",

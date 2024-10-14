@@ -10,7 +10,6 @@
   "scripts": {
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
-    "lint-staged": "lint-staged",
     "test": "jest"
   },
   "devDependencies": {
@@ -23,7 +22,8 @@
   },
   "dependencies": {
     "@session/contracts": "workspace:*",
-    "@session/util": "workspace:*",
+    "@session/util-js": "workspace:*",
+    "@session/util-crypto": "workspace:*",
     "@session/ui": "workspace:*",
     "@tanstack/react-query": "^5.32.1",
     "@web3modal/wagmi": "4.2.3",

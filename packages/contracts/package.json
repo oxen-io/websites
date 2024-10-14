@@ -13,12 +13,12 @@
     "format": "prettier --write .",
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
-    "lint-staged": "lint-staged",
     "tsc": "pnpm generate",
     "test": "jest"
   },
   "dependencies": {
-    "@session/util": "workspace:*",
+    "@session/util-js": "workspace:*",
+    "@session/util-crypto": "workspace:*",
     "@tanstack/react-query": "^5.32.1",
     "viem": "2.21.1",
     "wagmi": "2.12.8"

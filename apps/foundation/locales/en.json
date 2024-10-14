@@ -1,0 +1,31 @@
+{
+  "header": {
+    "mobileMenuButtonOpen": "Open navigation menu",
+    "mobileMenuButtonClose": "Close navigation menu"
+  },
+  "tile": {
+    "scrollOrTap": "SCROLL/TAP"
+  },
+  "image": {
+    "figureLabelTemplate": "Figure '{number'}:"
+  },
+  "notFound": {
+    "description": "Sorry! We couldn't find the page you were looking for.",
+    "homeButton": "Return Home",
+    "metaTitle": "Page not found",
+    "metaDescription": "Sorry! We couldn't find the page you were looking for."
+  },
+  "blog": {
+    "backToBlog": "Back to blog",
+    "inThisArticle": "In this article",
+    "readMore": "Read more",
+    "morePosts": "More posts"
+  },
+  "fileDownload": {
+    "fetching": "Fetching '{name'}...",
+    "clickToDownload": "Click to download",
+    "clickToDownloadAria": "Click to download file",
+    "openPdfInNewTab": "Open PDF in new tab",
+    "openPdfInNewTabAria": "Open PDF in new tab"
+  }
+}
