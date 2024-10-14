@@ -47,6 +47,11 @@ const nextConfig = {
   },
   webpack: (config) => {
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
+    if (process.env.NO_MINIFY?.toLowerCase() === 'true') {
+      config.optimization = {
+        minimize: false,
+      };
+    }
     return config;
   },
   redirects: async () => {
