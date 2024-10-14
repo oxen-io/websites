@@ -146,6 +146,8 @@ export const createRevalidateHandler = ({
               revalidatePath(`${schemaUrl}`);
             } else {
               revalidatePath(`${schemaUrl}${slug}`);
+              // Also revalidate the root schema url (if it's not the landing page) Eg: /blog
+              revalidatePath(schemaUrl.replaceAll('/', ''));
             }
           }
         }
