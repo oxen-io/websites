@@ -1,0 +1,19 @@
+{
+  "extends": "@session/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "rootDir": "."
+  },
+  "include": [
+    "./**/**.ts",
+    "./**/**.tsx",
+    "tests/**.ts",
+    "jest.config.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "turbo",
+    "dist"
+  ]
+}

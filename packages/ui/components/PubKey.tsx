@@ -3,7 +3,7 @@
 import { CopyToClipboardButton } from './CopyToClipboardButton';
 import { cn } from '../lib/utils';
 import { Tooltip } from './ui/tooltip';
-import { collapseString } from '@session/util/string';
+import { collapseString } from '@session/util-crypto/string';
 import { forwardRef, HTMLAttributes, useCallback, useEffect, useMemo, useState } from 'react';
 import { ButtonDataTestId } from '../data-test-ids';
 

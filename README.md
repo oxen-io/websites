@@ -30,6 +30,8 @@ This repository contains the following apps and packages:
 - `@session/feture-flags`: Feature flags library for [Next.js](https://nextjs.org/) apps. Supporting client, server, and
   remote flags. [Read more](packages/feature-flags/README.md).
 - `@session/logger`: An opinionated logging wrapper. [Read more](packages/logger/README.md).
+- `@session/sanity-cms`: A [Sanity](https://sanity.io/) CMS integration
+  library. [Read more](packages/sanity-cms/README.md).
 - `@session/sent-staking-js`: Session Token Staking js library for interacting with the Session Token staking
   backend. [Read more](packages/sent-staking-js/README.md).
 - `@session/testing`: A testing utility library. [Read more](packages/testing/README.md).
@@ -38,7 +40,11 @@ This repository contains the following apps and packages:
   and uses
   [Tailwind CSS](https://tailwindcss.com/), [Radix UI](https://www.radix-ui.com/),
   and [shadcn-ui](https://ui.shadcn.com/). [Read more](packages/ui/README.md).
-- `@session/util`: A utility library for common functions. [Read more](packages/util/README.md).
+- `@session/util-crypto`: A crypto utility library for common crypto
+  functions. [Read more](packages/util-crypto/README.md).
+- `@session/util-js`: A JS utility library for common functions. [Read more](packages/util-js/README.md).
+- `@session/util-logger`: A logger utility library for initializing the pino logger with @session/logger as a
+  wrapper. [Read more](packages/util-logger/README.md).
 - `@session/wallet`: A wallet library for interacting with the Session Token. [Read more](packages/wallet/README.md).
 
 ### Utilities

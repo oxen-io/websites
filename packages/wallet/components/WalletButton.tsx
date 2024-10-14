@@ -2,7 +2,7 @@ import { SENT_SYMBOL } from '@session/contracts';
 import { Button } from '@session/ui/components/ui/button';
 import { SessionTokenIcon } from '@session/ui/icons/SessionTokenIcon';
 import { cn } from '@session/ui/lib/utils';
-import { collapseString } from '@session/util/string';
+import { collapseString } from '@session/util-crypto/string';
 import { useMemo } from 'react';
 import { ButtonDataTestId } from '../testing/data-test-ids';
 import { ConnectedWalletAvatar } from './WalletAvatar';
