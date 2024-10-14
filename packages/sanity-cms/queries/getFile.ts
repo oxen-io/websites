@@ -7,6 +7,7 @@ const QUERY_GET_FILES_WITH_SLUG = groq`*[_type == 'cmsFile' && slug.current == $
 type QUERY_GET_FILES_WITH_SLUG_RETURN_TYPE = Array<
   FileSchemaType & {
     src: string;
+    fileName: string;
   }
 >;
 

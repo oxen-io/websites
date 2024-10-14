@@ -1,6 +1,12 @@
+'use client';
+
 import SanityPdf from './SanityPdf';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { cleanSanityString } from '../lib/string';
 
 type FileDownloadProps = {
+  fileName: string;
   src: string;
   strings: {
     fetching: string;
@@ -11,18 +17,32 @@ type FileDownloadProps = {
   };
 };
 
-export default function FileDownload({ src, strings }: FileDownloadProps) {
-  if (!src) return null;
+export default function FileDownload({ fileName, src, strings }: FileDownloadProps) {
+  const [downloaded, setDownloaded] = useState(false);
+  const router = useRouter();
+  if (!src || !fileName) return null;
 
-  if (src.endsWith('.pdf')) {
-    return <SanityPdf src={src} strings={strings} />;
+  const name = cleanSanityString(fileName);
+  const srcWithParams = new URL(src);
+  srcWithParams.searchParams.set('dl', name);
+
+  if (src.includes('.pdf')) {
+    return <SanityPdf src={src} url={srcWithParams} strings={strings} />;
   }
 
+  // Download file on mount
+  useEffect(() => {
+    if (!downloaded) {
+      setDownloaded(true);
+      void router.push(srcWithParams.href);
+    }
+  }, [src]);
+
   return (
-    <div className="flex flex-col items-center justify-center">
-      <p className="text-center text-sm">{strings.fetching}</p>
+    <div className="my-12 flex flex-col items-center justify-center gap-2">
+      <p className="text-center text-sm">{strings.fetching.replace('{name}', fileName)}</p>
       <a
-        href={src}
+        href={srcWithParams.href}
         className="group"
         target="_blank"
         rel="noopener noreferrer"

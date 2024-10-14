@@ -22,7 +22,7 @@
     "morePosts": "More posts"
   },
   "fileDownload": {
-    "fetching": "Fetching file...",
+    "fetching": "Fetching '{name'}...",
     "clickToDownload": "Click to download",
     "clickToDownloadAria": "Click to download file",
     "openPdfInNewTab": "Open PDF in new tab",

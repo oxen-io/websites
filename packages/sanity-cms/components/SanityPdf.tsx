@@ -3,19 +3,20 @@ import { LinkOutIcon } from '@session/ui/icons/LinkOutIcon';
 
 export type SanityPdfProps = {
   src: string;
+  url: URL;
   strings: {
     openPdfInNewTab: string;
     openPdfInNewTabAria: string;
   };
 };
 
-export default function SanityPdf({ src, strings }: SanityPdfProps) {
-  if (!src) return null;
+export default function SanityPdf({ src, url, strings }: SanityPdfProps) {
+  if (!url || !src) return null;
 
   return (
     <main className="flex h-full min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-4">
       <NavLink
-        href={src}
+        href={url.href}
         aria-label={strings.openPdfInNewTabAria}
         className="inline-flex items-center justify-center gap-2 align-middle"
       >

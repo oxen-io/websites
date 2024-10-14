@@ -102,10 +102,11 @@ export default async function UniversalPage({ params }: PageProps) {
       slug,
     });
 
-    if (file?.src) {
+    if (file?.src && file?.fileName) {
       const fileDictionary = await getTranslations('fileDownload');
       return (
         <FileDownload
+          fileName={file.fileName}
           src={file.src}
           strings={{
             fetching: fileDictionary('fetching'),

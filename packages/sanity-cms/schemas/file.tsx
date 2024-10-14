@@ -12,6 +12,13 @@ export const fileFields = [
     name: 'file',
     type: 'file',
   }),
+  defineField({
+    title: 'File Name',
+    name: 'fileName',
+    type: 'string',
+    description: 'The name of the file when it is downloaded',
+    validation: (Rule) => Rule.required(),
+  }),
 ];
 
 export const fileSchema = defineType({
