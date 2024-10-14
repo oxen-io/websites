@@ -1,33 +1,31 @@
 import { ActionModuleRow } from '@/components/ActionModule';
-import { getTotalStakedAmountForAddress, NodeContributorList } from '@/components/NodeCard';
+import { NodeContributorList } from '@/components/NodeCard';
 import { PubKey } from '@session/ui/components/PubKey';
 import { externalLink } from '@/lib/locale-defaults';
 import { TICKER, URL } from '@/lib/constants';
 import { LoadingText } from '@session/ui/components/loading-text';
-import { SENT_SYMBOL } from '@session/contracts';
 import { useTranslations } from 'next-intl';
+import { Stake } from '@session/sent-staking-js/client';
+import { formatSENTNumber } from '@session/contracts/hooks/SENT';
+import { SENT_SYMBOL } from '@session/contracts';
 import { useMemo } from 'react';
-import { StakedNode } from '@/components/StakedNodeCard';
-import { useWallet } from '@session/wallet/hooks/wallet-hooks';
 
 export default function NodeActionModuleInfo({
   node,
   feeEstimate,
   feeEstimateText,
 }: {
-  node: StakedNode;
+  node: Stake;
   feeEstimate?: string | null;
   feeEstimateText?: string;
 }) {
-  const { address } = useWallet();
   const dictionary = useTranslations('nodeCard.staked.requestExit.dialog.write');
   const dictionaryActionModulesNode = useTranslations('actionModules.node');
   const sessionNodeDictionary = useTranslations('sessionNodes.general');
 
   const stakedAmount = useMemo(
-    () =>
-      address ? getTotalStakedAmountForAddress(node.contributors, address) : `0 ${SENT_SYMBOL}`,
-    [node.contributors, address]
+    () => (node.staked_balance ? formatSENTNumber(node.staked_balance) : `0 ${SENT_SYMBOL}`),
+    [node.staked_balance]
   );
 
   return (
@@ -44,7 +42,7 @@ export default function NodeActionModuleInfo({
         label={sessionNodeDictionary('publicKeyShort')}
         tooltip={sessionNodeDictionary('publicKeyDescription')}
       >
-        <PubKey pubKey={node.pubKey} force="collapse" alwaysShowCopyButton />
+        <PubKey pubKey={node.service_node_pubkey} force="collapse" alwaysShowCopyButton />
       </ActionModuleRow>
       <ActionModuleRow
         label={sessionNodeDictionary('operatorAddress')}

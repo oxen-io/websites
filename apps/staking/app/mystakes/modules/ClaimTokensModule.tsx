@@ -68,7 +68,7 @@ export default function ClaimTokensModule() {
 
   const [rewards, blsSignature, excludedSigners] = useMemo(() => {
     if (!rewardsClaimData) return [null, null, null];
-    const { amount, signature, non_signer_indices } = rewardsClaimData.bls_rewards_response;
+    const { amount, signature, non_signer_indices } = rewardsClaimData.result;
 
     return [BigInt(amount), signature, non_signer_indices.map(BigInt)];
   }, [rewardsClaimData]);
@@ -85,20 +85,20 @@ export default function ClaimTokensModule() {
           onClick={handleClick}
         >
           <ModuleContent className="flex h-full select-none flex-row items-center gap-2 p-0 py-3 align-middle font-bold">
-            <PresentIcon
-              className={cn(
-                'mb-1 h-8 w-8 transition-all duration-300',
-                isDisabled
-                  ? 'fill-session-text opacity-50'
-                  : 'fill-session-green group-hover:fill-session-black'
-              )}
-            />
             <ModuleText
               className={cn(
-                'h-8 text-3xl transition-all duration-300',
+                'inline-flex items-center gap-1.5 align-middle text-3xl transition-all duration-300',
                 isDisabled ? 'opacity-50' : 'text-session-green group-hover:text-black'
               )}
             >
+              <PresentIcon
+                className={cn(
+                  'mb-1 h-7 w-7 transition-all duration-300',
+                  isDisabled
+                    ? 'fill-session-text opacity-50'
+                    : 'fill-session-green group-hover:fill-session-black'
+                )}
+              />
               {dictionary('title')}
             </ModuleText>
           </ModuleContent>

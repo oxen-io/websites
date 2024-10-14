@@ -24,6 +24,18 @@ function DropdownMenuItemNavLink({ label, children, ...props }: NavLinkProps) {
 export function DropdownHamburgerMenu() {
   const dictionary = useTranslations('navigation.hamburgerDropdown');
   const navDictionary = useTranslations('navigation');
+
+  const routes: typeof ROUTES = [];
+  ROUTES.forEach(({ dictionaryKey, href }) => {
+    if (
+      process.env.NEXT_PUBLIC_HIDE_FAUCET?.toLowerCase() === 'true' &&
+      dictionaryKey === 'faucet'
+    ) {
+      return;
+    }
+    routes.push({ dictionaryKey, href });
+  });
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -37,7 +49,7 @@ export function DropdownHamburgerMenu() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-max">
-        {ROUTES.map(({ dictionaryKey, href }) => (
+        {routes.map(({ dictionaryKey, href }) => (
           <DropdownMenuItemNavLink
             key={href}
             href={href}

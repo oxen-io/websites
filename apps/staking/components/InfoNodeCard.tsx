@@ -18,6 +18,7 @@ import { TextSeparator } from '@session/ui/components/Separator';
 export type InfoNodeCardProps = HTMLAttributes<HTMLDivElement> & {
   pubKey: string;
   buttonSiblings?: ReactNode;
+  isActive?: boolean;
   button?: {
     text: string;
     link: string;
@@ -29,7 +30,16 @@ export type InfoNodeCardProps = HTMLAttributes<HTMLDivElement> & {
 
 export const InfoNodeCard = forwardRef<HTMLDivElement, InfoNodeCardProps>(
   (
-    { statusIndicatorColour, buttonSiblings, className, pubKey, button, children, ...props },
+    {
+      statusIndicatorColour,
+      buttonSiblings,
+      isActive,
+      className,
+      pubKey,
+      button,
+      children,
+      ...props
+    },
     ref
   ) => {
     const generalNodeDictionary = useTranslations('sessionNodes.general');
@@ -38,7 +48,11 @@ export const InfoNodeCard = forwardRef<HTMLDivElement, InfoNodeCardProps>(
       <NodeCard
         ref={ref}
         {...props}
-        className="flex flex-col items-center justify-between gap-2 align-middle sm:flex-row md:gap-10"
+        className={cn(
+          'reduced-motion:transition-none flex flex-col items-center justify-between gap-2 border border-transparent align-middle transition-all duration-500 ease-in-out sm:flex-row md:gap-10',
+          isActive && 'border-session-green',
+          className
+        )}
       >
         <div className={cn('text-center sm:text-start', className)}>
           <div className="flex w-full cursor-pointer items-baseline gap-3 text-center align-middle sm:text-start">
@@ -63,7 +77,7 @@ export const InfoNodeCard = forwardRef<HTMLDivElement, InfoNodeCardProps>(
           {button ? (
             <Link href={button.link} className="w-full sm:w-auto" prefetch>
               <Button
-                variant="outline"
+                variant={isActive ? 'default' : 'outline'}
                 size="md"
                 rounded="md"
                 aria-label={button.ariaLabel}

@@ -9,7 +9,8 @@ import { bigIntToNumber } from '@session/util/maths';
 import { SENT_DECIMALS } from '@session/contracts';
 import { useTranslations } from 'next-intl';
 import { areHexesEqual } from '@session/util/string';
-import { formatSENTBigInt } from '@session/contracts/hooks/SENT';
+import { formatSENTBigInt, formatSENTNumber } from '@session/contracts/hooks/SENT';
+import { StakeContributor } from '@session/sent-staking-js/client';
 
 export interface Contributor {
   address: string;
@@ -120,7 +121,7 @@ const ContributorIcon = ({
   isUser,
 }: {
   className?: string;
-  contributor?: Contributor;
+  contributor?: StakeContributor;
   isUser?: boolean;
 }) => {
   const dictionary = useTranslations('general');
@@ -129,7 +130,7 @@ const ContributorIcon = ({
       tooltipContent={
         <p>
           {contributor
-            ? `${isUser ? dictionary('you') : contributor.address} | ${formatSENTBigInt(contributor.amount)}`
+            ? `${isUser ? dictionary('you') : contributor.address} | ${formatSENTNumber(contributor.amount)}`
             : dictionary('emptySlot')}
         </p>
       }
@@ -189,7 +190,7 @@ export const getTotalStakedAmountForAddress = (
 };
 
 type StakedNodeContributorListProps = HTMLAttributes<HTMLDivElement> & {
-  contributors: Contributor[];
+  contributors: StakeContributor[];
   showEmptySlots?: boolean;
   forceExpand?: boolean;
 };

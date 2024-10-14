@@ -10,7 +10,7 @@ import { externalLink } from '@/lib/locale-defaults';
 import { Module, ModuleTitle, ModuleTooltip } from '@session/ui/components/Module';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
-import { formatSENTNumber } from '@session/contracts/hooks/SENT';
+import { formatSENTBigInt } from '@session/contracts/hooks/SENT';
 
 export default function DailyNodeReward() {
   const { dailyNodeReward, status, refetch } = useDailyNodeReward();
@@ -21,7 +21,8 @@ export default function DailyNodeReward() {
   const title = dictionary('title');
 
   const formattedDailyNodeRewardAmount = useMemo(
-    () => `~ ${formatSENTNumber(dailyNodeReward ?? 0, DYNAMIC_MODULE.SENT_ROUNDED_DECIMALS)}`,
+    () =>
+      `~ ${formatSENTBigInt(dailyNodeReward ?? BigInt(0), DYNAMIC_MODULE.SENT_ROUNDED_DECIMALS)}`,
     [dailyNodeReward]
   );
 

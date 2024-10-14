@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:large": "NO_MINIFY=true next build",
     "start": "next start",
     "check-types": "tsc --noEmit",
     "check-telemetry": "next telemetry",
