@@ -47,3 +47,6 @@ jobs:
       - name: Set environment variables
         run: |
           grep '^export ' ./apps/staking/scripts/mock-build-env.sh | sed 's/export //' >> $GITHUB_ENV
+          
+      - name: Run builds
+        run: pnpm build
