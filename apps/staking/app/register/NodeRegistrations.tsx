@@ -94,11 +94,11 @@ export default function NodeRegistrations() {
       return [];
     }
 
-    if (!stakesData || stakesData.stakes.length === 0) {
+    if (!stakesData || !stakesData?.stakes?.length) {
       return registrationsData?.registrations ?? [];
     }
 
-    const stakedNodeEd25519Pubkeys = stakesData.stakes.map(
+    const stakedNodeEd25519Pubkeys = stakesData?.stakes?.map(
       ({ service_node_pubkey }) => service_node_pubkey
     );
 

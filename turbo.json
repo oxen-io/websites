@@ -17,6 +17,9 @@
         ".env.local"
       ],
       "env": [
+        "NO_MINIFY",
+        "NEXT_PUBLIC_IS_CANARY",
+        "NEXT_PUBLIC_HIDE_FAUCET",
         "NEXT_PUBLIC_SENT_STAKING_API_URL",
         "NEXT_PUBLIC_SENT_EXPLORER_API_URL",
         "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID",

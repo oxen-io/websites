@@ -7,7 +7,18 @@ import { useTranslations } from 'next-intl';
 export function Footer() {
   const dictionary = useTranslations('navigation');
 
-  const menuItems = [...ROUTES, ...EXTERNAL_ROUTES].map(
+  const routes: typeof ROUTES = [];
+  ROUTES.forEach(({ dictionaryKey, href }) => {
+    if (
+      process.env.NEXT_PUBLIC_HIDE_FAUCET?.toLowerCase() === 'true' &&
+      dictionaryKey === 'faucet'
+    ) {
+      return;
+    }
+    routes.push({ dictionaryKey, href });
+  });
+  
+  const menuItems = [...routes, ...EXTERNAL_ROUTES].map(
     ({ dictionaryKey, href, linkType = 'internal' }) => ({
       title: dictionary(dictionaryKey),
       href: href,
