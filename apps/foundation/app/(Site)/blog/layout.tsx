@@ -4,9 +4,12 @@ import { getInitialSiteDataForSSR } from '@/lib/sanity/sanity-server';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { generateSanityMetadata } from '@session/sanity-cms/lib/metadata';
 import { client } from '@/lib/sanity/sanity.client';
+import { generateRssFeed } from '@/lib/rss';
 
 export async function generateMetadata(_: object, parent: ResolvingMetadata): Promise<Metadata> {
   const { settings } = await getInitialSiteDataForSSR();
+
+  await generateRssFeed();
 
   return settings.blogSeo
     ? await generateSanityMetadata(client, {
