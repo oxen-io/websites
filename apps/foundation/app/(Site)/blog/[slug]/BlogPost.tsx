@@ -37,7 +37,7 @@ export default async function BlogPost({ post }: PostProps) {
     .filter(Boolean);
 
   return (
-    <article className="mx-auto mb-32 mt-4 flex max-w-screen-xl flex-col">
+    <article className="mx-auto mb-32 mt-4 flex max-w-screen-xl flex-col items-start">
       <Link href={SANITY_SCHEMA_URL.POST} prefetch>
         <Button
           data-testid={ButtonDataTestId.Back_To_Blog}
@@ -57,7 +57,11 @@ export default async function BlogPost({ post }: PostProps) {
         mobileImagePosition="below"
       />
       <div className="mt-6 flex flex-row justify-center gap-12 md:mt-12">
-        <PortableText body={body} className="max-w-screen-md" wrapperComponent="section" />
+        <PortableText
+          body={body}
+          className={cn(headings.length && 'max-w-screen-md')}
+          wrapperComponent="section"
+        />
         {headings.length ? (
           <HeadingOutline headings={headings} title={blogDictionary('inThisArticle')} />
         ) : null}
