@@ -22,6 +22,23 @@ const nextConfig = {
   images: {
     remotePatterns: [{ hostname: 'cdn.sanity.io' }],
   },
+  async rewrites() {
+    return [
+      ...[
+        '/rss',
+        '/feed',
+        '/feed.xml',
+        '/blog.xml',
+        '/blog/rss',
+        '/blog/feed',
+        '/blog/rss.xml',
+        '/blog/feed.xml',
+      ].map((source) => ({
+        source,
+        destination: '/rss.xml',
+      })),
+    ];
+  },
 };
 
 export default withNextIntl(withPlaiceholder(nextConfig));

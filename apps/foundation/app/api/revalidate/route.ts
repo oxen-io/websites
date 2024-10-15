@@ -1,5 +1,6 @@
 import { createRevalidateHandler } from '@session/sanity-cms/api/revalidate';
 import { SANITY_SCHEMA_URL } from '@/lib/constants';
+import { generateRssFeed } from '@/lib/rss';
 
 const SANITY_REVALIDATE_SECRET = process.env.SANITY_REVALIDATE_SECRET!;
 if (!SANITY_REVALIDATE_SECRET) {
@@ -12,4 +13,10 @@ export const { POST } = createRevalidateHandler({
     page: SANITY_SCHEMA_URL.PAGE,
     post: SANITY_SCHEMA_URL.POST,
   },
+  rssGenerators: [
+    {
+      _type: 'post',
+      generateRssFeed,
+    },
+  ],
 });
