@@ -38,7 +38,7 @@ export async function generateRssFeed() {
         description: 'RSS feed for Session Technology Foundation updates.',
         link: BASE_URL,
         image: {
-          url: `${BASE_URL}/images/logoBlack.png`,
+          url: `${BASE_URL}/images/logo.svg`,
           title: `Session Technology Foundation updates`,
           link: BASE_URL,
         },
