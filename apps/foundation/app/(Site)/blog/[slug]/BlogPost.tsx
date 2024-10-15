@@ -37,7 +37,7 @@ export default async function BlogPost({ post }: PostProps) {
     .filter(Boolean);
 
   return (
-    <article className="mx-auto mb-32 mt-4 flex max-w-screen-xl flex-col">
+    <article className="mx-auto mb-32 mt-4 flex max-w-screen-xl flex-col items-start">
       <Link href={SANITY_SCHEMA_URL.POST} prefetch>
         <Button
           data-testid={ButtonDataTestId.Back_To_Blog}
