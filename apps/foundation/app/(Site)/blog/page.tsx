@@ -53,9 +53,11 @@ export default async function BlogGridPage() {
           <ReadMoreText />
         </PostInfoBlock>
       </Link>
-      <Typography variant="h2" className="mt-12">
-        {blogDictionary('morePosts')}
-      </Typography>
+      {rest?.length ? (
+        <Typography variant="h2" className="mt-12">
+          {blogDictionary('morePosts')}
+        </Typography>
+      ) : null}
       <div className="mt-4 grid grid-cols-1 gap-12 md:mt-8 md:grid-cols-3">
         {rest.map((post, index) => (
           <Link

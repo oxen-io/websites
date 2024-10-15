@@ -18,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     ...pages.map((page) => ({
-      url: `${BASE_URL}${page.slug.current}`,
+      url: `${BASE_URL}/${page.slug.current}`,
       lastModified: page._updatedAt,
       changeFrequency: 'weekly' as const,
       priority: 0.5,

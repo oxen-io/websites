@@ -21,7 +21,7 @@ type HeadingOutlineProps = {
 
 export default function HeadingOutline({ title, headings }: HeadingOutlineProps) {
   return (
-    <nav className="wrap sticky top-12 mt-7 hidden h-max w-max max-w-[25vw] lg:block">
+    <nav className="wrap sticky top-12 hidden h-max w-max max-w-[25vw] lg:block">
       <Typography variant="h2" className="mb-3">
         {title}
       </Typography>
@@ -32,7 +32,7 @@ export default function HeadingOutline({ title, headings }: HeadingOutlineProps)
               onClick={() => {
                 scrollToHeading(heading);
               }}
-              className={cn(navlinkVariants({ active: false }), 'w-full text-wrap text-start')}
+              className={cn(navlinkVariants({ active: false }), 'w-max text-wrap text-start')}
             >
               {heading}
             </button>
